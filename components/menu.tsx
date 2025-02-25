@@ -67,11 +67,11 @@ export const Menu = () => {
 
     return (
         <section>
-            <div className="gap-8 grid grid-cols-2 sm:grid-cols-4 py-8">
+            <div className="gap-4 md:gap-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 py-8 justify-items-center">
                 {menus.map(({ id, title, price, img, location }) => (
-                    <Card key={id} isPressable shadow="sm" className="w-72 h-80">
+                    <Card key={id} isPressable shadow="sm" className="w-full max-w-xs h-80">
                         <CardBody
-                            className="overflow-visible p-0"
+                            className="overflow-visible p-0 relative"
                             style={{
                                 backgroundImage: `url(${img})`,
                                 backgroundRepeat: "no-repeat",
@@ -81,7 +81,7 @@ export const Menu = () => {
                             <FaRegHeart className="absolute top-2 right-2 text-white text-xl" />
                             <span className="absolute top-2 left-2 bg-white rounded-full px-4 py-1 text-xs">{title}</span>
                             <span className="absolute bottom-2 left-2 text-white text-sm font-semibold">Grilled Barbeque Dishes</span>
-                            <span className="absolute bottom-2 right-2 text-[#FCC01C] text-sm font-bold">&#163;{price}pp</span>
+                            <span className="absolute bottom-2 right-2 text-yellow-400 text-sm font-bold">&#163;{price}pp</span>
                         </CardBody>
                         <CardFooter className="justify-between items-center">
                             <User
@@ -90,13 +90,14 @@ export const Menu = () => {
                                 }}
                                 description={location}
                                 name="Jim Howard"
+                                className="overflow-hidden"
                             />
                             <div className="flex flex-col">
                                 <div className="flex gap-1 items-center justify-end">
-                                    <FaStar className="text-[#FCC01C]" />
-                                    <span className="text-[#323335]">4.6</span>
+                                    <FaStar className="text-yellow-400" />
+                                    <span className="text-gray-700">4.6</span>
                                 </div>
-                                <div className="text-[10px] text-[#323335]">(23 Reviews)</div>
+                                <div className="text-xs text-gray-700">(23 Reviews)</div>
                             </div>
                         </CardFooter>
                     </Card>
