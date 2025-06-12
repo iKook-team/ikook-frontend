@@ -1,7 +1,7 @@
 import React from "react";
 
-import { SearchDropdown } from "./SearchDropdown";
-import { UserMenu } from "./UserMenu";
+import { SearchDropdown } from "./search-dropdown";
+import { UserMenu } from "./user-menu";
 
 export const Navigation: React.FC = () => {
   return (

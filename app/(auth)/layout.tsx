@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-import { Navigation } from "@/components/auth/Navigation";
+import { Navigation } from "@/components/auth/navigation";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
