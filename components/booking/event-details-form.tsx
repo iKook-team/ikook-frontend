@@ -1,0 +1,294 @@
+import React, { useState } from "react";
+
+interface EventDetailsFormProps {
+  onFormChange: (data: EventFormData) => void;
+}
+
+export interface EventFormData {
+  location: string;
+  eventDate: string;
+  guests: number;
+  eventType?: string;
+}
+
+export const EventDetailsForm: React.FC<EventDetailsFormProps> = ({
+  onFormChange,
+}) => {
+  const [formData, setFormData] = useState<EventFormData>({
+    location: "Lagos, Nigeria",
+    eventDate: "28/08/2023",
+    guests: 40,
+    eventType: "",
+  });
+
+  const handleInputChange = (field: keyof EventFormData, value: string | number) => {
+    const updatedData = { ...formData, [field]: value };
+    setFormData(updatedData);
+    onFormChange(updatedData);
+  };
+
+  const availableCuisines = [
+    "African",
+    "Modern English",
+    "Italian",
+    "French",
+    "Asian",
+    "Mediterranean",
+    "Mexican",
+    "Indian",
+  ];
+
+  const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
+
+  const handleCuisineChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedCuisine = e.target.value;
+    if (selectedCuisine && !selectedCuisines.includes(selectedCuisine)) {
+      setSelectedCuisines([...selectedCuisines, selectedCuisine]);
+    }
+    // Reset the select value
+    e.target.value = "";
+  };
+
+  const removeCuisine = (cuisineToRemove: string) => {
+    setSelectedCuisines(
+      selectedCuisines.filter((cuisine) => cuisine !== cuisineToRemove),
+    );
+  };
+
+  return (
+    <form className="mt-[31px] max-md:max-w-full">
+      <div className="max-w-full w-[613px]">
+        <div className="w-full max-md:max-w-full">
+          <div className="w-full max-md:max-w-full">
+            <label
+              htmlFor="location"
+              className="text-[#344054] text-sm font-medium leading-none"
+            >
+              Location
+            </label>
+            <div className="items-center border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#101828] font-normal bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid max-md:max-w-full">
+              <input
+                type="text"
+                value={formData.location}
+                onChange={(e) => handleInputChange("location", e.target.value)}
+                className="text-[#101828] self-stretch flex-1 shrink basis-[0%] min-w-60 w-full gap-2 my-auto max-md:max-w-full bg-transparent border-none outline-none"
+                aria-label="Event location"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-full w-[613px] mt-6">
+        <div className="w-full max-md:max-w-full">
+          <div className="w-full max-md:max-w-full">
+            <label
+              htmlFor="eventDate"
+              className="text-[#344054] text-sm font-medium leading-none"
+            >
+              Event Date
+            </label>
+            <div className="items-center border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#101828] font-normal whitespace-nowrap flex-wrap bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid max-md:max-w-full">
+              <input
+                type="text"
+                value={formData.eventDate}
+                onChange={(e) => handleInputChange("eventDate", e.target.value)}
+                className="text-[#101828] self-stretch flex-1 shrink basis-[0%] min-w-60 gap-2 my-auto max-md:max-w-full bg-transparent border-none outline-none"
+                placeholder="DD/MM/YYYY"
+                aria-label="Event date"
+              />
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/d3ae61d330e0cd7d8060dfcaa4f95eb302335845?placeholderIfAbsent=true"
+                alt="Calendar icon"
+                className="aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-full w-[613px] mt-6">
+        <div className="w-full max-md:max-w-full">
+          <div className="w-full max-md:max-w-full">
+            <label
+              htmlFor="guests"
+              className="text-[#344054] text-sm font-medium leading-none"
+            >
+              Guests
+            </label>
+            <div className="items-center border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#101828] font-normal flex-wrap bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid max-md:max-w-full">
+              <select
+                value={formData.guests}
+                onChange={(e) =>
+                  handleInputChange("guests", parseInt(e.target.value) || 40)
+                }
+                className="text-[#101828] self-stretch flex-1 shrink basis-[0%] min-w-60 gap-2 my-auto max-md:max-w-full bg-transparent border-none outline-none appearance-none pr-8"
+                aria-label="Number of guests"
+              >
+                {[40, 50, 60, 70, 80, 90, 100].map((num) => (
+                  <option key={num} value={num}>
+                    {num} {num === 40 ? "guests (minimum)" : "guests"}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                <svg
+                  width="12"
+                  height="8"
+                  viewBox="0 0 12 8"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="text-gray-500"
+                >
+                  <path
+                    d="M1 1.5L6 6.5L11 1.5"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {formData.guests < 40 && (
+        <div className="flex w-full flex-col text-xs text-[#3F3E3D] font-normal leading-5 justify-center bg-[#FFFCF5] mt-8 px-5 py-4 rounded-lg max-md:max-w-full">
+          <div className="flex items-center gap-3">
+            <img
+              src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/75d3ec646f092868067adae007d588e6b96a5773?placeholderIfAbsent=true"
+              alt="Warning icon"
+              className="aspect-[1] object-contain w-5 self-stretch shrink-0 my-auto"
+            />
+            <div className="text-[#3F3E3D] self-stretch my-auto">
+              Minimum number of guests for booking this chef is{" "}
+              <span className="font-semibold text-sm leading-5">40</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="max-w-full w-[613px] mt-6">
+        <div className="w-full max-md:max-w-full">
+          <div className="w-full max-md:max-w-full">
+            <label
+              htmlFor="guests"
+              className="text-[#344054] text-sm font-medium leading-none"
+            >
+              Event Type
+            </label>
+            <div className="items-center border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#101828] font-normal flex-wrap bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid max-md:max-w-full">
+              <select
+                value={formData.eventType}
+                onChange={(e) => handleInputChange("eventType", e.target.value)}
+                className="text-[#101828] self-stretch flex-1 shrink basis-[0%] min-w-60 gap-2 my-auto max-md:max-w-full bg-transparent border-none outline-none appearance-none pr-8"
+                aria-label="Number of guests"
+              >
+                <option value="">Select event type</option>
+                <option value="wedding">Wedding</option>
+                <option value="birthday">Birthday Party</option>
+                <option value="corporate">Corporate Event</option>
+                <option value="anniversary">Anniversary</option>
+                <option value="graduation">Graduation</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                <svg
+                  width="12"
+                  height="8"
+                  viewBox="0 0 12 8"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="text-gray-500"
+                >
+                  <path
+                    d="M1 1.5L6 6.5L11 1.5"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-full w-[613px] mt-6">
+        <div className="w-full max-md:max-w-full">
+          <div className="w-full max-md:max-w-full">
+            <label
+              className="text-[#344054] text-sm font-medium leading-none block mb-1.5"
+              htmlFor="cuisines"
+            >
+              Preferred cuisines
+            </label>
+            <div className="relative">
+              <div className="flex flex-wrap gap-2 items-center min-h-[44px] w-full border border-[#D0D5DD] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white px-3.5 py-2.5 rounded-lg text-base text-[#101828]">
+                {selectedCuisines.length > 0 ? (
+                  selectedCuisines.map((cuisine) => (
+                    <div
+                      key={cuisine}
+                      className="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
+                    >
+                      {cuisine}
+                      <button
+                        className="ml-2 text-gray-500 hover:text-gray-700"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeCuisine(cuisine);
+                        }}
+                        type="button"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <span className="text-gray-400">Select cuisines</span>
+                )}
+                <select
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  id="cuisines"
+                  onChange={handleCuisineChange}
+                  value=""
+                >
+                  <option disabled value="">
+                    Select a cuisine
+                  </option>
+                  {availableCuisines
+                    .filter((cuisine) => !selectedCuisines.includes(cuisine))
+                    .map((cuisine) => (
+                      <option key={cuisine} value={cuisine}>
+                        {cuisine}
+                      </option>
+                    ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                  <svg
+                    className="text-gray-500"
+                    fill="none"
+                    height="8"
+                    viewBox="0 0 12 8"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1 1.5L6 6.5L11 1.5"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  );
+};
