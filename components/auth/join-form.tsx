@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { WelcomeSection } from "./welcome-section";
 import { ActionButtons, UserType } from "./action-button";
@@ -15,11 +16,12 @@ export const JoinForm: React.FC<JoinFormProps> = ({
   onSubmit,
   onLoginClick,
 }) => {
+  const router = useRouter();
   const [selectedUserType, setSelectedUserType] = useState<UserType>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSelectionChange = (selection: UserType) => {
-    setSelectedUserType(selection);
+  const handleSelectionChange = (type: UserType) => {
+    setSelectedUserType(type);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,11 +35,20 @@ export const JoinForm: React.FC<JoinFormProps> = ({
     setIsSubmitting(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate API call
+      
+      // Call the onSubmit prop if provided
       onSubmit?.(selectedUserType);
-      console.log(`User selected: ${selectedUserType}`);
-    } catch (error) {
-      console.error("Error submitting form:", error);
+      
+      // Navigate based on user type
+      if (selectedUserType === "host") {
+        router.push("/host-signup");
+      } else {
+        // TODO: Implement chef signup flow
+        // Placeholder for chef signup implementation
+      }
+    } catch (_error) {
+      // Handle error appropriately in production
     } finally {
       setIsSubmitting(false);
     }
@@ -45,7 +56,6 @@ export const JoinForm: React.FC<JoinFormProps> = ({
 
   const handleLoginClick = () => {
     onLoginClick?.();
-    console.log("Login clicked");
   };
 
   return (

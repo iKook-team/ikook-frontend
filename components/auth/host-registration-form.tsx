@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import { ProgressBar } from "@/components/ui/progress-bar";
@@ -16,6 +17,7 @@ interface FormData {
 }
 
 export const HostRegistrationForm: React.FC = () => {
+  const router = useRouter();
   const [selectedCountry, setSelectedCountry] = useState("NG");
   const {
     register,
@@ -25,10 +27,17 @@ export const HostRegistrationForm: React.FC = () => {
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
-    console.log("Form submitted:", { ...data, country: selectedCountry });
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    alert("Form submitted successfully!");
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      
+      // In a real app, you would send the data to your API here
+      // Navigate to email verification page
+      router.push("/email-verification");
+    } catch (error) {
+
+      alert("An error occurred. Please try again.");
+    }
   };
 
   const formValues = watch();

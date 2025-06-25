@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { FaStar } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 import { Card, CardBody, CardFooter, User, Button } from "@heroui/react";
@@ -64,6 +65,12 @@ export const Menu = () => {
     },
   ];
 
+  const router = useRouter();
+
+  const handleMenuClick = (id: number) => {
+    router.push(`/booking/custom?menuId=${id}`);
+  };
+
   return (
     <section className="px-12 max-md:px-6 max-sm:px-4">
       <div className="gap-4 md:gap-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 py-8 justify-items-center">
@@ -71,8 +78,9 @@ export const Menu = () => {
           <Card
             key={id}
             isPressable
+            className="w-full max-w-xs h-80 cursor-pointer hover:shadow-lg transition-shadow duration-200"
             shadow="sm"
-            className="w-full max-w-xs h-80"
+            onPress={() => handleMenuClick(id)}
           >
             <CardBody
               className="overflow-visible p-0 relative"
@@ -98,9 +106,14 @@ export const Menu = () => {
                 avatarProps={{
                   src: "/chef.png",
                 }}
-                description={location}
-                name="Jim Howard"
-                className="overflow-hidden"
+                description={
+                  <div className="flex gap-1 items-center">
+                    <FaStar className="text-yellow-400" />
+                    <span className="text-xs">4.9</span>
+                    <span className="text-gray-400 text-xs">• {location}</span>
+                  </div>
+                }
+                name="Chef John"
               />
               <div className="flex flex-col">
                 <div className="flex gap-1 items-center justify-end">

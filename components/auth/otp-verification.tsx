@@ -1,12 +1,18 @@
 "use client";
 
 import React, { useState, useRef, KeyboardEvent } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { ProgressBar } from '@/components/ui/progress-bar';
 import { OTPInput } from '@/components/ui/otp-input';
 import { Button } from '@/components/ui/button';
 
-export const OTPVerification: React.FC = () => {
+interface OTPVerificationProps {
+  onVerificationSuccess?: () => void;
+}
+
+export const OTPVerification: React.FC<OTPVerificationProps> = ({ onVerificationSuccess }) => {
+  const router = useRouter();
   const [otpValues, setOtpValues] = useState<string[]>(['', '', '', '', '', '']);
   const [isResending, setIsResending] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -65,11 +71,27 @@ export const OTPVerification: React.FC = () => {
     }, 2000);
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     const otpCode = otpValues.join('');
     if (otpCode.length === 6) {
-      console.log('OTP Code:', otpCode);
-      // Handle form submission
+      try {
+        // In a real app, you would verify the OTP with your API here
+        console.log('Verifying OTP:', otpCode);
+        
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Call the success callback if provided
+        if (onVerificationSuccess) {
+          onVerificationSuccess();
+        } else {
+          // Default behavior: navigate to dashboard on success
+          router.push('/dashboard');
+        }
+      } catch (error) {
+        console.error('Error verifying OTP:', error);
+        alert('Failed to verify OTP. Please try again.');
+      }
     }
   };
 

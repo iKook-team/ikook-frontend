@@ -1,24 +1,39 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export const LoginForm: React.FC = () => {
+  const router = useRouter();
   const [userType, setUserType] = useState<"host" | "chef">("host");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login attempt:", { userType, email, password });
+    setError("");
+    setIsLoading(true);
+
+    try {
+      // In a real app, you would validate the form and submit to your API
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      router.push("/dashboard");
+    } catch {
+      setError("Invalid email or password. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleForgotPassword = () => {
-    console.log("Forgot password clicked");
+    router.push("/forgot-password");
   };
 
   const handleSignup = () => {
-    console.log("Signup clicked");
+    router.push("/join");
   };
 
   return (
@@ -115,14 +130,14 @@ export const LoginForm: React.FC = () => {
                   </label>
                   <div className="flex items-center gap-2 w-full border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white px-3.5 py-2.5 rounded-lg border-solid border-[#CFCFCE] focus-within:border-[#FCC01C]">
                     <input
+                      className="flex-1 text-[#6F6E6D] text-base font-normal leading-6 bg-transparent border-none outline-none placeholder:text-[#6F6E6D] focus:text-black"
                       id="password"
-                      type={showPassword ? "text" : "password"}
-                      value={password}
+                      minLength={6}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter your password"
-                      className="flex-1 text-[#6F6E6D] text-base font-normal leading-6 bg-transparent border-none outline-none placeholder:text-[#6F6E6D] focus:text-black"
                       required
-                      minLength={6}
+                      type={showPassword ? "text" : "password"}
+                      value={password}
                     />
                     <button
                       type="button"
@@ -153,13 +168,20 @@ export const LoginForm: React.FC = () => {
         {/* Submit Button and Signup Link */}
         <div className="flex w-[508px] flex-col items-center gap-4 absolute h-[87px] left-12 top-[478px] max-md:w-full max-md:relative max-md:left-0 max-md:top-0">
           <button
-            className="text-white text-base font-bold leading-6 gap-2 w-full border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-[#FCC01C] px-[113px] py-3 rounded-lg border-solid border-[#FCC01C] hover:bg-[#e6ac19] transition-colors max-sm:px-5 max-sm:py-3.5"
+            className="text-white text-base font-bold leading-6 gap-2 w-full border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-[#FCC01C] px-[113px] py-3 rounded-lg border-solid border-[#FCC01C] hover:bg-[#e6ac19] transition-colors max-sm:px-5 max-sm:py-3.5 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isLoading}
             form="login-form"
-            type="submit"
             onClick={handleSubmit}
+            type="submit"
           >
-            Login
+            {isLoading ? "Logging in..." : "Login"}
           </button>
+          
+          {error && (
+            <div className="w-full text-red-500 text-sm text-center mt-2">
+              {error}
+            </div>
+          )}
 
           <div className="w-full text-black text-center text-[15px] font-normal max-sm:text-sm">
             <span>Don&apos;t have account, </span>
