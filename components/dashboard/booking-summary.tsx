@@ -10,7 +10,7 @@ export default function BookingSummary() {
   const isEnquiry = "enquiry";
   const isCustom = true;
 
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <aside className="flex flex-col grow justify-center px-8 py-9 mt-9 w-full bg-white rounded-2xl border border-solid shadow-2xl border-[color:var(--Black-100,#E7E7E7)] max-md:px-5 max-md:mt-10">
