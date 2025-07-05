@@ -4,8 +4,11 @@ import React from "react";
 
 import StatusBadge from "./status-badge";
 import MenuSection from "./menu-section";
+import { CustomDetailsForm } from "./custom-details";
 
 export default function BookingDetails() {
+  const user = "chef";
+  const isCustom = true;
   const starterItems = [
     { id: "1", name: "Mediterranean Chicken Kebab with Garlic Sauce" },
     { id: "2", name: "Roasted Red Pepper Greek Yoghurt Hummus" },
@@ -35,7 +38,7 @@ export default function BookingDetails() {
         />
         <div className="flex flex-col grow shrink-0 self-start mt-1.5 basis-0 w-fit">
           <h2 className="text-base font-medium text-zinc-800">
-            Braised Chicken With Lemon and Olives
+            {!isCustom ? "Braised Chicken With Lemon and Olives" : "Custom Booking"}
           </h2>
           <div className="self-start mt-2 text-neutral-500">
             <p className="text-sm font-medium text-neutral-500">
@@ -72,11 +75,15 @@ export default function BookingDetails() {
         </div>
       </article>
 
-      <section className="flex flex-col items-start px-2.5 pt-2.5 pb-6 mt-7 rounded-md bg-stone-50 min-h-[335px] max-md:max-w-full">
+      {!isCustom && <section className="flex flex-col items-start px-2.5 pt-2.5 pb-6 mt-7 rounded-md bg-stone-50 min-h-[335px] max-md:max-w-full">
         <MenuSection title="Starter x2" items={starterItems} />
         <MenuSection title="Main x1" items={mainItems} />
         <MenuSection title="Desert x1" items={dessertItems} />
-      </section>
+      </section>}
+      
+      <div className="px-2.5 pt-2.5 pb-6 mt-7 bg-stone-50 max-md:max-w-full">
+        <CustomDetailsForm />
+      </div>
     </section>
   );
 }

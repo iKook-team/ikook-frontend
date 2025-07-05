@@ -36,16 +36,15 @@ export const JoinForm: React.FC<JoinFormProps> = ({
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate API call
-      
+
       // Call the onSubmit prop if provided
       onSubmit?.(selectedUserType);
-      
+
       // Navigate based on user type
       if (selectedUserType === "host") {
         router.push("/host-signup");
       } else {
-        // TODO: Implement chef signup flow
-        // Placeholder for chef signup implementation
+        router.push("/chef-requirements");
       }
     } catch (_error) {
       // Handle error appropriately in production

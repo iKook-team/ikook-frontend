@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 interface ChefCardProps {
@@ -25,10 +26,12 @@ export const ChefCard: React.FC<ChefCardProps> = ({
     <article className="border border-[color:var(--Black-100,#E7E7E7)] shadow-[0px_4px_70px_0px_rgba(0,0,0,0.07)] bg-white pl-[15px] pr-[76px] py-[13px] rounded-lg border-solid max-md:max-w-full max-md:pr-5">
       <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
         <div className="w-[28%] max-md:w-full max-md:ml-0">
-          <img
-            src={imageUrl}
+          <Image
             alt={dishName}
-            className="aspect-[1.1] object-contain w-[142px] shrink-0 max-w-full grow max-md:mt-[29px]"
+            className="object-contain shrink-0 max-w-full grow max-md:mt-[29px]"
+            height={129}
+            src={imageUrl}
+            width={142}
           />
         </div>
         <div className="w-[72%] ml-5 max-md:w-full max-md:ml-0">
@@ -42,10 +45,12 @@ export const ChefCard: React.FC<ChefCardProps> = ({
               </div>
               <div className="flex gap-2 text-sm mt-1">
                 <div className="flex items-center gap-1 font-normal whitespace-nowrap leading-none">
-                  <img
-                    src={locationIconUrl}
+                  <Image
                     alt="Location"
-                    className="aspect-[1.07] object-contain w-[15px] self-stretch shrink-0 my-auto rounded-lg"
+                    className="object-contain self-stretch shrink-0 my-auto rounded-lg"
+                    height={14}
+                    src={locationIconUrl}
+                    width={15}
                   />
                   <div className="text-[#6F6E6D] self-stretch w-[55px] my-auto">
                     {location}
@@ -53,10 +58,12 @@ export const ChefCard: React.FC<ChefCardProps> = ({
                 </div>
                 <div className="flex items-center">
                   <div className="self-stretch flex items-center gap-1 font-normal whitespace-nowrap leading-none my-auto">
-                    <img
-                      src={ratingIconUrl}
+                    <Image
                       alt="Rating"
-                      className="aspect-[1] object-contain w-[17px] self-stretch shrink-0 my-auto rounded-lg"
+                      className="object-contain self-stretch shrink-0 my-auto rounded-lg"
+                      height={17}
+                      src={ratingIconUrl}
+                      width={17}
                     />
                     <div className="text-[#6F6E6D] self-stretch w-7 my-auto">
                       {rating}

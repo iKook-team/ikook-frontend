@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image"
 
 interface MenuItem {
   id: string;
@@ -23,10 +24,12 @@ export default function MenuSection({ title, items }: MenuSectionProps) {
             className={`flex gap-3 items-center ${index > 0 ? "mt-3" : ""}`}
           >
             <div className="flex justify-center items-center self-stretch my-auto w-5">
-              <img
+              <Image
                 src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/e3c8d396e4c5a0dc750a068ed920c1105cacaf78?placeholderIfAbsent=true"
                 className="object-contain self-stretch my-auto w-5 aspect-square"
                 alt="Checkbox"
+                width={20}
+                height={20}
               />
             </div>
             <p className="self-stretch my-auto text-base text-neutral-700">

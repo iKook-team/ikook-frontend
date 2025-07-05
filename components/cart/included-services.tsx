@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React from "react";
 
 interface Service {
@@ -19,10 +20,12 @@ export const IncludedServices: React.FC<IncludedServicesProps> = ({
       <div className="flex gap-[27px] flex-wrap max-md:max-w-full">
         {services.map((service, index) => (
           <div key={index} className="flex items-center gap-3">
-            <img
+            <Image
+              alt={`${service.name} icon`}
+              className="object-contain self-stretch shrink-0 my-auto"
+              height={20}
               src={service.iconUrl}
-              alt=""
-              className="aspect-[1] object-contain w-5 self-stretch shrink-0 my-auto"
+              width={20}
             />
             <span className="text-[#3F3E3D] self-stretch my-auto">
               {service.name}

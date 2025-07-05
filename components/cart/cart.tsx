@@ -57,7 +57,7 @@ export const Cart: React.FC = () => {
   ];
 
   const handleContinue = () => {
-    console.log("Continue button clicked");
+    // TODO: Implement continue logic
   };
 
   return (
@@ -67,9 +67,9 @@ export const Cart: React.FC = () => {
       <div className="border border-[color:var(--Black-100,#E7E7E7)] shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] flex w-full flex-col items-stretch bg-white mt-2 py-[33px] rounded-[15px] border-solid max-md:max-w-full">
         <div className="flex w-full flex-col items-stretch px-[19px] max-md:max-w-full max-md:pr-5">
           <ChefCard
-            imageUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/231d86006c0dab5ed39c08a8a310d23841a29a6f?placeholderIfAbsent=true"
-            dishName="Braised Chicken With Lemon and Olives"
             chefName="Chef Titilayo John"
+            dishName="Braised Chicken With Lemon and Olives"
+            imageUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/231d86006c0dab5ed39c08a8a310d23841a29a6f?placeholderIfAbsent=true"
             location="London"
             locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
             rating="4.6"
@@ -78,18 +78,13 @@ export const Cart: React.FC = () => {
           />
 
           <MenuSection
-            courses={menuCourses}
-            separatorUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/c5112919cd18c4d749069bc40490d71c0104a44e?placeholderIfAbsent=true"
             checkboxUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/cf65a6606e6871f81a6c7b4d7ef1f12024024702?placeholderIfAbsent=true"
+            courses={menuCourses}
           />
 
           <IncludedServices services={includedServices} />
 
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/4e5e0e8d7af4287197a7d5d0575a23c15b68d216?placeholderIfAbsent=true"
-            alt=""
-            className="aspect-[500] object-contain w-full stroke-[1px] stroke-[#E7E7E7] mt-[15px] max-md:max-w-full"
-          />
+          <hr className="w-full mt-[15px] border-t border-gray-200" />
         </div>
 
         <ContinueButton onClick={handleContinue} />

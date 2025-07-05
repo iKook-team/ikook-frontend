@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Image from "next/image";
 
 interface EventDetailsFormProps {
   onFormChange: (data: EventFormData) => void;
@@ -157,10 +158,12 @@ export const EventDetailsForm: React.FC<EventDetailsFormProps> = ({
       {formData.guests < 40 && (
         <div className="flex w-full flex-col text-xs text-[#3F3E3D] font-normal leading-5 justify-center bg-[#FFFCF5] mt-8 px-5 py-4 rounded-lg max-md:max-w-full">
           <div className="flex items-center gap-3">
-            <img
+            <Image
+              width={20}
+              height={20}
               src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/75d3ec646f092868067adae007d588e6b96a5773?placeholderIfAbsent=true"
-              alt="Warning icon"
-              className="aspect-[1] object-contain w-5 self-stretch shrink-0 my-auto"
+              alt="payment icon"
+              className="object-contain shrink-0 self-stretch my-auto w-5 aspect-square"
             />
             <div className="text-[#3F3E3D] self-stretch my-auto">
               Minimum number of guests for booking this chef is{" "}

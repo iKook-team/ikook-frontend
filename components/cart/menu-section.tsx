@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState } from "react";
 
 interface MenuItem {
@@ -15,19 +16,18 @@ interface MenuCourse {
 
 interface MenuSectionProps {
   courses: MenuCourse[];
-  separatorUrl: string;
   checkboxUrl: string;
 }
 
 export const MenuSection: React.FC<MenuSectionProps> = ({
   courses,
-  separatorUrl,
   checkboxUrl,
 }) => {
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
 
   const handleItemToggle = (itemId: string) => {
     const newSelected = new Set(selectedItems);
+
     if (newSelected.has(itemId)) {
       newSelected.delete(itemId);
     } else {
@@ -47,11 +47,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
           Titilayo John
         </p>
       </div>
-      <img
-        src={separatorUrl}
-        alt=""
-        className="aspect-[500] object-contain w-full stroke-[1px] stroke-[#E7E7E7] mt-3.5 max-md:max-w-full"
-      />
+      <hr className="w-full border-t border-gray-200 mt-3.5" />
       <div className="mt-[22px] max-md:max-w-full">
         {courses.map((course, courseIndex) => (
           <div
@@ -62,11 +58,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
               <h3>
                 {course.title} x{course.quantity}
               </h3>
-              <img
-                src={separatorUrl}
-                alt=""
-                className="aspect-[500] object-contain w-full stroke-[1px] stroke-[#E7E7E7] mt-1.5"
-              />
+              <hr className="w-full border-t border-gray-200 mt-1.5" />
             </div>
             <div className="flex flex-col items-stretch mt-4">
               {course.items.map((item, itemIndex) => (
@@ -75,17 +67,19 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
                   className={`flex items-center gap-3 ${itemIndex > 0 ? "mt-3" : ""}`}
                 >
                   <button
+                    aria-pressed={selectedItems.has(item.id)}
+                    className="self-stretch flex items-center justify-center w-5 my-auto"
                     type="button"
                     onClick={() => handleItemToggle(item.id)}
-                    className="self-stretch flex items-center justify-center w-5 my-auto"
-                    aria-pressed={selectedItems.has(item.id)}
                   >
-                    <img
-                      src={checkboxUrl}
+                    <Image
                       alt={
                         selectedItems.has(item.id) ? "Selected" : "Not selected"
                       }
-                      className="aspect-[1] object-contain w-5 self-stretch my-auto"
+                      className="object-contain self-stretch my-auto"
+                      height={20}
+                      src={checkboxUrl}
+                      width={20}
                     />
                   </button>
                   <label className="text-[#344054] text-base font-medium self-stretch my-auto cursor-pointer">

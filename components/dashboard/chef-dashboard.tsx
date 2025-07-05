@@ -1,13 +1,13 @@
 "use client";
 import React from "react";
-import Image from "next/image";
 
 import { BookingCard, BookingCardProps } from "./booking-card";
+import { DocumentNotification } from "./document-notification"
 
 export const MyBookingsPage: React.FC = () => {
   const bookingData: BookingCardProps[] = [
     {
-      user: "host",
+      user: "chef",
       title: "Large Event",
       date: "August 16, 2023",
       location: "London, UK",
@@ -18,7 +18,7 @@ export const MyBookingsPage: React.FC = () => {
         "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/a432e0085dfc7da10d5e7fc4771e6a4a467731f1?placeholderIfAbsent=true",
     },
     {
-      user: "host",
+      user: "chef",
       title: "Custom booking",
       date: "August 16, 2023",
       location: "London, UK",
@@ -29,7 +29,7 @@ export const MyBookingsPage: React.FC = () => {
         "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/b8d1fae7a7ccc7a59b5d4a9ed0cc5526edcecb05?placeholderIfAbsent=true",
     },
     {
-      user: "host",
+      user: "chef",
       title: "Meal Prep",
       date: "August 16, 2023",
       location: "London, UK",
@@ -40,7 +40,7 @@ export const MyBookingsPage: React.FC = () => {
         "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/a432e0085dfc7da10d5e7fc4771e6a4a467731f1?placeholderIfAbsent=true",
     },
     {
-      user: "host",
+      user: "chef",
       title: "Chef at Home",
       date: "August 16, 2023",
       location: "London, UK",
@@ -52,6 +52,36 @@ export const MyBookingsPage: React.FC = () => {
     },
   ];
 
+  const menuData = [
+    {
+      title: "Grilled Barbeque Dishes",
+      price: "£20pp",
+      category: "Italian",
+      imageUrl:
+        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/39f72e1583ff7edbdd7426c67562575d27d45653?placeholderIfAbsent=true",
+      heartIconUrl:
+        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/b6ccf83f71f5f693e5cbcf516ff7627fecd1bb75?placeholderIfAbsent=true",
+    },
+    {
+      title: "Grilled Barbeque Dishes",
+      price: "£20pp",
+      category: "Italian",
+      imageUrl:
+        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/8d4a08812633ed5981a719d01a6eee00bc2498f7?placeholderIfAbsent=true",
+      heartIconUrl:
+        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/b6faaf6f2a4462f2ab8cd2c5b4f4acfad0e6c106?placeholderIfAbsent=true",
+    },
+    {
+      title: "Grilled Barbeque Dishes",
+      price: "£20pp",
+      category: "Italian",
+      imageUrl:
+        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/eb7e70a6c4aa28cd9b97896fe51eacb521399440?placeholderIfAbsent=true",
+      heartIconUrl:
+        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/70f36abab728018c9c539c178027535244f19736?placeholderIfAbsent=true",
+    },
+  ];
+
   return (
     <div className="flex overflow-hidden flex-col bg-zinc-50">
       <main className="flex flex-col self-center mt-9 w-full max-w-[1114px] max-md:max-w-full">
@@ -59,43 +89,8 @@ export const MyBookingsPage: React.FC = () => {
           My Bookings
         </h1>
 
-        <section className="flex flex-wrap gap-5 justify-between self-center mt-8 max-w-full w-[885px]">
-          <div className="flex flex-col justify-center px-3 py-5 text-xs bg-amber-100 rounded-lg text-neutral-700">
-            <div className="flex gap-3 items-center">
-              <Image
-                alt="Payment refundable icon"
-                className="object-contain shrink-0 self-stretch my-auto"
-                height={20}
-                src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/75d3ec646f092868067adae007d588e6b96a5773?placeholderIfAbsent=true"
-                width={20}
-              />
-              <p className="self-stretch my-auto w-[335px]">
-                Payment is fully refundable{" "}
-                <span style={{ fontWeight: 700 }}>12 days </span>before the
-                event
-              </p>
-            </div>
-          </div>
-          <div className="flex gap-7 items-center px-2 py-2 rounded-lg border border-solid border-[color:var(--Primary,#FCC01C)] min-h-[55px]">
-            <div className="flex flex-col self-stretch my-auto text-xs">
-              <div className="text-neutral-500">Your referral code</div>
-              <div className="flex gap-2 items-center self-start mt-1.5 font-bold text-black whitespace-nowrap">
-                <div className="self-stretch my-auto text-black">
-                  iyabobello
-                </div>
-                <Image
-                  alt="Copy icon"
-                  className="object-contain shrink-0 self-stretch my-auto"
-                  height={14}
-                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/d0176cfe2e7a9a576fe9ccbeeb80e706f305dc2f?placeholderIfAbsent=true"
-                  width={14}
-                />
-              </div>
-            </div>
-            <button className="overflow-hidden gap-2 self-stretch px-4 py-2.5 my-auto text-sm font-semibold leading-none text-white bg-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)]">
-              Check referral
-            </button>
-          </div>
+        <section className="flex self-center mt-8 max-w-full w-[885px]">
+          <DocumentNotification />
         </section>
 
         <nav className="flex gap-4 items-start self-start mt-9 ml-28 text-xs font-medium text-zinc-950 max-md:max-w-full">
@@ -139,6 +134,7 @@ export const MyBookingsPage: React.FC = () => {
             </div>
           </div>
         </section>
+
       </main>
     </div>
   );

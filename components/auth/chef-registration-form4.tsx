@@ -3,28 +3,33 @@
 import React, { useState } from "react";
 
 import { FormField } from "@/components/ui/form-field";
-import { PasswordStrengthIndicator } from "@/components/ui/password-strength-indicator";
 import { ProgressBar } from "@/components/ui/progress-bar";
 
-interface RegistrationFormProps {
+interface ChefRegistrationForm4Props {
   formData: {
-    username?: string;
-    password?: string;
-    confirmPassword?: string;
+    criminalRecord?: string;
+    instagramAccount?: string;
+    website?: string;
   };
   isSubmitting: boolean;
   onSubmit: (data: any) => void;
 }
 
-export const RegistrationForm: React.FC<RegistrationFormProps> = ({
+const criminalRecordOptions = [
+  { value: "no", label: "No" },
+  { value: "yes", label: "Yes" },
+  { value: "prefer-not-to-say", label: "Prefer not to say" },
+];
+
+export const ChefRegistrationForm4: React.FC<ChefRegistrationForm4Props> = ({
   formData: initialFormData,
   isSubmitting,
   onSubmit,
 }) => {
   const [formData, setFormData] = useState({
-    username: initialFormData.username || "",
-    password: initialFormData.password || "",
-    confirmPassword: initialFormData.confirmPassword || "",
+    criminalRecord: initialFormData.criminalRecord || "",
+    instagramAccount: initialFormData.instagramAccount || "",
+    website: initialFormData.website || "",
   });
 
   const [errors, setErrors] = useState<Partial<typeof formData>>({});
@@ -39,14 +44,16 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
   const validate = () => {
     const newErrors: Partial<typeof formData> = {};
 
-    if (!formData.password) {
-      newErrors.password = "Password is required.";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters.";
+    if (!formData.criminalRecord) {
+      newErrors.criminalRecord = "Please select an option.";
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match.";
+    if (formData.website) {
+      try {
+        new URL(formData.website);
+      } catch {
+        newErrors.website = "Please enter a valid URL.";
+      }
     }
 
     return newErrors;
@@ -74,11 +81,11 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
 
       <main className="relative h-[750px] w-[605px] rounded-[15px] border border-solid border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)]">
         <div className="absolute top-[27px] left-0 w-full px-0">
-          <ProgressBar progress={100} />
+          <ProgressBar progress={80} />
         </div>
 
-        <h1 className="absolute top-[51px] left-[49px] h-[29px] w-[275px] text-[19px] font-medium text-black">
-          Create your password
+        <h1 className="absolute top-[51px] left-[49px] h-[29px] w-[350px] text-[19px] font-medium text-black">
+          Thank you Iyabo, Tell us about you?
         </h1>
 
         <form
@@ -86,47 +93,40 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
           onSubmit={handleSubmit}
         >
           <fieldset className="flex w-full flex-col items-start gap-6">
-            <legend className="sr-only">Account Information</legend>
-
+            <legend className="sr-only">Additional Information</legend>
             <FormField
               required
               className="w-full"
-              error={errors.username}
-              label="Username"
-              placeholder="Enter a username"
-              type="text"
-              value={formData.username}
-              onChange={(e) => handleInputChange("username", e.target.value)}
-            />
-
-
-            <FormField
-              required
-              className="w-full"
-              error={errors.password}
-              label="Password"
-              placeholder="Create a password"
-              type="password"
-              value={formData.password}
-              onChange={(e) => handleInputChange("password", e.target.value)}
-            />
-
-            <FormField
-              required
-              className="w-full"
-              error={errors.confirmPassword}
-              label="Confirm Password"
-              placeholder="Confirm your password"
-              type="password"
-              value={formData.confirmPassword}
+              error={errors.criminalRecord}
+              label="Do you have any criminal record?"
+              options={criminalRecordOptions}
+              placeholder="Select"
+              type="select"
+              value={formData.criminalRecord}
               onChange={(e) =>
-                handleInputChange("confirmPassword", e.target.value)
+                handleInputChange("criminalRecord", e.target.value)
               }
             />
 
-            <PasswordStrengthIndicator
-              confirmPassword={formData.confirmPassword}
-              password={formData.password}
+            <FormField
+              className="w-full"
+              label="Cooking images (optional)"
+              placeholder="Link your cooking related Instagram account?"
+              type="text"
+              value={formData.instagramAccount}
+              onChange={(e) =>
+                handleInputChange("instagramAccount", e.target.value)
+              }
+            />
+
+            <FormField
+              className="w-full"
+              error={errors.website}
+              label="Your website (optional)"
+              placeholder="Link your cooking related Website address?"
+              type="url"
+              value={formData.website}
+              onChange={(e) => handleInputChange("website", e.target.value)}
             />
           </fieldset>
 
@@ -136,7 +136,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
               disabled={isSubmitting}
               type="submit"
             >
-              {isSubmitting ? "Submitting..." : "Submit"}
+              {isSubmitting ? "Submitting..." : "Continue"}
             </button>
           </div>
         </form>

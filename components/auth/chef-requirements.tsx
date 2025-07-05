@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 import { WarningCard } from "../ui/warning-card";
 import { RequirementsList } from "../ui/requirements-list";
@@ -12,6 +13,7 @@ interface ChefRequirementData {
 }
 
 export const ChefRequirementsData: React.FC = () => {
+  const router = useRouter();
   const {
     handleSubmit,
     formState: { isSubmitting },
@@ -19,7 +21,8 @@ export const ChefRequirementsData: React.FC = () => {
 
   const onSubmit = async (data: ChefRequirementData) => {
     console.log("Form submitted:", data);
-    // Handle form submission logic here
+    // Navigate to chef signup page
+    router.push("/chef-signup");
   };
 
   const requirements = [
@@ -92,6 +95,7 @@ export const ChefRequirementsData: React.FC = () => {
               disabled={isSubmitting}
               className="flex w-full justify-center items-center gap-2 border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] h-12 bg-[#FCC01C] px-[113px] py-3 rounded-lg border-solid border-[#FCC01C] hover:bg-[#E6AC19] focus:outline-none focus:ring-2 focus:ring-[#FCC01C] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               aria-describedby="continue-button-description"
+              onClick={handleSubmit(onSubmit)}
             >
               <span className="font-semibold text-base text-white leading-6">
                 {isSubmitting ? "Processing..." : "Continue"}

@@ -1,12 +1,13 @@
+import Image from "next/image";
 import React from "react";
 
 export const ChefProfile: React.FC = () => {
   const handleViewProfile = () => {
-    console.log("View profile clicked");
+    // TODO: Implement view profile logic
   };
 
   const handleMessageChef = () => {
-    console.log("Message chef clicked");
+    // TODO: Implement message chef logic
   };
 
   return (
@@ -15,10 +16,12 @@ export const ChefProfile: React.FC = () => {
         <div className="w-6/12 max-md:w-full max-md:ml-0">
           <article className="flex w-full flex-col bg-[#FFFCF5] mx-auto px-[34px] py-7 rounded-lg max-md:max-w-full max-md:mt-9 max-md:px-5">
             <div className="flex items-stretch gap-[19px]">
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/b8c11ad88b00cdfbfd0dac9c16bd04c1ac816df3?placeholderIfAbsent=true"
-                className="aspect-[1] object-contain w-20 shrink-0 rounded-lg"
+              <Image
                 alt="Chef Titilayo John"
+                className="object-contain shrink-0 rounded-lg"
+                height={80}
+                src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/b8c11ad88b00cdfbfd0dac9c16bd04c1ac816df3?placeholderIfAbsent=true"
+                width={80}
               />
               <div className="my-auto">
                 <h3 className="text-[#323335] text-2xl font-semibold leading-none">
@@ -26,10 +29,12 @@ export const ChefProfile: React.FC = () => {
                 </h3>
                 <div className="flex gap-2 text-sm mt-2">
                   <div className="flex items-center gap-1 text-[#3F3E3D] font-normal whitespace-nowrap leading-none">
-                    <img
-                      src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/dfcd46b6803d624324159219dfd8ae78bb76aa0c?placeholderIfAbsent=true"
-                      className="aspect-[1.07] object-contain w-[15px] self-stretch shrink-0 my-auto rounded-lg"
+                    <Image
                       alt="Location"
+                      className="object-contain self-stretch shrink-0 my-auto rounded-lg"
+                      height={14}
+                      src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/dfcd46b6803d624324159219dfd8ae78bb76aa0c?placeholderIfAbsent=true"
+                      width={15}
                     />
                     <span className="text-[#3F3E3D] self-stretch w-[55px] my-auto">
                       London
@@ -37,10 +42,12 @@ export const ChefProfile: React.FC = () => {
                   </div>
                   <div className="flex items-center text-[#323335]">
                     <div className="self-stretch flex items-center gap-1 font-normal whitespace-nowrap leading-none my-auto">
-                      <img
-                        src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/607894db2d671e85c5a1076a938020fc1900cee9?placeholderIfAbsent=true"
-                        className="aspect-[1] object-contain w-[17px] self-stretch shrink-0 my-auto rounded-lg"
+                      <Image
                         alt="Rating"
+                        className="object-contain self-stretch shrink-0 my-auto rounded-lg"
+                        height={17}
+                        src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/607894db2d671e85c5a1076a938020fc1900cee9?placeholderIfAbsent=true"
+                        width={17}
                       />
                       <span className="text-[#323335] self-stretch w-7 my-auto">
                         4.6
@@ -67,40 +74,48 @@ export const ChefProfile: React.FC = () => {
             </p>
             <div className="flex items-center gap-4 text-xs text-[#060605] font-medium mt-6">
               <div className="self-stretch flex items-center gap-[5px] my-auto">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/f200b755364de2e8d4f12a4b91851c38dfd032e5?placeholderIfAbsent=true"
-                  className="aspect-[1] object-contain w-3 self-stretch shrink-0 my-auto"
+                <Image
                   alt="Service"
+                  className="object-contain self-stretch shrink-0 my-auto"
+                  height={12}
+                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/f200b755364de2e8d4f12a4b91851c38dfd032e5?placeholderIfAbsent=true"
+                  width={12}
                 />
                 <span className="text-[#060605] self-stretch my-auto">
                   Chef at Home
                 </span>
               </div>
               <div className="self-stretch flex items-center gap-[5px] my-auto">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/f200b755364de2e8d4f12a4b91851c38dfd032e5?placeholderIfAbsent=true"
-                  className="aspect-[1] object-contain w-3 self-stretch shrink-0 my-auto"
+                <Image
                   alt="Service"
+                  className="object-contain self-stretch shrink-0 my-auto"
+                  height={12}
+                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/f200b755364de2e8d4f12a4b91851c38dfd032e5?placeholderIfAbsent=true"
+                  width={12}
                 />
                 <span className="text-[#060605] self-stretch my-auto">
                   Large Event
                 </span>
               </div>
               <div className="self-stretch flex items-center gap-[5px] my-auto">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/f200b755364de2e8d4f12a4b91851c38dfd032e5?placeholderIfAbsent=true"
-                  className="aspect-[1] object-contain w-3 self-stretch shrink-0 my-auto"
+                <Image
                   alt="Service"
+                  className="object-contain self-stretch shrink-0 my-auto"
+                  height={12}
+                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/f200b755364de2e8d4f12a4b91851c38dfd032e5?placeholderIfAbsent=true"
+                  width={12}
                 />
                 <span className="text-[#060605] self-stretch my-auto">
                   Meal Prep
                 </span>
               </div>
               <div className="self-stretch flex items-center gap-[5px] my-auto">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/f200b755364de2e8d4f12a4b91851c38dfd032e5?placeholderIfAbsent=true"
-                  className="aspect-[1] object-contain w-3 self-stretch shrink-0 my-auto"
+                <Image
                   alt="Service"
+                  className="object-contain self-stretch shrink-0 my-auto"
+                  height={12}
+                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/f200b755364de2e8d4f12a4b91851c38dfd032e5?placeholderIfAbsent=true"
+                  width={12}
                 />
                 <span className="text-[#060605] self-stretch my-auto">
                   +3 More
@@ -108,8 +123,8 @@ export const ChefProfile: React.FC = () => {
               </div>
             </div>
             <button
-              onClick={handleViewProfile}
               className="flex text-sm text-[#344054] font-semibold leading-none mt-[23px] rounded-lg"
+              onClick={handleViewProfile}
             >
               <div className="text-[#344054] self-stretch border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] gap-2 overflow-hidden bg-white px-3.5 py-2 rounded-lg border-solid">
                 View Profile
@@ -121,10 +136,12 @@ export const ChefProfile: React.FC = () => {
           <div className="max-md:max-w-full max-md:mt-9">
             <div className="flex w-full flex-col text-black justify-center bg-[#FFFCF5] px-[26px] py-4 rounded-[15px] max-md:max-w-full max-md:px-5">
               <div className="flex items-center gap-6">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/0815e60f5cfc35b62bcc1074b83551b54a44e6f0?placeholderIfAbsent=true"
-                  className="aspect-[1] object-contain w-[50px] self-stretch shrink-0 my-auto"
+                <Image
                   alt="Available"
+                  className="object-contain w-[50px] self-stretch shrink-0 my-auto"
+                  height={50}
+                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/0815e60f5cfc35b62bcc1074b83551b54a44e6f0?placeholderIfAbsent=true"
+                  width={50}
                 />
                 <div className="self-stretch min-w-60 my-auto">
                   <h4 className="text-base font-semibold">
@@ -145,8 +162,8 @@ export const ChefProfile: React.FC = () => {
                 and the requirements you have.
               </p>
               <button
-                onClick={handleMessageChef}
                 className="flex text-[#344054] leading-none mt-[21px] rounded-lg"
+                onClick={handleMessageChef}
               >
                 <div className="text-[#344054] self-stretch border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] gap-2 overflow-hidden bg-white px-3.5 py-2 rounded-lg border-solid">
                   Message Chef

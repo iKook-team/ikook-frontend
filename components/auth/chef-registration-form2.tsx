@@ -3,28 +3,25 @@
 import React, { useState } from "react";
 
 import { FormField } from "@/components/ui/form-field";
-import { PasswordStrengthIndicator } from "@/components/ui/password-strength-indicator";
 import { ProgressBar } from "@/components/ui/progress-bar";
 
-interface RegistrationFormProps {
+interface ChefRegistrationForm2Props {
   formData: {
-    username?: string;
-    password?: string;
-    confirmPassword?: string;
+    email?: string;
+    phoneNumber?: string;
   };
   isSubmitting: boolean;
   onSubmit: (data: any) => void;
 }
 
-export const RegistrationForm: React.FC<RegistrationFormProps> = ({
+export const ChefRegistrationForm2: React.FC<ChefRegistrationForm2Props> = ({
   formData: initialFormData,
   isSubmitting,
   onSubmit,
 }) => {
   const [formData, setFormData] = useState({
-    username: initialFormData.username || "",
-    password: initialFormData.password || "",
-    confirmPassword: initialFormData.confirmPassword || "",
+    email: initialFormData.email || "",
+    phoneNumber: initialFormData.phoneNumber || "",
   });
 
   const [errors, setErrors] = useState<Partial<typeof formData>>({});
@@ -38,15 +35,19 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
 
   const validate = () => {
     const newErrors: Partial<typeof formData> = {};
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
 
-    if (!formData.password) {
-      newErrors.password = "Password is required.";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters.";
+    if (!formData.email) {
+      newErrors.email = "Email is required.";
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Invalid email address.";
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match.";
+    if (!formData.phoneNumber) {
+      newErrors.phoneNumber = "Phone number is required.";
+    } else if (!phoneRegex.test(formData.phoneNumber)) {
+      newErrors.phoneNumber = "Invalid phone number format.";
     }
 
     return newErrors;
@@ -74,11 +75,11 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
 
       <main className="relative h-[750px] w-[605px] rounded-[15px] border border-solid border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)]">
         <div className="absolute top-[27px] left-0 w-full px-0">
-          <ProgressBar progress={100} />
+          <ProgressBar progress={40} />
         </div>
 
         <h1 className="absolute top-[51px] left-[49px] h-[29px] w-[275px] text-[19px] font-medium text-black">
-          Create your password
+          Contact Information
         </h1>
 
         <form
@@ -86,47 +87,28 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
           onSubmit={handleSubmit}
         >
           <fieldset className="flex w-full flex-col items-start gap-6">
-            <legend className="sr-only">Account Information</legend>
+            <legend className="sr-only">Contact Information</legend>
 
             <FormField
               required
               className="w-full"
-              error={errors.username}
-              label="Username"
-              placeholder="Enter a username"
-              type="text"
-              value={formData.username}
-              onChange={(e) => handleInputChange("username", e.target.value)}
-            />
-
-
-            <FormField
-              required
-              className="w-full"
-              error={errors.password}
-              label="Password"
-              placeholder="Create a password"
-              type="password"
-              value={formData.password}
-              onChange={(e) => handleInputChange("password", e.target.value)}
+              error={errors.email}
+              label="Email Address"
+              placeholder="your.email@example.com"
+              type="email"
+              value={formData.email}
+              onChange={(e) => handleInputChange("email", e.target.value)}
             />
 
             <FormField
               required
               className="w-full"
-              error={errors.confirmPassword}
-              label="Confirm Password"
-              placeholder="Confirm your password"
-              type="password"
-              value={formData.confirmPassword}
-              onChange={(e) =>
-                handleInputChange("confirmPassword", e.target.value)
-              }
-            />
-
-            <PasswordStrengthIndicator
-              confirmPassword={formData.confirmPassword}
-              password={formData.password}
+              error={errors.phoneNumber}
+              label="Phone Number"
+              placeholder="+1 (555) 123-4567"
+              type="tel"
+              value={formData.phoneNumber}
+              onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
             />
           </fieldset>
 
@@ -136,7 +118,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
               disabled={isSubmitting}
               type="submit"
             >
-              {isSubmitting ? "Submitting..." : "Submit"}
+              {isSubmitting ? "Submitting..." : "Continue"}
             </button>
           </div>
         </form>
