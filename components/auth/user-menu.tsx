@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export const UserMenu: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -8,6 +9,9 @@ export const UserMenu: React.FC = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const user = "chef";
+  const router = useRouter();
 
   return (
     <div className="w-[84px] h-12 relative max-sm:w-11 max-sm:h-11">
@@ -42,14 +46,38 @@ export const UserMenu: React.FC = () => {
       {isMenuOpen && (
         <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-[#EBEBEB] rounded-lg shadow-lg z-50">
           <div className="py-2">
+            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100" onClick={() => router.push(user === "chef" ? "/dashboard/chef" : "/dashboard/host")}>
+              Bookings
+            </button>
+            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100" onClick={() => router.push("/menus")}>
+              Menus
+            </button>
             <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
-              Profile
+              Calendar
+            </button>
+            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+              Revenue
+            </button>
+            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+              Discount
+            </button>
+            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+              Review
+            </button>
+            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+              Services
+            </button>
+            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+              Document verification
+            </button>
+            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+              References
             </button>
             <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
               Settings
             </button>
             <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
-              Help
+              Support
             </button>
             <hr className="my-1" />
             <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">

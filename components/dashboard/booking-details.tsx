@@ -7,7 +7,6 @@ import MenuSection from "./menu-section";
 import { CustomDetailsForm } from "./custom-details";
 
 export default function BookingDetails() {
-  const user = "chef";
   const isCustom = true;
   const starterItems = [
     { id: "1", name: "Mediterranean Chicken Kebab with Garlic Sauce" },
@@ -28,7 +27,10 @@ export default function BookingDetails() {
         Chef at Home Booking
       </h1>
 
-      <StatusBadge status="In progress" iconSrc="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/854fbc987f04d5db1e66f0babdee9a8a8d18031e?placeholderIfAbsent=true" />
+      <StatusBadge
+        status="In progress"
+        iconSrc="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/854fbc987f04d5db1e66f0babdee9a8a8d18031e?placeholderIfAbsent=true"
+      />
 
       <article className="flex flex-wrap gap-4 py-2.5 pr-14 pl-2 mt-7 bg-white rounded-md border-solid shadow-2xl border-[0.639px] border-[color:var(--Gray-50,#E7E7E7)] max-md:pr-5">
         <img
@@ -38,7 +40,9 @@ export default function BookingDetails() {
         />
         <div className="flex flex-col grow shrink-0 self-start mt-1.5 basis-0 w-fit">
           <h2 className="text-base font-medium text-zinc-800">
-            {!isCustom ? "Braised Chicken With Lemon and Olives" : "Custom Booking"}
+            {!isCustom
+              ? "Braised Chicken With Lemon and Olives"
+              : "Custom Booking"}
           </h2>
           <div className="self-start mt-2 text-neutral-500">
             <p className="text-sm font-medium text-neutral-500">
@@ -75,12 +79,14 @@ export default function BookingDetails() {
         </div>
       </article>
 
-      {!isCustom && <section className="flex flex-col items-start px-2.5 pt-2.5 pb-6 mt-7 rounded-md bg-stone-50 min-h-[335px] max-md:max-w-full">
-        <MenuSection title="Starter x2" items={starterItems} />
-        <MenuSection title="Main x1" items={mainItems} />
-        <MenuSection title="Desert x1" items={dessertItems} />
-      </section>}
-      
+      {!isCustom && (
+        <section className="flex flex-col items-start px-2.5 pt-2.5 pb-6 mt-7 rounded-md bg-stone-50 min-h-[335px] max-md:max-w-full">
+          <MenuSection title="Starter x2" items={starterItems} />
+          <MenuSection title="Main x1" items={mainItems} />
+          <MenuSection title="Desert x1" items={dessertItems} />
+        </section>
+      )}
+
       <div className="px-2.5 pt-2.5 pb-6 mt-7 bg-stone-50 max-md:max-w-full">
         <CustomDetailsForm />
       </div>

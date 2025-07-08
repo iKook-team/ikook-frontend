@@ -1,9 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { FaStar } from "react-icons/fa";
-import { FaRegHeart } from "react-icons/fa";
-import { Card, CardBody, CardFooter, User, Button } from "@heroui/react";
+import { Button } from "@heroui/react";
+
+import { MenuItem } from "./menus/menu-item";
 
 export const Menu = () => {
   const menus = [
@@ -65,65 +64,11 @@ export const Menu = () => {
     },
   ];
 
-  const router = useRouter();
-
-  const handleMenuClick = (id: number) => {
-    router.push(`/booking/custom?menuId=${id}`);
-  };
-
   return (
     <section className="px-12 max-md:px-6 max-sm:px-4">
       <div className="gap-4 md:gap-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 py-8 justify-items-center">
-        {menus.map(({ id, title, price, img, location }) => (
-          <Card
-            key={id}
-            isPressable
-            className="w-full max-w-xs h-80 cursor-pointer hover:shadow-lg transition-shadow duration-200"
-            shadow="sm"
-            onPress={() => handleMenuClick(id)}
-          >
-            <CardBody
-              className="overflow-visible p-0 relative"
-              style={{
-                backgroundImage: `url(${img})`,
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "cover",
-              }}
-            >
-              <FaRegHeart className="absolute top-2 right-2 text-white text-xl" />
-              <span className="absolute top-2 left-2 bg-white rounded-full px-4 py-1 text-xs">
-                {title}
-              </span>
-              <span className="absolute bottom-2 left-2 text-white text-sm font-semibold">
-                Grilled Barbeque Dishes
-              </span>
-              <span className="absolute bottom-2 right-2 text-yellow-400 text-sm font-bold">
-                &#163;{price}pp
-              </span>
-            </CardBody>
-            <CardFooter className="justify-between items-center">
-              <User
-                avatarProps={{
-                  src: "/chef.png",
-                }}
-                description={
-                  <div className="flex gap-1 items-center">
-                    <FaStar className="text-yellow-400" />
-                    <span className="text-xs">4.9</span>
-                    <span className="text-gray-400 text-xs">• {location}</span>
-                  </div>
-                }
-                name="Chef John"
-              />
-              <div className="flex flex-col">
-                <div className="flex gap-1 items-center justify-end">
-                  <FaStar className="text-yellow-400" />
-                  <span className="text-gray-700">4.6</span>
-                </div>
-                <div className="text-xs text-gray-700">(23 Reviews)</div>
-              </div>
-            </CardFooter>
-          </Card>
+        {menus.map((menu) => (
+          <MenuItem key={menu.id} {...menu} />
         ))}
       </div>
       <Button className="bg-[#FCC01C] text-white flex mx-auto mt-16 mb-24">
