@@ -1,35 +1,61 @@
-"use client";
+import * as React from "react";
 
-import React from "react";
+import { ProgressStep } from "./progress-step";
 
-interface ProgressStep {
+interface Step {
+  id: string;
   label: string;
-  completed: boolean;
+  isCompleted?: boolean;
 }
 
-interface ProgressIndicatorProps {
-  steps: ProgressStep[];
+interface ProgressStepperProps {
+  steps?: Step[];
+  className?: string;
 }
 
-export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ steps }) => {
+const defaultSteps: Step[] = [
+  { id: "details", label: "Details", isCompleted: true },
+  { id: "menu-prices", label: "Menu & prices", isCompleted: true },
+  { id: "menu-images", label: "Menu images", isCompleted: true },
+  { id: "finish-upload", label: "Finish upload", isCompleted: true }
+];
+
+export function ProgressStepper({
+  steps = defaultSteps,
+  className = ""
+}: ProgressStepperProps) {
   return (
-    <div className="flex flex-wrap gap-10 items-start self-center text-xs leading-none text-neutral-700 max-md:max-w-full">
-      {steps.map((step, index) => (
-        <div key={index} className="flex flex-col grow shrink items-start whitespace-nowrap w-[76px]">
-          <div className="flex gap-0.5 items-center">
-            <div className="flex gap-0.5 items-center self-stretch my-auto">
-              <div
-                className={`flex shrink-0 self-stretch my-auto w-1.5 border border-green-600 border-solid stroke-[0.603px] stroke-green-600 ${
-                  step.completed ? "h-[7px]" : "h-1.5"
-                }`}
-              />
-              <div className="self-stretch my-auto text-neutral-700">
-                {step.label}
-              </div>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
+    <section className={`box-border flex gap-16 items-start p-4 w-full max-w-[604px] max-md:flex-wrap max-md:gap-10 max-md:justify-center max-sm:flex-col max-sm:gap-5 max-sm:items-center ${className}`}>
+      {steps.map((step, index) => {
+        let stepClassName = "";
+
+        // Apply specific widths based on step index to match the design
+        switch (index) {
+          case 0:
+            stepClassName = "w-[95px]";
+            break;
+          case 1:
+            stepClassName = "w-[93.1px]";
+            break;
+          case 2:
+            stepClassName = "w-[95px]";
+            break;
+          case 3:
+            stepClassName = "w-[95px]";
+            break;
+          default:
+            stepClassName = "w-[95px]";
+        }
+
+        return (
+          <ProgressStep
+            key={step.id}
+            label={step.label}
+            isCompleted={step.isCompleted}
+            className={stepClassName}
+          />
+        );
+      })}
+    </section>
   );
-};
+}
