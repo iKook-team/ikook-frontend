@@ -55,16 +55,16 @@ export const UserMenu: React.FC = () => {
             <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100" onClick={() => router.push("/calendar")}>
               Calendar
             </button>
-            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100" onClick={() => router.push("/revenue")}>
               Revenue
             </button>
-            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100" onClick={() => router.push("/discount")}>
               Discount
             </button>
-            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100" onClick={() => router.push("/reviews")}>
               Review
             </button>
-            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100" onClick={() => router.push("/services")}>
               Services
             </button>
             <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
