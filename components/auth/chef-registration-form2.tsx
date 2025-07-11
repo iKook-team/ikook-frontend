@@ -4,6 +4,7 @@ import React, { useState } from "react";
 
 import { FormField } from "@/components/ui/form-field";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { PhoneInput } from "@/components/ui/phone-input";
 
 interface ChefRegistrationForm2Props {
   formData: {
@@ -69,7 +70,7 @@ export const ChefRegistrationForm2: React.FC<ChefRegistrationForm2Props> = ({
     <div className="mx-auto my-0 flex w-[603px] flex-col items-start justify-center gap-1.5 p-5">
       <header>
         <h1 className="h-[30px] w-[201px] text-xl font-medium leading-[30px] text-black">
-          Join iKook as a Host
+          Join iKook as a Chef
         </h1>
       </header>
 
@@ -100,16 +101,21 @@ export const ChefRegistrationForm2: React.FC<ChefRegistrationForm2Props> = ({
               onChange={(e) => handleInputChange("email", e.target.value)}
             />
 
-            <FormField
-              required
-              className="w-full"
-              error={errors.phoneNumber}
-              label="Phone Number"
-              placeholder="+1 (555) 123-4567"
-              type="tel"
-              value={formData.phoneNumber}
-              onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
-            />
+            <div className="w-full">
+              <PhoneInput
+                error={errors.phoneNumber}
+                label="Phone Number"
+                placeholder="Enter phone number"
+                required={true}
+                value={formData.phoneNumber}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleInputChange("phoneNumber", e.target.value)
+                }
+                onCountryChange={(_countryCode: string) => {
+                  // Handle country code change if needed
+                }}
+              />
+            </div>
           </fieldset>
 
           <div className="absolute top-[400px] h-12 w-[508px]">

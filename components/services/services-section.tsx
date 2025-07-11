@@ -8,25 +8,28 @@ const services = [
   { name: "Chef at home", defaultActive: true },
   { name: "Fine dining", defaultActive: true },
   { name: "Large event", defaultActive: false },
-  { name: 'Meal prep', defaultActive: false },
-  { name: 'Gormet delivery', defaultActive: false },
-  { name: 'Cooking class', defaultActive: false },
-  { name: 'Corporate dining', defaultActive: false },
-  { name: 'Healthy eating coach', defaultActive: false },
+  { name: "Meal prep", defaultActive: false },
+  { name: "Gormet delivery", defaultActive: false },
+  { name: "Cooking class", defaultActive: false },
+  { name: "Corporate dining", defaultActive: false },
+  { name: "Healthy eating coach", defaultActive: false },
 ];
 
 export const ServicesSection: React.FC = () => {
   const [activeServices, setActiveServices] = useState<Record<string, boolean>>(
-    services.reduce((acc, service) => ({
-      ...acc,
-      [service.name]: service.defaultActive
-    }), {})
+    services.reduce(
+      (acc, service) => ({
+        ...acc,
+        [service.name]: service.defaultActive,
+      }),
+      {}
+    )
   );
 
   const handleServiceToggle = (serviceName: string, isActive: boolean) => {
-    setActiveServices(prev => ({
+    setActiveServices((prev) => ({
       ...prev,
-      [serviceName]: isActive
+      [serviceName]: isActive,
     }));
   };
 

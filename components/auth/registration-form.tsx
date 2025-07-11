@@ -13,12 +13,14 @@ interface RegistrationFormProps {
     confirmPassword?: string;
   };
   isSubmitting: boolean;
+  userType?: "chef" | "host";
   onSubmit: (data: any) => void;
 }
 
 export const RegistrationForm: React.FC<RegistrationFormProps> = ({
   formData: initialFormData,
   isSubmitting,
+  userType = "chef", // Default to 'chef' for backward compatibility
   onSubmit,
 }) => {
   const [formData, setFormData] = useState({
@@ -68,7 +70,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
     <div className="mx-auto my-0 flex w-[603px] flex-col items-start justify-center gap-1.5 p-5">
       <header>
         <h1 className="h-[30px] w-[201px] text-xl font-medium leading-[30px] text-black">
-          Join iKook as a Host
+          {`Join iKook as a ${userType === "chef" ? "Chef" : "Host"}`}
         </h1>
       </header>
 

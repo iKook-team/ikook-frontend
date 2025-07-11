@@ -4,25 +4,27 @@ import React from "react";
 import { useRouter } from "next/navigation";
 
 import { OTPVerification } from "@/components/auth/otp-verification";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 const EmailVerificationPage: React.FC = () => {
   const router = useRouter();
-
+  const { userType: rawUserType } = useAuthStore();
+  const userType =
+    rawUserType === "host" || rawUserType === "chef" ? rawUserType : undefined;
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  const handleSubmit = async (data: { otp: string }) => {
+  const handleSubmit = async (_data: { otp: string }) => {
     setIsSubmitting(true);
     try {
       // In a real app, you would verify the OTP with your API here
-      console.log('Verifying OTP:', data.otp);
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Navigate to dashboard after successful verification
-      router.push("/dashboard");
-    } catch (error) {
-      console.error('Verification failed:', error);
-    } finally {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Always redirect back to the signup page with verified=true
+      // The signup page will handle showing the appropriate form
+      router.push(`/host-signup?verified=true`);
+    } catch {
+      // Error handling would go here in a real app
       setIsSubmitting(false);
     }
   };
@@ -30,7 +32,11 @@ const EmailVerificationPage: React.FC = () => {
   return (
     <div className="w-full min-h-screen relative bg-[#FBFBFB] max-md:w-full max-md:max-w-screen-lg max-md:h-auto max-md:min-h-screen">
       <main className="relative">
-        <OTPVerification isSubmitting={isSubmitting} onSubmit={handleSubmit} />
+        <OTPVerification
+          userType={userType}
+          isSubmitting={isSubmitting}
+          onSubmit={handleSubmit}
+        />
       </main>
     </div>
   );

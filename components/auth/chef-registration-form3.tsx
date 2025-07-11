@@ -19,21 +19,77 @@ interface ChefRegistrationForm3Props {
 
 const countryOptions = [
   { value: "United Kingdom", label: "United Kingdom" },
-  { value: "United States", label: "United States" },
-  { value: "Canada", label: "Canada" },
-  { value: "Australia", label: "Australia" },
-  { value: "Germany", label: "Germany" },
-  { value: "France", label: "France" },
+  { value: "Nigeria", label: "Nigeria" },
+  { value: "South Africa", label: "South Africa" },
 ];
 
-const cityOptions = [
-  { value: "London", label: "London" },
-  { value: "Manchester", label: "Manchester" },
-  { value: "Birmingham", label: "Birmingham" },
-  { value: "Liverpool", label: "Liverpool" },
-  { value: "Leeds", label: "Leeds" },
-  { value: "Sheffield", label: "Sheffield" },
-];
+// City options based on selected country
+interface CityOption {
+  value: string;
+  label: string;
+}
+
+const getCityOptions = (country: string): CityOption[] => {
+  const cities: Record<string, CityOption[]> = {
+    Nigeria: [
+      { value: "Abia", label: "Abia" },
+      { value: "Adamawa", label: "Adamawa" },
+      { value: "Akwa Ibom", label: "Akwa Ibom" },
+      { value: "Anambra", label: "Anambra" },
+      { value: "Bauchi", label: "Bauchi" },
+      { value: "Bayelsa", label: "Bayelsa" },
+      { value: "Benue", label: "Benue" },
+      { value: "Borno", label: "Borno" },
+      { value: "Cross River", label: "Cross River" },
+      { value: "Delta", label: "Delta" },
+      { value: "Ebonyi", label: "Ebonyi" },
+      { value: "Edo", label: "Edo" },
+      { value: "Ekiti", label: "Ekiti" },
+      { value: "Enugu", label: "Enugu" },
+      { value: "FCT", label: "FCT" },
+      { value: "Gombe", label: "Gombe" },
+      { value: "Imo", label: "Imo" },
+      { value: "Jigawa", label: "Jigawa" },
+      { value: "Kaduna", label: "Kaduna" },
+      { value: "Kano", label: "Kano" },
+      { value: "Katsina", label: "Katsina" },
+      { value: "Kebbi", label: "Kebbi" },
+      { value: "Kogi", label: "Kogi" },
+      { value: "Kwara", label: "Kwara" },
+      { value: "Lagos", label: "Lagos" },
+      { value: "Nasarawa", label: "Nasarawa" },
+      { value: "Niger", label: "Niger" },
+      { value: "Ogun", label: "Ogun" },
+      { value: "Ondo", label: "Ondo" },
+      { value: "Oyo", label: "Oyo" },
+      { value: "Plateau", label: "Plateau" },
+      { value: "Rivers", label: "Rivers" },
+      { value: "Sokoto", label: "Sokoto" },
+      { value: "Taraba", label: "Taraba" },
+      { value: "Yobe", label: "Yobe" },
+      { value: "Zamfara", label: "Zamfara" },
+    ],
+    "South Africa": [
+      { value: "Eastern Cape", label: "Eastern Cape" },
+      { value: "Free State", label: "Free State" },
+      { value: "Gauteng", label: "Gauteng" },
+      { value: "Kwazulu Natal", label: "Kwazulu Natal" },
+      { value: "Limpopo", label: "Limpopo" },
+      { value: "Mpumalanga", label: "Mpumalanga" },
+      { value: "North West", label: "North West" },
+      { value: "Northen Cape", label: "Northen Cape" },
+      { value: "Western Cape", label: "Western Cape" },
+    ],
+    "United Kingdom": [
+      { value: "England", label: "England" },
+      { value: "Scotland", label: "Scotland" },
+      { value: "Wales", label: "Wales" },
+      { value: "Northern Ireland", label: "Northern Ireland" },
+    ],
+  };
+
+  return (country && cities[country]) || [];
+};
 
 const workAuthOptions = [
   { value: "yes", label: "Yes, I have the right to work" },
@@ -105,7 +161,7 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
     <div className="mx-auto my-0 flex w-[603px] flex-col items-start justify-center gap-1.5 p-5">
       <header>
         <h1 className="h-[30px] w-[201px] text-xl font-medium leading-[30px] text-black">
-          Join iKook as a Host
+          Join iKook as a Chef
         </h1>
       </header>
 
@@ -140,7 +196,7 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
               className="w-full"
               error={errors.city}
               label="City/State"
-              options={cityOptions}
+              options={getCityOptions(formData.country)}
               placeholder="Select city"
               type="select"
               value={formData.city}

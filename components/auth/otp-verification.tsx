@@ -9,11 +9,14 @@ import { ProgressBar } from "@/components/ui/progress-bar";
 interface OTPVerificationProps {
   isSubmitting: boolean;
   onSubmit: (data: { otp: string }) => void;
+  userType?: "host" | "chef";
+  _otp?: string; // Prefix with underscore since it's not used
 }
 
 export const OTPVerification: React.FC<OTPVerificationProps> = ({
   isSubmitting,
   onSubmit,
+  userType,
 }) => {
   const [otpValues, setOtpValues] = useState<string[]>([
     "",
@@ -70,7 +73,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
   return (
     <div className="mx-auto my-0 flex w-[603px] h-[786px] flex-col items-start justify-center gap-1.5 p-5 max-md:w-full max-md:max-w-[603px] max-md:p-[15px] max-sm:w-full max-sm:p-2.5">
       <header className="mb-1.5 h-[30px] w-[203px] font-medium leading-[30px] text-black text-xl max-sm:text-sm">
-        Join iKook as a Chef
+        Join iKook as a {userType === "host" ? "Host" : "Chef"}
       </header>
 
       <main className="relative h-[750px] w-[605px] rounded-[15px] border border-solid border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] max-md:w-full max-md:max-w-[605px] max-sm:h-auto max-sm:min-h-[650px] max-sm:w-full max-sm:pb-5">
@@ -118,7 +121,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
             </Button>
           </div>
 
-          <div className="mt-6">
+          <div className="mt-80">
             <Button
               className="w-full"
               disabled={!isOTPComplete || isSubmitting}

@@ -84,6 +84,8 @@ export const ServiceSelection: React.FC<ServiceSelectionProps> = ({
           {services.map((service, index) => (
             <div
               key={index}
+              role="button"
+              tabIndex={0}
               onClick={() => handleServiceSelect(service.title)}
               className={`cursor-pointer transition-all duration-200 ${selectedService === service.title ? "ring-2 ring-amber-400 rounded-lg" : ""}`}
             >

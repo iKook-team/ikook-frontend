@@ -75,7 +75,7 @@ export const ChefRegistrationForm4: React.FC<ChefRegistrationForm4Props> = ({
     <div className="mx-auto my-0 flex w-[603px] flex-col items-start justify-center gap-1.5 p-5">
       <header>
         <h1 className="h-[30px] w-[201px] text-xl font-medium leading-[30px] text-black">
-          Join iKook as a Host
+          Join iKook as a Chef
         </h1>
       </header>
 

@@ -1,20 +1,21 @@
 import React, { forwardRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
-interface PhoneInputProps {
+interface PhoneInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   placeholder: string;
   required?: boolean;
   error?: string;
   className?: string;
   onCountryChange?: (country: string) => void;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const countries = [
   { code: "NG", name: "Nigeria", flag: "🇳🇬" },
-  { code: "US", name: "United States", flag: "🇺🇸" },
   { code: "UK", name: "United Kingdom", flag: "🇬🇧" },
-  { code: "CA", name: "Canada", flag: "🇨🇦" },
+  { code: "ZA", name: "South Africa", flag: "🇿🇦" },
 ];
 
 export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
@@ -48,9 +49,9 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
         <div className="flex items-start gap-0 w-full border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white rounded-lg border-solid border-[#CFCFCE] focus-within:ring-2 focus-within:ring-[#FCC01C] focus-within:border-[#FCC01C]">
           <div className="relative">
             <button
-              type="button"
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className="flex justify-between items-center pl-3.5 pr-3 py-2.5 border-r border-[#CFCFCE] hover:bg-gray-50 focus:outline-none"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              type="button"
             >
               <span className="text-[#101828] text-base font-normal leading-6 max-sm:text-[15px]">
                 {selectedCountry.code}
@@ -79,10 +80,13 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
 
           <input
             ref={ref}
-            type="tel"
+            className="flex-1 text-[#6F6E6D] text-base font-normal leading-6 pl-4 pr-3.5 py-2.5 bg-transparent border-none focus:outline-none placeholder:text-[#6F6E6D] max-sm:text-[15px]"
+            disabled={props.disabled}
+            onChange={props.onChange}
             placeholder={placeholder}
-            className="flex-1 text-[#6F6E6D] text-base font-normal leading-6 pl-0 pr-3.5 py-2.5 bg-transparent border-none focus:outline-none placeholder:text-[#6F6E6D] max-sm:text-[15px]"
-            {...props}
+            required={required}
+            type="tel"
+            value={props.value}
           />
         </div>
         {error && <span className="text-red-500 text-sm">{error}</span>}

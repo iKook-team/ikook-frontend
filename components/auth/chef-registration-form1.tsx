@@ -18,11 +18,7 @@ interface ChefRegistrationForm1Props {
 
 const serviceOptions = [
   { value: "Chef", label: "Chef" },
-  { value: "Sous Chef", label: "Sous Chef" },
-  { value: "Pastry Chef", label: "Pastry Chef" },
-  { value: "Line Cook", label: "Line Cook" },
-  { value: "Prep Cook", label: "Prep Cook" },
-  { value: "Kitchen Manager", label: "Kitchen Manager" },
+  { value: "Box Groceries", label: "Box Groceries" },
 ];
 
 export const ChefRegistrationForm1: React.FC<ChefRegistrationForm1Props> = ({
@@ -88,7 +84,7 @@ export const ChefRegistrationForm1: React.FC<ChefRegistrationForm1Props> = ({
     <div className="mx-auto my-0 flex w-[603px] flex-col items-start justify-center gap-1.5 p-5">
       <header>
         <h1 className="h-[30px] w-[201px] text-xl font-medium leading-[30px] text-black">
-          Join iKook as a Host
+          Join iKook as a Chef
         </h1>
       </header>
 
@@ -135,7 +131,7 @@ export const ChefRegistrationForm1: React.FC<ChefRegistrationForm1Props> = ({
               className="w-full"
               error={errors.dateOfBirth}
               label="Date of Birth"
-              placeholder="17/01/1990"
+              placeholder="13/08/1990"
               type="date"
               value={formData.dateOfBirth}
               onChange={(e) => handleInputChange("dateOfBirth", e.target.value)}

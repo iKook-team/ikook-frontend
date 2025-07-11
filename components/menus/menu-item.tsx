@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { FaStar, FaRegHeart } from "react-icons/fa";
 import { Card, CardBody, CardFooter, User } from "@heroui/react";
 
@@ -19,18 +18,10 @@ export const MenuItem = ({
   img,
   location,
 }: MenuItemProps) => {
-  const router = useRouter();
-
-  const handleMenuClick = (id: number) => {
-    router.push(`/booking/custom?menuId=${id}`);
-  };
-
   return (
     <Card
-      isPressable
-      className="w-full max-w-lg h-80 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+      className="w-full max-w-lg h-80 hover:shadow-lg transition-shadow duration-200"
       shadow="sm"
-      onPress={() => handleMenuClick(id)}
     >
       <CardBody
         className="overflow-visible p-0 relative"

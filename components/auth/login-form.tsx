@@ -37,15 +37,15 @@ export const LoginForm: React.FC = () => {
   };
 
   return (
-    <section className="w-[603px] h-[786px] absolute left-[419px] top-[193px] max-md:w-[90%] max-md:max-w-[500px] max-md:-translate-x-2/4 max-md:left-2/4 max-md:top-[120px] max-sm:w-[95%] max-sm:top-[100px]">
-      <h1 className="text-black text-xl font-normal leading-[30px] absolute w-[219px] h-[30px] left-0 top-0 max-sm:text-lg max-sm:text-center max-sm:w-full max-sm:left-0">
+    <section className="w-full">
+      <h1 className="text-black text-xl font-normal leading-[30px] w-[219px] h-[30px] mb-2 max-sm:text-lg max-sm:text-center max-sm:w-full">
         Login to your account
       </h1>
 
-      <div className="flex w-[605px] h-[750px] flex-col items-center border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] absolute bg-white pl-[49px] pr-12 pt-[41px] pb-[671px] rounded-[15px] border-solid border-[#E7E7E7] left-0 top-9 max-md:w-full max-md:h-auto max-md:px-6 max-md:py-8 max-sm:px-4 max-sm:py-6 max-sm:rounded-xl">
+      <div className="flex w-full flex-col items-center border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] bg-white pl-[49px] pr-12 pt-[41px] pb-16 rounded-[15px] border-solid border-[#E7E7E7] min-h-[600px] max-md:px-6 max-md:py-8 max-sm:px-4 max-sm:py-6 max-sm:rounded-xl">
         {/* User Type Toggle */}
-        <div className="w-[508px] h-[38px] absolute left-[49px] top-[41px] max-md:w-full max-md:relative max-md:mb-8 max-md:left-0 max-md:top-0 max-sm:mb-6">
-          <div className="w-[509px] h-[38px] absolute bg-[#CFCFCE] rounded-[4.547px] left-0 top-0 max-md:w-full" />
+        <div className="w-full max-w-[508px] mb-10 relative">
+          <div className="w-full h-[38px] bg-[#CFCFCE] rounded-[4.547px] absolute left-0 top-0" />
 
           <button
             type="button"
@@ -89,7 +89,7 @@ export const LoginForm: React.FC = () => {
         {/* Login Form */}
         <form
           onSubmit={handleSubmit}
-          className="flex w-[508px] flex-col items-start gap-4 absolute h-[211px] left-[49px] top-[185px] max-md:w-full max-md:relative max-md:mb-6 max-md:left-0 max-md:top-0 max-sm:gap-3 max-sm:mb-5"
+          className="flex w-full max-w-[508px] flex-col items-start gap-4 mt-16 mb-6 max-sm:gap-3"
         >
           <div className="flex flex-col items-start gap-8 max-sm:gap-6 w-full">
             {/* Email/Phone Field */}
@@ -100,7 +100,7 @@ export const LoginForm: React.FC = () => {
                     htmlFor="email"
                     className="text-[#344054] text-sm font-normal leading-5"
                   >
-                    Email/Phone
+                    Email
                   </label>
                   <div className="flex items-center gap-2 w-full border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white px-3.5 py-2.5 rounded-lg border-solid border-[#CFCFCE] focus-within:border-[#FCC01C]">
                     <input
@@ -108,7 +108,7 @@ export const LoginForm: React.FC = () => {
                       type="text"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email address or phone number"
+                      placeholder="Enter your email address"
                       className="flex-1 text-[#6F6E6D] text-base font-normal leading-6 bg-transparent border-none outline-none placeholder:text-[#6F6E6D] focus:text-black"
                       required
                       aria-describedby="email-help"

@@ -104,6 +104,7 @@ const ChefSignupPage: React.FC = () => {
           <RegistrationForm
             formData={formData}
             isSubmitting={isSubmitting}
+            userType="chef"
             onSubmit={handleNext}
           />
         );

@@ -59,7 +59,7 @@ export const JoinForm: React.FC<JoinFormProps> = ({
 
   return (
     <main className="max-w-none flex flex-col justify-center items-start gap-1.5 w-[603px] h-[786px] box-border mx-auto my-0 p-5 max-md:max-w-[500px] max-md:w-full max-md:p-[15px] max-sm:max-w-screen-sm max-sm:w-full max-sm:p-2.5">
-      <header className="text-black text-xl font-medium leading-[30px] w-[104px] h-[30px] mb-9 max-sm:text-lg max-sm:mb-5">
+      <header className="text-black text-xl font-medium leading-[30px] w-[104px] h-[30px] mb-1 max-sm:text-lg max-sm:mb-5">
         Join iKooK
       </header>
 
