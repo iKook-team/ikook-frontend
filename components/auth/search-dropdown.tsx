@@ -8,7 +8,7 @@ export const SearchDropdown: React.FC = () => {
   const [guests, setGuests] = useState("");
 
   const handleSearch = () => {
-    console.log("Searching with:", { location, eventDate, guests });
+    // Debug logging removed
   };
 
   return (

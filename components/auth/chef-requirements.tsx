@@ -20,7 +20,7 @@ export const ChefRequirementsData: React.FC = () => {
   } = useForm<ChefRequirementData>();
 
   const onSubmit = async (data: ChefRequirementData) => {
-    console.log("Form submitted:", data);
+    // Debug logging removed
     // Navigate to chef signup page
     router.push("/chef-signup");
   };

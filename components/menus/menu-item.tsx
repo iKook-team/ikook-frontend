@@ -12,7 +12,7 @@ interface MenuItemProps {
 }
 
 export const MenuItem = ({
-  id,
+  id: _id,
   title,
   price,
   img,

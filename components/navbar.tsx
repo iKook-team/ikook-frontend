@@ -1,13 +1,12 @@
 "use client";
 
+import React, { useState } from "react";
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
   NavbarBrand,
   NavbarItem,
-  NavbarMenu,
   NavbarMenuItem,
-  NavbarMenuToggle,
 } from "@heroui/navbar";
 import { Button, Link, Input, Divider, Image } from "@heroui/react";
 import { FiShoppingCart } from "react-icons/fi";
@@ -19,8 +18,20 @@ import { FiUser } from "react-icons/fi";
 import {
   Logo,
 } from "@/components/icons";
+import { useAuthStore } from "@/lib/store/auth-store";
+import { UserMenu } from "@/components/auth/user-menu";
 
 export const Navbar = () => {
+  const { isAuthenticated, isInitialized, user } = useAuthStore();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Only render after auth is initialized
+  if (!isInitialized) {
+    return null;
+  }
+
+  // --- IMPORTANT: Only one of login or user menu should ever render! ---
+
   const searchInput = (
     <div className="w-full border-1 rounded-full flex flex-col md:flex-row justify-between items-center p-1 md:py-1 md:px-2 gap-2 shadow">
       <Input
@@ -80,7 +91,14 @@ export const Navbar = () => {
             <FiShoppingCart />
           </Button>
 
-          <NavbarMenuToggle className="ml-2" />
+          <Button
+            isIconOnly
+            variant="light"
+            className="ml-2 text-xl"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <IoMenu />
+          </Button>
         </NavbarItem>
       </NavbarContent>
 
@@ -98,7 +116,13 @@ export const Navbar = () => {
       >
         <NavbarItem className="flex items-center gap-3">
           <FiShoppingCart />
-          <Link className="text-sm text-gray-800">Login</Link>
+          {isAuthenticated ? (
+            <UserMenu />
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link href="/login" className="text-sm text-gray-800">Login</Link>
+            </div>
+          )}
         </NavbarItem>
         <NavbarItem className="flex items-center gap-2">
           <Button
@@ -120,26 +144,47 @@ export const Navbar = () => {
       </NavbarContent>
 
       {/* Mobile Menu */}
-      <NavbarMenu>
-        <div className="p-4">
-          {searchInput}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-white pt-20">
+          <div className="p-4">
+            {searchInput}
+          </div>
+          <NavbarMenuItem>
+            <Link 
+              href="/cart" 
+              className="w-full text-gray-800 py-2 flex items-center gap-2 px-4 hover:bg-gray-100"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <FiShoppingCart />
+              <span>Cart</span>
+            </Link>
+          </NavbarMenuItem>
+          <NavbarMenuItem>
+            {isAuthenticated ? (
+              <div className="w-full">
+                <UserMenu />
+              </div>
+            ) : (
+              <Link 
+                href="/login" 
+                className="w-full text-gray-800 py-3 px-4 block hover:bg-gray-100"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Logi
+              </Link>
+            )}
+          </NavbarMenuItem>
+          <NavbarMenuItem className="flex items-center gap-2 py-2 px-4">
+            <Image
+              src="/usflag.png"
+              alt="flag"
+              width={22}
+              height={22}
+              className="rounded-full"
+            />
+          </NavbarMenuItem>
         </div>
-        <NavbarMenuItem>
-          <Link className="w-full text-gray-800 py-2 flex items-center gap-2">
-            <FiShoppingCart />
-            Login
-          </Link>
-        </NavbarMenuItem>
-        <NavbarMenuItem className="flex items-center gap-2 py-2">
-          <Image
-            src="/usflag.png"
-            alt="flag"
-            width={22}
-            height={22}
-            className="rounded-full"
-          />
-        </NavbarMenuItem>
-      </NavbarMenu>
+      )}
     </HeroUINavbar>
   );
 };

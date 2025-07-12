@@ -19,26 +19,29 @@ const services: Service[] = [
   { id: "large-event", name: "Large Event", category: "menu" },
   { id: "meal-prep", name: "Meal Prep", category: "menu" },
   { id: "meal-delivery", name: "Meal Delivery", category: "menu" },
-  { id: "cooking-class", name: "Cooking Class", category: "menu" },
   { id: "fine-dining", name: "Fine Dining", category: "menu" },
   { id: "corporate-dining", name: "Corporate Dining", category: "menu" },
+  { id: "cooking-class", name: "Cooking Class", category: "service" },
   { id: "eating-coach", name: "Eating Coach", category: "service" },
   { id: "box-groceries", name: "Box Groceries", category: "service" },
   { id: "chefs", name: "CHEFS", category: "profile" },
 ];
 
-export function Services() {
+interface ServicesProps {
+  selectedService: string;
+  onServiceChange: (serviceId: string) => void;
+}
+
+export function Services({ selectedService, onServiceChange }: ServicesProps) {
   const router = useRouter();
+  const [isFilterOpen, setIsFilterOpen] = React.useState<boolean>(false);
 
   const handleCustomBookingClick = () => {
     router.push('/booking/custom');
   };
-  const [activeService, setActiveService] =
-    React.useState<string>("chef-at-home");
-  const [isFilterOpen, setIsFilterOpen] = React.useState<boolean>(false);
 
   const handleServiceClick = (serviceId: string) => {
-    setActiveService(serviceId);
+    onServiceChange(serviceId);
   };
 
   const handleFilterClick = () => {
@@ -61,9 +64,9 @@ export function Services() {
           {services.map((service) => (
             <ServiceButton
               key={service.id}
-              isActive={activeService === service.id}
+              isActive={selectedService === service.id}
               onClick={() => handleServiceClick(service.id)}
-              aria-pressed={activeService === service.id}
+              aria-pressed={selectedService === service.id}
               aria-label={`Select ${service.name} service`}
             >
               {service.name}
@@ -89,7 +92,7 @@ export function Services() {
       <div className="px-12 max-md:px-6 max-sm:px-4 w-full">
         <div className="flex flex-col md:flex-row gap-4 md:items-center w-full max-w-[1440px] mx-auto">
           <h1 className="text-xl font-bold w-full md:w-1/4">
-            {services.find((service) => service.id === activeService)?.name}
+            {services.find((service) => service.id === selectedService)?.name}
           </h1>
 
           <div className="w-full md:w-2/4 flex justify-between items-center rounded-full border-1 py-2 px-4">

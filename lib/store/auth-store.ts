@@ -1,6 +1,21 @@
 import { create } from 'zustand';
+import { clearToken, getToken, isAuthenticated } from '@/src/lib/auth';
+import { authService } from '@/lib/api/auth';
 
 type UserType = 'host' | 'chef' | null;
+
+interface User {
+  id: number;
+  email: string;
+  user_type: 'Host' | 'Chef';
+  username: string;
+  is_active: boolean;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  access_token: string;
+  refresh_token: string;
+}
 
 interface HostFormData {
   firstName: string;
@@ -29,9 +44,15 @@ interface ChefFormData {
 
 interface AuthState {
   userType: UserType;
+  user: User | null;
+  isAuthenticated: boolean;
+  isInitialized: boolean;
   hostFormData: HostFormData | null;
   chefFormData: ChefFormData | null;
   setUserType: (type: UserType) => void;
+  setUser: (user: User) => void;
+  logout: () => void;
+  initializeAuth: () => void;
   setHostFormData: (data: HostFormData) => void;
   setChefFormData: (data: ChefFormData) => void;
   clearUserType: () => void;
@@ -39,11 +60,110 @@ interface AuthState {
   clearChefFormData: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+// Helper function to save user data to localStorage
+const saveUserToStorage = (user: User) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem('ikook_user_data', JSON.stringify(user));
+  }
+};
+
+// Helper function to get user data from localStorage
+const getUserFromStorage = (): User | null => {
+  if (typeof window !== "undefined") {
+    const userData = localStorage.getItem('ikook_user_data');
+    if (userData) {
+      try {
+        return JSON.parse(userData);
+      } catch (error) {
+        console.error('Failed to parse user data from localStorage:', error);
+        return null;
+      }
+    }
+  }
+  return null;
+};
+
+// Helper function to clear user data from localStorage
+const clearUserFromStorage = () => {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem('ikook_user_data');
+  }
+};
+
+export const useAuthStore = create<AuthState>((set, get) => ({
   userType: null,
+  user: null,
+  isAuthenticated: false,
+  isInitialized: false,
   hostFormData: null,
   chefFormData: null,
-  setUserType: (type) => set({ userType: type }),
+  setUserType: (type) => {
+    // Debug logging removed
+    set({ userType: type });
+  },
+  setUser: (user) => {
+    // Debug logging removed
+    // Save user data to localStorage for persistence
+    saveUserToStorage(user);
+    set({ 
+      user, 
+      isAuthenticated: true, 
+      userType: user.user_type === 'Host' ? 'host' : 'chef' 
+    });
+    // Debug logging removed
+  },
+  logout: () => {
+    // Debug logging removed
+    clearToken();
+    clearUserFromStorage();
+    set({ user: null, isAuthenticated: false, userType: null });
+    // Debug logging removed
+  },
+  initializeAuth: () => {
+    // Debug logging removed
+    // Check if user has existing tokens
+    const hasToken = isAuthenticated();
+    // Debug logging removed
+    
+    if (hasToken) {
+      // Try to get user data from localStorage first
+      const userData = getUserFromStorage();
+      // Debug logging removed
+      
+      if (userData) {
+        // We have both token and user data, restore the session
+        set({ 
+          user: userData, 
+          isAuthenticated: true, 
+          userType: userData.user_type === 'Host' ? 'host' : 'chef',
+          isInitialized: true 
+        });
+        // Debug logging removed
+        
+        // Skip token validation for now to avoid 500 errors
+        // The token will be validated on the next API call that requires it
+        // Debug logging removed
+      } else {
+        // We have token but no user data, set basic authenticated state
+        set({ 
+          isAuthenticated: true, 
+          isInitialized: true 
+        });
+        // Debug logging removed
+      }
+    } else {
+      // No token, clear everything
+      clearUserFromStorage();
+      set({ 
+        user: null, 
+        isAuthenticated: false, 
+        userType: null, 
+        isInitialized: true 
+      });
+      // Debug logging removed
+    }
+    // Debug logging removed
+  },
   setHostFormData: (data) => set({ hostFormData: data }),
   setChefFormData: (data) => set({ chefFormData: data }),
   clearUserType: () => set({ userType: null }),

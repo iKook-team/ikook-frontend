@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { OTPVerification } from "@/components/auth/otp-verification";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { authService } from "@/lib/api/auth";
+import { showToast, handleApiError } from "@/lib/utils/toast";
 
 const EmailVerificationPage: React.FC = () => {
   const router = useRouter();
@@ -22,8 +23,11 @@ const EmailVerificationPage: React.FC = () => {
       if (!email) {
         throw new Error("Email not found in form data");
       }
-      
+
       await authService.verifyOtp(email, data.otp);
+
+      // Show success toast
+      showToast.success("Email verified successfully!");
 
       // Redirect back to the appropriate signup page with verified=true
       if (userType === "host") {
@@ -32,8 +36,7 @@ const EmailVerificationPage: React.FC = () => {
         router.push(`/chef-signup?verified=true`);
       }
     } catch (error) {
-      console.error("OTP verification failed:", error);
-      alert("Invalid verification code. Please try again.");
+      handleApiError(error, "Invalid verification code. Please try again.");
       setIsSubmitting(false);
     }
   };

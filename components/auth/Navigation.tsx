@@ -1,10 +1,15 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 
 import { SearchDropdown } from "./search-dropdown";
 import { UserMenu } from "./user-menu";
 
+import { useAuthStore } from "@/lib/store/auth-store";
+
 export const Navigation: React.FC = () => {
+  const { isAuthenticated } = useAuthStore();
   return (
     <nav className="w-full h-[117px] relative max-md:h-20 max-sm:h-[70px]">
       <div className="w-full h-[117px] shadow-[0px_4px_30px_0px_rgba(0,0,0,0.05)] absolute bg-white left-0 top-0 max-md:h-20 max-sm:h-[70px]" />
@@ -28,6 +33,7 @@ export const Navigation: React.FC = () => {
       {/* Right Side Menu */}
       <div className="inline-flex items-center gap-[38px] absolute w-[242px] h-12 left-[1151px] top-[26px] max-md:w-auto max-md:gap-5 max-md:left-auto max-md:right-6 max-md:top-4 max-sm:gap-4 max-sm:right-4 max-sm:top-[13px]">
         <div className="flex items-start gap-6 max-md:gap-4">
+          {/* Cart icon temporarily disabled
           <button className="w-6 h-6" aria-label="Shopping cart">
             <div
               dangerouslySetInnerHTML={{
@@ -36,14 +42,18 @@ export const Navigation: React.FC = () => {
               }}
             />
           </button>
-          <Link href="/login">
-            <button className="text-[#222] text-sm font-normal leading-5">
-              Login
-            </button>
-          </Link>
-        </div>
+          */}
 
-        <UserMenu />
+          {isAuthenticated ? (
+            <UserMenu />
+          ) : (
+            <Link href="/login">
+              <button className="text-[#222] text-sm font-normal leading-5">
+                Login
+              </button>
+            </Link>
+          )}
+        </div>
 
         {/* Language Selector */}
         <button

@@ -2,11 +2,11 @@ import React from "react";
 
 export const HeroSection: React.FC = () => {
   const handleShare = () => {
-    console.log("Share clicked");
+    // Debug logging removed
   };
 
   const handleSave = () => {
-    console.log("Save clicked");
+    // Debug logging removed
   };
 
   return (

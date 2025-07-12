@@ -9,6 +9,7 @@ import { FormField } from "@/components/ui/form-field";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { authService } from "@/lib/api/auth";
+import { showToast, handleApiError } from "@/lib/utils/toast";
 
 interface FormData {
   firstName: string;
@@ -51,11 +52,13 @@ export const HostRegistrationForm: React.FC = () => {
       // Send OTP to email using the real API
       await authService.sendOtp(data.email);
       
+      // Show success toast
+      showToast.success("Verification code sent to your email");
+      
       // Navigate to email verification page
       router.push("/email-verification");
     } catch (error) {
-      console.error("Registration error:", error);
-      alert("Failed to send verification code. Please try again.");
+      handleApiError(error, "Failed to send verification code. Please try again.");
     }
   };
 
@@ -69,19 +72,21 @@ export const HostRegistrationForm: React.FC = () => {
     Object.keys(errors).length === 0;
 
   return (
-    <div className="max-w-none flex flex-col justify-center items-start gap-1.5 w-[603px] min-h-[850px] mx-auto my-0 p-5 max-md:max-w-[603px] max-md:w-full max-md:p-4 max-sm:max-w-screen-sm max-sm:p-3">
-      <h1 className="text-black text-xl font-medium leading-[30px] w-[201px] h-[30px] max-sm:text-lg">
-        Join iKook as a Host
-      </h1>
+    <div className="mx-auto my-0 flex w-[603px] flex-col items-start justify-center gap-1.5 p-5">
+      <header>
+        <h1 className="h-[30px] w-[201px] text-xl font-medium leading-[30px] text-black">
+          Join iKook as a Host
+        </h1>
+      </header>
 
-      <div className="w-[605px] min-h-[750px] border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] relative bg-white rounded-[15px] border-solid border-[#E7E7E7] max-md:w-full pb-8">
-        <div className="absolute left-0 top-[27px] w-full px-0">
+      <main className="relative h-[750px] w-[605px] rounded-[15px] border border-solid border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)]">
+        <div className="absolute top-[27px] left-0 w-full px-0">
           <ProgressBar progress={25} />
         </div>
 
-        <h2 className="text-black text-[19px] font-medium absolute w-[267px] h-[29px] left-[49px] top-[51px] max-md:text-lg max-md:left-8 max-sm:text-[17px] max-sm:left-6 max-sm:top-[45px]">
-          Hi there, Let get to know you
-        </h2>
+        <h1 className="absolute top-[51px] left-[49px] h-[29px] w-[275px] text-[19px] font-medium text-black">
+          Personal Information
+        </h1>
 
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -136,44 +141,39 @@ export const HostRegistrationForm: React.FC = () => {
               className="w-full"
             />
 
-            <div className="w-full">
-              <PhoneInput
-                error={errors.phoneNumber?.message}
-                label="Phone Number"
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setValue("phoneNumber", value, { shouldValidate: true });
-                  if (value.trim()) {
-                    clearErrors("phoneNumber");
-                  }
-                }}
-                onCountryChange={(country) => {
-                  setCountryCode(country);
-                  trigger("phoneNumber");
-                }}
-                placeholder="810 166 7299"
-                required
-                value={watch("phoneNumber")}
-              />
-            </div>
+            <PhoneInput
+              label="Phone Number"
+              placeholder="Enter your phone number"
+              required
+              value={formValues.phoneNumber}
+              onChange={(e) => {
+                setValue("phoneNumber", e.target.value);
+                clearErrors("phoneNumber");
+              }}
+              onCountryChange={(code) => setCountryCode(code)}
+              error={errors.phoneNumber?.message}
+              className="w-full"
+            />
 
             <FormField
-              label="Referral Code (optional)"
-              placeholder="Enter code"
+              label="Referral Code (Optional)"
+              placeholder="Enter referral code"
               {...register("referralCode")}
               className="w-full"
             />
           </fieldset>
 
-          <button
-            type="submit"
-            disabled={isSubmitting || !isFormValid}
-            className="text-white text-base font-semibold leading-6 w-full gap-2 border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] h-12 cursor-pointer bg-[#FCC01C] px-6 py-3 rounded-lg border-solid border-[#FCC01C] mt-[100px] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#E6AC19] transition-colors max-md:px-6 max-md:py-3 max-sm:text-[15px] max-sm:px-6 max-sm:py-3.5 max-sm:mt-8"
-          >
-            {isSubmitting ? "Processing..." : "Continue"}
-          </button>
+          <div className="absolute top-[400px] h-12 w-[508px]">
+            <button
+              className="h-12 w-full cursor-pointer gap-2 rounded-lg border border-solid border-[#FCC01C] bg-[#FCC01C] px-4 py-3 text-base font-semibold leading-6 text-white shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] disabled:cursor-not-allowed disabled:bg-gray-400"
+              disabled={!isFormValid || isSubmitting}
+              type="submit"
+            >
+              {isSubmitting ? "Sending..." : "Continue"}
+            </button>
+          </div>
         </form>
-      </div>
+      </main>
     </div>
   );
 };

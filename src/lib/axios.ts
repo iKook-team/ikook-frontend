@@ -1,15 +1,10 @@
-import axios from "axios";
+import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from "axios";
 
-type AxiosInstance = import("axios").AxiosInstance;
-type AxiosResponse<T = any> = import("axios").AxiosResponse<T>;
-type AxiosError<T = any> = import("axios").AxiosError<T>;
-type InternalAxiosRequestConfig = import("axios").InternalAxiosRequestConfig;
-
-import { getToken, clearToken } from "./auth.js";
+import { getToken, clearToken } from "./auth";
 
 // Create axios instance with base URL and headers
 const apiClient: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api",
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000",
   headers: {
     "Content-Type": "application/json",
   },

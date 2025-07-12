@@ -12,6 +12,7 @@ import { RegistrationForm } from "@/components/auth/registration-form";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { authService } from "@/lib/api/auth";
 import { saveTokens } from "@/src/lib/auth";
+import { showToast, handleApiError } from "@/lib/utils/toast";
 
 interface AllFormData {
   firstName?: string;
@@ -128,14 +129,16 @@ const ChefSignupPage: React.FC = () => {
           saveTokens(response.data.access_token, response.data.refresh_token);
         }
 
+        // Show success toast
+        showToast.success("Chef account created successfully! Welcome to iKook.");
+
         // Clear form data from store
         clearChefFormData();
 
         // Redirect to chef dashboard
         router.push("/dashboard/chef");
       } catch (error) {
-        console.error("Chef signup failed:", error);
-        alert("Signup failed. Please try again.");
+        handleApiError(error, "Chef signup failed. Please try again.");
         setIsSubmitting(false);
       }
     } else {
@@ -200,7 +203,7 @@ const ChefSignupPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen relative bg-[#FBFBFB] max-md:w-full max-md:max-w-screen-lg max-md:h-auto max-md:min-h-screen">
-      <main className="relative flex items-center justify-center min-h-screen">
+      <main className="relative">
         {renderForm()}
       </main>
     </div>

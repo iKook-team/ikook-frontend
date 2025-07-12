@@ -2,7 +2,7 @@ import React from "react";
 
 export const ImageGallery: React.FC = () => {
   const handleViewAllImages = () => {
-    console.log("View all images clicked");
+    // Debug logging removed
   };
 
   return (

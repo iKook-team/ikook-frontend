@@ -41,7 +41,7 @@ const CreateMenuPage: React.FC = () => {
   // Handle save draft functionality
   const handleSaveDraft = useCallback(() => {
     // Save draft logic here
-    console.log('Saving draft:', formData);
+    // Debug logging removed
   }, [formData]);
 
   // Handle navigation back to menus

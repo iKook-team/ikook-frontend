@@ -2,27 +2,75 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { authService } from "@/lib/api/auth";
+import { useAuthStore } from "@/lib/store/auth-store";
+import { saveTokens } from "@/src/lib/auth";
+import { showToast, handleApiError } from "@/lib/utils/toast";
 
 export const LoginForm: React.FC = () => {
   const router = useRouter();
+  const { setUser } = useAuthStore();
   const [userType, setUserType] = useState<"host" | "chef">("host");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setIsLoading(true);
 
     try {
-      // In a real app, you would validate the form and submit to your API
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/dashboard");
-    } catch {
-      setError("Invalid email or password. Please try again.");
+      // Call the real login API
+      const response = await authService.login({
+        email,
+        password,
+        user_type: userType === "host" ? "Host" : "Chef",
+      });
+
+      // Debug logging removed
+
+      // Handle different response structures
+      let userData = response.data;
+      let accessToken = response.data?.access_token;
+      let refreshToken = response.data?.refresh_token;
+
+      // Check if response has a nested data structure
+      if (response.data && response.data.data) {
+        userData = response.data.data;
+        accessToken = response.data.data?.access_token;
+        refreshToken = response.data.data?.refresh_token;
+      }
+
+      // Debug logging removed
+
+      // Save tokens
+      if (accessToken && refreshToken) {
+        saveTokens(accessToken, refreshToken);
+        // Debug logging removed
+      } else {
+        console.error("No tokens found in response");
+      }
+
+      // Set user in store
+      // Debug logging removed
+      setUser(userData);
+
+      // Show success toast
+      showToast.success("Login successful! Welcome back.");
+
+      // Small delay to ensure store is updated
+      setTimeout(() => {
+        // Navigate based on user type
+        if (userType === "host") {
+          router.push("/dashboard/host");
+        } else {
+          router.push("/dashboard/chef");
+        }
+      }, 100);
+    } catch (error: any) {
+      console.error("Login error:", error);
+      handleApiError(error, "Invalid email or password. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -176,12 +224,6 @@ export const LoginForm: React.FC = () => {
           >
             {isLoading ? "Logging in..." : "Login"}
           </button>
-          
-          {error && (
-            <div className="w-full text-red-500 text-sm text-center mt-2">
-              {error}
-            </div>
-          )}
 
           <div className="w-full text-black text-center text-[15px] font-normal max-sm:text-sm">
             <span>Don&apos;t have account, </span>

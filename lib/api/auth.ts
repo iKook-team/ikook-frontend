@@ -1,6 +1,6 @@
+import apiClient from "@/src/lib/axios";
 import axios from "axios";
-
-const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
+import { getRefreshToken } from "@/src/lib/auth";
 
 type VerifyAction = "send_token" | "verify_token";
 
@@ -20,10 +20,16 @@ interface VerifyOtpPayload extends BaseVerifyPayload {
 
 type VerifyEmailPayload = SendOtpPayload | VerifyOtpPayload;
 
+interface LoginPayload {
+  email: string;
+  password: string;
+  user_type: "Host" | "Chef";
+}
+
 export const authService = {
   // Send or verify OTP
   verifyEmail: async (data: VerifyEmailPayload) => {
-    const response = await axios.post(`${API_URL}/users/auth/verify/`, data);
+    const response = await apiClient.post(`/users/auth/verify/`, data);
     return response.data;
   },
 
@@ -56,9 +62,69 @@ export const authService = {
     }
   },
 
+  // Login user
+  login: async (data: LoginPayload) => {
+    const response = await apiClient.post(`/users/auth/login/`, data);
+    return response.data;
+  },
+
+  // Validate token and get user data
+  validateToken: async () => {
+    const token = localStorage.getItem("ikook_auth_token");
+    if (!token) {
+      throw new Error("No token found");
+    }
+
+    try {
+      const response = await apiClient.get(`/users/profiles/`, {
+        params: {
+          user_type: "Host" // This will be filtered by the backend
+        }
+      });
+      return { 
+        success: true, 
+        message: "Token is valid",
+        data: null
+      };
+    } catch (error) {
+      console.error("Token validation failed:", error);
+      throw error;
+    }
+  },
+
+  // Logout user
+  logout: async () => {
+    const refreshToken = getRefreshToken();
+    const accessToken = localStorage.getItem("ikook_auth_token");
+    // Debug logging removed
+    
+    if (!refreshToken) {
+      throw new Error("No refresh token found");
+    }
+
+    try {
+      // Debug logging removed
+      const response = await apiClient.post(
+        `/users/auth/logout/`,
+        {},
+        {
+          headers: {
+            refresh_token: refreshToken,
+            Authorization: accessToken ? `Bearer ${accessToken}` : undefined,
+          },
+        }
+      );
+      // Debug logging removed
+      return response.data;
+    } catch (error: any) {
+      // Debug logging removed
+      throw error;
+    }
+  },
+
   // Sign up a new user
   signup: async (data: any) => {
-    const response = await axios.post(`${API_URL}/users/auth/signup/`, data);
+    const response = await apiClient.post(`/users/auth/signup/`, data);
     return response.data;
   },
 };

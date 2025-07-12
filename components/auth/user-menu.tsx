@@ -3,15 +3,65 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { useAuthStore } from "@/lib/store/auth-store";
+import { authService } from "@/lib/api/auth";
+import { showToast, handleApiError } from "@/lib/utils/toast";
+
 export const UserMenu: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const { isAuthenticated, user, logout } = useAuthStore();
+  const router = useRouter();
+
+  // Debug logging removed
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const user = "chef";
-  const router = useRouter();
+  const handleLogout = async () => {
+    // Debug logging removed
+    if (!isAuthenticated) return;
+
+    setIsLoggingOut(true);
+    try {
+      // Call the logout API
+      await authService.logout();
+
+      // Clear local state
+      logout();
+
+      // Close menu
+      setIsMenuOpen(false);
+
+      // Show success toast
+      showToast.success("Logged out successfully");
+
+      // Redirect to home page
+      router.push("/");
+    } catch (error) {
+      handleApiError(error, "Logout failed. Please try again.");
+      // Even if API call fails, clear local state
+      logout();
+      setIsMenuOpen(false);
+      router.push("/");
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
+  // --- IMPORTANT: Button is only disabled when isLoggingOut ---
+
+  // Don't render if not authenticated
+  if (!isAuthenticated) {
+    // Debug logging removed
+    return null;
+  }
+
+  // Debug logging removed
+
+  const isChef = user?.user_type === "Chef";
+  const isHost = user?.user_type === "Host";
 
   return (
     <div className="w-[84px] h-12 relative max-sm:w-11 max-sm:h-11">
@@ -46,32 +96,24 @@ export const UserMenu: React.FC = () => {
       {isMenuOpen && (
         <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-[#EBEBEB] rounded-lg shadow-lg z-50">
           <div className="py-2">
-            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100" onClick={() => router.push(user === "chef" ? "/dashboard/chef" : "/dashboard/host")}>
+            {/* Shared items for both hosts and chefs */}
+            <button
+              className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+              onClick={() =>
+                router.push(
+                  user?.user_type === "Chef"
+                    ? "/dashboard/chef"
+                    : "/dashboard/host"
+                )
+              }
+            >
               Bookings
             </button>
-            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100" onClick={() => router.push("/menus")}>
-              Menus
-            </button>
-            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100" onClick={() => router.push("/calendar")}>
-              Calendar
-            </button>
-            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100" onClick={() => router.push("/revenue")}>
-              Revenue
-            </button>
-            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100" onClick={() => router.push("/discount")}>
-              Discount
-            </button>
-            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100" onClick={() => router.push("/reviews")}>
+            <button
+              className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+              onClick={() => router.push("/reviews")}
+            >
               Review
-            </button>
-            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100" onClick={() => router.push("/services")}>
-              Services
-            </button>
-            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
-              Document verification
-            </button>
-            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
-              References
             </button>
             <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
               Settings
@@ -79,9 +121,77 @@ export const UserMenu: React.FC = () => {
             <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
               Support
             </button>
+
+            {/* Chef-specific items */}
+            {isChef && (
+              <>
+                <button
+                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={() => router.push("/menus")}
+                >
+                  Menus
+                </button>
+                <button
+                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={() => router.push("/calendar")}
+                >
+                  Calendar
+                </button>
+                <button
+                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={() => router.push("/revenue")}
+                >
+                  Revenue
+                </button>
+                <button
+                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={() => router.push("/discount")}
+                >
+                  Discount
+                </button>
+                <button
+                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={() => router.push("/services")}
+                >
+                  Services
+                </button>
+                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+                  Document verification
+                </button>
+                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+                  References
+                </button>
+              </>
+            )}
+
+            {/* Host-specific items */}
+            {isHost && (
+              <>
+                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+                  Wallet
+                </button>
+                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+                  Favourites
+                </button>
+                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+                  Addresses
+                </button>
+                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+                  Referral
+                </button>
+                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+                  Payment
+                </button>
+              </>
+            )}
+
             <hr className="my-1" />
-            <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
-              Sign out
+            <button
+              className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+            >
+              {isLoggingOut ? "Signing out..." : "Sign out"}
             </button>
           </div>
         </div>
