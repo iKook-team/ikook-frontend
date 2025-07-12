@@ -4,6 +4,7 @@ import React, { useState } from "react";
 
 import { FormField } from "@/components/ui/form-field";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 interface ChefRegistrationForm4Props {
   formData: {
@@ -26,6 +27,7 @@ export const ChefRegistrationForm4: React.FC<ChefRegistrationForm4Props> = ({
   isSubmitting,
   onSubmit,
 }) => {
+  const { setChefFormData, chefFormData } = useAuthStore();
   const [formData, setFormData] = useState({
     criminalRecord: initialFormData.criminalRecord || "",
     instagramAccount: initialFormData.instagramAccount || "",
@@ -65,9 +67,18 @@ export const ChefRegistrationForm4: React.FC<ChefRegistrationForm4Props> = ({
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-
       return;
     }
+
+    // Save form data to store
+    const updatedChefData = {
+      ...chefFormData,
+      criminalRecord: formData.criminalRecord,
+      instagramAccount: formData.instagramAccount,
+      website: formData.website,
+    };
+    setChefFormData(updatedChefData);
+    
     onSubmit(formData);
   };
 

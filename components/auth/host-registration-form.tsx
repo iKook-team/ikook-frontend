@@ -8,6 +8,7 @@ import { ProgressBar } from "@/components/ui/progress-bar";
 import { FormField } from "@/components/ui/form-field";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { authService } from "@/lib/api/auth";
 
 interface FormData {
   firstName: string;
@@ -19,7 +20,7 @@ interface FormData {
 
 export const HostRegistrationForm: React.FC = () => {
   const router = useRouter();
-  const { setUserType } = useAuthStore();
+  const { setUserType, setHostFormData } = useAuthStore();
   // Track selected country code for phone input
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_countryCode, setCountryCode] = useState("NG");
@@ -41,17 +42,20 @@ export const HostRegistrationForm: React.FC = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
-      // Set user type to 'host' in global state before navigation
+      // Set user type to 'host' in global state
       setUserType('host');
       
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Save form data locally
+      setHostFormData(data);
+      
+      // Send OTP to email using the real API
+      await authService.sendOtp(data.email);
       
       // Navigate to email verification page
       router.push("/email-verification");
     } catch (error) {
       console.error("Registration error:", error);
-      alert("An error occurred. Please try again.");
+      alert("Failed to send verification code. Please try again.");
     }
   };
 

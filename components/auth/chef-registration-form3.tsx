@@ -4,6 +4,7 @@ import React, { useState } from "react";
 
 import { FormField } from "@/components/ui/form-field";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 interface ChefRegistrationForm3Props {
   formData: {
@@ -102,6 +103,7 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
   isSubmitting,
   onSubmit,
 }) => {
+  const { setChefFormData, chefFormData } = useAuthStore();
   const [formData, setFormData] = useState({
     country: initialFormData.country || "United Kingdom",
     city: initialFormData.city || "London",
@@ -151,9 +153,20 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-
       return;
     }
+
+    // Save form data to store
+    const updatedChefData = {
+      ...chefFormData,
+      country: formData.country,
+      city: formData.city,
+      postalCode: formData.postalCode,
+      address: formData.address,
+      workAuthorization: formData.workAuthorization,
+    };
+    setChefFormData(updatedChefData);
+    
     onSubmit(formData);
   };
 

@@ -1,10 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { FormField } from "@/components/ui/form-field";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { PhoneInput } from "@/components/ui/phone-input";
+import { useAuthStore } from "@/lib/store/auth-store";
+import { authService } from "@/lib/api/auth";
 
 interface ChefRegistrationForm2Props {
   formData: {
@@ -20,6 +23,8 @@ export const ChefRegistrationForm2: React.FC<ChefRegistrationForm2Props> = ({
   isSubmitting,
   onSubmit,
 }) => {
+  const router = useRouter();
+  const { setUserType, setChefFormData, chefFormData } = useAuthStore();
   const [formData, setFormData] = useState({
     email: initialFormData.email || "",
     phoneNumber: initialFormData.phoneNumber || "",
@@ -54,16 +59,36 @@ export const ChefRegistrationForm2: React.FC<ChefRegistrationForm2Props> = ({
     return newErrors;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validate();
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-
       return;
     }
-    onSubmit(formData);
+
+    try {
+      // Set user type to 'chef' in global state
+      setUserType('chef');
+      
+      // Update chef form data with email and phone
+      const updatedChefData = {
+        ...chefFormData,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+      };
+      setChefFormData(updatedChefData);
+      
+      // Send OTP to email using the real API
+      await authService.sendOtp(formData.email);
+      
+      // Navigate to email verification page
+      router.push("/email-verification");
+    } catch (error) {
+      console.error("Registration error:", error);
+      alert("Failed to send verification code. Please try again.");
+    }
   };
 
   return (

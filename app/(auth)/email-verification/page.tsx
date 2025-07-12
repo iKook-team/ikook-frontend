@@ -5,26 +5,35 @@ import { useRouter } from "next/navigation";
 
 import { OTPVerification } from "@/components/auth/otp-verification";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { authService } from "@/lib/api/auth";
 
 const EmailVerificationPage: React.FC = () => {
   const router = useRouter();
-  const { userType: rawUserType } = useAuthStore();
+  const { userType: rawUserType, hostFormData, chefFormData } = useAuthStore();
   const userType =
     rawUserType === "host" || rawUserType === "chef" ? rawUserType : undefined;
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  const handleSubmit = async (_data: { otp: string }) => {
+  const handleSubmit = async (data: { otp: string }) => {
     setIsSubmitting(true);
     try {
-      // In a real app, you would verify the OTP with your API here
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Verify OTP using the real API
+      const email = hostFormData?.email || chefFormData?.email;
+      if (!email) {
+        throw new Error("Email not found in form data");
+      }
+      
+      await authService.verifyOtp(email, data.otp);
 
-      // Always redirect back to the signup page with verified=true
-      // The signup page will handle showing the appropriate form
-      router.push(`/host-signup?verified=true`);
-    } catch {
-      // Error handling would go here in a real app
+      // Redirect back to the appropriate signup page with verified=true
+      if (userType === "host") {
+        router.push(`/host-signup?verified=true`);
+      } else if (userType === "chef") {
+        router.push(`/chef-signup?verified=true`);
+      }
+    } catch (error) {
+      console.error("OTP verification failed:", error);
+      alert("Invalid verification code. Please try again.");
       setIsSubmitting(false);
     }
   };
