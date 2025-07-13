@@ -1,253 +1,238 @@
 "use client";
 
+import { useState } from "react";
+
 import { MenuListing } from "./listings/menu";
 import { ChefCard } from "./listings/chef";
 import { ServiceListing } from "./listings/service";
 
-type CardType = 'menu' | 'chef' | 'service';
+import Skeleton from "@/components/ui/skeleton";
+import useListings from "@/hooks/useListings";
+
+// Map API response to component props
+const mapMenuToItem = (menu: any) => ({
+  id: menu.id,
+  title: menu.name,
+  price: menu.price_per_person,
+  img: menu.images?.find((img: any) => img.is_primary)?.image || "",
+  location: menu.chef_details?.city || "Unknown location",
+  rating: menu.chef_details?.average_rating || 0,
+  reviewCount: menu.chef_details?.num_reviews || 0,
+  chefName:
+    `${menu.chef_details?.first_name || ""} ${menu.chef_details?.last_name || ""}`.trim(),
+  chefAvatar: menu.chef_details?.avatar || "",
+});
+
+const mapChefToItem = (chef: any) => ({
+  id: chef.id,
+  name: `${chef.first_name} ${chef.last_name}`.trim(),
+  location: chef.city || "Unknown location",
+  rating: chef.average_rating || 0,
+  reviewCount: chef.num_reviews || 0,
+  description: chef.bio || "Professional chef",
+  services: chef.cuisine_types || [],
+  mainImageUrl: chef.cover_photo || "",
+  profileImageUrl: chef.avatar || "",
+  isVerified: chef.is_verified,
+});
+
+const mapServiceToItem = (service: any) => ({
+  id: service.id,
+  title: service.name,
+  description: service.description,
+  price: service.price_per_person,
+  imageUrl: service.images?.find((img: any) => img.is_primary)?.image || "",
+  rating: service.chef_details?.average_rating || 0,
+  reviewCount: service.chef_details?.num_reviews || 0,
+  location: service.chef_details?.city || "Unknown location",
+  services: [service.chef_service],
+  profileImageUrl: service.chef_details?.avatar || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+  isVerified: service.chef_details?.is_verified,
+  chefName:
+    `${service.chef_details?.first_name || ""} ${service.chef_details?.last_name || ""}`.trim(),
+});
+
+// Skeleton Loader Component
+interface ListingSkeletonProps {
+  count?: number;
+  type?: "menu" | "chef" | "service";
+}
+
+const ListingSkeleton = ({
+  count = 4,
+  type = "menu",
+}: ListingSkeletonProps) => {
+  const getSkeletonClass = () => {
+    switch (type) {
+      case "menu":
+        return "h-64";
+      case "chef":
+        return "h-80";
+      case "service":
+        return "h-72";
+      default:
+        return "h-64";
+    }
+  };
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className="rounded-lg overflow-hidden shadow-md">
+          <Skeleton className={`w-full ${getSkeletonClass()}`} />
+          <div className="p-4">
+            <Skeleton className="h-6 w-3/4 mb-2" />
+            <Skeleton className="h-4 w-1/2 mb-2" />
+            <Skeleton className="h-4 w-1/4" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 interface ListingProps {
   selectedService?: string;
 }
 
-interface MenuItem {
-  id: number;
-  title: string;
-  price: string;
-  img: string;
-  location: string;
-}
-
-interface ChefItem {
-  id: number;
-  name: string;
-  location: string;
-  rating: number;
-  reviewCount: number;
-  description: string;
-  services: string[];
-  mainImageUrl: string;
-  profileImageUrl: string;
-  isVerified?: boolean;
-}
-
-interface ServiceItem {
-  id: number;
-  title: string;
-  description: string;
-  price: string;
-  imageUrl: string;
-  rating: number;
-  reviewCount: number;
-  location: string;
-  services: string[];
-  profileImageUrl: string;
-  isVerified?: boolean;
-}
-
-// Define service to card type mapping
-const getCardTypeForService = (serviceId: string): CardType => {
-  const menuCardTypes = [
-    "chef-at-home",
-    "corporate-dining",
-    "fine-dining",
-    "large-event",
-    "meal-delivery",
-    "meal-prep",
-  ];
-  const serviceCardTypes = ["box-groceries", "cooking-class", "eating-coach"];
-
-  if (serviceId === "chefs") return "chef";
-  if (serviceCardTypes.includes(serviceId)) return "service";
-  if (menuCardTypes.includes(serviceId)) return "menu";
-  
-  // Default to menu if no match
-  return "menu";
-};
-
 export const Listing = ({ selectedService = "chef-at-home" }: ListingProps) => {
-  const cardType = getCardTypeForService(selectedService);
+  const [page, setPage] = useState(1);
+  const pageSize = 12; // Show 12 items per page
 
-  // Mock data - reduced to 2 items each as requested
-  const menuItems: MenuItem[] = [
-    {
-      id: 1,
-      title: "British Breakfast",
-      price: "25",
-      img: "https://images.unsplash.com/photo-1551024601-bc78ca9296a0?w=800&h=600&fit=crop&crop=center",
-      location: "London",
-    },
-    {
-      id: 2,
-      title: "Italian Pasta",
-      price: "22",
-      img: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&h=600&fit=crop&crop=center",
-      location: "Manchester",
-    },
-    {
-      id: 4,
-      title: "Mexican",
-      price: "20",
-      img: "/menus/menu4.png",
-      location: "London",
-    },
-    {
-      id: 5,
-      title: "Italian",
-      price: "20",
-      img: "/menus/menu1.png",
-      location: "London",
-    },
-    {
-      id: 6,
-      title: "British",
-      price: "20",
-      img: "/menus/menu2.png",
-      location: "London",
-    },
-    {
-      id: 7,
-      title: "African",
-      price: "20",
-      img: "/menus/menu3.png",
-      location: "London",
-    },
-    {
-      id: 8,
-      title: "Italian",
-      price: "20",
-      img: "/menus/menu4.png",
-      location: "London",
-    },
-  ];
+  const { listings, loading, error, listingType, totalCount, refetch } =
+    useListings({
+      selectedService,
+      page,
+      pageSize,
+    });
 
-  // Mock data for chefs
-  const chefItems: ChefItem[] = [
-    {
-      id: 1,
-      name: "John Smith",
-      location: "London",
-      rating: 4.8,
-      reviewCount: 124,
-      description: "Professional chef with 10+ years of experience in Italian cuisine. Specializes in homemade pasta and authentic Italian dishes.",
-      services: ["Italian", "Pasta Making", "Fine Dining"],
-      mainImageUrl: "https://images.unsplash.com/photo-1595475207225-4288f6ae566a?w=800&h=600&fit=crop&crop=center",
-      profileImageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=center",
-      isVerified: true
-    },
-    {
-      id: 2,
-      name: "Maria Garcia",
-      location: "Manchester",
-      rating: 4.9,
-      reviewCount: 98,
-      description: "Award-winning chef specializing in Spanish and Mediterranean cuisine with a modern twist.",
-      services: ["Spanish", "Tapas", "Seafood"],
-      mainImageUrl: "https://images.unsplash.com/photo-1541614107199-1cfdf4d421bf?w=800&h=600&fit=crop&crop=center",
-      profileImageUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=center",
-    },
-  ];
+  // Map API data to component props
+  const mappedListings = listings.map((item) => {
+    switch (listingType) {
+      case "menu":
+        return mapMenuToItem(item);
+      case "chef":
+        return mapChefToItem(item);
+      case "service":
+        return mapServiceToItem(item);
+      default:
+        return item;
+    }
+  });
 
-  // Mock data for services
-  const serviceItems: ServiceItem[] = [
-    {
-      id: 1,
-      title: "Private Chef Experience",
-      description: "A luxurious dining experience at home with a personal chef preparing a customized menu just for you.",
-      price: "150",
-      imageUrl: "https://images.unsplash.com/photo-1504674900247-0877039348bf?w=800&h=600&fit=crop&crop=center",
-      rating: 4.9,
-      reviewCount: 87,
-      location: "London",
-      services: ["Private Dining", "Custom Menus", "Fine Dining"],
-      profileImageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=center",
-      isVerified: true
-    },
-    {
-      id: 2,
-      title: "Cooking Class",
-      description: "Learn to cook authentic Italian dishes from a professional chef in a fun, interactive session.",
-      price: "75",
-      imageUrl: "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&h=600&fit=crop&crop=center",
-      rating: 4.7,
-      reviewCount: 64,
-      location: "Manchester",
-      services: ["Italian Cuisine", "Hands-on Cooking", "Group Classes"],
-      profileImageUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=center"
-    },
-  ];
+  // Handle page change
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-  const renderContent = (): JSX.Element => {
-    switch (cardType) {
-      case 'menu':
+  // Render the appropriate component based on listing type
+  const renderContent = () => {
+    if (loading) {
+      return <ListingSkeleton type={listingType} count={4} />;
+    }
+
+    if (error) {
+      return (
+        <div className="text-center py-12">
+          <p className="text-red-500 mb-4">{error}</p>
+          <button
+            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
+            onClick={refetch}
+            type="button"
+          >
+            Retry
+          </button>
+        </div>
+      );
+    }
+
+    if (mappedListings.length === 0) {
+      return (
+        <div className="text-center py-12">
+          <p className="text-gray-500">
+            No items found for the selected service.
+          </p>
+        </div>
+      );
+    }
+
+    switch (listingType) {
+      case "menu":
         return (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {menuItems.map((menu) => (
-              <div key={menu.id} className="w-full">
-                <MenuListing
-                  id={menu.id}
-                  img={menu.img}
-                  location={menu.location}
-                  price={menu.price}
-                  title={menu.title}
-                />
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {mappedListings.map((item: any) => (
+              <MenuListing key={item.id} {...item} />
             ))}
           </div>
         );
-      case 'chef':
+      case "chef":
         return (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {chefItems.map((chef) => (
-              <div key={chef.id} className="w-full">
-                <ChefCard
-                  description={chef.description}
-                  isVerified={chef.isVerified}
-                  location={chef.location}
-                  mainImageUrl={chef.mainImageUrl}
-                  name={chef.name}
-                  profileImageUrl={chef.profileImageUrl}
-                  rating={chef.rating}
-                  reviewCount={chef.reviewCount}
-                  services={chef.services}
-                />
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {mappedListings.map((item: any) => (
+              <ChefCard key={item.id} {...item} />
             ))}
           </div>
         );
-      case 'service':
+      case "service":
         return (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {serviceItems.map((service) => (
-              <div key={service.id} className="w-full">
-                <ServiceListing
-                  description={service.description}
-                  isVerified={service.isVerified}
-                  location={service.location}
-                  mainImageUrl={service.imageUrl}
-                  name={service.title}
-                  profileImageUrl={service.profileImageUrl}
-                  rating={service.rating}
-                  reviewCount={service.reviewCount}
-                  services={service.services}
-                  price={service.price}
-                  title={service.title}
-                />
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {mappedListings.map((item: any) => (
+              <ServiceListing key={item.id} {...item} />
             ))}
           </div>
         );
       default:
-        return <div>No content available</div>;
+        return <div>No items found</div>;
     }
+  };
+
+  // Render pagination controls
+  const renderPagination = () => {
+    if (totalCount <= pageSize || loading) return null;
+
+    const totalPages = Math.ceil(totalCount / pageSize);
+    const showPrev = page > 1;
+    const showNext = page < totalPages;
+
+    return (
+      <div className="flex justify-center mt-8 space-x-2">
+        <button
+          className={`px-4 py-2 rounded-md ${
+            showPrev
+              ? "bg-primary text-white hover:bg-primary/90"
+              : "bg-gray-200 text-gray-500 cursor-not-allowed"
+          }`}
+          disabled={!showPrev}
+          onClick={() => handlePageChange(page - 1)}
+          type="button"
+        >
+          Previous
+        </button>
+        <span className="px-4 py-2">
+          Page {page} of {totalPages}
+        </span>
+        <button
+          className={`px-4 py-2 rounded-md ${
+            showNext
+              ? "bg-primary text-white hover:bg-primary/90"
+              : "bg-gray-200 text-gray-500 cursor-not-allowed"
+          }`}
+          disabled={!showNext}
+          onClick={() => handlePageChange(page + 1)}
+          type="button"
+        >
+          Next
+        </button>
+      </div>
+    );
   };
 
   return (
     <div className="w-full px-12 max-md:px-6 max-sm:px-4 py-8">
       <div className="w-full max-w-[1440px] mx-auto">
-        <div className="flex flex-col gap-8 w-full">
-          {renderContent()}
-        </div>
+        {renderContent()}
+        {renderPagination()}
       </div>
     </div>
   );

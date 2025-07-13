@@ -126,7 +126,7 @@ export const listingService = {
         status: boolean;
         message: string;
         data: ApiResponse<Menu>;
-      }>("/api/menus/", {
+      }>("/menus/", {
         params: requestParams,
       });
 

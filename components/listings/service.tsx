@@ -91,10 +91,10 @@ const VerificationBadge = ({
   profileImageUrl,
 }: VerificationBadgeProps) => (
   <div className="w-[60px] h-[60px] shrink-0 absolute left-[225px] top-[191px] max-md:left-[205px] max-md:top-[175px] max-sm:left-[180px] max-sm:top-40">
-    <div className="flex w-[60px] h-[60px] justify-center items-center shrink-0 absolute left-0 top-0">
+    <div className="flex w-[60px] h-[60px] justify-center items-center overflow-hidden rounded-full border-[2.25px] border-solid border-white">
       <Image
         alt="Service provider"
-        className="shrink-0 absolute object-cover rounded-[300px] border-[2.25px] border-solid border-white left-0 top-0"
+        className="object-cover w-full h-full"
         height={60}
         src={profileImageUrl}
         width={60}
