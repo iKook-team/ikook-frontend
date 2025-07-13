@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { Footer } from "@/components/footer/footer";
 import { Listing } from "@/components/listing";
-import { Navigation } from "@/components/auth/navigation";
+import { Navigation } from "@/components/auth/Navigation";
 import { Services } from "@/components/filter/Services";
 
 export default function Home() {
