@@ -1,6 +1,10 @@
 import React from "react";
 
-export const OrderSummary: React.FC = () => {
+interface OrderSummaryProps {
+  quote?: any;
+}
+
+export const OrderSummary: React.FC<OrderSummaryProps> = ({ quote }) => {
   const handlePayment = () => {
     console.log("Processing payment...");
   };

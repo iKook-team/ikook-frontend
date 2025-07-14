@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { FaStar, FaRegHeart } from "react-icons/fa";
 import { Card, CardBody, CardFooter, User } from "@heroui/react";
 import Image from "next/image";
@@ -13,7 +14,7 @@ interface BadgeData {
 interface BadgeProps {
   icon: string;
   label: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const Badge: React.FC<BadgeProps> = ({ icon, label, onClick }) => (
@@ -79,72 +80,81 @@ export const MenuListing: React.FC<MenuListingProps> = ({
   reviewCount = 23,
   title,
 }) => {
+  const router = useRouter();
+
+  const handleCardClick = () => {
+    router.push(`/booking/menus/details/${_id}`);
+  };
+
+  const handleBadgeClick = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    badgeId: string,
+  ) => {
+    e.stopPropagation(); // Prevent card click when clicking on badge
+    _onBadgeClick?.(badgeId);
+  };
+
   return (
-    <Card
-      className="w-full max-w-lg h-80 hover:shadow-lg transition-shadow duration-200"
-      shadow="sm"
+    <div 
+      className="relative w-full max-w-lg h-80"
+      onClick={handleCardClick}
+      onKeyDown={(e: React.KeyboardEvent) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleCardClick();
+        }
+      }}
+      role="button"
+      tabIndex={0}
     >
-      <CardBody
-        className="overflow-visible p-0 relative"
-        style={{
-          backgroundImage: `url(${img})`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-        }}
+      <Card
+        className="w-full h-full hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+        shadow="sm"
       >
-        <FaRegHeart className="absolute top-2 right-2 text-white text-xl" />
-        <span className="absolute top-2 left-2 bg-white rounded-full px-4 py-1 text-xs">
-          {title}
-        </span>
-        <span className="absolute bottom-2 left-2 text-white text-sm font-semibold">
-          Professional Catering Service
-        </span>
-        <span className="absolute bottom-2 right-2 text-yellow-400 text-sm font-bold">
-          £{price}pp
-        </span>
-      </CardBody>
-      <CardFooter className="justify-between items-center">
-        <User
-          avatarProps={{
-            className: "shrink-0",
-            classNames: {
-              base: "border-2 border-solid border-white",
-              img: "object-cover w-10 h-10"
-            },
-            src: "/chef.png"
+        <CardBody
+          className="overflow-visible p-0 relative h-48"
+          style={{
+            backgroundImage: `url(${img})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center"
           }}
-          description={
-            <div className="flex items-center gap-1">
-              <svg className="w-3 h-3 text-yellow-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-              </svg>
-              <span className="text-xs text-gray-500">{location}</span>
-            </div>
-          }
-          name="Menu Provider"
-        />
-        <div className="flex flex-col items-end">
-          <div className="flex items-center">
-            <FaStar className="text-yellow-400 mr-1" />
-            <span className="text-sm font-medium">{rating}</span>
+        >
+          <FaRegHeart className="absolute top-2 right-2 text-white text-xl" />
+          <span className="absolute top-2 left-2 bg-white rounded-full px-4 py-1 text-xs">
+            {location}
+          </span>
+        </CardBody>
+        <CardFooter className="flex flex-col items-start gap-1.5 px-4 py-3">
+          <div className="flex items-center justify-between w-full">
+            <h3 className="text-base font-semibold text-gray-900">{title}</h3>
+            <span className="text-base font-semibold text-gray-900">{price}</span>
           </div>
-          <span className="text-xs text-gray-500">({reviewCount} Reviews)</span>
+          <div className="flex items-center gap-1">
+            <div className="flex items-center">
+              <FaStar className="text-yellow-400" />
+              <span className="ml-1 text-sm font-medium text-gray-900">
+                {rating}
+              </span>
+            </div>
+            <span className="text-xs text-gray-500">({reviewCount} Reviews)</span>
+          </div>
+        </CardFooter>
+        {/* Divider and badges section */}
+        <div className="px-4 pb-3">
+          <div className="h-px w-full bg-gray-200 mb-2" />
+          <div className="flex gap-1">
+            {badges.map((badge) => (
+              <Badge
+                key={badge.id}
+                icon={badge.icon}
+                label={badge.label}
+                onClick={(e) => handleBadgeClick(e, badge.id)}
+              />
+            ))}
+          </div>
         </div>
-      </CardFooter>
-      {/* Divider and badges section - unique to MenuListing */}
-      <div className="px-4 pb-3">
-        <div className="h-px w-full bg-gray-200 mb-2" />
-        <div className="flex flex-wrap gap-1.5">
-          {badges.map((badge) => (
-            <Badge
-              key={badge.id}
-              icon={badge.icon}
-              label={badge.label}
-              onClick={() => {}}
-            />
-          ))}
-        </div>
-      </div>
-    </Card>
+      </Card>
+    </div>
   );
 };

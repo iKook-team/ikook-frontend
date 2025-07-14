@@ -1,50 +1,50 @@
 import React from "react";
 
-export const ImageGallery: React.FC = () => {
-  const handleViewAllImages = () => {
-    // Debug logging removed
-  };
+interface ImageGalleryProps {
+  images: Array<{ id: number; image: string }>;
+}
+
+const renderImageOrPlaceholder = (src?: string, alt?: string, className = "") => {
+  if (src) {
+    return (
+      <img
+        src={src}
+        className={`w-full h-full object-cover rounded-[15px] ${className}`}
+        alt={alt || "Menu image"}
+      />
+    );
+  }
+  return <div className={`w-full h-full rounded-[15px] bg-gray-200 flex items-center justify-center ${className}`} />;
+};
+
+export const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
+  // Always render 5 slots
+  const galleryImages = images && images.length > 0 ? images.map(img => img.image) : [];
+  // Pad to 5 slots
+  while (galleryImages.length < 5) galleryImages.push("");
+
+  const handleViewAllImages = () => {};
 
   return (
     <section className="flex gap-4 mt-[26px] w-full max-w-full">
       {/* Main image on the left */}
       <div className="w-[610px] min-w-[610px]">
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6562908c23c2311a45f292088c3c70820c18bbd3?placeholderIfAbsent=true"
-          className="w-full h-full object-cover rounded-[15px] aspect-[1.56]"
-          alt="Main dish"
-        />
+        {renderImageOrPlaceholder(galleryImages[0], "Main dish")}
       </div>
 
       {/* Two columns of images on the right */}
       <div className="flex gap-2">
         {/* Left column */}
         <div className="flex flex-col gap-2 w-[245px]">
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/e87f866a4178ebe9a90f2b338265d486848fb47c?placeholderIfAbsent=true"
-            className="w-full h-[191px] object-cover rounded-[15px]"
-            alt="Dish view 1"
-          />
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/e364f206b1ef5b1c397ddc7dedde9055209ea160?placeholderIfAbsent=true"
-            className="w-full h-[191px] object-cover rounded-[15px]"
-            alt="Dish view 2"
-          />
+          {renderImageOrPlaceholder(galleryImages[1], "Dish view 1")}
+          {renderImageOrPlaceholder(galleryImages[2], "Dish view 2")}
         </div>
 
         {/* Right column */}
         <div className="relative w-[245px]">
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/de752858dd03efcf695aa68ab83eeb8e29b7f516?placeholderIfAbsent=true"
-            className="w-full h-[191px] object-cover rounded-[15px] mb-2"
-            alt="Dish view 3"
-          />
+          {renderImageOrPlaceholder(galleryImages[3], "Dish view 3", "h-[191px] mb-2")}
           <div className="relative">
-            <img
-              src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/d351f8aca22bb00b50e9a3f167246204ef866421?placeholderIfAbsent=true"
-              className="w-full h-[191px] object-cover rounded-[15px]"
-              alt="Dish view 4"
-            />
+            {renderImageOrPlaceholder(galleryImages[4], "Dish view 4", "h-[191px]")}
             <button
               onClick={handleViewAllImages}
               className="absolute right-3 bottom-3 flex items-center gap-1 bg-white bg-opacity-90 px-3 py-1.5 rounded-lg"

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { DietaryRestrictions } from "./dietary-restrictions";
+import { DietaryRestrictions } from "../dietary-restrictions";
 
 interface PreferencesFormProps {
   onNext: (data?: Record<string, any>) => void;

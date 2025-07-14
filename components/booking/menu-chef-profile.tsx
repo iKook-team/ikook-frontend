@@ -1,14 +1,16 @@
 import Image from "next/image";
 import React from "react";
+import { FiUser } from "react-icons/fi";
 
-export const ChefProfile: React.FC = () => {
-  const handleViewProfile = () => {
-    // TODO: Implement view profile logic
-  };
+interface ChefProfileProps {
+  chef: any;
+}
 
-  const handleMessageChef = () => {
-    // TODO: Implement message chef logic
-  };
+export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
+  const handleViewProfile = () => {};
+  const handleMessageChef = () => {};
+
+  const avatar = chef?.avatar;
 
   return (
     <section className="w-full max-w-[1115px] mt-[71px] max-md:max-w-full max-md:mt-10">
@@ -16,16 +18,22 @@ export const ChefProfile: React.FC = () => {
         <div className="w-6/12 max-md:w-full max-md:ml-0">
           <article className="flex w-full flex-col bg-[#FFFCF5] mx-auto px-[34px] py-7 rounded-lg max-md:max-w-full max-md:mt-9 max-md:px-5">
             <div className="flex items-stretch gap-[19px]">
-              <Image
-                alt="Chef Titilayo John"
-                className="object-contain shrink-0 rounded-lg"
-                height={80}
-                src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/b8c11ad88b00cdfbfd0dac9c16bd04c1ac816df3?placeholderIfAbsent=true"
-                width={80}
-              />
+              {avatar ? (
+                <Image
+                  alt={`${chef?.first_name || ''} ${chef?.last_name || ''}`}
+                  className="object-contain shrink-0 rounded-lg"
+                  height={80}
+                  src={avatar}
+                  width={80}
+                />
+              ) : (
+                <div className="flex items-center justify-center bg-gray-200 rounded-lg" style={{ width: 80, height: 80 }}>
+                  <FiUser className="text-gray-500" size={40} />
+                </div>
+              )}
               <div className="my-auto">
                 <h3 className="text-[#323335] text-2xl font-semibold leading-none">
-                  Chef Titilayo John
+                  {chef?.first_name} {chef?.last_name}
                 </h3>
                 <div className="flex gap-2 text-sm mt-2">
                   <div className="flex items-center gap-1 text-[#3F3E3D] font-normal whitespace-nowrap leading-none">
@@ -37,7 +45,7 @@ export const ChefProfile: React.FC = () => {
                       width={15}
                     />
                     <span className="text-[#3F3E3D] self-stretch w-[55px] my-auto">
-                      London
+                      {chef?.city}
                     </span>
                   </div>
                   <div className="flex items-center text-[#323335]">
@@ -50,11 +58,11 @@ export const ChefProfile: React.FC = () => {
                         width={17}
                       />
                       <span className="text-[#323335] self-stretch w-7 my-auto">
-                        4.6
+                        {chef?.average_rating}
                       </span>
                     </div>
                     <span className="text-[#323335] font-light self-stretch my-auto">
-                      (23 Reviews)
+                      ({chef?.num_reviews} Reviews)
                     </span>
                   </div>
                 </div>

@@ -49,6 +49,8 @@ interface AuthState {
   isInitialized: boolean;
   hostFormData: HostFormData | null;
   chefFormData: ChefFormData | null;
+  bookingMenu: any | null;
+  bookingMenuSelection: any | null;
   setUserType: (type: UserType) => void;
   setUser: (user: User) => void;
   logout: () => void;
@@ -58,6 +60,8 @@ interface AuthState {
   clearUserType: () => void;
   clearHostFormData: () => void;
   clearChefFormData: () => void;
+  setBookingMenu: (menu: any) => void;
+  setBookingMenuSelection: (selection: any) => void;
 }
 
 // Helper function to save user data to localStorage
@@ -97,6 +101,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isInitialized: false,
   hostFormData: null,
   chefFormData: null,
+  bookingMenu: null,
+  bookingMenuSelection: null,
   setUserType: (type) => {
     // Debug logging removed
     set({ userType: type });
@@ -169,4 +175,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   clearUserType: () => set({ userType: null }),
   clearHostFormData: () => set({ hostFormData: null }),
   clearChefFormData: () => set({ chefFormData: null }),
+  setBookingMenu: (menu) => set({ bookingMenu: menu }),
+  setBookingMenuSelection: (selection) => set({ bookingMenuSelection: selection }),
 }));

@@ -6,7 +6,12 @@ import StatusBadge from "./status-badge";
 import MenuSection from "./menu-section";
 import { CustomDetailsForm } from "./custom-details";
 
-export default function BookingDetails() {
+interface BookingDetailsProps {
+  booking: any;
+  userType: "host" | "chef" | undefined;
+}
+
+export default function BookingDetails({ booking, userType }: BookingDetailsProps) {
   const isCustom = true;
   const starterItems = [
     { id: "1", name: "Mediterranean Chicken Kebab with Garlic Sauce" },
@@ -24,29 +29,27 @@ export default function BookingDetails() {
   return (
     <section className="flex flex-col w-full max-md:mt-7 max-md:max-w-full">
       <h1 className="self-start text-2xl font-semibold leading-none text-black">
-        Chef at Home Booking
+        {booking.chef_service || "Booking"}
       </h1>
 
       <StatusBadge
-        status="In progress"
+        status={booking.status}
         iconSrc="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/854fbc987f04d5db1e66f0babdee9a8a8d18031e?placeholderIfAbsent=true"
       />
 
       <article className="flex flex-wrap gap-4 py-2.5 pr-14 pl-2 mt-7 bg-white rounded-md border-solid shadow-2xl border-[0.639px] border-[color:var(--Gray-50,#E7E7E7)] max-md:pr-5">
         <img
-          src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/2ecd8a595cbab8ede06ec47fca4bcdf9a4ed3068?placeholderIfAbsent=true"
+          src={booking.imageUrl || "/chef.png"}
           className="object-contain shrink-0 aspect-[1.12] w-[90px]"
-          alt="Braised Chicken dish"
+          alt={booking.chef_service || "Booking image"}
         />
         <div className="flex flex-col grow shrink-0 self-start mt-1.5 basis-0 w-fit">
           <h2 className="text-base font-medium text-zinc-800">
-            {!isCustom
-              ? "Braised Chicken With Lemon and Olives"
-              : "Custom Booking"}
+            {booking.chef_service || "Booking"}
           </h2>
           <div className="self-start mt-2 text-neutral-500">
             <p className="text-sm font-medium text-neutral-500">
-              Chef Titilayo John
+              {booking.chef?.full_name || "Chef"}
             </p>
             <div className="flex gap-1.5 items-center text-xs">
               <div className="flex gap-1 items-center self-stretch my-auto leading-none whitespace-nowrap">
@@ -56,7 +59,7 @@ export default function BookingDetails() {
                   alt="Location icon"
                 />
                 <span className="self-stretch my-auto text-neutral-500">
-                  London
+                  {booking.city || booking.event_venue || "-"}
                 </span>
               </div>
               <div className="flex items-center self-stretch my-auto">
@@ -67,11 +70,11 @@ export default function BookingDetails() {
                     alt="Rating icon"
                   />
                   <span className="self-stretch my-auto text-neutral-500 w-[18px]">
-                    4.6
+                    {booking.chef?.rating || "-"}
                   </span>
                 </div>
                 <span className="self-stretch my-auto font-light text-neutral-500">
-                  (23 Reviews)
+                  ({booking.chef?.review_count || 0} Reviews)
                 </span>
               </div>
             </div>
@@ -88,7 +91,7 @@ export default function BookingDetails() {
       )}
 
       <div className="px-2.5 pt-2.5 pb-6 mt-7 bg-stone-50 max-md:max-w-full">
-        <CustomDetailsForm />
+        <CustomDetailsForm booking={booking} />
       </div>
     </section>
   );

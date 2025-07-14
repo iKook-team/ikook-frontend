@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AllergyTag } from "./allergy-tags";
+import { AllergyTag } from "./custom/allergy-tags";
 
 const allergyOptions = [
   "Vegetarian",

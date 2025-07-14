@@ -17,23 +17,24 @@ interface MenuCourse {
 interface MenuSectionProps {
   courses: MenuCourse[];
   checkboxUrl: string;
+  selectedMenuItems: string[];
+  setSelectedMenuItems: (items: string[]) => void;
 }
 
 export const MenuSection: React.FC<MenuSectionProps> = ({
   courses,
   checkboxUrl,
+  selectedMenuItems,
+  setSelectedMenuItems,
 }) => {
-  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
-
   const handleItemToggle = (itemId: string) => {
-    const newSelected = new Set(selectedItems);
-
-    if (newSelected.has(itemId)) {
-      newSelected.delete(itemId);
+    let newSelected: string[];
+    if (selectedMenuItems.includes(itemId)) {
+      newSelected = selectedMenuItems.filter((id) => id !== itemId);
     } else {
-      newSelected.add(itemId);
+      newSelected = [...selectedMenuItems, itemId];
     }
-    setSelectedItems(newSelected);
+    setSelectedMenuItems(newSelected);
   };
 
   return (
@@ -67,14 +68,14 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
                   className={`flex items-center gap-3 ${itemIndex > 0 ? "mt-3" : ""}`}
                 >
                   <button
-                    aria-pressed={selectedItems.has(item.id)}
+                    aria-pressed={selectedMenuItems.includes(item.id)}
                     className="self-stretch flex items-center justify-center w-5 my-auto"
                     type="button"
                     onClick={() => handleItemToggle(item.id)}
                   >
                     <Image
                       alt={
-                        selectedItems.has(item.id) ? "Selected" : "Not selected"
+                        selectedMenuItems.includes(item.id) ? "Selected" : "Not selected"
                       }
                       className="object-contain self-stretch my-auto"
                       height={20}

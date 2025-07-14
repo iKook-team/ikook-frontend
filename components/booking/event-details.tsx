@@ -3,7 +3,12 @@ import React from "react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
-export const EventDetails: React.FC = () => {
+interface EventDetailsProps {
+  onNext: (data?: Record<string, any>) => void;
+  onBack: () => void;
+}
+
+export const EventDetails: React.FC<EventDetailsProps> = ({ onNext, onBack }) => {
   const cuisines = [
     "African",
     "Italian",

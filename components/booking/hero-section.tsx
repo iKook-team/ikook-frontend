@@ -1,33 +1,38 @@
 import React from "react";
 
-export const HeroSection: React.FC = () => {
-  const handleShare = () => {
-    // Debug logging removed
-  };
+interface HeroSectionProps {
+  menu: any;
+}
 
-  const handleSave = () => {
-    // Debug logging removed
-  };
+export const HeroSection: React.FC<HeroSectionProps> = ({ menu }) => {
+  const handleShare = () => {};
+  const handleSave = () => {};
 
   return (
-    <section className="flex flex-wrap mt-[47px] max-md:max-w-full max-md:mt-10">
+    <section className="flex flex-wrap mt-[47px] max-md:max-w-full max-md:mt-10 items-start justify-between w-full">
       <div className="flex min-w-60 flex-col items-stretch max-md:max-w-full">
         <h1 className="text-[#323335] text-[26px] font-semibold leading-none max-md:max-w-full">
-          Braised Chicken With Lemon and Olives
+          {menu.name}
         </h1>
         <div className="flex items-center gap-1.5 text-sm text-[#3F3E3D] font-normal leading-none mt-2">
-          <span className="text-[#3F3E3D] self-stretch my-auto">
-            3 courses included
-          </span>
-          <span className="text-[#3F3E3D] self-stretch my-auto">
-            30 menus to choose
-          </span>
-          <span className="text-[#FCC01C] self-stretch my-auto">
-            Modern English
-          </span>
+          {menu.courses && (
+            <span className="text-[#3F3E3D] self-stretch my-auto">
+              {menu.courses.length} courses included
+            </span>
+          )}
+          {menu.cuisine_types && menu.cuisine_types.length > 0 && (
+            <span className="text-[#3F3E3D] self-stretch my-auto">
+              {menu.cuisine_types.join(", ")}
+            </span>
+          )}
+          {menu.menu_type && (
+            <span className="text-[#FCC01C] self-stretch my-auto">
+              {menu.menu_type}
+            </span>
+          )}
         </div>
       </div>
-      <div className="flex gap-[18px] text-sm text-black font-normal whitespace-nowrap leading-none">
+      <div className="flex gap-[18px] text-sm text-black font-normal whitespace-nowrap leading-none ml-auto">
         <div className="w-[88px]">
           <button
             onClick={handleShare}

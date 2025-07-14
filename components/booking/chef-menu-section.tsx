@@ -1,65 +1,56 @@
 "use client";
 
 import React, { useState } from "react";
+import { useMemo } from "react";
 
-interface MenuItem {
-  id: string;
-  title: string;
-  description?: string;
-  selected: boolean;
+interface ChefMenuSectionProps {
+  menu: any;
+  selectedItems: Record<string, Set<number>>;
+  setSelectedItems: React.Dispatch<React.SetStateAction<Record<string, Set<number>> | null>>;
 }
 
-export const ChefMenuSection: React.FC = () => {
+function getCurrencySymbol(menu: any): string {
+  if (menu?.chef?.currency) {
+    if (menu.chef.currency === "NGN") return "₦";
+    if (menu.chef.currency === "ZAR") return "R";
+    if (menu.chef.currency === "GBP") return "£";
+  }
+  if (menu?.chef?.country) {
+    const country = menu.chef.country;
+    if (country === "Nigeria") return "₦";
+    if (country === "South Africa") return "R";
+    if (country === "United Kingdom") return "£";
+  }
+  return "₦";
+}
+
+export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({ menu, selectedItems, setSelectedItems }) => {
   const [activeTab, setActiveTab] = useState<"sharing" | "plated">("sharing");
-  const [starterItems, setStarterItems] = useState<MenuItem[]>([
-    {
-      id: "1",
-      title: "Queso dip with tortilla chips",
-      description:
-        "A creamy and cheesy dip made with melted cheese, often cheddar or Monterey Jack, blended with spices and served with crispy tortilla chips. Perfect for parties and gatherings.",
-      selected: false,
-    },
-    { id: "2", title: "Queso dip with tortilla chips", selected: false },
-    { id: "3", title: "Queso dip with tortilla chips", selected: false },
-    { id: "4", title: "Queso dip with tortilla chips", selected: false },
-  ]);
-  const [mainItems, setMainItems] = useState<MenuItem[]>([
-    { id: "5", title: "Queso dip with tortilla chips", selected: false },
-    { id: "6", title: "Queso dip with tortilla chips", selected: false },
-    { id: "7", title: "Queso dip with tortilla chips", selected: false },
-  ]);
-  const [dessertItems, setDessertItems] = useState<MenuItem[]>([
-    { id: "8", title: "Queso dip with tortilla chips", selected: false },
-    { id: "9", title: "Queso dip with tortilla chips", selected: false },
-    { id: "10", title: "Queso dip with tortilla chips", selected: false },
-  ]);
 
-  const handleItemToggle = (
-    id: string,
-    category: "starter" | "main" | "dessert"
-  ) => {
-    const updateItems = (items: MenuItem[]) =>
-      items.map((item) =>
-        item.id === id ? { ...item, selected: !item.selected } : item
-      );
+  // Group items by course
+  const itemsByCourse: Record<string, any[]> = {};
+  (menu.items || []).forEach((item: any) => {
+    if (!itemsByCourse[item.course]) itemsByCourse[item.course] = [];
+    itemsByCourse[item.course].push(item);
+  });
 
-    switch (category) {
-      case "starter":
-        setStarterItems(updateItems);
-        break;
-      case "main":
-        setMainItems(updateItems);
-        break;
-      case "dessert":
-        setDessertItems(updateItems);
-        break;
-    }
+  const handleItemToggle = (course: string, id: number) => {
+    setSelectedItems((prev) => {
+      if (!prev) return prev;
+      const limit = menu.courses_selection_limit?.[course] || 1;
+      const newSet = new Set(prev[course]);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        if (newSet.size < limit) {
+          newSet.add(id);
+        }
+      }
+      return { ...prev, [course]: newSet };
+    });
   };
 
-  const renderMenuItem = (
-    item: MenuItem,
-    category: "starter" | "main" | "dessert"
-  ) => (
+  const renderMenuItem = (item: any, course: string) => (
     <div
       key={item.id}
       className="border border-[color:var(--Black-100,#E7E7E7)] flex w-full max-w-[690px] flex-col overflow-hidden items-stretch px-[31px] py-[21px] rounded-lg border-solid max-md:max-w-full max-md:px-5"
@@ -67,18 +58,18 @@ export const ChefMenuSection: React.FC = () => {
       <div className="flex items-center gap-[18px]">
         <div className="self-stretch flex items-center justify-center w-[30px] my-auto">
           <button
-            onClick={() => handleItemToggle(item.id, category)}
+            onClick={() => handleItemToggle(course, item.id)}
             className={`border-[color:var(--Gray-300,#D0D5DD)] self-stretch flex min-h-[30px] w-[30px] h-[30px] my-auto rounded-[9px] border-[1.5px] border-solid ${
-              item.selected ? "bg-[#FCC01C] border-[#FCC01C]" : "bg-white"
+              selectedItems[course]?.has(item.id) ? "bg-[#FCC01C] border-[#FCC01C]" : "bg-white"
             }`}
           >
-            {item.selected && (
+            {selectedItems[course]?.has(item.id) && (
               <span className="text-white text-lg self-center">✓</span>
             )}
           </button>
         </div>
         <div className="text-[#344054] text-base font-medium leading-loose self-stretch my-auto">
-          {item.title}
+          {item.name}
         </div>
       </div>
       {item.description && (
@@ -95,7 +86,7 @@ export const ChefMenuSection: React.FC = () => {
         <div className="flex items-center flex-wrap max-md:max-w-full">
           <div className="self-stretch my-auto">
             <h2 className="text-[#323335] text-2xl font-semibold leading-none">
-              Chef Titilayo John
+              {menu.chef?.first_name} {menu.chef?.last_name}
             </h2>
             <div className="flex gap-2 text-sm mt-2">
               <div className="flex items-center gap-1 text-[#3F3E3D] font-normal whitespace-nowrap leading-none">
@@ -105,7 +96,7 @@ export const ChefMenuSection: React.FC = () => {
                   alt="Location"
                 />
                 <span className="text-[#3F3E3D] self-stretch w-[55px] my-auto">
-                  London
+                  {menu.chef?.city}
                 </span>
               </div>
               <div className="flex items-center text-[#323335]">
@@ -116,17 +107,17 @@ export const ChefMenuSection: React.FC = () => {
                     alt="Rating"
                   />
                   <span className="text-[#323335] self-stretch w-7 my-auto">
-                    4.6
+                    {menu.chef?.average_rating}
                   </span>
                 </div>
                 <span className="text-[#323335] font-light self-stretch my-auto">
-                  (23 Reviews)
+                  ({menu.chef?.num_reviews} Reviews)
                 </span>
               </div>
             </div>
           </div>
           <img
-            src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/00356440fdef2da5a7b79a1c6f5685ce0c83233e?placeholderIfAbsent=true"
+            src={menu.chef?.avatar}
             className="aspect-[1] object-contain w-20 self-stretch shrink-0 my-auto rounded-lg"
             alt="Chef profile"
           />
@@ -138,22 +129,36 @@ export const ChefMenuSection: React.FC = () => {
           alt="Divider"
         />
 
-        <div className="flex items-stretch gap-5 text-sm text-[#323335] font-medium leading-none flex-wrap justify-between bg-[#FDEEC5] mt-[29px] rounded-lg max-md:max-w-full max-md:mr-[3px]">
+        {/* Tab Switch for Sharing Menu / Plated Menu */}
+        <div className="w-full mb-8 relative mx-auto">
+          <div className="w-full h-[38px] bg-[#CFCFCE] rounded-[4.547px] absolute left-0 top-0" />
           <button
+            type="button"
             onClick={() => setActiveTab("sharing")}
-            className={`px-[70px] py-3.5 rounded-lg max-md:px-5 ${
-              activeTab === "sharing"
-                ? "text-[#323335] shadow-[1px_0px_10px_0px_rgba(0,0,0,0.10)] bg-[#FCC01C]"
-                : "text-[#323335]"
-            }`}
+            className={`w-1/2 h-[30px] absolute left-[5px] top-1 rounded-sm transition-all z-10
+              ${activeTab === "sharing"
+                ? "bg-[#FCC01C] text-white shadow-[0.568px_0px_5.683px_0px_rgba(0,0,0,0.10)]"
+                : "bg-transparent text-[#020101]"}
+            `}
+            aria-pressed={activeTab === "sharing"}
           >
-            Sharing Menu
+            <span className="text-xs font-normal leading-[11px]">
+              Sharing Menu
+            </span>
           </button>
           <button
+            type="button"
             onClick={() => setActiveTab("plated")}
-            className={`text-[#323335] my-auto ${activeTab === "plated" ? "font-bold" : ""}`}
+            className={`w-1/2 h-[30px] absolute right-[5px] top-1 rounded-sm transition-all z-10
+              ${activeTab === "plated"
+                ? "bg-[#FCC01C] text-white shadow-[0.568px_0px_5.683px_0px_rgba(0,0,0,0.10)]"
+                : "bg-transparent text-[#020101]"}
+            `}
+            aria-pressed={activeTab === "plated"}
           >
-            Plated Menu
+            <span className="text-xs font-normal leading-[11px]">
+              Plated Menu
+            </span>
           </button>
         </div>
 
@@ -163,93 +168,32 @@ export const ChefMenuSection: React.FC = () => {
           alt="Divider"
         />
 
-        {activeTab === "sharing" && (
-          <>
-            <div className="mt-[34px] max-md:max-w-full">
-              <div className="flex max-w-full w-[690px] flex-col items-stretch">
-                <div>
-                  <h3 className="text-black text-2xl font-semibold leading-none">
-                    Starter Menu (Select 3)
-                  </h3>
-                  <p className="text-[#6f6e6d] text-sm font-normal leading-none mt-1">
-                    Extra dish cost{" "}
-                    <span
-                      style={{ fontWeight: 500, color: "rgba(252,192,28,1)" }}
-                    >
-                      £10pp
-                    </span>
-                  </p>
-                </div>
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/c5aa4e73234bded19e99f5c937f589bf4da8239f?placeholderIfAbsent=true"
-                  className="aspect-[1000] object-contain w-full stroke-[1px] stroke-[#E7E7E7] mt-3"
-                  alt="Divider"
-                />
+        {/* Render menu items by course */}
+        {menu.courses?.map((course: string) => (
+          <div key={course} className="mt-[34px] max-md:max-w-full">
+            <div className="flex max-w-full w-[690px] flex-col items-stretch">
+              <div>
+                <h3 className="text-black text-2xl font-semibold leading-none">
+                  {course} Menu (Select {menu.courses_selection_limit?.[course] || 1})
+                </h3>
+                <p className="text-[#6f6e6d] text-sm font-normal leading-none mt-1">
+                  Extra dish cost{' '}
+                  <span style={{ fontWeight: 500, color: 'rgba(252,192,28,1)' }}>
+                    {getCurrencySymbol(menu)}{menu.courses_extra_charge_per_person?.[course] || 0}pp
+                  </span>
+                </p>
               </div>
-              <div className="max-w-full w-[690px] mt-6 space-y-3">
-                {starterItems.map((item) => renderMenuItem(item, "starter"))}
-              </div>
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/c5aa4e73234bded19e99f5c937f589bf4da8239f?placeholderIfAbsent=true"
+                className="aspect-[1000] object-contain w-full stroke-[1px] stroke-[#E7E7E7] mt-3"
+                alt="Divider"
+              />
             </div>
-
-            <div className="mt-[45px] max-md:max-w-full max-md:mt-10">
-              <div className="flex max-w-full w-[690px] flex-col items-stretch">
-                <div>
-                  <h3 className="text-black text-2xl font-semibold leading-none">
-                    Main Menu (Select 3)
-                  </h3>
-                  <p className="text-[#6f6e6d] text-sm font-normal leading-none mt-1">
-                    Extra dish cost{" "}
-                    <span
-                      style={{ fontWeight: 500, color: "rgba(252,192,28,1)" }}
-                    >
-                      £10pp
-                    </span>
-                  </p>
-                </div>
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/c5aa4e73234bded19e99f5c937f589bf4da8239f?placeholderIfAbsent=true"
-                  className="aspect-[1000] object-contain w-full stroke-[1px] stroke-[#E7E7E7] mt-3"
-                  alt="Divider"
-                />
-              </div>
-              <div className="max-w-full w-[690px] mt-6 space-y-3">
-                {mainItems.map((item) => renderMenuItem(item, "main"))}
-              </div>
+            <div className="max-w-full w-[690px] mt-6 space-y-3">
+              {(itemsByCourse[course] || []).map((item) => renderMenuItem(item, course))}
             </div>
-
-            <div className="mt-[45px] max-md:max-w-full max-md:mt-10">
-              <div className="flex max-w-full w-[690px] flex-col items-stretch">
-                <div>
-                  <h3 className="text-black text-2xl font-semibold leading-none">
-                    Desert Menu (Select 3)
-                  </h3>
-                  <p className="text-[#6f6e6d] text-sm font-normal leading-none mt-1">
-                    Extra dish cost{" "}
-                    <span
-                      style={{ fontWeight: 500, color: "rgba(252,192,28,1)" }}
-                    >
-                      £10pp
-                    </span>
-                  </p>
-                </div>
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/c5aa4e73234bded19e99f5c937f589bf4da8239f?placeholderIfAbsent=true"
-                  className="aspect-[1000] object-contain w-full stroke-[1px] stroke-[#E7E7E7] mt-3"
-                  alt="Divider"
-                />
-              </div>
-              <div className="max-w-full w-[690px] mt-6 space-y-3">
-                {dessertItems.map((item) => renderMenuItem(item, "dessert"))}
-              </div>
-            </div>
-          </>
-        )}
-
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/c5aa4e73234bded19e99f5c937f589bf4da8239f?placeholderIfAbsent=true"
-          className="aspect-[1000] object-contain w-full stroke-[1px] stroke-[#E7E7E7] mt-[38px] max-md:max-w-full"
-          alt="Divider"
-        />
+          </div>
+        ))}
       </div>
     </section>
   );

@@ -69,7 +69,6 @@ export const LoginForm: React.FC = () => {
         }
       }, 100);
     } catch (error: any) {
-      console.error("Login error:", error);
       handleApiError(error, "Invalid email or password. Please try again.");
     } finally {
       setIsLoading(false);

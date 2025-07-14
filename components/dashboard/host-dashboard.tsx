@@ -1,56 +1,24 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
+import useBookings from "@/hooks/useBookings";
+import { BookingCard } from "./booking-card";
+import { useAuthStore } from "@/lib/store/auth-store";
+import { FiCopy } from "react-icons/fi";
 
-import { BookingCard, BookingCardProps } from "./booking-card";
+const STATUS_OPTIONS = [
+  "Upcoming",
+  "Enquiries",
+  "Pending",
+  "Completed",
+  "Cancelled",
+];
 
 export const MyBookingsPage: React.FC = () => {
-  const bookingData: BookingCardProps[] = [
-    {
-      user: "host",
-      title: "Large Event",
-      date: "August 16, 2023",
-      location: "London, UK",
-      price: "£1,250",
-      description: "Birthday party event",
-      attendees: "40 people attending",
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/a432e0085dfc7da10d5e7fc4771e6a4a467731f1?placeholderIfAbsent=true",
-    },
-    {
-      user: "host",
-      title: "Custom booking",
-      date: "August 16, 2023",
-      location: "London, UK",
-      price: "£1,250",
-      description: "Birthday party event",
-      attendees: "40 people attending",
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/b8d1fae7a7ccc7a59b5d4a9ed0cc5526edcecb05?placeholderIfAbsent=true",
-    },
-    {
-      user: "host",
-      title: "Meal Prep",
-      date: "August 16, 2023",
-      location: "London, UK",
-      price: "£1,250",
-      description: "Birthday party event",
-      attendees: "40 people attending",
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/a432e0085dfc7da10d5e7fc4771e6a4a467731f1?placeholderIfAbsent=true",
-    },
-    {
-      user: "host",
-      title: "Chef at Home",
-      date: "August 16, 2023",
-      location: "London, UK",
-      price: "£1,250",
-      description: "Birthday party event",
-      attendees: "40 people attending",
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/b8d1fae7a7ccc7a59b5d4a9ed0cc5526edcecb05?placeholderIfAbsent=true",
-    },
-  ];
+  const [selectedStatus, setSelectedStatus] = useState<string>("Upcoming");
+  const { bookings, loading, error, totalCount, refetch } = useBookings({ status: selectedStatus });
+  const { user } = useAuthStore();
+  const referralCode = user?.username || "-";
 
   return (
     <div className="flex overflow-hidden flex-col bg-zinc-50">
@@ -71,8 +39,7 @@ export const MyBookingsPage: React.FC = () => {
               />
               <p className="self-stretch my-auto w-[335px]">
                 Payment is fully refundable{" "}
-                <span style={{ fontWeight: 700 }}>12 days </span>before the
-                event
+                <span style={{ fontWeight: 700 }}>12 days </span>before the event
               </p>
             </div>
           </div>
@@ -80,16 +47,8 @@ export const MyBookingsPage: React.FC = () => {
             <div className="flex flex-col self-stretch my-auto text-xs">
               <div className="text-neutral-500">Your referral code</div>
               <div className="flex gap-2 items-center self-start mt-1.5 font-bold text-black whitespace-nowrap">
-                <div className="self-stretch my-auto text-black">
-                  iyabobello
-                </div>
-                <Image
-                  alt="Copy icon"
-                  className="object-contain shrink-0 self-stretch my-auto"
-                  height={14}
-                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/d0176cfe2e7a9a576fe9ccbeeb80e706f305dc2f?placeholderIfAbsent=true"
-                  width={14}
-                />
+                <div className="self-stretch my-auto text-black">{referralCode}</div>
+                <FiCopy className="w-4 h-4 text-gray-500 cursor-pointer" />
               </div>
             </div>
             <button className="overflow-hidden gap-2 self-stretch px-4 py-2.5 my-auto text-sm font-semibold leading-none text-white bg-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)]">
@@ -100,44 +59,46 @@ export const MyBookingsPage: React.FC = () => {
 
         <nav className="flex gap-4 items-start self-start mt-9 ml-28 text-xs font-medium text-zinc-950 max-md:max-w-full">
           <div className="flex flex-wrap gap-2.5 items-start min-w-60 max-md:max-w-full">
-            <button className="overflow-hidden gap-2 self-stretch px-3.5 py-2 border-solid border-[0.767px] border-[color:var(--Black-200,#CFCFCE)] rounded-[30.689px] text-zinc-950">
-              Upcoming bookings (1)
-            </button>
-            <button className="overflow-hidden gap-2 self-stretch py-2 pr-3.5 pl-3.5 text-white bg-amber-400 border-solid border-[1.534px] border-[color:var(--Primary-200,#F9DF98)] rounded-[30.689px]">
-              Enquiries (5)
-            </button>
-            <button className="overflow-hidden gap-2 self-stretch py-2 pr-3.5 pl-3.5 whitespace-nowrap border-solid border-[0.767px] border-[color:var(--Black-200,#CFCFCE)] rounded-[30.689px] text-zinc-950">
-              Pending(5)
-            </button>
-            <button className="overflow-hidden gap-2 self-stretch px-3.5 py-2 border-solid border-[0.767px] border-[color:var(--Black-200,#CFCFCE)] rounded-[30.689px] text-zinc-950">
-              Completed (4)
-            </button>
-            <button className="overflow-hidden gap-2 self-stretch px-3.5 py-2 whitespace-nowrap border-solid border-[1.534px] border-[color:var(--Black-200,#CFCFCE)] rounded-[30.689px] text-zinc-950">
-              Cancelled
-            </button>
+            {STATUS_OPTIONS.map((status) => (
+              <button
+                key={status}
+                className={`overflow-hidden gap-2 self-stretch px-3.5 py-2 border-solid rounded-[30.689px] ${
+                  selectedStatus === status
+                    ? "text-white bg-amber-400 border-[1.534px] border-[color:var(--Primary-200,#F9DF98)]"
+                    : "text-zinc-950 border-[0.767px] border-[color:var(--Black-200,#CFCFCE)]"
+                }`}
+                onClick={() => setSelectedStatus(status)}
+                type="button"
+              >
+                {status}
+              </button>
+            ))}
           </div>
         </nav>
 
         <section className="self-center mt-9 max-w-full w-[887px]">
-          <div className="flex gap-5 max-md:flex-col max-md:">
-            <div className="w-6/12 max-md:ml-0 max-md:w-full">
-              <BookingCard {...bookingData[0]} />
+          {loading ? (
+            <div className="text-center py-12 text-gray-500">Loading bookings...</div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <p className="text-red-500 mb-4">{error}</p>
+              <button
+                className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
+                onClick={refetch}
+                type="button"
+              >
+                Retry
+              </button>
             </div>
-            <div className="ml-5 w-6/12 max-md:ml-0 max-md:w-full">
-              <BookingCard {...bookingData[1]} />
+          ) : bookings.length === 0 ? (
+            <div className="text-center py-12 text-gray-500">No bookings found for this status.</div>
+          ) : (
+            <div className="grid grid-cols-2 gap-5 max-md:grid-cols-1">
+              {bookings.map((booking, idx) => (
+                <BookingCard key={idx} booking={booking} />
+              ))}
             </div>
-          </div>
-        </section>
-
-        <section className="self-center mt-8 max-w-full w-[886px]">
-          <div className="flex gap-5 max-md:flex-col max-md:">
-            <div className="w-6/12 max-md:ml-0 max-md:w-full">
-              <BookingCard {...bookingData[2]} />
-            </div>
-            <div className="ml-5 w-6/12 max-md:ml-0 max-md:w-full">
-              <BookingCard {...bookingData[3]} />
-            </div>
-          </div>
+          )}
         </section>
       </main>
     </div>

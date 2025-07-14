@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { quotesService } from "@/lib/api/quotes";
 
 import { ProgressIndicator } from "@/components/ui/progress-indicator";
 import { EventDetailsCard } from "@/components/checkout/event-details-card";
@@ -7,7 +8,25 @@ import { PaymentMethodSelector } from "@/components/checkout/payment-method-sele
 import { OrderSummary } from "@/components/checkout/order-summary";
 import { MenuIncludes } from "@/components/checkout/menu-includes";
 
-export const Checkout: React.FC = () => {
+interface CheckoutProps {
+  bookingId?: number | null;
+}
+
+export const Checkout: React.FC<CheckoutProps> = ({ bookingId }) => {
+  const [quote, setQuote] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!bookingId) return;
+    setLoading(true);
+    setError(null);
+    quotesService.getQuoteById(bookingId)
+      .then((data) => setQuote(data))
+      .catch(() => setError("Failed to fetch quote details."))
+      .finally(() => setLoading(false));
+  }, [bookingId]);
+
   return (
     <div className="bg-[rgba(251,251,251,1)] flex flex-col overflow-hidden items-stretch pb-[81px]">
       <main className="self-center flex w-full max-w-[1062px] flex-col items-stretch mt-[57px] max-md:max-w-full max-md:mt-10">
@@ -38,8 +57,10 @@ export const Checkout: React.FC = () => {
             {/* Right Column - Order Summary */}
             <div className="w-[36%] ml-5 max-md:w-full max-md:ml-0">
               <div className="flex flex-col">
-                <OrderSummary />
-                <MenuIncludes />
+                {loading && <div className="text-gray-500 text-center py-4">Loading quote...</div>}
+                {error && <div className="text-red-500 text-center py-4">{error}</div>}
+                {quote && <OrderSummary quote={quote} />}
+                {quote && <MenuIncludes quote={quote} />}
               </div>
             </div>
           </div>

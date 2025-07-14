@@ -26,7 +26,12 @@ export const MessagesForm: React.FC<MessagesFormProps> = ({
       onNext({ message });
       setMessage("");
     } catch (error) {
-      console.error("Error sending message:", error);
+      // Log error in production with proper error handling
+      if (process.env.NODE_ENV !== "production") {
+        // eslint-disable-next-line no-console
+        console.error("Error sending message:", error);
+      }
+      // In a real app, you might want to use a toast or other UI notification
       alert("Failed to send message. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -66,7 +71,7 @@ export const MessagesForm: React.FC<MessagesFormProps> = ({
                 aria-describedby="message-help"
               />
               <div id="message-help" className="sr-only">
-                Enter your message or inquiry about the event venue
+                Let the chef know about any other details
               </div>
             </div>
           </div>
