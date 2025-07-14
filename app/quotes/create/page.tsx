@@ -3,7 +3,7 @@ import React from "react";
 import { QuoteForm } from "@/components/quotes/quote-form";
 import { CreateSidebar } from "@/components/quotes/create-sidebar";
 
-export const CreateQuotePage: React.FC = () => {
+const CreateQuotePage: React.FC = () => {
   return (
     <main className="flex flex-col items-center justify-center mt-9 max-w-full w-full px-4">
       <div className="w-full max-w-[885px]">
