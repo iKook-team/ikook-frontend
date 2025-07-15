@@ -69,7 +69,7 @@ export const ChefBookingForm: React.FC = () => {
             className="aspect-[500] object-contain w-full stroke-[1px] stroke-[#E7E7E7] mt-1 max-md:max-w-full"
           />
 
-          <EventDetailsForm onFormChange={handleFormChange} />
+          <EventDetailsForm onNext={handleFormChange} onBack={() => {}} />
 
           <hr className="w-full stroke-[1px] stroke-[#E7E7E7] mt-[231px] max-md:max-w-full max-md:mt-10 border-[#E7E7E7]" />
           

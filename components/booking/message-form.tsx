@@ -8,7 +8,7 @@ export interface MessagesFormProps {
   onNext: (data?: Record<string, any>) => void;
   onBack: () => void;
   bookingData?: Record<string, any>;
-  selectedMenuItems?: number[];
+  selectedMenuItems?: string[];
   menuId?: number;
 }
 
@@ -34,7 +34,7 @@ export const MessagesForm: React.FC<MessagesFormProps> = ({
       // Compose payload for booking
       const payload = {
         ...bookingData,
-        menu_choices: selectedMenuItems,
+        menu_choices: selectedMenuItems.map(Number),
         menu: menuId,
         message,
       };

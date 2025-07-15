@@ -16,7 +16,7 @@ const Index = () => {
 
         <div className="w-[64%] ml-5 max-md:w-full max-md:ml-0">
           <div className="grow max-md:max-w-full max-md:mt-[33px]">
-            <EventDetails />
+            <EventDetails onNext={() => {}} onBack={() => {}} />
             <ReviewsSection />
             <MenusSection />
             <SimilarChefs />

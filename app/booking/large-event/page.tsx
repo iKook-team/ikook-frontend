@@ -20,6 +20,11 @@ type BookingStep =
 const FineDiningBookingPage = () => {
   const [currentStep, setCurrentStep] = useState<BookingStep>("cart");
   const [bookingData, setBookingData] = useState<Record<string, any>>({});
+  const [menu, setMenu] = useState<any>(null);
+  const [menuLoading, setMenuLoading] = useState(false);
+  const [menuError, setMenuError] = useState<string | null>(null);
+  const [selectedMenuItems, setSelectedMenuItems] = useState<string[]>([]);
+  const setMenuId = (id: number) => {};
 
   const handleNext = (data?: Record<string, any>) => {
     if (data) {
@@ -62,7 +67,17 @@ const FineDiningBookingPage = () => {
   const renderStep = () => {
     switch (currentStep) {
       case "cart":
-        return <Cart onNext={handleNext} />;
+        return (
+          <Cart
+            onNext={handleNext}
+            menu={menu}
+            menuLoading={menuLoading}
+            menuError={menuError}
+            selectedMenuItems={selectedMenuItems}
+            setSelectedMenuItems={setSelectedMenuItems}
+            setMenuId={setMenuId}
+          />
+        );
       case "event-details":
         return <EventDetailsForm onBack={handleBack} onNext={handleNext} />;
       case "event-details2":
@@ -79,7 +94,17 @@ const FineDiningBookingPage = () => {
       case "checkout":
         return <Checkout />;
       default:
-        return <Cart onNext={handleNext} />;
+        return (
+          <Cart
+            onNext={handleNext}
+            menu={menu}
+            menuLoading={menuLoading}
+            menuError={menuError}
+            selectedMenuItems={selectedMenuItems}
+            setSelectedMenuItems={setSelectedMenuItems}
+            setMenuId={setMenuId}
+          />
+        );
     }
   };
 
