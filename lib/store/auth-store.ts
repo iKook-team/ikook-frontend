@@ -15,6 +15,7 @@ interface User {
   phone_number: string;
   access_token: string;
   refresh_token: string;
+  document_verified?: boolean;
 }
 
 interface HostFormData {

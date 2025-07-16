@@ -9,6 +9,7 @@ interface CustomerReviewCardProps {
   likes?: number;
   dislikes?: number;
   serviceType?: "meal-prep" | "barbeque" | "default";
+  rating?: number;
 }
 
 export const CustomerReviewCard: React.FC<CustomerReviewCardProps> = ({
@@ -19,6 +20,7 @@ export const CustomerReviewCard: React.FC<CustomerReviewCardProps> = ({
   likes,
   dislikes,
   serviceType = "default",
+  rating = 0,
 }) => {
   const getServiceBadgeStyle = () => {
     switch (serviceType) {
@@ -31,16 +33,28 @@ export const CustomerReviewCard: React.FC<CustomerReviewCardProps> = ({
     }
   };
 
+  // Render stars based on rating (max 5)
+  const roundedRating = Math.round(rating);
+  const stars = Array.from({ length: 5 }, (_, i) => (
+    <svg
+      key={i}
+      width="16"
+      height="16"
+      viewBox="0 0 20 20"
+      fill={i < roundedRating ? "#FCC01C" : "#E5E7EB"}
+      xmlns="http://www.w3.org/2000/svg"
+      className="inline-block"
+    >
+      <path d="M10 15.27L16.18 19l-1.64-7.03L20 7.24l-7.19-.61L10 0 7.19 6.63 0 7.24l5.46 4.73L3.82 19z" />
+    </svg>
+  ));
+
   return (
     <article className="flex flex-col grow shrink items-start px-3 pt-3 pb-24 rounded-2xl border border-solid border-stone-300 min-h-[227px] min-w-60 w-[314px]">
       <div className="flex flex-col items-start max-w-full h-[127px] w-[310px]">
         <div className="text-base font-medium text-zinc-800">
           <h3 className="text-zinc-800">{name}</h3>
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/def8ee5183f6b9f76e04a574a116d058be679d34?placeholderIfAbsent=true"
-            className="object-contain mt-1.5 aspect-[5.59] w-[84px]"
-            alt="Rating stars"
-          />
+          <div className="flex mt-1.5">{stars}</div>
         </div>
         <div
           className={`flex gap-2.5 justify-center items-center p-2 mt-3.5 text-xs rounded-md ${getServiceBadgeStyle()}`}

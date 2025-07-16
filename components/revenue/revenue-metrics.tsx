@@ -1,4 +1,6 @@
 import React from "react";
+import { useAuthStore } from "@/lib/store/auth-store";
+import { getCurrencySymbol } from "@/lib/utils/currency";
 
 interface MetricCardProps {
   title: string;
@@ -22,15 +24,35 @@ const MetricCard = ({ title, amount }: MetricCardProps) => (
   </div>
 );
 
-export const RevenueMetrics = () => {
+interface RevenueMetricsProps {
+  earnings: {
+    balance?: string;
+    total_withdrawals?: string;
+    total_earnings?: string;
+  };
+}
+
+export const RevenueMetrics: React.FC<RevenueMetricsProps> = ({ earnings }) => {
+  const user = useAuthStore((s) => s.user);
+  const currency = getCurrencySymbol({
+    currency: (user as any)?.currency,
+    country: (user as any)?.country,
+  });
+  // Helper to format amount with thousand separators
+  const formatAmount = (amount?: string) => {
+    if (!amount) return `${currency}0`;
+    const num = Number(amount);
+    if (isNaN(num)) return `${currency}0`;
+    return `${currency}${num.toLocaleString()}`;
+  };
   return (
     <section className="w-full max-w-4xl mx-auto px-5 py-6">
       <h1 className="text-2xl font-bold text-black mb-6">Revenue</h1>
 
       <div className="flex gap-4 w-full">
-        <MetricCard title="Available Balance" amount="£4,500" />
-        <MetricCard title="Withdraw" amount="£7,500" />
-        <MetricCard title="Total" amount="£12,000" />
+        <MetricCard title="Available Balance" amount={formatAmount(earnings?.balance)} />
+        <MetricCard title="Withdraw" amount={formatAmount(earnings?.total_withdrawals)} />
+        <MetricCard title="Total" amount={formatAmount(earnings?.total_earnings)} />
       </div>
     </section>
   );

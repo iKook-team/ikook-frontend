@@ -1,5 +1,8 @@
 import * as React from "react";
 
+import { useAuthStore } from "@/lib/store/auth-store";
+import { useRouter } from "next/navigation";
+
 import { UploadButton } from "./upload-button";
 
 interface DocumentNotificationProps {
@@ -11,27 +14,16 @@ export function DocumentNotification({
   onUpload,
   className,
 }: DocumentNotificationProps) {
+  const user = useAuthStore((s) => s.user);
+  const router = useRouter();
+  // Only show if document_verified is false (or not present)
+  if (user?.user_type !== "Chef" || user?.document_verified) {
+    return null;
+  }
+
   const handleUploadClick = () => {
-    if (onUpload) {
-      onUpload();
-    } else {
-      // Default behavior - could open file picker
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = ".pdf,.doc,.docx,.jpg,.jpeg,.png";
-      input.multiple = true;
-      input.onchange = (e) => {
-        const files = (e.target as HTMLInputElement).files;
-        if (files && files.length > 0) {
-          console.log(
-            "Files selected:",
-            Array.from(files).map((f) => f.name)
-          );
-          // Here you would typically handle the file upload
-        }
-      };
-      input.click();
-    }
+    // Always navigate to document verification page
+    router.push("/document-verification");
   };
 
   return (
