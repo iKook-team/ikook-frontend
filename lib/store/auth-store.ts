@@ -23,6 +23,7 @@ interface HostFormData {
   email: string;
   phoneNumber: string;
   referralCode?: string;
+  countryCode?: string;
 }
 
 interface ChefFormData {

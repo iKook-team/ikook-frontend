@@ -104,6 +104,7 @@ interface BaseListingParams {
 interface MenuListingParams extends BaseListingParams {
   menu_type?: MenuTag;
   // Add menu-specific filters
+  status?: string;
 }
 
 interface ServiceListingParams extends BaseListingParams {

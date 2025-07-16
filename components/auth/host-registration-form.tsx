@@ -17,14 +17,18 @@ interface FormData {
   email: string;
   phoneNumber: string;
   referralCode?: string;
+  countryCode: string;
 }
 
-export const HostRegistrationForm: React.FC = () => {
+interface HostRegistrationFormProps {
+  onSubmit?: (data: FormData) => void;
+}
+
+export const HostRegistrationForm: React.FC<HostRegistrationFormProps> = ({ onSubmit }) => {
   const router = useRouter();
   const { setUserType, setHostFormData } = useAuthStore();
   // Track selected country code for phone input
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_countryCode, setCountryCode] = useState("NG");
+  const [countryCode, setCountryCode] = useState("NG");
 
   const {
     register,
@@ -41,13 +45,13 @@ export const HostRegistrationForm: React.FC = () => {
     },
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onLocalSubmit = async (data: FormData) => {
     try {
       // Set user type to 'host' in global state
       setUserType('host');
       
       // Save form data locally
-      setHostFormData(data);
+      setHostFormData({ ...data, countryCode });
       
       // Send OTP to email using the real API
       await authService.sendOtp(data.email);
@@ -55,8 +59,11 @@ export const HostRegistrationForm: React.FC = () => {
       // Show success toast
       showToast.success("Verification code sent to your email");
       
-      // Navigate to email verification page
-      router.push("/email-verification");
+      // Remove navigation to /email-verification so the OTP step stays in the flow
+      // router.push("/email-verification");
+      if (onSubmit) {
+        onSubmit({ ...data, countryCode });
+      }
     } catch (error) {
       handleApiError(error, "Failed to send verification code. Please try again.");
     }
@@ -89,7 +96,7 @@ export const HostRegistrationForm: React.FC = () => {
         </h1>
 
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onLocalSubmit)}
           className="absolute w-[508px] left-[49px] top-[104px] max-md:w-[calc(100%_-_64px)] max-md:left-8 max-sm:w-[calc(100%_-_48px)] max-sm:left-6 max-sm:top-[90px]"
         >
           <fieldset className="flex flex-col items-start gap-6 max-sm:gap-5">
@@ -163,15 +170,13 @@ export const HostRegistrationForm: React.FC = () => {
             />
           </fieldset>
 
-          <div className="absolute top-[400px] h-12 w-[508px]">
-            <button
-              className="h-12 w-full cursor-pointer gap-2 rounded-lg border border-solid border-[#FCC01C] bg-[#FCC01C] px-4 py-3 text-base font-semibold leading-6 text-white shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] disabled:cursor-not-allowed disabled:bg-gray-400"
-              disabled={!isFormValid || isSubmitting}
-              type="submit"
-            >
-              {isSubmitting ? "Sending..." : "Continue"}
-            </button>
-          </div>
+          <button
+            className="mt-8 h-12 w-full cursor-pointer gap-2 rounded-lg border border-solid border-[#FCC01C] bg-[#FCC01C] px-4 py-3 text-base font-semibold leading-6 text-white shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] disabled:cursor-not-allowed disabled:opacity-60"
+            disabled={!isFormValid || isSubmitting}
+            type="submit"
+          >
+            {isSubmitting ? "Sending..." : "Continue"}
+          </button>
         </form>
       </main>
     </div>

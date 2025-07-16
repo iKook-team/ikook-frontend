@@ -25,7 +25,7 @@ export function ProgressStepper({
   className = ""
 }: ProgressStepperProps) {
   return (
-    <section className={`box-border flex gap-16 items-start p-4 w-full max-w-[604px] max-md:flex-wrap max-md:gap-10 max-md:justify-center max-sm:flex-col max-sm:gap-5 max-sm:items-center ${className}`}>
+    <section className={`box-border flex justify-between items-start w-[615px] mx-auto max-md:flex-wrap max-md:gap-6 max-md:justify-center max-sm:flex-col max-sm:gap-4 max-sm:items-center ${className}`}>
       {steps.map((step, index) => {
         let stepClassName = "";
 

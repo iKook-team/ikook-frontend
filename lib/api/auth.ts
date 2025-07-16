@@ -1,5 +1,5 @@
 import apiClient from "@/src/lib/axios";
-import axios from "axios";
+
 import { getRefreshToken } from "@/src/lib/auth";
 
 type VerifyAction = "send_token" | "verify_token";
@@ -42,7 +42,6 @@ export const authService = {
       });
       return true;
     } catch (error) {
-      console.error("Failed to send OTP:", error);
       throw error;
     }
   },
@@ -57,7 +56,6 @@ export const authService = {
       });
       return true;
     } catch (error) {
-      console.error("OTP verification failed:", error);
       throw error;
     }
   },
@@ -78,16 +76,15 @@ export const authService = {
     try {
       const response = await apiClient.get(`/users/profiles/`, {
         params: {
-          user_type: "Host" // This will be filtered by the backend
-        }
+          user_type: "Host", // This will be filtered by the backend
+        },
       });
-      return { 
-        success: true, 
+      return {
+        success: true,
         message: "Token is valid",
-        data: null
+        data: null,
       };
     } catch (error) {
-      console.error("Token validation failed:", error);
       throw error;
     }
   },
@@ -97,7 +94,7 @@ export const authService = {
     const refreshToken = getRefreshToken();
     const accessToken = localStorage.getItem("ikook_auth_token");
     // Debug logging removed
-    
+
     if (!refreshToken) {
       throw new Error("No refresh token found");
     }

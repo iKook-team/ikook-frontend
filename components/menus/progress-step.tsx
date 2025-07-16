@@ -13,10 +13,10 @@ export function ProgressStep({
 }: ProgressStepProps) {
   return (
     <div className={`flex relative flex-col shrink-0 gap-1 items-start ${className}`}>
-      <div className="relative h-1 w-[140px]">
-        <div className="absolute top-0 left-0 shrink-0 h-1 rounded bg-neutral-200 w-[140px]" />
+      <div className="relative h-1 w-full">
+        <div className="absolute top-0 left-0 shrink-0 h-1 rounded bg-neutral-200 w-full" />
         {isCompleted && (
-          <div className="absolute top-0 left-0 shrink-0 h-1 bg-green-600 rounded-lg w-[140px]" />
+          <div className="absolute top-0 left-0 shrink-0 h-1 bg-green-600 rounded-lg w-full" />
         )}
       </div>
       <div className="flex relative gap-0.5 items-center">

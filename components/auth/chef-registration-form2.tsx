@@ -83,8 +83,12 @@ export const ChefRegistrationForm2: React.FC<ChefRegistrationForm2Props> = ({
       // Send OTP to email using the real API
       await authService.sendOtp(formData.email);
       
-      // Navigate to email verification page
-      router.push("/email-verification");
+      // Notify parent to advance to OTP step
+      if (onSubmit) {
+        onSubmit(formData);
+      }
+      // Remove navigation to /email-verification
+      // router.push("/email-verification");
     } catch (error) {
       console.error("Registration error:", error);
       alert("Failed to send verification code. Please try again.");

@@ -6,10 +6,12 @@ import Image from "next/image";
 import { FormField } from "../ui/form-field";
 import { PriceInput } from "../ui/price-input";
 import { TagSelector } from "../ui/tag-selector";
+
 import { FormNavigationFooter } from "./form-navigation-footer";
 import { ProgressStepper } from "./progress-indicator";
 
 import { MenuFormData } from "@/types/menu-form";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 interface CreateMenuStep1Props {
   onContinue: () => void;
@@ -24,43 +26,55 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
   formData,
   updateFormData,
 }) => {
+  const chefFormData = useAuthStore((s) => s.chefFormData);
+  const country = chefFormData?.country;
+  function getCurrencySymbol(country?: string) {
+    if (!country) return "£";
+    if (country === "Nigeria") return "₦";
+    if (country === "South Africa") return "R";
+    if (country === "United Kingdom") return "£";
+    return "£";
+  }
+  const currency = getCurrencySymbol(country);
   const [localFormData, setLocalFormData] = useState<Partial<MenuFormData>>({
     menuName: formData.menuName || "",
     price: formData.price || "",
     minimumGuests: formData.minimumGuests || "",
-    maxMenuSelection: formData.maxMenuSelection || "3",
-    eventTypes: formData.eventTypes || ["Wedding", "Birthday", "Dinner"],
-    cuisineTypes: formData.cuisineTypes || ["African", "Modern English", "Italian"],
-    menuType: formData.menuType || "Chef at home",
+    maxMenuSelection: formData.maxMenuSelection || "",
+    eventTypes: formData.eventTypes || [],
+    cuisineTypes: formData.cuisineTypes || [],
+    menuType: formData.menuType || "Chef at Home",
   });
 
   const progressSteps = [
-    { label: "Details", completed: true },
-    { label: "Menu & prices", completed: true },
-    { label: "Menu images", completed: true },
-    { label: "Finish upload", completed: true },
+    { id: "details", label: "Details", isCompleted: true },
+    { id: "menu-prices", label: "Menu & prices", isCompleted: false },
+    { id: "menu-images", label: "Menu images", isCompleted: false },
+    { id: "finish-upload", label: "Finish upload", isCompleted: false },
   ];
 
   const eventTypeOptions = [
+    "Naming",
     "Wedding",
-    "Birthday",
-    "Dinner",
-    "Corporate",
-    "Anniversary",
+    "Gathering",
   ];
   const cuisineTypeOptions = [
-    "African",
-    "Modern English",
     "Italian",
-    "Asian",
-    "Mediterranean",
+    "African",
+    "Chinese",
+    "Pastries",
     "French",
+    "English",
+    "Spicy Mediterranean",
+    "Pizza",
   ];
   const menuTypeOptions = [
-    "Chef at home",
-    "Catering",
-    "Meal prep",
-    "Private dining",
+    "Chef at Home",
+    "Fine Dining",
+    "Large Event",
+    "Corporate Dining",
+    "Meal Prep",
+    "Meal Delivery",
   ];
 
   const handleInputChange =
@@ -88,6 +102,15 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
     onContinue();
   };
 
+  const isStepValid =
+    !!localFormData.menuName &&
+    !!localFormData.price &&
+    !!localFormData.minimumGuests &&
+    !!localFormData.maxMenuSelection &&
+    Array.isArray(localFormData.eventTypes) && localFormData.eventTypes.length > 0 &&
+    Array.isArray(localFormData.cuisineTypes) && localFormData.cuisineTypes.length > 0 &&
+    !!localFormData.menuType;
+
   return (
     <div className="flex flex-col w-full max-w-[655px] mx-auto">
       <header className="text-xl font-semibold text-black mb-6">
@@ -95,7 +118,7 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
       </header>
 
       <main className="flex flex-col w-full bg-white rounded-2xl border border-solid shadow-lg border-neutral-200 p-6">
-        <ProgressStepper />
+        <ProgressStepper steps={progressSteps} />
 
         <section>
           <h2 className="self-start mt-7 text-lg font-semibold leading-loose text-black max-md:ml-0.5">
@@ -118,6 +141,7 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
               placeholder="What's the menu name?"
               value={localFormData.menuName}
               onChange={handleInputChange("menuName")}
+              required={true}
             />
 
             <PriceInput
@@ -126,6 +150,7 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
               placeholder="Price per person"
               value={localFormData.price}
               onChange={handleValueChange("price")}
+              currency={currency}
             />
 
             <FormField
@@ -135,16 +160,17 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
               type="number"
               value={localFormData.minimumGuests}
               onChange={handleInputChange("minimumGuests")}
+              required={true}
             />
 
             <FormField
               className="mt-5"
               label="Maximum menu selection"
-              options={["1", "2", "3", "4", "5"]}
-              placeholder="Select maximum menu selection"
-              type="select"
+              placeholder="Enter maximum menu selection"
+              type="number"
               value={localFormData.maxMenuSelection}
               onChange={handleInputChange("maxMenuSelection")}
+              required={true}
             />
 
             <TagSelector
@@ -171,6 +197,7 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
               type="select"
               value={localFormData.menuType}
               onChange={handleInputChange("menuType")}
+              required={true}
             />
           </div>
         </section>
@@ -187,6 +214,7 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
         <FormNavigationFooter 
           onBack={onBack}
           onContinue={handleContinueClick}
+          disabled={!isStepValid}
         />
       </main>
     </div>

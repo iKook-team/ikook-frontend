@@ -10,6 +10,7 @@ interface OTPVerificationProps {
   isSubmitting: boolean;
   onSubmit: (data: { otp: string }) => void;
   userType?: "host" | "chef";
+  email?: string;
   _otp?: string; // Prefix with underscore since it's not used
 }
 
@@ -17,6 +18,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
   isSubmitting,
   onSubmit,
   userType,
+  email,
 }) => {
   const [otpValues, setOtpValues] = useState<string[]>([
     "",
@@ -53,11 +55,28 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
 
   const handleResendCode = async () => {
     setIsResending(true);
-    setTimeout(() => {
-      setIsResending(false);
+    try {
+      if (!email) {
+        // Show error if email is missing
+        if (typeof window !== 'undefined') {
+          // Only show toast in browser
+          const { showToast } = await import('@/lib/utils/toast');
+          showToast.error('Email not found. Please go back and re-enter your email.');
+        }
+        setIsResending(false);
+        return;
+      }
+      const { showToast } = await import('@/lib/utils/toast');
+      await (await import('@/lib/api/auth')).authService.sendOtp(email);
+      showToast.success('Verification code resent to your email.');
       setOtpValues(["", "", "", "", "", ""]);
       inputRefs.current[0]?.focus();
-    }, 2000);
+    } catch (error) {
+      const { handleApiError } = await import('@/lib/utils/toast');
+      handleApiError(error, 'Failed to resend verification code. Please try again.');
+    } finally {
+      setIsResending(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {

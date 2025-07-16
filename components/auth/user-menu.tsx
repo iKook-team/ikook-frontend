@@ -38,13 +38,13 @@ export const UserMenu: React.FC = () => {
       showToast.success("Logged out successfully");
 
       // Redirect to home page
-      router.push("/");
+      router.push("/login");
     } catch (error) {
       handleApiError(error, "Logout failed. Please try again.");
       // Even if API call fails, clear local state
       logout();
       setIsMenuOpen(false);
-      router.push("/");
+      router.push("/login");
     } finally {
       setIsLoggingOut(false);
     }

@@ -6,6 +6,7 @@ interface FormNavigationFooterProps {
   backButtonText?: string;
   continueButtonText?: string;
   className?: string;
+  disabled?: boolean;
 }
 
 export const FormNavigationFooter: React.FC<FormNavigationFooterProps> = ({
@@ -14,6 +15,7 @@ export const FormNavigationFooter: React.FC<FormNavigationFooterProps> = ({
   backButtonText = 'Back',
   continueButtonText = 'Continue',
   className = '',
+  disabled = false,
 }) => {
   return (
     <footer className={`flex gap-6 items-start self-end mt-3 text-base font-semibold whitespace-nowrap ${className}`}>
@@ -33,6 +35,7 @@ export const FormNavigationFooter: React.FC<FormNavigationFooterProps> = ({
         <button
           type="button"
           onClick={onContinue}
+          disabled={disabled}
           className="flex items-start text-white rounded-lg"
         >
           <div className="flex overflow-hidden gap-2 justify-center items-center px-7 py-3 bg-amber-400 rounded-lg border border-amber-400 border-solid shadow-sm max-md:px-5">

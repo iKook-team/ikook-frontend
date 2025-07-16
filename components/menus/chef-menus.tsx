@@ -1,41 +1,37 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { MenuItem } from "./menu-item";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { listingService } from "@/lib/api/listing";
 
 export const MyMenusPage: React.FC = () => {
   const router = useRouter();
-  const menus = [
-    {
-      id: 1,
-      title: "British",
-      price: "20",
-      img: "/menus/menu1.png",
-      location: "London",
-    },
-    {
-      id: 2,
-      title: "African",
-      price: "20",
-      img: "/menus/menu2.png",
-      location: "London",
-    },
-    {
-      id: 3,
-      title: "Spanish",
-      price: "20",
-      img: "/menus/menu3.png",
-      location: "London",
-    },
-    {
-      id: 4,
-      title: "Mexican",
-      price: "20",
-      img: "/menus/menu4.png",
-      location: "London",
-    },
+  const [menus, setMenus] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<string>("Active");
+
+  useEffect(() => {
+    const fetchMenus = async () => {
+      setLoading(true);
+      try {
+        const data = await listingService.getMenus({ status });
+        setMenus(data.results || []);
+      } catch (error) {
+        setMenus([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMenus();
+  }, [status]);
+
+  const statusOptions = [
+    { label: "Active menus", value: "Active" },
+    { label: "Draft", value: "Draft" },
+    { label: "Pending", value: "Pending" },
+    { label: "Deleted", value: "Deleted" },
   ];
 
   return (
@@ -47,18 +43,15 @@ export const MyMenusPage: React.FC = () => {
 
         <nav className="flex gap-4 justify-between w-[885px] mt-9 ml-28 text-xs font-medium text-zinc-950 max-md:max-w-full items-center">
           <div className="flex flex-wrap gap-2.5 items-center min-w-60 max-md:max-w-full">
-            <button className="overflow-hidden gap-2 self-stretch px-3.5 py-2 border-solid border-[0.767px] border-[color:var(--Black-200,#CFCFCE)] rounded-[30.689px] text-zinc-950">
-              Active menus (1)
-            </button>
-            <button className="overflow-hidden gap-2 self-stretch py-2 pr-3.5 pl-3.5 text-white bg-amber-400 border-solid border-[1.534px] border-[color:var(--Primary-200,#F9DF98)] rounded-[30.689px]">
-              Draft (5)
-            </button>
-            <button className="overflow-hidden gap-2 self-stretch py-2 pr-3.5 pl-3.5 whitespace-nowrap border-solid border-[0.767px] border-[color:var(--Black-200,#CFCFCE)] rounded-[30.689px] text-zinc-950">
-              Pending(5)
-            </button>
-            <button className="overflow-hidden gap-2 self-stretch px-3.5 py-2 border-solid border-[0.767px] border-[color:var(--Black-200,#CFCFCE)] rounded-[30.689px] text-zinc-950">
-              Deleted (4)
-            </button>
+            {statusOptions.map((option) => (
+              <button
+                key={option.value}
+                className={`overflow-hidden gap-2 self-stretch px-3.5 py-2 border-solid border-[0.767px] border-[color:var(--Black-200,#CFCFCE)] rounded-[30.689px] text-zinc-950 ${status === option.value ? "bg-amber-400 text-white border-[1.534px] border-[color:var(--Primary-200,#F9DF98)]" : ""}`}
+                onClick={() => setStatus(option.value)}
+              >
+                {option.label}
+              </button>
+            ))}
           </div>
           <Button
             size="sm"
@@ -70,9 +63,15 @@ export const MyMenusPage: React.FC = () => {
         </nav>
 
         <div className="ml-28 w-[885px] gap-6 grid grid-cols-1 md:grid-cols-2 py-8">
-          {menus.map((menu) => (
-            <MenuItem key={menu.id} {...menu} />
-          ))}
+          {loading ? (
+            <div>Loading...</div>
+          ) : menus.length === 0 ? (
+            <div>No menus found.</div>
+          ) : (
+            menus.map((menu) => (
+              <MenuItem key={menu.id} {...menu} />
+            ))
+          )}
         </div>
       </main>
     </div>

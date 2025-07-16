@@ -25,7 +25,7 @@ export const ImageUploadArea: React.FC<ImageUploadAreaProps> = ({
   };
 
   return (
-    <section className="flex flex-col gap-2.5 items-center p-2.5 rounded-xl border border-dashed border-stone-300 h-[94px] w-[613px] max-md:w-[calc(100%_-_42px)] max-sm:p-2">
+    <section className="flex flex-col gap-2.5 items-center p-2.5 rounded-xl border border-dashed border-stone-300 h-[110px] w-[613px] max-md:w-[calc(100%_-_42px)] max-sm:p-2">
       <p className="relative text-xs text-center text-zinc-800 w-[272px] max-sm:text-xs">
         (Recommended 1000px width, 1000px height.Maximum of 1MB file size)
       </p>

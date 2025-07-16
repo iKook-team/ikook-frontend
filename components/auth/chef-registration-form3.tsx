@@ -104,18 +104,32 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
   onSubmit,
 }) => {
   const { setChefFormData, chefFormData } = useAuthStore();
-  const [formData, setFormData] = useState({
-    country: initialFormData.country || "United Kingdom",
-    city: initialFormData.city || "London",
-    postalCode: initialFormData.postalCode || "",
-    address: initialFormData.address || "",
-    workAuthorization: initialFormData.workAuthorization || "",
+  const [formData, setFormData] = useState(() => {
+    const country = initialFormData.country || "United Kingdom";
+    const cityOptions = getCityOptions(country);
+    return {
+      country,
+      city: initialFormData.city || (cityOptions.length > 0 ? cityOptions[0].value : ""),
+      postalCode: initialFormData.postalCode || "",
+      address: initialFormData.address || "",
+      workAuthorization: initialFormData.workAuthorization || "",
+    };
   });
 
   const [errors, setErrors] = useState<Partial<typeof formData>>({});
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => {
+      if (field === "country") {
+        const cityOptions = getCityOptions(value);
+        return {
+          ...prev,
+          country: value,
+          city: cityOptions.length > 0 ? cityOptions[0].value : "",
+        };
+      }
+      return { ...prev, [field]: value };
+    });
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }

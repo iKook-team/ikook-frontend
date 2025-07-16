@@ -36,19 +36,18 @@ interface AllFormData {
 
 const ChefSignupPage: React.FC = () => {
   const router = useRouter();
-  const [step, setStep] = useState(1);
+  const searchParams = useSearchParams();
+  // Set initial step based on URL param only once on mount
+  const initialStep = React.useMemo(() => {
+    const verified = searchParams.get("verified") === "true";
+    return verified ? 4 : 1;
+  }, []);
+  const [step, setStep] = useState(initialStep);
   const [formData, setFormData] = useState<Partial<AllFormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { chefFormData, clearChefFormData } = useAuthStore();
-  const searchParams = useSearchParams();
 
-  // Check for verification success in URL params
-  useEffect(() => {
-    const verified = searchParams.get("verified") === "true";
-    if (verified) {
-      setStep(4); // Skip to form 4 after email verification
-    }
-  }, [searchParams]);
+  // Removed useEffect for step reset
 
   const nextStep = () => setStep((prev) => prev + 1);
 
@@ -129,6 +128,12 @@ const ChefSignupPage: React.FC = () => {
           saveTokens(response.data.access_token, response.data.refresh_token);
         }
 
+        // Save user profile to auth store
+        if (response.data) {
+          const { setUser } = require("@/lib/store/auth-store").useAuthStore.getState();
+          setUser(response.data);
+        }
+
         // Show success toast
         showToast.success("Chef account created successfully! Welcome to iKook.");
 
@@ -169,6 +174,7 @@ const ChefSignupPage: React.FC = () => {
           <OTPVerification
             isSubmitting={isSubmitting}
             onSubmit={handleNext}
+            email={chefFormData?.email}
           />
         );
       case 4:
