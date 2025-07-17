@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { ServiceToggle } from "./service-toggle";
 
@@ -9,13 +10,14 @@ const services = [
   { name: "Fine dining", defaultActive: true },
   { name: "Large event", defaultActive: false },
   { name: "Meal prep", defaultActive: false },
-  { name: "Gormet delivery", defaultActive: false },
+  { name: "Meal delivery", defaultActive: false },
   { name: "Cooking class", defaultActive: false },
   { name: "Corporate dining", defaultActive: false },
   { name: "Healthy eating coach", defaultActive: false },
 ];
 
 export const ServicesSection: React.FC = () => {
+  const router = useRouter();
   const [activeServices, setActiveServices] = useState<Record<string, boolean>>(
     services.reduce(
       (acc, service) => ({
@@ -45,6 +47,17 @@ export const ServicesSection: React.FC = () => {
               serviceName={service.name}
               isActive={activeServices[service.name]}
               onToggle={handleServiceToggle}
+              onClick={
+                service.name === "Large event"
+                  ? () => router.push("/services/large-event")
+                  : service.name === "Meal prep"
+                  ? () => router.push("/services/meal-prep")
+                  : service.name === "Meal delivery"
+                  ? () => router.push("/services/meal-delivery")
+                  : service.name === "Cooking class"
+                  ? () => router.push("/services/cooking-class")
+                  : undefined
+              }
             />
           </div>
         ))}

@@ -4,12 +4,14 @@ interface ServiceToggleProps {
   serviceName: string;
   isActive?: boolean;
   onToggle?: (serviceName: string, isActive: boolean) => void;
+  onClick?: () => void;
 }
 
 export const ServiceToggle: React.FC<ServiceToggleProps> = ({
   serviceName,
   isActive = false,
   onToggle,
+  onClick,
 }) => {
   const [active, setActive] = useState(isActive);
 
@@ -19,9 +21,11 @@ export const ServiceToggle: React.FC<ServiceToggleProps> = ({
     onToggle?.(serviceName, newState);
   };
 
+  const mainProps = onClick ? { onClick, style: { cursor: 'pointer' } } : {};
+
   if (active) {
     return (
-      <div className="flex items-center flex-wrap max-md:max-w-full">
+      <div className="flex items-center flex-wrap max-md:max-w-full" {...mainProps}>
         <div className="text-[#020101] text-lg font-normal leading-loose self-stretch w-[298px] my-auto">
           {serviceName}
         </div>
@@ -40,7 +44,7 @@ export const ServiceToggle: React.FC<ServiceToggleProps> = ({
   }
 
   return (
-    <div className="flex items-center text-lg text-[#020101] font-normal leading-loose flex-wrap max-md:max-w-full">
+    <div className="flex items-center text-lg text-[#020101] font-normal leading-loose flex-wrap max-md:max-w-full" {...mainProps}>
       <div className="text-[#020101] self-stretch w-[298px] my-auto">
         {serviceName}
       </div>

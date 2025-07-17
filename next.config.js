@@ -2,7 +2,12 @@
 const nextConfig = {
   images: {
     dangerouslyAllowSVG: true,
-    domains: ["cdn.builder.io", "images.unsplash.com", "www.svgrepo.com"],
+    domains: [
+      "api.builder.io",
+      "cdn.builder.io",
+      "images.unsplash.com",
+      "www.svgrepo.com",
+    ],
   },
 };
 
