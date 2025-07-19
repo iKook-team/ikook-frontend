@@ -147,12 +147,6 @@ export const listingService = {
       // Map the response to match the expected ApiResponse<Menu> format
       return response.data.data;
     } catch (error: any) {
-      console.error("Error in getMenus:", {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status,
-        params: requestParams,
-      });
 
       // Return an empty result set instead of throwing to prevent UI crashes
       return { count: 0, next: null, previous: null, results: [] };
