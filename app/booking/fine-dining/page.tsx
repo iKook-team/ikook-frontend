@@ -4,7 +4,7 @@ import React, { useState } from "react";
 
 import { Cart } from "@/components/cart/cart";
 import { EventDetailsForm } from "@/components/booking/event-details-form";
-import { EventDetailsForm2 } from "@/components/booking/event-details-form2";
+import { EventDetailsForm3 } from "@/components/booking/event-details-form3";
 import { PreferencesForm } from "@/components/booking/preferences";
 import { MessagesForm } from "@/components/booking/message-form";
 import { Checkout } from "@/components/checkout/checkout";
@@ -12,7 +12,7 @@ import { Checkout } from "@/components/checkout/checkout";
 type BookingStep =
   | "cart"
   | "event-details"
-  | "event-details2"
+  | "event-details3"
   | "preferences"
   | "messages"
   | "checkout";
@@ -29,7 +29,7 @@ const FineDiningBookingPage = () => {
     const steps: BookingStep[] = [
       "cart",
       "event-details",
-      "event-details2",
+      "event-details3",
       "preferences",
       "messages",
       "checkout",
@@ -46,7 +46,7 @@ const FineDiningBookingPage = () => {
     const steps: BookingStep[] = [
       "cart",
       "event-details",
-      "event-details2",
+      "event-details3",
       "preferences",
       "messages",
       "checkout",
@@ -82,8 +82,8 @@ const FineDiningBookingPage = () => {
         );
       case "event-details":
         return <EventDetailsForm onBack={handleBack} onNext={handleNext} />;
-      case "event-details2":
-        return <EventDetailsForm2 onBack={handleBack} onNext={handleNext} />;
+      case "event-details3":
+        return <EventDetailsForm3 onBack={handleBack} onNext={handleNext} />;
       case "preferences":
         return (
           <PreferencesForm

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Image from "next/image";
 
 import { CartHeader } from "@/components/cart/cart-header";
 import { ChefCard } from "@/components/cart/chef-card";
@@ -13,7 +12,8 @@ export interface EventFormData {
   location: string;
   eventDate: string;
   guests: number;
-  eventType?: string;
+  eventTime?: string;
+  venue?: string;
 }
 
 export const EventDetailsForm3: React.FC<EventDetailsFormProps> = ({
@@ -24,47 +24,36 @@ export const EventDetailsForm3: React.FC<EventDetailsFormProps> = ({
     location: "Lagos, Nigeria",
     eventDate: "28/08/2023",
     guests: 40,
-    eventType: "",
+    eventTime: "",
+    venue: "",
   });
 
-  const handleInputChange = (
-    field: keyof EventFormData,
-    value: string | number,
-  ) => {
+  const handleInputChange = (field: keyof EventFormData, value: string | number) => {
     const updatedData = { ...formData, [field]: value };
     setFormData(updatedData);
   };
 
+  const venueOptions = [
+    {
+      id: "home",
+      value: "home",
+      label: "Home",
+    },
+    {
+      id: "relative",
+      value: "relative",
+      label: "Relative/Friend Home",
+    },
+    {
+      id: "rented",
+      value: "rented",
+      label: "Rented Venue",
+    },
+  ];
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onNext(formData);
-  };
-
-  const availableCuisines = [
-    "African",
-    "Modern English",
-    "Italian",
-    "French",
-    "Asian",
-    "Mediterranean",
-    "Mexican",
-    "Indian",
-  ];
-
-  const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
-
-  const handleCuisineChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value,
-    );
-    setSelectedCuisines(selected);
-  };
-
-  const removeCuisine = (cuisineToRemove: string) => {
-    setSelectedCuisines(
-      selectedCuisines.filter((cuisine) => cuisine !== cuisineToRemove),
-    );
   };
 
   return (
@@ -86,65 +75,26 @@ export const EventDetailsForm3: React.FC<EventDetailsFormProps> = ({
             ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
             reviewCount="(23 Reviews)"
           />
-          <div className="mt-6 max-w-full w-full">
-            <div className="w-full max-md:max-w-full">
-              <div className="w-full max-md:max-w-full">
-                <label
-                  htmlFor="location"
-                  className="text-[#344054] text-sm font-medium leading-none"
-                >
-                  Location
-                </label>
-                <div className="items-center border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#101828] font-normal bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid max-md:max-w-full">
-                  <div className="relative w-full">
-                    <select
-                      aria-label="Location"
-                      className="text-[#101828] w-full self-stretch flex-1 shrink basis-[0%] min-w-60 gap-2 my-auto max-md:max-w-full bg-transparent border-none outline-none"
-                      value={formData.location}
-                      onChange={(e) => handleInputChange("location", e.target.value)}
-                    >
-                      <option value="">Select a location</option>
-                      <option value="Lagos, Nigeria">Lagos, Nigeria</option>
-                      <option value="Abuja, Nigeria">Abuja, Nigeria</option>
-                      <option value="Port Harcourt, Nigeria">
-                        Port Harcourt, Nigeria
-                      </option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
           <div className="mt-6 max-w-full w-full">
             <div className="w-full max-md:max-w-full">
               <div className="w-full max-md:max-w-full">
                 <label
-                  htmlFor="eventDate"
+                  htmlFor="event-time"
                   className="text-[#344054] text-sm font-medium leading-none"
                 >
-                  Event Date
+                  Event Time
                 </label>
-                <div className="items-center border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#101828] font-normal whitespace-nowrap flex-wrap bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid max-md:max-w-full">
-                  <div className="relative w-full">
-                    <select
-                      aria-label="Event date"
-                      className="text-[#101828] w-full self-stretch flex-1 shrink basis-[0%] min-w-60 gap-2 my-auto max-md:max-w-full bg-transparent border-none outline-none"
-                      value={formData.eventDate}
-                      onChange={(e) => handleInputChange("eventDate", e.target.value)}
-                    >
-                      <option value="">Select a date</option>
-                      <option value="28/08/2023">28/08/2023</option>
-                      <option value="29/08/2023">29/08/2023</option>
-                      <option value="30/08/2023">30/08/2023</option>
-                    </select>
-                  </div>
-                  <Image
-                    src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/d3ae61d330e0cd7d8060dfcaa4f95eb302335845?placeholderIfAbsent=true"
-                    alt="Calendar icon"
-                    width={16}
-                    height={16}
-                    className="aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto"
+                <div className="relative w-full">
+                  <input
+                    className="w-full border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] text-[#101828] text-base font-normal bg-white mt-1.5 px-3.5 py-2.5 rounded-lg outline-none"
+                    id="event-time"
+                    onChange={(e) =>
+                      handleInputChange("eventTime", e.target.value)
+                    }
+                    required
+                    type="time"
+                    value={formData.eventTime}
                   />
                 </div>
               </div>
@@ -154,233 +104,34 @@ export const EventDetailsForm3: React.FC<EventDetailsFormProps> = ({
           <div className="mt-6 max-w-full w-full">
             <div className="w-full max-md:max-w-full">
               <div className="w-full max-md:max-w-full">
-                <label
-                  htmlFor="guests"
-                  className="text-[#344054] text-sm font-medium leading-none"
-                >
-                  Guests
-                </label>
-                <div className="relative items-center border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#101828] font-normal flex-wrap bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid max-md:max-w-full">
-                  <select
-                    aria-label="Number of guests"
-                    className="text-[#101828] self-stretch flex-1 shrink basis-[0%] min-w-60 gap-2 my-auto max-md:max-w-full bg-transparent border-none outline-none appearance-none pr-8"
-                    value={formData.guests}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "guests",
-                        parseInt(e.target.value) || 40,
-                      )
-                    }
-                  >
-                    {[40, 50, 60, 70, 80, 90, 100].map((num) => (
-                      <option key={num} value={num}>
-                        {num} {num === 40 ? "guests (minimum)" : "guests"}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-                    <svg
-                      width="12"
-                      height="8"
-                      viewBox="0 0 12 8"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="text-gray-500"
-                    >
-                      <path
-                        d="M1 1.5L6 6.5L11 1.5"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                <h3 className="text-[#344054] text-sm font-medium leading-none block mb-2">
+                  Venue
+                </h3>
+                <div className="space-y-3">
+                  {venueOptions.map((option) => (
+                    <div key={option.id} className="flex items-center">
+                      <input
+                        checked={formData.venue === option.value}
+                        className="h-4 w-4 text-amber-500 border-gray-300 focus:ring-amber-500"
+                        id={option.id}
+                        name="venue"
+                        onChange={(
+                          event: React.ChangeEvent<HTMLInputElement>
+                        ) => {
+                          if (event.target.checked) {
+                            handleInputChange("venue", option.value);
+                          }
+                        }}
+                        type="radio"
                       />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {formData.guests < 40 && (
-            <div className="flex w-full flex-col text-xs text-[#3F3E3D] font-normal leading-5 justify-center bg-[#FFFCF5] mt-6 px-5 py-4 rounded-lg max-md:max-w-full">
-              <div className="flex items-center gap-3">
-                <Image
-                  width={20}
-                  height={20}
-                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/75d3ec646f092868067adae007d588e6b96a5773?placeholderIfAbsent=true"
-                  alt="payment icon"
-                  className="object-contain shrink-0 self-stretch my-auto w-5 aspect-square"
-                />
-                <div className="text-[#3F3E3D] self-stretch my-auto">
-                  Minimum number of guests for booking this chef is{" "}
-                  <span className="font-semibold text-sm leading-5">40</span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div className="mt-6 max-w-full w-full">
-            <div className="w-full max-md:max-w-full">
-              <div className="w-full max-md:max-w-full">
-                <label
-                  htmlFor="event-type"
-                  className="text-[#344054] text-sm font-medium leading-none"
-                >
-                  Event Type
-                </label>
-                <div className="relative items-center border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#101828] font-normal flex-wrap bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid max-md:max-w-full">
-                  <select
-                    aria-label="Event type"
-                    className="text-[#101828] self-stretch flex-1 shrink basis-[0%] min-w-60 gap-2 my-auto max-md:max-w-full bg-transparent border-none outline-none appearance-none pr-8"
-                    value={formData.eventType}
-                    onChange={(e) => handleInputChange("eventType", e.target.value)}
-                  >
-                    <option value="">Select event type</option>
-                    <option value="wedding">Wedding</option>
-                    <option value="birthday">Birthday Party</option>
-                    <option value="corporate">Corporate Event</option>
-                    <option value="anniversary">Anniversary</option>
-                    <option value="graduation">Graduation</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-                    <svg
-                      width="12"
-                      height="8"
-                      viewBox="0 0 12 8"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="text-gray-500"
-                    >
-                      <path
-                        d="M1 1.5L6 6.5L11 1.5"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 max-w-full w-full">
-            <div className="w-full max-md:max-w-full">
-              <div className="w-full max-md:max-w-full">
-                <label
-                  className="text-[#344054] text-sm font-medium leading-none block mb-1.5"
-                  htmlFor="cuisines"
-                >
-                  Preferred Cuisines
-                </label>
-                <div className="relative">
-                  <div className="flex flex-wrap gap-2 items-center min-h-[44px] w-full border border-[#D0D5DD] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white px-3.5 py-2.5 rounded-lg text-base text-[#101828]">
-                    {selectedCuisines.length > 0 ? (
-                      selectedCuisines.map((cuisine) => (
-                        <div
-                          key={cuisine}
-                          className="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
-                        >
-                          {cuisine}
-                          <button
-                            className="ml-2 text-gray-500 hover:text-gray-700"
-                            aria-label={`Remove ${cuisine}`}
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              removeCuisine(cuisine);
-                            }}
-                          >
-                            ×
-                          </button>
-                        </div>
-                      ))
-                    ) : (
-                      <span className="text-gray-400">Select cuisines</span>
-                    )}
-                    <select
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      id="cuisines"
-                      onChange={handleCuisineChange}
-                      value=""
-                    >
-                      <option value="" disabled>
-                        Select a cuisine
-                      </option>
-                      {availableCuisines
-                        .filter((cuisine) => !selectedCuisines.includes(cuisine))
-                        .map((cuisine) => (
-                          <option key={cuisine} value={cuisine}>
-                            {cuisine}
-                          </option>
-                        ))}
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-                      <svg
-                        className="text-gray-500"
-                        fill="none"
-                        height="8"
-                        viewBox="0 0 12 8"
-                        width="12"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <label
+                        className="ml-3 block text-sm font-medium text-gray-700"
+                        htmlFor={option.id}
                       >
-                        <path
-                          d="M1 1.5L6 6.5L11 1.5"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="1.5"
-                        />
-                      </svg>
+                        {option.label}
+                      </label>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 max-w-full w-full">
-            <div className="w-full max-md:max-w-full">
-              <div className="w-full max-md:max-w-full">
-                <label
-                  htmlFor="cuisine"
-                  className="text-[#344054] text-sm font-medium leading-none"
-                >
-                  Cuisine
-                </label>
-                <div className="relative items-center border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#101828] font-normal flex-wrap bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid max-md:max-w-full">
-                  <select
-                    value=""
-                    onChange={handleCuisineChange}
-                    className="text-[#101828] self-stretch flex-1 shrink basis-[0%] min-w-60 gap-2 my-auto max-md:max-w-full bg-transparent border-none outline-none appearance-none pr-8"
-                    aria-label="Select cuisine type"
-                  >
-                    <option value="">Select cuisine type</option>
-                    <option value="nigerian">Nigerian</option>
-                    <option value="italian">Italian</option>
-                    <option value="chinese">Chinese</option>
-                    <option value="mexican">Mexican</option>
-                    <option value="indian">Indian</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-                    <svg
-                      width="12"
-                      height="8"
-                      viewBox="0 0 12 8"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="text-gray-500"
-                    >
-                      <path
-                        d="M1 1.5L6 6.5L11 1.5"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -388,15 +139,18 @@ export const EventDetailsForm3: React.FC<EventDetailsFormProps> = ({
 
           <div className="flex w-full justify-between items-center mt-8 text-base font-semibold whitespace-nowrap">
             <button
-              type="button"
-              onClick={onBack}
               className="px-5 py-3 text-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)] w-[150px] hover:bg-amber-50 transition-colors"
+              onClick={(e) => {
+                e.preventDefault();
+                onBack();
+              }}
+              type="button"
             >
               Back
             </button>
             <button
-              type="submit"
               className="px-5 py-3 text-white bg-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)] w-[150px] hover:bg-amber-500 transition-colors"
+              type="submit"
             >
               Continue
             </button>
