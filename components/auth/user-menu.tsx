@@ -173,16 +173,24 @@ export const UserMenu: React.FC = () => {
             {/* Host-specific items */}
             {isHost && (
               <>
-                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={() => router.push("/wallet")}
+                >
                   Wallet
                 </button>
-                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={() => router.push("/favourites")}
+                >
                   Favourites
                 </button>
-                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={() => router.push("/addresses")}
+                >
                   Addresses
                 </button>
-                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={() => router.push("/referrals")}
+                >
                   Referral
                 </button>
                 <button

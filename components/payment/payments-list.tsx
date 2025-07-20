@@ -1,44 +1,34 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { PaymentCard } from './payment-card';
+import { paymentCardsService, PaymentCard as APIPaymentCard } from '@/lib/api/payment-cards';
 
-interface PaymentMethod {
-  id: string;
-  cardType: string;
-  cardNumber: string;
-  iconSrc: string;
-}
+const CARD_ICONS: Record<string, string> = {
+  VISA: 'https://api.builder.io/api/v1/image/assets/TEMP/0ec22a48944ef07eb754a2ae5fba8767bf7767a9?placeholderIfAbsent=true',
+  Mastercard: 'https://api.builder.io/api/v1/image/assets/TEMP/8e5c30b354596f0df1258f9a98b0228783ec3c1c?placeholderIfAbsent=true',
+  Verve: 'https://api.builder.io/api/v1/image/assets/TEMP/0bbcb836776468a8466ea81de21f70d7c581de4c?placeholderIfAbsent=true',
+};
+const DEFAULT_ICON = 'https://api.builder.io/api/v1/image/assets/TEMP/8a6ed808e811837a68be25e7e097e2916e02a0e0?placeholderIfAbsent=true';
 
 export const PaymentsList: React.FC = () => {
-  const paymentMethods: PaymentMethod[] = [
-    {
-      id: '1',
-      cardType: 'VISA',
-      cardNumber: '123************7678',
-      iconSrc: 'https://api.builder.io/api/v1/image/assets/TEMP/0ec22a48944ef07eb754a2ae5fba8767bf7767a9?placeholderIfAbsent=true'
-    },
-    {
-      id: '2',
-      cardType: 'Mastercard',
-      cardNumber: '123************7678',
-      iconSrc: 'https://api.builder.io/api/v1/image/assets/TEMP/8e5c30b354596f0df1258f9a98b0228783ec3c1c?placeholderIfAbsent=true'
-    },
-    {
-      id: '3',
-      cardType: 'Verve',
-      cardNumber: '123************7678',
-      iconSrc: 'https://api.builder.io/api/v1/image/assets/TEMP/0bbcb836776468a8466ea81de21f70d7c581de4c?placeholderIfAbsent=true'
-    },
-    {
-      id: '4',
-      cardType: 'Verve',
-      cardNumber: '123************7678',
-      iconSrc: 'https://api.builder.io/api/v1/image/assets/TEMP/8a6ed808e811837a68be25e7e097e2916e02a0e0?placeholderIfAbsent=true'
-    }
-  ];
+  const [cards, setCards] = useState<APIPaymentCard[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleEditCard = (cardId: string) => {
+  useEffect(() => {
+    paymentCardsService.getCards()
+      .then((res) => {
+        setCards(res.results || []);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError('Failed to load payment cards.');
+        setLoading(false);
+      });
+  }, []);
+
+  const handleEditCard = (cardId: number) => {
     console.log('Editing card:', cardId);
   };
 
@@ -53,13 +43,18 @@ export const PaymentsList: React.FC = () => {
           Payments
         </h1>
         <div className="self-stretch mt-6 max-md:max-w-full">
-          {paymentMethods.map((method, index) => (
+          {loading && <div>Loading cards...</div>}
+          {error && <div className="text-red-500">{error}</div>}
+          {!loading && !error && cards.length === 0 && (
+            <div className="text-gray-500">No payment cards found.</div>
+          )}
+          {!loading && !error && cards.map((card) => (
             <PaymentCard
-              key={method.id}
-              cardType={method.cardType}
-              cardNumber={method.cardNumber}
-              iconSrc={method.iconSrc}
-              onEdit={() => handleEditCard(method.id)}
+              key={card.id}
+              cardType={card.card_type}
+              cardNumber={`**** **** **** ${card.last4}`}
+              iconSrc={CARD_ICONS[card.card_type] || DEFAULT_ICON}
+              onEdit={() => handleEditCard(card.id)}
             />
           ))}
         </div>

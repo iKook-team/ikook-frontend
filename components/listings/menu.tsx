@@ -112,16 +112,16 @@ export const MenuListing: React.FC<MenuListingProps> = ({
         shadow="sm"
       >
         <CardBody
-          className="overflow-visible p-0 relative h-48"
-          style={{
-            backgroundImage: `url(${img})`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            backgroundPosition: "center"
-          }}
+          className="overflow-visible p-0 relative h-48 bg-gray-100"
         >
-          <FaRegHeart className="absolute top-2 right-2 text-white text-xl" />
-          <span className="absolute top-2 left-2 bg-white rounded-full px-4 py-1 text-xs">
+          <img
+            src={img || "/menus/menu1.png"}
+            alt={title}
+            className="w-full h-full object-cover absolute inset-0 z-0"
+            loading="lazy"
+          />
+          <FaRegHeart className="absolute top-2 right-2 text-white text-xl z-10" />
+          <span className="absolute top-2 left-2 bg-white rounded-full px-4 py-1 text-xs z-10">
             {location}
           </span>
         </CardBody>
