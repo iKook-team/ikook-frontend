@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 // Sub-components
 const StarRating = ({
@@ -90,7 +91,7 @@ const VerificationBadge = ({
   isVerified = true,
   profileImageUrl,
 }: VerificationBadgeProps) => (
-  <div className="w-[60px] h-[60px] shrink-0 absolute left-[225px] top-[191px] max-md:left-[205px] max-md:top-[175px] max-sm:left-[180px] max-sm:top-40">
+  <div className="w-[60px] h-[60px] shrink-0 absolute left-[270px] top-[191px] max-md:left-[205px] max-md:top-[175px] max-sm:left-[180px] max-sm:top-40">
     <div className="flex w-[60px] h-[60px] justify-center items-center overflow-hidden rounded-full border-[2.25px] border-solid border-white">
       <Image
         alt="Service provider"
@@ -161,7 +162,7 @@ interface ServiceCardProps {
   title?: string;
 }
 
-export const ServiceListing: React.FC<ServiceCardProps> = ({
+export const ServiceListing: React.FC<ServiceCardProps & { id?: number; services?: string[] }> = ({
   description,
   isVerified = true,
   location,
@@ -170,13 +171,22 @@ export const ServiceListing: React.FC<ServiceCardProps> = ({
   profileImageUrl,
   rating,
   reviewCount,
-  services,
+  services = [],
   price,
   title,
+  id,
 }) => {
+  const router = useRouter();
+  // Normalize service tag for comparison
+  const tag = (services && services[0]) ? String(services[0]).toLowerCase().replace(/[-_ ]/g, "") : "";
+  const handleCardClick = () => {
+    if (tag === "cookingclass" || tag === "eatingcoach") {
+      router.push(`/booking/services/details/${id}`);
+    }
+  };
   return (
-    <article className="w-[310px] h-[331px] shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] relative max-md:w-[280px] max-md:h-[300px] max-sm:w-[250px] max-sm:h-[280px]">
-      <div className="w-[310px] h-[300px] shrink-0 border absolute bg-white rounded-[15px] border-solid border-[#E7E7E7] left-0 top-0 max-md:w-[280px] max-md:h-[300px] max-sm:w-[250px] max-sm:h-[280px]" />
+    <article className="w-full h-80 shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] relative cursor-pointer" onClick={handleCardClick} tabIndex={0} role="button">
+      <div className="w-full h-72 shrink-0 border absolute bg-white rounded-[15px] border-solid border-[#E7E7E7] left-0 top-0" />
 
       <div
         className="absolute left-0 top-0 w-full h-[220px] rounded-t-[15px] bg-cover bg-center bg-no-repeat"
@@ -188,7 +198,7 @@ export const ServiceListing: React.FC<ServiceCardProps> = ({
       <LocationBadge location={location} />
 
       {price && (
-        <div className="absolute left-[9px] top-[190px] right-4 max-md:left-2 max-md:top-[170px] max-sm:left-[7px] max-sm:top-[140px]">
+        <div className="absolute left-[9px] top-[190px] right-4">
           <div className="text-white font-semibold leading-6">
             From £{price}
           </div>
