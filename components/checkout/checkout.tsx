@@ -59,8 +59,17 @@ export const Checkout: React.FC<CheckoutProps> = ({ bookingId }) => {
               <div className="flex flex-col">
                 {loading && <div className="text-gray-500 text-center py-4">Loading quote...</div>}
                 {error && <div className="text-red-500 text-center py-4">{error}</div>}
-                {quote && <OrderSummary quote={quote} />}
-                {quote && <MenuIncludes quote={quote} />}
+                {quote ? (
+                  <>
+                    <OrderSummary quote={quote} />
+                    <MenuIncludes quote={quote} />
+                  </>
+                ) : (
+                  <div className="bg-white rounded-[15px] shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] p-6 min-h-[300px] flex flex-col items-center justify-center text-gray-400">
+                    <div className="text-lg font-medium mb-2">Order Summary</div>
+                    <div className="text-sm">No quote loaded. Your order summary will appear here.</div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

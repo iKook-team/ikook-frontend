@@ -2,30 +2,30 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 import { Cart } from "@/components/cart/cart";
-import { EventDetailsForm } from "@/components/booking/event-details-form";
-import { EventDetailsForm2 } from "@/components/booking/event-details-form2"
-import { EventDetailsForm3 } from "@/components/booking/event-details-form3";
+import MealDetailsForm from "@/components/booking/meal-details-form";
+import MealDetailsForm2 from "@/components/booking/meal-details-form2";
+import MealDetailsForm3 from "@/components/booking/meal-details-form3";
+import MealDetailsForm4 from "@/components/booking/meal-details-form4";
+import DeliveryForm from "@/components/booking/delivery-form";
 import { PreferencesForm } from "@/components/booking/preferences";
 import { MessagesForm } from "@/components/booking/message-form";
 import { Checkout } from "@/components/checkout/checkout";
-import BudgetStep from "@/components/booking/budget-step";
-import { useAuthStore } from "@/lib/store/auth-store";
 
 type BookingStep =
   | "cart"
-  | "event-details"
-  | "event-details2"
-  | "event-details3"
-  | "budget"
+  | "meal-details"
+  | "meal-details2"
+  | "meal-details3"
+  | "meal-details4"
+  | "delivery"
   | "preferences"
   | "messages"
   | "checkout";
 
-console.log("Large Event Booking Page loaded");
-
-const LargeEventBookingPage = () => {
+const MealPrepBookingPage = () => {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState<BookingStep>("cart");
   const [bookingData, setBookingData] = useState<Record<string, any>>({});
@@ -33,25 +33,22 @@ const LargeEventBookingPage = () => {
   const [menuLoading, setMenuLoading] = useState(false);
   const [menuError, setMenuError] = useState<string | null>(null);
   const [selectedMenuItems, setSelectedMenuItems] = useState<string[]>([]);
+  const [bookingId, setBookingId] = useState<number | null>(null);
   const setMenuId = (id: number) => {};
-
-  React.useEffect(() => {
-    if (menu?.type === "Meal Delivery") {
-      router.replace("/booking/meal-delivery");
-    }
-  }, [menu, router]);
 
   const handleNext = (data?: Record<string, any>) => {
     if (data) {
+      if (data.bookingId) setBookingId(data.bookingId);
       setBookingData((prev) => ({ ...prev, ...data }));
     }
 
     const steps: BookingStep[] = [
       "cart",
-      "event-details",
-      "event-details2",
-      "event-details3",
-      "budget",
+      "meal-details",
+      "meal-details2",
+      "meal-details3",
+      "meal-details4",
+      "delivery",
       "preferences",
       "messages",
       "checkout",
@@ -67,10 +64,11 @@ const LargeEventBookingPage = () => {
   const handleBack = () => {
     const steps: BookingStep[] = [
       "cart",
-      "event-details",
-      "event-details2",
-      "event-details3",
-      "budget",
+      "meal-details",
+      "meal-details2",
+      "meal-details3",
+      "meal-details4",
+      "delivery",
       "preferences",
       "messages",
       "checkout",
@@ -97,14 +95,16 @@ const LargeEventBookingPage = () => {
             setMenuId={setMenuId}
           />
         );
-      case "event-details":
-        return <EventDetailsForm onBack={handleBack} onNext={handleNext} />;
-      case "event-details2":
-        return <EventDetailsForm2 onBack={handleBack} onNext={handleNext} />
-      case "event-details3":
-        return <EventDetailsForm3 onBack={handleBack} onNext={handleNext} />;
-      case "budget":
-        return <BudgetStep onBack={handleBack} onNext={handleNext} />;
+      case "meal-details":
+        return <MealDetailsForm onBack={handleBack} onNext={handleNext} />;
+      case "meal-details2":
+        return <MealDetailsForm2 onBack={handleBack} onNext={handleNext} />;
+      case "meal-details3":
+        return <MealDetailsForm3 onBack={handleBack} onNext={handleNext} />;
+      case "meal-details4":
+        return <MealDetailsForm4 onBack={handleBack} onNext={handleNext} />;
+      case "delivery":
+        return <DeliveryForm onBack={handleBack} onNext={handleNext} />;
       case "preferences":
         return (
           <PreferencesForm
@@ -115,7 +115,7 @@ const LargeEventBookingPage = () => {
       case "messages":
         return <MessagesForm onBack={handleBack} onNext={handleNext} />;
       case "checkout":
-        return <Checkout />;
+        return <Checkout bookingId={bookingId} />;
       default:
         return (
           <Cart
@@ -138,4 +138,4 @@ const LargeEventBookingPage = () => {
   );
 };
 
-export default LargeEventBookingPage;
+export default MealPrepBookingPage;

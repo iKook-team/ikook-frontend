@@ -28,6 +28,7 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
   menu,
   selectedItems,
 }) => {
+  console.log('PricingSidebar component loaded - DEBUG');
   const router = useRouter();
   const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
   const setBookingMenuSelection = useAuthStore((s) => s.setBookingMenuSelection);
@@ -64,11 +65,27 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
   const total = subtotal + platformFee;
 
   const handleProceedToCart = () => {
-    if (!menu?.menu_type) return;
-    let path = "/booking/chef-at-home";
-    if (menu.menu_type.toLowerCase() === "fine dining") {
-      path = "/booking/fine-dining";
+    if (!menu?.menu_type) {
+      console.log("No menu_type found!", menu);
+      return;
     }
+    let path = "/booking/chef-at-home";
+    const type = String(menu.menu_type).toLowerCase().replace(/[-_ ]/g, "");
+    console.log('Normalized menu_type:', type);
+    if (type === "finedining") {
+      path = "/booking/fine-dining";
+    } else if (type === "largeevent") {
+      path = "/booking/large-event";
+    } else if (type === "mealdelivery") {
+      path = "/booking/meal-delivery";
+    } else if (type === "mealprep") {
+      path = "/booking/meal-prep";
+    } else if (type === "corporatedining") {
+      path = "/booking/corporate-dining";
+    } else if (type === "chefathome") {
+      path = "/booking/chef-at-home";
+    }
+    console.log("Proceeding to:", path, "for menu_type:", menu.menu_type, menu);
     // Save menu and selection to zustand store
     setBookingMenu(menu);
     // Flatten selectedItems (Record<string, Set<number>>) to array of IDs
@@ -205,7 +222,10 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
         </div>
 
         <button
-          onClick={handleProceedToCart}
+          onClick={() => {
+            console.log("Proceed to Cart button clicked");
+            handleProceedToCart();
+          }}
           className={`flex text-base text-white font-bold mt-10 rounded-lg ${totalSelected === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
           type="button"
           disabled={totalSelected === 0}

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 
 import { Cart } from "@/components/cart/cart";
 import { EventDetailsForm } from "@/components/booking/event-details-form";
@@ -23,10 +22,9 @@ type BookingStep =
   | "messages"
   | "checkout";
 
-console.log("Large Event Booking Page loaded");
+console.log("Meal Delivery Booking Page loaded");
 
-const LargeEventBookingPage = () => {
-  const router = useRouter();
+const MealDeliveryBookingPage = () => {
   const [currentStep, setCurrentStep] = useState<BookingStep>("cart");
   const [bookingData, setBookingData] = useState<Record<string, any>>({});
   const menu = useAuthStore((s) => s.bookingMenu);
@@ -34,12 +32,6 @@ const LargeEventBookingPage = () => {
   const [menuError, setMenuError] = useState<string | null>(null);
   const [selectedMenuItems, setSelectedMenuItems] = useState<string[]>([]);
   const setMenuId = (id: number) => {};
-
-  React.useEffect(() => {
-    if (menu?.type === "Meal Delivery") {
-      router.replace("/booking/meal-delivery");
-    }
-  }, [menu, router]);
 
   const handleNext = (data?: Record<string, any>) => {
     if (data) {
@@ -138,4 +130,4 @@ const LargeEventBookingPage = () => {
   );
 };
 
-export default LargeEventBookingPage;
+export default MealDeliveryBookingPage;

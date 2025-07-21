@@ -1,43 +1,60 @@
-"use client";
-
-import { useState } from "react";
+import React, { useState } from "react";
 import { ProgressIndicator } from './progress-indicator';
 import { ChefCard } from "@/components/cart/chef-card";
+import { TagSelector } from "@/components/ui/tag-selector";
 import { ActionButtons } from './action-buttons';
-import { DietaryRestrictions } from "./dietary-restrictions";
 
-interface PreferencesFormProps {
-  onNext: (data?: Record<string, any>) => void;
+interface DeliveryFormProps {
+  onNext: (data: DeliveryFormData) => void;
   onBack: () => void;
 }
 
-const PreferencesForm: React.FC<PreferencesFormProps> = ({ onNext, onBack }) => {
-  const [allergyDetails, setAllergyDetails] = useState("");
+export interface DeliveryFormData {
+  option: 'Physical' | 'Delivery' | '';
+  days: string[];
+}
+
+const availableDays = [
+  "Monday",
+  "Tuesday", 
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+
+const DeliveryForm: React.FC<DeliveryFormProps> = ({ onNext, onBack }) => {
+  const [formData, setFormData] = useState<DeliveryFormData>({
+    option: '',
+    days: [],
+  });
 
   const progressSteps = [
-    { label: 'Event Details', completed: true, inProgress: true },
-    { label: 'Budget', completed: false },
+    { label: 'Meal Details', completed: true },
+    { label: 'Delivery', completed: false, inProgress: true },
     { label: 'Message', completed: false }
   ];
 
+  const handleInputChange = (field: keyof DeliveryFormData, value: any) => {
+    setFormData({ ...formData, [field]: value });
+  };
+
   const handleContinue = () => {
-    onNext({ allergyDetails });
+    onNext(formData);
   };
 
   return (
     <main className="w-[655px] h-[852px] absolute left-[393px] top-[177px]">
       <div className="w-[654px] h-[814px] border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] absolute bg-white rounded-[15px] border-solid border-[#E7E7E7] left-px top-[38px]" />
-
       <header className="absolute left-0 top-0">
         <h1 className="text-black text-xl font-medium leading-[30px] w-[126px] h-[30px]">
           Chef Titilayo
         </h1>
       </header>
-
       <div className="absolute left-5 top-[69px]">
         <ProgressIndicator steps={progressSteps} />
       </div>
-
       <div className="absolute left-5 top-[132px]">
         <ChefCard
           chefName="Chef Titilayo John"
@@ -50,50 +67,57 @@ const PreferencesForm: React.FC<PreferencesFormProps> = ({ onNext, onBack }) => 
           reviewCount="(23 Reviews)"
         />
       </div>
-
       <div className="absolute left-5 top-[291px]">
         <svg width="613" height="1" viewBox="0 0 613 1" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M-0.00390625 0.5L613.003 0.5" stroke="#E7E7E7"></path>
         </svg>
       </div>
-
       <section className="absolute left-5 top-[307px] w-[613px]">
-        <h2 className="text-black text-2xl font-medium leading-8 w-[200px] h-0">
-          Preferences
+        <h2 className="text-black text-2xl font-medium leading-8 w-[200px] h-8 mb-[47px]">
+          Delivery
         </h2>
         <form className="flex flex-col flex-1 w-full" onSubmit={e => { e.preventDefault(); handleContinue(); }}>
-          <div className="mb-6">
-            <DietaryRestrictions />
+          <label className="text-[#344054] text-sm font-medium leading-none mb-2">Option</label>
+          <div className="flex gap-4 mb-6">
+            {['Physical', 'Delivery'].map((option) => (
+              <label key={option} className={`flex items-center cursor-pointer border border-[color:var(--Gray-300,#D0D5DD)] rounded-lg px-4 py-2 transition-colors ${formData.option === option ? 'border-amber-500 bg-amber-50' : 'bg-white'}`}>
+                <input
+                  type="radio"
+                  name="option"
+                  value={option}
+                  checked={formData.option === option}
+                  onChange={() => handleInputChange('option', option)}
+                  className="form-radio text-amber-500 focus:ring-amber-500 mr-2"
+                />
+                <span className="text-base text-[#101828] font-normal">{option}</span>
+              </label>
+            ))}
           </div>
-          <label htmlFor="allergy-details" className="text-sm font-medium leading-none text-neutral-700 mb-2">
-            Give us more details about guest allergies
-          </label>
-          <textarea
-            className="overflow-hidden flex-1 shrink gap-2 px-3.5 py-2.5 mt-1.5 text-base leading-6 bg-white rounded-lg border border-solid shadow-sm basis-0 border-[color:var(--Gray-100,#CFCFCE)] w-full text-neutral-700 min-h-[120px] resize-none mb-6"
-            id="allergy-details"
-            placeholder="Enter a description..."
-            value={allergyDetails}
-            onChange={(e) => setAllergyDetails(e.target.value)}
-          />
+          <div className="mb-6">
+            <TagSelector
+              label="Days"
+              tags={availableDays}
+              selectedTags={formData.days}
+              onTagsChange={tags => handleInputChange("days", tags)}
+            />
+          </div>
         </form>
       </section>
-
       <div className="absolute left-5 top-[720px]">
         <svg width="613" height="2" viewBox="0 0 613 2" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M0 1L613.007 1" stroke="#E7E7E7"></path>
         </svg>
       </div>
-
       <div className="absolute left-[357px] top-[772px]">
         <ActionButtons
           onBack={onBack}
           onContinue={handleContinue}
-          continueDisabled={false}
+          continueDisabled={!formData.option || formData.days.length === 0}
         />
       </div>
     </main>
   );
 };
 
-export default PreferencesForm;
-export { PreferencesForm };
+export default DeliveryForm;
+export { DeliveryForm }; 

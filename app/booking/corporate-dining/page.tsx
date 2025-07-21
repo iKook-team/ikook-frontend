@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { Cart } from "@/components/cart/cart";
 import { EventDetailsForm } from "@/components/booking/event-details-form";
-import { EventDetailsForm2 } from "@/components/booking/event-details-form2"
+import { EventDetailsForm2 } from "@/components/booking/event-details-form2";
 import { EventDetailsForm3 } from "@/components/booking/event-details-form3";
 import { PreferencesForm } from "@/components/booking/preferences";
 import { MessagesForm } from "@/components/booking/message-form";
@@ -23,9 +23,9 @@ type BookingStep =
   | "messages"
   | "checkout";
 
-console.log("Large Event Booking Page loaded");
+console.log("Corporate Dining Booking Page loaded");
 
-const LargeEventBookingPage = () => {
+const CorporateDiningBookingPage = () => {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState<BookingStep>("cart");
   const [bookingData, setBookingData] = useState<Record<string, any>>({});
@@ -34,12 +34,6 @@ const LargeEventBookingPage = () => {
   const [menuError, setMenuError] = useState<string | null>(null);
   const [selectedMenuItems, setSelectedMenuItems] = useState<string[]>([]);
   const setMenuId = (id: number) => {};
-
-  React.useEffect(() => {
-    if (menu?.type === "Meal Delivery") {
-      router.replace("/booking/meal-delivery");
-    }
-  }, [menu, router]);
 
   const handleNext = (data?: Record<string, any>) => {
     if (data) {
@@ -100,7 +94,7 @@ const LargeEventBookingPage = () => {
       case "event-details":
         return <EventDetailsForm onBack={handleBack} onNext={handleNext} />;
       case "event-details2":
-        return <EventDetailsForm2 onBack={handleBack} onNext={handleNext} />
+        return <EventDetailsForm2 onBack={handleBack} onNext={handleNext} />;
       case "event-details3":
         return <EventDetailsForm3 onBack={handleBack} onNext={handleNext} />;
       case "budget":
@@ -138,4 +132,4 @@ const LargeEventBookingPage = () => {
   );
 };
 
-export default LargeEventBookingPage;
+export default CorporateDiningBookingPage; 

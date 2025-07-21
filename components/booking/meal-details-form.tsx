@@ -4,31 +4,31 @@ import { ProgressIndicator } from './progress-indicator';
 import { ChefCard } from "@/components/cart/chef-card";
 import { ActionButtons } from './action-buttons';
 
-interface EventDetailsFormProps {
-  onNext: (data: EventFormData) => void;
+interface MealDetailsFormProps {
+  onNext: (data: MealFormData) => void;
   onBack: () => void;
 }
 
-export interface EventFormData {
-  location: string;
-  eventDate: string;
+export interface MealFormData {
+  deliveryAddress: string;
   guests: number;
+  appearance: 'Weekly' | 'Monthly' | '';
 }
 
-const EventDetailsForm: React.FC<EventDetailsFormProps> = ({ onNext, onBack }) => {
-  const [formData, setFormData] = useState<EventFormData>({
-    location: "Lagos, Nigeria",
-    eventDate: "2023-08-28",
-    guests: 40,
+const MealDetailsForm: React.FC<MealDetailsFormProps> = ({ onNext, onBack }) => {
+  const [formData, setFormData] = useState<MealFormData>({
+    deliveryAddress: "",
+    guests: 1,
+    appearance: '',
   });
 
   const progressSteps = [
-    { label: 'Event Details', completed: true, inProgress: true },
+    { label: 'Meal Details', completed: true, inProgress: true },
     { label: 'Budget', completed: false },
     { label: 'Message', completed: false }
   ];
 
-  const handleInputChange = (field: keyof EventFormData, value: string | number) => {
+  const handleInputChange = (field: keyof MealFormData, value: string | number) => {
     setFormData({ ...formData, [field]: value });
   };
 
@@ -39,17 +39,14 @@ const EventDetailsForm: React.FC<EventDetailsFormProps> = ({ onNext, onBack }) =
   return (
     <main className="w-[655px] h-[852px] absolute left-[393px] top-[177px]">
       <div className="w-[654px] h-[814px] border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] absolute bg-white rounded-[15px] border-solid border-[#E7E7E7] left-px top-[38px]" />
-
       <header className="absolute left-0 top-0">
         <h1 className="text-black text-xl font-medium leading-[30px] w-[126px] h-[30px]">
           Chef Titilayo
         </h1>
       </header>
-
       <div className="absolute left-5 top-[69px]">
         <ProgressIndicator steps={progressSteps} />
       </div>
-
       <div className="absolute left-5 top-[132px]">
         <ChefCard
           chefName="Chef Titilayo John"
@@ -62,84 +59,74 @@ const EventDetailsForm: React.FC<EventDetailsFormProps> = ({ onNext, onBack }) =
           reviewCount="(23 Reviews)"
         />
       </div>
-
       <div className="absolute left-5 top-[291px]">
         <svg width="613" height="1" viewBox="0 0 613 1" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M-0.00390625 0.5L613.003 0.5" stroke="#E7E7E7"></path>
         </svg>
       </div>
-
       <section className="absolute left-5 top-[307px] w-[613px]">
         <h2 className="text-black text-2xl font-medium leading-8 w-[200px] h-8 mb-[47px]">
-          Event Details
+          Meal Details
         </h2>
         <form className="flex flex-col flex-1 w-full" onSubmit={e => { e.preventDefault(); handleContinue(); }}>
-          <label htmlFor="location" className="text-[#344054] text-sm font-medium leading-none mb-2">Location</label>
+          <label htmlFor="deliveryAddress" className="text-[#344054] text-sm font-medium leading-none mb-2">Delivery Address</label>
           <input
             type="text"
-            id="location"
-            name="location"
-            value={formData.location}
-            onChange={(e) => handleInputChange("location", e.target.value)}
+            id="deliveryAddress"
+            name="deliveryAddress"
+            value={formData.deliveryAddress}
+            onChange={(e) => handleInputChange("deliveryAddress", e.target.value)}
             className="border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] w-full text-base text-[#101828] font-normal bg-white mb-6 px-3.5 py-2.5 rounded-lg border-solid focus:outline-none focus:ring-1 focus:ring-amber-500"
-            placeholder="Enter location"
-          />
-          <label htmlFor="eventDate" className="text-[#344054] text-sm font-medium leading-none mb-2">Event Date</label>
-          <input
-            type="date"
-            id="eventDate"
-            name="eventDate"
-            value={formData.eventDate}
-            onChange={(e) => handleInputChange("eventDate", e.target.value)}
-            className="border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] w-full text-base text-[#101828] font-normal bg-white mb-6 px-3.5 py-2.5 rounded-lg border-solid focus:outline-none focus:ring-1 focus:ring-amber-500"
+            placeholder="Enter delivery address"
           />
           <label htmlFor="guests" className="text-[#344054] text-sm font-medium leading-none mb-2">Guests</label>
           <input
             type="number"
             id="guests"
             name="guests"
-            min="40"
+            min="1"
             step="1"
             value={formData.guests}
-            onChange={(e) => handleInputChange("guests", parseInt(e.target.value, 10) || 40)}
+            onChange={(e) => handleInputChange("guests", parseInt(e.target.value, 10) || 1)}
             className="border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] w-full text-base text-[#101828] font-normal bg-white mb-6 px-3.5 py-2.5 rounded-lg border-solid focus:outline-none focus:ring-1 focus:ring-amber-500"
-            placeholder="40 (minimum)"
+            placeholder="Number of guests"
           />
-          {formData.guests < 40 && (
-            <div className="flex w-full flex-col text-xs text-[#3F3E3D] font-normal leading-5 justify-center bg-[#FFFCF5] mb-6 px-5 py-4 rounded-lg">
-              <div className="flex items-center gap-3">
-                <Image
-                  width={20}
-                  height={20}
-                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/75d3ec646f092868067adae007d588e6b96a5773?placeholderIfAbsent=true"
-                  alt="payment icon"
-                  className="object-contain shrink-0 self-stretch my-auto w-5 aspect-square"
+          <label className="text-[#344054] text-sm font-medium leading-none mb-2">Appearance</label>
+          <div className="space-y-3 mb-6">
+            {['Weekly', 'Monthly'].map((option) => (
+              <div key={option} className="flex items-center">
+                <input
+                  type="radio"
+                  name="appearance"
+                  id={`appearance-${option}`}
+                  value={option}
+                  checked={formData.appearance === option}
+                  onChange={() => handleInputChange('appearance', option)}
+                  className="h-4 w-4 text-amber-500 border-gray-300 focus:ring-amber-500"
                 />
-                <div className="text-[#3F3E3D] self-stretch my-auto">
-                  Minimum number of guests for booking this chef is <span className="font-semibold text-sm leading-5">40</span>
-                </div>
+                <label htmlFor={`appearance-${option}`} className="ml-2 text-base text-[#101828] font-normal cursor-pointer">
+                  {option}
+                </label>
               </div>
-            </div>
-          )}
+            ))}
+          </div>
         </form>
       </section>
-
       <div className="absolute left-5 top-[720px]">
         <svg width="613" height="2" viewBox="0 0 613 2" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M0 1L613.007 1" stroke="#E7E7E7"></path>
         </svg>
       </div>
-
       <div className="absolute left-[357px] top-[772px]">
         <ActionButtons
           onBack={onBack}
           onContinue={handleContinue}
-          continueDisabled={formData.guests < 40}
+          continueDisabled={!formData.deliveryAddress || formData.guests < 1 || !formData.appearance}
         />
       </div>
     </main>
   );
 };
 
-export default EventDetailsForm;
-export { EventDetailsForm };
+export default MealDetailsForm;
+export { MealDetailsForm };
