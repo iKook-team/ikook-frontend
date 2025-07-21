@@ -208,8 +208,6 @@ export const listingService = {
       const response = await apiClient.get(`/services/${id}/`);
       return response.data;
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(`Failed to fetch service ${id}:`, error);
       throw error;
     }
   },
@@ -220,8 +218,6 @@ export const listingService = {
       const response = await apiClient.get(`/users/profiles/${id}/`);
       return response.data;
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(`Failed to fetch chef ${id}:`, error);
       throw error;
     }
   },

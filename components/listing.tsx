@@ -15,12 +15,19 @@ const mapMenuToItem = (menu: any) => ({
   title: menu.name,
   price: menu.price_per_person,
   img: menu.images && menu.images.length > 0 ? menu.images[0].image : "/menus/menu1.png",
-  location: menu.chef_details?.city || "Unknown location",
-  rating: menu.chef_details?.average_rating ? Math.round(menu.chef_details.average_rating * 10) / 10 : 0,
-  reviewCount: menu.chef_details?.num_reviews || 0,
+  location: menu.chef_details?.city || menu.chef?.city || "Unknown location",
+  rating: menu.chef_details?.average_rating 
+    ? Math.round(menu.chef_details.average_rating * 10) / 10 
+    : menu.chef?.average_rating 
+    ? Math.round(menu.chef.average_rating * 10) / 10 
+    : 0,
+  reviewCount: menu.chef_details?.num_reviews || menu.chef?.num_reviews || 0,
   chefName:
-    `${menu.chef_details?.first_name || ""} ${menu.chef_details?.last_name || ""}`.trim(),
-  chefAvatar: menu.chef_details?.avatar || "",
+    `${menu.chef_details?.first_name || menu.chef?.first_name || ""} ${menu.chef_details?.last_name || menu.chef?.last_name || ""}`.trim(),
+  chefAvatar: menu.chef_details?.avatar || menu.chef?.avatar || "",
+  cuisine_types: menu.cuisine_types || [],
+  country: menu.chef_details?.country || menu.chef?.country,
+  currency: menu.chef_details?.currency || menu.chef?.currency,
 });
 
 const mapChefToItem = (chef: any) => ({

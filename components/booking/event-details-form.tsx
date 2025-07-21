@@ -7,6 +7,9 @@ import { ActionButtons } from './action-buttons';
 interface EventDetailsFormProps {
   onNext: (data: EventFormData) => void;
   onBack: () => void;
+  menu: any; // Accept menu as a prop
+  formData: EventFormData;
+  onChange: (data: EventFormData) => void;
 }
 
 export interface EventFormData {
@@ -15,21 +18,17 @@ export interface EventFormData {
   guests: number;
 }
 
-const EventDetailsForm: React.FC<EventDetailsFormProps> = ({ onNext, onBack }) => {
-  const [formData, setFormData] = useState<EventFormData>({
-    location: "Lagos, Nigeria",
-    eventDate: "2023-08-28",
-    guests: 40,
-  });
+const EventDetailsForm: React.FC<EventDetailsFormProps> = ({ onNext, onBack, menu, formData, onChange }) => {
+  const minGuests = menu?.num_of_guests || 1;
 
   const progressSteps = [
     { label: 'Event Details', completed: true, inProgress: true },
-    { label: 'Budget', completed: false },
+    { label: 'Preferences', completed: false },
     { label: 'Message', completed: false }
   ];
 
   const handleInputChange = (field: keyof EventFormData, value: string | number) => {
-    setFormData({ ...formData, [field]: value });
+    onChange({ ...formData, [field]: value });
   };
 
   const handleContinue = () => {
@@ -41,8 +40,8 @@ const EventDetailsForm: React.FC<EventDetailsFormProps> = ({ onNext, onBack }) =
       <div className="w-[654px] h-[814px] border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] absolute bg-white rounded-[15px] border-solid border-[#E7E7E7] left-px top-[38px]" />
 
       <header className="absolute left-0 top-0">
-        <h1 className="text-black text-xl font-medium leading-[30px] w-[126px] h-[30px]">
-          Chef Titilayo
+        <h1 className="text-black text-xl font-medium leading-[30px] w-[300px] h-[30px] truncate">
+          {menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
         </h1>
       </header>
 
@@ -50,16 +49,16 @@ const EventDetailsForm: React.FC<EventDetailsFormProps> = ({ onNext, onBack }) =
         <ProgressIndicator steps={progressSteps} />
       </div>
 
-      <div className="absolute left-5 top-[132px]">
+      <div className="absolute left-5 right-5 top-[132px] w-auto">
         <ChefCard
-          chefName="Chef Titilayo John"
-          dishName="Braised Chicken With Lemon and Olives"
-          imageUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/231d86006c0dab5ed39c08a8a310d23841a29a6f?placeholderIfAbsent=true"
-          location="London"
+          chefName={menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
+          dishName={menu?.name || "Menu"}
+          imageUrl={menu?.images && menu.images.length > 0 && menu.images[0].image ? menu.images[0].image : "/menus/menu1.png"}
+          location={menu?.chef?.city || "Unknown"}
           locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
-          rating="4.6"
+          rating={menu?.chef?.average_rating ? menu.chef.average_rating.toFixed(1) : "-"}
           ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
-          reviewCount="(23 Reviews)"
+          reviewCount={menu?.chef?.num_reviews ? `(${menu.chef.num_reviews} Reviews)` : "(0 Reviews)"}
         />
       </div>
 
@@ -98,14 +97,14 @@ const EventDetailsForm: React.FC<EventDetailsFormProps> = ({ onNext, onBack }) =
             type="number"
             id="guests"
             name="guests"
-            min="40"
+            min={minGuests}
             step="1"
             value={formData.guests}
-            onChange={(e) => handleInputChange("guests", parseInt(e.target.value, 10) || 40)}
+            onChange={(e) => handleInputChange("guests", parseInt(e.target.value, 10) || minGuests)}
             className="border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] w-full text-base text-[#101828] font-normal bg-white mb-6 px-3.5 py-2.5 rounded-lg border-solid focus:outline-none focus:ring-1 focus:ring-amber-500"
-            placeholder="40 (minimum)"
+            placeholder={`${minGuests} (minimum)`}
           />
-          {formData.guests < 40 && (
+          {formData.guests < minGuests && (
             <div className="flex w-full flex-col text-xs text-[#3F3E3D] font-normal leading-5 justify-center bg-[#FFFCF5] mb-6 px-5 py-4 rounded-lg">
               <div className="flex items-center gap-3">
                 <Image
@@ -116,7 +115,7 @@ const EventDetailsForm: React.FC<EventDetailsFormProps> = ({ onNext, onBack }) =
                   className="object-contain shrink-0 self-stretch my-auto w-5 aspect-square"
                 />
                 <div className="text-[#3F3E3D] self-stretch my-auto">
-                  Minimum number of guests for booking this chef is <span className="font-semibold text-sm leading-5">40</span>
+                  Minimum number of guests for booking this chef is <span className="font-semibold text-sm leading-5">{minGuests}</span>
                 </div>
               </div>
             </div>
@@ -134,7 +133,7 @@ const EventDetailsForm: React.FC<EventDetailsFormProps> = ({ onNext, onBack }) =
         <ActionButtons
           onBack={onBack}
           onContinue={handleContinue}
-          continueDisabled={formData.guests < 40}
+          continueDisabled={formData.guests < minGuests}
         />
       </div>
     </main>

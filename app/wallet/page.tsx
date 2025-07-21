@@ -1,99 +1,51 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { WalletBalance } from "@/components/wallet/wallet-balance";
 import { TransactionTabs } from "@/components/wallet/transaction-tabs";
 import { TransactionList } from "@/components/wallet/transaction-list";
+import { paymentsService } from "@/lib/api/payments";
 
 interface Transaction {
-  id: string;
-  type: string;
-  date: string;
-  amount: string;
+  id: string | number;
+  transaction_type: string;
+  amount: string | number;
+  created_at: string;
 }
 
 const Index: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"redeemed" | "debits">("redeemed");
+  const [wallet, setWallet] = useState<any>(null);
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const redeemedTransactions: Transaction[] = [
-    {
-      id: "1",
-      type: "Gift voucher",
-      date: "15 October, 2023",
-      amount: "£1,000",
-    },
-    {
-      id: "2",
-      type: "Gift voucher",
-      date: "15 October, 2023",
-      amount: "£1,000",
-    },
-    {
-      id: "3",
-      type: "Gift voucher",
-      date: "15 October, 2023",
-      amount: "£1,000",
-    },
-    {
-      id: "4",
-      type: "Gift voucher",
-      date: "15 October, 2023",
-      amount: "£1,000",
-    },
-    {
-      id: "5",
-      type: "Gift voucher",
-      date: "15 October, 2023",
-      amount: "£1,000",
-    },
-    {
-      id: "6",
-      type: "Gift voucher",
-      date: "15 October, 2023",
-      amount: "£1,000",
-    },
-    {
-      id: "7",
-      type: "Gift voucher",
-      date: "15 October, 2023",
-      amount: "£1,000",
-    },
-    {
-      id: "8",
-      type: "Gift voucher",
-      date: "15 October, 2023",
-      amount: "£1,000",
-    },
-    {
-      id: "9",
-      type: "Gift voucher",
-      date: "15 October, 2023",
-      amount: "£1,000",
-    },
-  ];
+  useEffect(() => {
+    const fetchWalletData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const walletDetails = await paymentsService.getWalletDetails();
+        const txData = await paymentsService.getWalletTransactions();
+        setWallet(walletDetails);
+        setTransactions(txData.results || []);
+      } catch (err: any) {
+        setError("Failed to load wallet data");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchWalletData();
+  }, []);
 
-  const debitsTransactions: Transaction[] = [
-    {
-      id: "10",
-      type: "Service charge",
-      date: "14 October, 2023",
-      amount: "-£50",
-    },
-    {
-      id: "11",
-      type: "Processing fee",
-      date: "13 October, 2023",
-      amount: "-£25",
-    },
-    {
-      id: "12",
-      type: "Transaction fee",
-      date: "12 October, 2023",
-      amount: "-£15",
-    },
-  ];
-
+  // Filter transactions by type for tabs
+  const redeemedTransactions = transactions.filter(
+    (tx) => tx.transaction_type === "Credit"
+  );
+  const debitsTransactions = transactions.filter(
+    (tx) => tx.transaction_type !== "Credit"
+  );
   const currentTransactions =
     activeTab === "redeemed" ? redeemedTransactions : debitsTransactions;
 
@@ -103,12 +55,23 @@ const Index: React.FC = () => {
         <h1 className="text-black text-2xl font-semibold leading-none">
           Wallet
         </h1>
-
-        <WalletBalance />
-
-        <TransactionTabs activeTab={activeTab} onTabChange={setActiveTab} />
-
-        <TransactionList transactions={currentTransactions} />
+        {loading ? (
+          <div className="mt-8">Loading...</div>
+        ) : error ? (
+          <div className="mt-8 text-red-500">{error}</div>
+        ) : (
+          <>
+            <WalletBalance balance={wallet?.balance} />
+            {transactions.length > 0 ? (
+              <>
+                <TransactionTabs activeTab={activeTab} onTabChange={setActiveTab} />
+                <TransactionList transactions={currentTransactions} />
+              </>
+            ) : (
+              <div className="text-center py-12 text-gray-500">No transactions found in your wallet yet.</div>
+            )}
+          </>
+        )}
       </main>
     </div>
   );

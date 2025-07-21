@@ -9,5 +9,5 @@ export function getCurrencySymbol(user?: { currency?: string; country?: string }
     if (user.country === "South Africa") return "R";
     if (user.country === "United Kingdom") return "£";
   }
-  return "£";
+  return "₦";
 } 

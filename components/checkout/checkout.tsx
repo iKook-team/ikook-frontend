@@ -17,13 +17,22 @@ export const Checkout: React.FC<CheckoutProps> = ({ bookingId }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  console.log('Checkout bookingId:', bookingId);
+
   useEffect(() => {
     if (!bookingId) return;
     setLoading(true);
     setError(null);
-    quotesService.getQuoteById(bookingId)
-      .then((data) => setQuote(data))
-      .catch(() => setError("Failed to fetch quote details."))
+    console.log('Fetching quote for bookingId:', bookingId);
+    quotesService.getQuoteByBookingId(bookingId)
+      .then((data) => {
+        console.log('Quote API response:', data);
+        setQuote(data)
+      })
+      .catch((err) => {
+        console.error('Failed to fetch quote details:', err);
+        setError("Failed to fetch quote details.")
+      })
       .finally(() => setLoading(false));
   }, [bookingId]);
 
@@ -49,7 +58,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ bookingId }) => {
                   />
                 </div>
 
-                <PaymentPlanSelector />
+                {/* <PaymentPlanSelector /> */}
                 <PaymentMethodSelector />
               </section>
             </div>

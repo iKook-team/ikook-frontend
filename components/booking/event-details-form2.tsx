@@ -7,6 +7,9 @@ import { ActionButtons } from './action-buttons';
 interface EventDetailsForm2Props {
   onNext: (data: EventFormData) => void;
   onBack: () => void;
+  menu: any;
+  formData: EventFormData;
+  onChange: (data: EventFormData) => void;
 }
 
 export interface EventFormData {
@@ -25,12 +28,7 @@ const availableCuisines = [
   "Indian",
 ];
 
-const EventDetailsForm2: React.FC<EventDetailsForm2Props> = ({ onNext, onBack }) => {
-  const [formData, setFormData] = useState<EventFormData>({
-    eventType: "",
-    preferredCuisines: [],
-  });
-
+const EventDetailsForm2: React.FC<EventDetailsForm2Props> = ({ onNext, onBack, menu, formData, onChange }) => {
   const progressSteps = [
     { label: 'Event Details', completed: true, inProgress: true },
     { label: 'Budget', completed: false },
@@ -38,7 +36,7 @@ const EventDetailsForm2: React.FC<EventDetailsForm2Props> = ({ onNext, onBack })
   ];
 
   const handleInputChange = (field: keyof EventFormData, value: any) => {
-    setFormData({ ...formData, [field]: value });
+    onChange({ ...formData, [field]: value });
   };
 
   const handleContinue = () => {
@@ -59,16 +57,16 @@ const EventDetailsForm2: React.FC<EventDetailsForm2Props> = ({ onNext, onBack })
         <ProgressIndicator steps={progressSteps} />
       </div>
 
-      <div className="absolute left-5 top-[132px]">
+      <div className="absolute left-5 right-5 top-[132px] w-auto">
         <ChefCard
-          chefName="Chef Titilayo John"
-          dishName="Braised Chicken With Lemon and Olives"
-          imageUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/231d86006c0dab5ed39c08a8a310d23841a29a6f?placeholderIfAbsent=true"
-          location="London"
+          chefName={menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
+          dishName={menu?.name || "Menu"}
+          imageUrl={menu?.images && menu.images.length > 0 && menu.images[0].image ? menu.images[0].image : "/menus/menu1.png"}
+          location={menu?.chef?.city || "Unknown"}
           locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
-          rating="4.6"
+          rating={menu?.chef?.average_rating ? menu.chef.average_rating.toFixed(1) : "-"}
           ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
-          reviewCount="(23 Reviews)"
+          reviewCount={menu?.chef?.num_reviews ? `(${menu.chef.num_reviews} Reviews)` : "(0 Reviews)"}
         />
       </div>
 

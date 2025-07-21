@@ -1,18 +1,27 @@
 import React from 'react';
+import { getCurrencySymbol } from '@/lib/utils/currency';
 
 interface BudgetSectionProps {
   chefName: string;
   minBudgetPerPerson: number;
   guestCount: number;
   totalPrice: number;
+  menu: any;
 }
 
 export const BudgetSection: React.FC<BudgetSectionProps> = ({
   chefName,
   minBudgetPerPerson,
   guestCount,
-  totalPrice
+  totalPrice,
+  menu
 }) => {
+  console.log('Menu data in BudgetSection:', menu?.chef);
+  const currencySymbol = getCurrencySymbol({ 
+    currency: menu?.chef?.chef_details?.currency || menu?.chef?.currency,
+    country: menu?.chef?.chef_details?.country || menu?.chef?.country || "United Kingdom"
+  });
+
   return (
     <section className="w-[613px] h-[97px] bg-[#FFFCF5] rounded-lg relative">
       <div className="inline-flex items-center gap-3 absolute w-[582px] h-[60px] left-5 top-4">
@@ -25,9 +34,9 @@ export const BudgetSection: React.FC<BudgetSectionProps> = ({
           </svg>
         </div>
         <div className="w-[540px] text-[#3F3E3D] text-sm font-semibold leading-5">
-          {chefName} minimum budget per person for this event is £{minBudgetPerPerson}. 
+          {chefName} minimum budget per person for this event is {currencySymbol}{minBudgetPerPerson}. 
           Based on your number of guests ({guestCount}), the price for this event is about{' '}
-          <span className="font-bold">£{totalPrice.toLocaleString()}</span>.<br />
+          <span className="font-bold">{currencySymbol}{totalPrice.toLocaleString()}</span>.<br />
           You can always negotiate the price with the chef.
         </div>
       </div>

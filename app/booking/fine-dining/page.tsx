@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 import { Cart } from "@/components/cart/cart";
 import { EventDetailsForm } from "@/components/booking/event-details-form";
@@ -18,11 +19,39 @@ type BookingStep =
   | "checkout";
 
 const FineDiningBookingPage = () => {
+  const bookingMenu = useAuthStore((s) => s.bookingMenu);
+  const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
+  const bookingMenuSelection = useAuthStore((s) => s.bookingMenuSelection);
+  const setBookingMenuSelection = useAuthStore((s) => s.setBookingMenuSelection);
+  const [selectedMenuItems, setSelectedMenuItems] = useState<string[]>(
+    (bookingMenuSelection || []).map((id: any) => String(id))
+  );
+  const menu = bookingMenu;
   const [currentStep, setCurrentStep] = useState<BookingStep>("cart");
   const [bookingData, setBookingData] = useState<Record<string, any>>({});
+  const [eventDetailsForm, setEventDetailsForm] = useState({
+    location: "",
+    eventDate: "",
+    guests: menu?.num_of_guests || 1,
+  });
+  const [eventDetailsForm3, setEventDetailsForm3] = useState({
+    eventTime: "",
+    venue: "",
+  });
+  const [preferencesForm, setPreferencesForm] = useState({
+    allergyDetails: "",
+    dietaryRestrictions: [],
+  });
+  const menuLoading = false;
+  const menuError = !bookingMenu ? "No menu data found. Please start from the menu detail page." : null;
+  const [bookingId, setBookingId] = useState<number | null>(null);
 
   const handleNext = (data?: Record<string, any>) => {
     if (data) {
+      // If data contains selectedMenuItems or menuId, update them
+      if (data.selectedMenuItems) setSelectedMenuItems(data.selectedMenuItems);
+      if (data.menuId) setBookingMenu(data.menuId); // Assuming menuId is set via setBookingMenu
+      if (data.bookingId) setBookingId(data.bookingId);
       setBookingData((prev) => ({ ...prev, ...data }));
     }
 
@@ -59,13 +88,6 @@ const FineDiningBookingPage = () => {
     }
   };
 
-  // Placeholder state for menu and selection (replace with real data/fetch as needed)
-  const [menu, setMenu] = useState<any>(null);
-  const [menuLoading, setMenuLoading] = useState(false);
-  const [menuError, setMenuError] = useState<string | null>(null);
-  const [selectedMenuItems, setSelectedMenuItems] = useState<string[]>([]);
-  const setMenuId = (id: number) => {};
-
   const renderStep = () => {
     switch (currentStep) {
       case "cart":
@@ -77,24 +99,53 @@ const FineDiningBookingPage = () => {
             menuError={menuError}
             selectedMenuItems={selectedMenuItems}
             setSelectedMenuItems={setSelectedMenuItems}
-            setMenuId={setMenuId}
+            setMenuId={() => {}}
           />
         );
       case "event-details":
-        return <EventDetailsForm onBack={handleBack} onNext={handleNext} />;
+        return (
+          <EventDetailsForm
+            onBack={handleBack}
+            onNext={handleNext}
+            menu={menu}
+            formData={eventDetailsForm}
+            onChange={setEventDetailsForm}
+          />
+        );
       case "event-details3":
-        return <EventDetailsForm3 onBack={handleBack} onNext={handleNext} />;
+        return (
+          <EventDetailsForm3
+            onBack={handleBack}
+            onNext={handleNext}
+            menu={menu}
+            formData={eventDetailsForm3}
+            onChange={setEventDetailsForm3}
+          />
+        );
       case "preferences":
         return (
           <PreferencesForm
             onNext={(data) => handleNext(data)}
             onBack={handleBack}
+            menu={menu}
+            formData={preferencesForm}
+            onChange={(data) => setPreferencesForm({ allergyDetails: data.allergyDetails ?? "", dietaryRestrictions: data.dietaryRestrictions ?? [] })}
           />
         );
       case "messages":
-        return <MessagesForm onBack={handleBack} onNext={handleNext} />;
+        return (
+          <MessagesForm
+            onBack={handleBack}
+            onNext={handleNext}
+            bookingData={bookingData}
+            selectedMenuItems={selectedMenuItems}
+            menuId={menu?.id ?? undefined}
+            menu={menu}
+            dietaryRestrictions={preferencesForm.dietaryRestrictions}
+          />
+        );
       case "checkout":
-        return <Checkout />;
+        return <Checkout bookingId={bookingId} />;
       default:
         return (
           <Cart
@@ -104,7 +155,7 @@ const FineDiningBookingPage = () => {
             menuError={menuError}
             selectedMenuItems={selectedMenuItems}
             setSelectedMenuItems={setSelectedMenuItems}
-            setMenuId={setMenuId}
+            setMenuId={() => {}}
           />
         );
     }

@@ -5,29 +5,29 @@ import { AllergyTag } from "./custom/allergy-tags";
 
 const allergyOptions = [
   "Vegetarian",
-  "Gluten free",
+  "Gluten Free",
   "No Shellfish",
   "No Nuts",
-  "Dairy free",
+  "Dairy Free",
   "Wheat",
-  "Plant only",
+  "Plant Only",
   "Halal",
   "Others",
   "None",
 ];
 
-export const DietaryRestrictions = () => {
-  const [selectedAllergies, setSelectedAllergies] = useState<string[]>([
-    "Vegetarian",
-    "Halal",
-  ]);
+interface DietaryRestrictionsProps {
+  selectedAllergies: string[];
+  onChange: (allergies: string[]) => void;
+}
 
+export const DietaryRestrictions: React.FC<DietaryRestrictionsProps> = ({ selectedAllergies, onChange }) => {
   const toggleAllergy = (allergy: string) => {
-    setSelectedAllergies((prev) =>
-      prev.includes(allergy)
-        ? prev.filter((item) => item !== allergy)
-        : [...prev, allergy]
-    );
+    if (selectedAllergies.includes(allergy)) {
+      onChange(selectedAllergies.filter((item) => item !== allergy));
+    } else {
+      onChange([...selectedAllergies, allergy]);
+    }
   };
 
   return (

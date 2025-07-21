@@ -7,7 +7,7 @@ interface BudgetFormProps {
 }
 
 export const BudgetForm: React.FC<BudgetFormProps> = ({
-  defaultBudget = 1500,
+  defaultBudget = 0,
   onBudgetChange,
   onBudgetTypeChange
 }) => {

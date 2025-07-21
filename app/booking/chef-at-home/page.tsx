@@ -19,8 +19,6 @@ type BookingStep =
   | "checkout";
 
 const ChefAtHomeBookingPage = () => {
-  const [currentStep, setCurrentStep] = useState<BookingStep>("cart");
-  const [bookingData, setBookingData] = useState<Record<string, any>>({});
   const bookingMenu = useAuthStore((s) => s.bookingMenu);
   const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
   const bookingMenuSelection = useAuthStore((s) => s.bookingMenuSelection);
@@ -29,6 +27,21 @@ const ChefAtHomeBookingPage = () => {
     (bookingMenuSelection || []).map((id: any) => String(id))
   );
   const menu = bookingMenu;
+  const [currentStep, setCurrentStep] = useState<BookingStep>("cart");
+  const [bookingData, setBookingData] = useState<Record<string, any>>({});
+  const [eventDetailsForm, setEventDetailsForm] = useState({
+    location: "",
+    eventDate: "",
+    guests: menu?.num_of_guests || 1,
+  });
+  const [eventDetailsForm3, setEventDetailsForm3] = useState({
+    eventTime: "",
+    venue: "",
+  });
+  const [preferencesForm, setPreferencesForm] = useState({
+    allergyDetails: "",
+    dietaryRestrictions: [],
+  });
   const menuLoading = false;
   const menuError = !bookingMenu ? "No menu data found. Please start from the menu detail page." : null;
   const [bookingId, setBookingId] = useState<number | null>(null);
@@ -90,14 +103,33 @@ const ChefAtHomeBookingPage = () => {
           />
         );
       case "event-details":
-        return <EventDetailsForm onBack={handleBack} onNext={handleNext} />;
+        return (
+          <EventDetailsForm
+            onBack={handleBack}
+            onNext={handleNext}
+            menu={menu}
+            formData={eventDetailsForm}
+            onChange={setEventDetailsForm}
+          />
+        );
       case "event-details3":
-        return <EventDetailsForm3 onBack={handleBack} onNext={handleNext} />;
+        return (
+          <EventDetailsForm3
+            onBack={handleBack}
+            onNext={handleNext}
+            menu={menu}
+            formData={eventDetailsForm3}
+            onChange={setEventDetailsForm3}
+          />
+        );
       case "preferences":
         return (
           <PreferencesForm
             onNext={(data) => handleNext(data)}
             onBack={handleBack}
+            menu={menu}
+            formData={preferencesForm}
+            onChange={(data) => setPreferencesForm({ allergyDetails: data.allergyDetails ?? "", dietaryRestrictions: data.dietaryRestrictions ?? [] })}
           />
         );
       case "messages":
@@ -107,7 +139,9 @@ const ChefAtHomeBookingPage = () => {
             onNext={handleNext}
             bookingData={bookingData}
             selectedMenuItems={selectedMenuItems}
-            menuId={bookingMenu ?? undefined}
+            menuId={menu?.id ?? undefined}
+            menu={menu}
+            dietaryRestrictions={preferencesForm.dietaryRestrictions}
           />
         );
       case "checkout":

@@ -1,6 +1,18 @@
 import React from 'react';
+import { useAuthStore } from '@/lib/store/auth-store';
+import { getCurrencySymbol } from '@/lib/utils/currency';
 
-export const WalletBalance: React.FC = () => {
+interface WalletBalanceProps {
+  balance?: string | number;
+}
+
+export const WalletBalance: React.FC<WalletBalanceProps> = ({ balance }) => {
+  const { user } = useAuthStore();
+  const currencySymbol = getCurrencySymbol({
+    currency: user?.currency,
+    country: user?.country
+  });
+
   const handleAddMoney = () => {
     console.log('Add money clicked');
   };
@@ -10,13 +22,13 @@ export const WalletBalance: React.FC = () => {
   };
 
   return (
-    <section className="justify-end items-stretch flex w-full gap-[40px_100px] overflow-hidden flex-wrap bg-[#FFFCF5] mt-6 px-11 py-[31px] rounded-md max-md:max-w-full max-md:px-5">
+    <section className="flex justify-between items-stretch w-[885px] max-w-full mx-auto gap-[40px_100px] overflow-hidden flex-wrap bg-[#FFFCF5] mt-6 px-4 py-[31px] rounded-md">
       <div className="text-[#323335]">
         <div className="text-[#323335] text-sm font-normal leading-none">
           Wallet balance
         </div>
         <div className="text-[#323335] text-2xl font-semibold leading-none mt-1">
-          £1,435
+          {currencySymbol}{balance ?? '0'}
         </div>
       </div>
       <div className="flex gap-4 text-[15px] text-white font-normal my-auto">

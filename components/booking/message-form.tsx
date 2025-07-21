@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { ProgressIndicator } from './progress-indicator';
 import { ChefCard } from "@/components/cart/chef-card";
 import { ActionButtons } from './action-buttons';
+import { bookingsService } from "@/lib/api/bookings";
+import { showToast } from "@/lib/utils/toast";
+import { useAuthStore } from '@/lib/store/auth-store';
 
 export interface MessagesFormProps {
   onNext: (data?: Record<string, any>) => void;
@@ -9,6 +12,11 @@ export interface MessagesFormProps {
   bookingData?: Record<string, any>;
   selectedMenuItems?: string[];
   menuId?: number;
+  menu?: any;
+  dietaryRestrictions?: string[];
+  budget?: number;
+  budgetType?: 'Flexible' | 'Fixed' | null;
+  preferredCuisines?: string[];
 }
 
 const MessagesForm: React.FC<MessagesFormProps> = ({
@@ -17,7 +25,13 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
   bookingData = {},
   selectedMenuItems = [],
   menuId,
+  menu,
+  dietaryRestrictions = [],
+  budget,
+  budgetType,
+  preferredCuisines = [],
 }) => {
+  const setBooking = useAuthStore((s) => s.setBooking);
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,23 +42,72 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
     { label: 'Message', completed: false }
   ];
 
-  const handleContinue = () => {
+  const VALID_DIETARY_RESTRICTIONS = [
+    "Vegetarian",
+    "Gluten Free",
+    "No Shellfish",
+    "No Nuts",
+    "Dairy Free",
+    "Wheat",
+    "Plant Only",
+    "Halal",
+    "Others",
+    "None",
+  ];
+
+  // Map venue value to label
+  const venueValueToLabel = (value: string) => {
+    switch (value) {
+      case "home": return "Home";
+      case "relative": return "Relative/Friends Home";
+      case "rented": return "Rented Venue";
+      default: return value;
+    }
+  };
+
+  const handleContinue = async () => {
     if (!message.trim()) return;
     setError(null);
     setIsSubmitting(true);
     // Compose payload for booking
     const payload = {
-      ...bookingData,
+      is_custom: false,
+      chef_service: menu?.menu_type || menu?.type || "Large Event",
+      location: "POINT(0.0 0.0)",
+      country: "Nigeria",
+      address: bookingData.location || "",
+      additional_address_info: "",
+      city: bookingData.location || "",
+      dietary_restrictions: dietaryRestrictions,
+      dietary_restrictions_details: bookingData.allergyDetails || "",
+      event_date: bookingData.eventDate || "",
+      event_time: bookingData.eventTime || "",
+      event_venue: venueValueToLabel(bookingData.venue || ""),
+      num_of_guests: bookingData.guests || 1,
+      hob_type: "Induction",
+      hob_size: "2 top",
+      has_oven: true,
       menu_choices: selectedMenuItems.map(Number),
       menu: menuId,
-      message,
+      budget: budget || null,
+      budget_type: budgetType || null,
+      preferred_cuisines: preferredCuisines || [],
     };
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const result = await bookingsService.createBooking(payload);
+      setBooking({
+        ...result.data,
+        menu_price_per_person: menu?.price_per_person || 0,
+        menu_name: menu?.name || '',
+      }); // Save booking to store
+      showToast.success("Booking created successfully!");
       setIsSubmitting(false);
-      onNext({ message });
       setMessage("");
-    }, 500);
+      onNext({ message, bookingId: result.data.id });
+    } catch (err: any) {
+      setIsSubmitting(false);
+      showToast.error(err?.response?.data?.message || "Failed to create booking. Please try again.");
+    }
   };
 
   return (
@@ -52,8 +115,8 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
       <div className="w-[654px] h-[814px] border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] absolute bg-white rounded-[15px] border-solid border-[#E7E7E7] left-px top-[38px]" />
 
       <header className="absolute left-0 top-0">
-        <h1 className="text-black text-xl font-medium leading-[30px] w-[126px] h-[30px]">
-          Chef Titilayo
+        <h1 className="text-black text-xl font-medium leading-[30px] w-[300px] h-[30px] truncate">
+          {menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
         </h1>
       </header>
 
@@ -61,16 +124,16 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
         <ProgressIndicator steps={progressSteps} />
       </div>
 
-      <div className="absolute left-5 top-[132px]">
+      <div className="absolute left-5 top-[132px] w-full pr-5">
         <ChefCard
-          chefName="Chef Titilayo John"
-          dishName="Braised Chicken With Lemon and Olives"
-          imageUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/231d86006c0dab5ed39c08a8a310d23841a29a6f?placeholderIfAbsent=true"
-          location="London"
+          chefName={menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
+          dishName={menu?.name || "Menu"}
+          imageUrl={menu?.images && menu.images.length > 0 && menu.images[0].image ? menu.images[0].image : "/menus/menu1.png"}
+          location={menu?.chef?.city || "Unknown"}
           locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
-          rating="4.6"
+          rating={menu?.chef?.average_rating ? menu.chef.average_rating.toFixed(1) : "-"}
           ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
-          reviewCount="(23 Reviews)"
+          reviewCount={menu?.chef?.num_reviews ? `(${menu.chef.num_reviews} Reviews)` : "(0 Reviews)"}
         />
       </div>
 
@@ -114,9 +177,6 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
           continueDisabled={isSubmitting || !message.trim()}
         />
       </div>
-      {error && (
-        <div className="absolute left-5 top-[700px] text-red-500 text-sm mb-2">{error}</div>
-      )}
     </main>
   );
 };
