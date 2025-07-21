@@ -16,6 +16,8 @@ interface User {
   access_token: string;
   refresh_token: string;
   document_verified?: boolean;
+  currency?: string;
+  country?: string;
 }
 
 interface HostFormData {
@@ -53,6 +55,8 @@ interface AuthState {
   chefFormData: ChefFormData | null;
   bookingMenu: any | null;
   bookingMenuSelection: any | null;
+  booking: any | null;
+  setBooking: (booking: any) => void;
   setUserType: (type: UserType) => void;
   setUser: (user: User) => void;
   logout: () => void;
@@ -105,6 +109,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   chefFormData: null,
   bookingMenu: null,
   bookingMenuSelection: null,
+  booking: null,
+  setBooking: (booking) => set({ booking }),
   setUserType: (type) => {
     // Debug logging removed
     set({ userType: type });

@@ -17,13 +17,22 @@ export const Checkout: React.FC<CheckoutProps> = ({ bookingId }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  console.log('Checkout bookingId:', bookingId);
+
   useEffect(() => {
     if (!bookingId) return;
     setLoading(true);
     setError(null);
-    quotesService.getQuoteById(bookingId)
-      .then((data) => setQuote(data))
-      .catch(() => setError("Failed to fetch quote details."))
+    console.log('Fetching quote for bookingId:', bookingId);
+    quotesService.getQuoteByBookingId(bookingId)
+      .then((data) => {
+        console.log('Quote API response:', data);
+        setQuote(data)
+      })
+      .catch((err) => {
+        console.error('Failed to fetch quote details:', err);
+        setError("Failed to fetch quote details.")
+      })
       .finally(() => setLoading(false));
   }, [bookingId]);
 
@@ -49,7 +58,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ bookingId }) => {
                   />
                 </div>
 
-                <PaymentPlanSelector />
+                {/* <PaymentPlanSelector /> */}
                 <PaymentMethodSelector />
               </section>
             </div>
@@ -59,8 +68,17 @@ export const Checkout: React.FC<CheckoutProps> = ({ bookingId }) => {
               <div className="flex flex-col">
                 {loading && <div className="text-gray-500 text-center py-4">Loading quote...</div>}
                 {error && <div className="text-red-500 text-center py-4">{error}</div>}
-                {quote && <OrderSummary quote={quote} />}
-                {quote && <MenuIncludes quote={quote} />}
+                {quote ? (
+                  <>
+                    <OrderSummary quote={quote} />
+                    <MenuIncludes quote={quote} />
+                  </>
+                ) : (
+                  <div className="bg-white rounded-[15px] shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] p-6 min-h-[300px] flex flex-col items-center justify-center text-gray-400">
+                    <div className="text-lg font-medium mb-2">Order Summary</div>
+                    <div className="text-sm">No quote loaded. Your order summary will appear here.</div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

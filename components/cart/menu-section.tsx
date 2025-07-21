@@ -19,6 +19,8 @@ interface MenuSectionProps {
   checkboxUrl: string;
   selectedMenuItems: string[];
   setSelectedMenuItems: (items: string[]) => void;
+  menuName: string;
+  chefName: string;
 }
 
 export const MenuSection: React.FC<MenuSectionProps> = ({
@@ -26,6 +28,8 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
   checkboxUrl,
   selectedMenuItems,
   setSelectedMenuItems,
+  menuName,
+  chefName,
 }) => {
   const handleItemToggle = (itemId: string) => {
     let newSelected: string[];
@@ -44,8 +48,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
           Your menu pick
         </h2>
         <p className="text-[#6F6E6D] text-xs font-normal max-md:max-w-full">
-          Your menu selection from Braised chicken with lemon and olives by Chef
-          Titilayo John
+          Your menu selection from {menuName} by {chefName}
         </p>
       </div>
       <hr className="w-full border-t border-gray-200 mt-3.5" />

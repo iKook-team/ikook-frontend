@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { FaStar, FaRegHeart } from "react-icons/fa";
 import { Card, CardBody, CardFooter, User } from "@heroui/react";
 import Image from "next/image";
+import { getCurrencySymbol } from '@/lib/utils/currency';
 
 interface BadgeData {
   id: string;
@@ -51,6 +52,9 @@ interface MenuListingProps {
   badges?: BadgeData[];
   onCardClick?: () => void;
   onBadgeClick?: (badgeId: string) => void;
+  cuisine_types?: string[];
+  country?: string;
+  currency?: string;
 }
 
 export const MenuListing: React.FC<MenuListingProps> = ({
@@ -79,6 +83,9 @@ export const MenuListing: React.FC<MenuListingProps> = ({
   rating = 4.6,
   reviewCount = 23,
   title,
+  cuisine_types = [],
+  country,
+  currency,
 }) => {
   const router = useRouter();
 
@@ -93,6 +100,8 @@ export const MenuListing: React.FC<MenuListingProps> = ({
     e.stopPropagation(); // Prevent card click when clicking on badge
     _onBadgeClick?.(badgeId);
   };
+
+  const currencySymbol = getCurrencySymbol({ currency, country });
 
   return (
     <div 
@@ -112,23 +121,23 @@ export const MenuListing: React.FC<MenuListingProps> = ({
         shadow="sm"
       >
         <CardBody
-          className="overflow-visible p-0 relative h-48"
-          style={{
-            backgroundImage: `url(${img})`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            backgroundPosition: "center"
-          }}
+          className="overflow-visible p-0 relative h-48 bg-gray-100"
         >
-          <FaRegHeart className="absolute top-2 right-2 text-white text-xl" />
-          <span className="absolute top-2 left-2 bg-white rounded-full px-4 py-1 text-xs">
-            {location}
+          <img
+            src={img || "/menus/menu1.png"}
+            alt={title}
+            className="w-full h-full object-cover absolute inset-0 z-0"
+            loading="lazy"
+          />
+          <FaRegHeart className="absolute top-2 right-2 text-white text-xl z-10" />
+          <span className="absolute top-2 left-2 bg-white rounded-full px-4 py-1 text-xs z-10">
+            {cuisine_types && cuisine_types.length > 0 ? cuisine_types[0] : 'Cuisine'}
           </span>
         </CardBody>
         <CardFooter className="flex flex-col items-start gap-1.5 px-4 py-3">
           <div className="flex items-center justify-between w-full">
             <h3 className="text-base font-semibold text-gray-900">{title}</h3>
-            <span className="text-base font-semibold text-gray-900">{price}</span>
+            <span className="text-base font-semibold text-gray-900">{currencySymbol}{price}</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="flex items-center">

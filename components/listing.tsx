@@ -14,13 +14,20 @@ const mapMenuToItem = (menu: any) => ({
   id: menu.id,
   title: menu.name,
   price: menu.price_per_person,
-  img: menu.images?.find((img: any) => img.is_primary)?.image || "",
-  location: menu.chef_details?.city || "Unknown location",
-  rating: menu.chef_details?.average_rating || 0,
-  reviewCount: menu.chef_details?.num_reviews || 0,
+  img: menu.images && menu.images.length > 0 ? menu.images[0].image : "/menus/menu1.png",
+  location: menu.chef_details?.city || menu.chef?.city || "Unknown location",
+  rating: menu.chef_details?.average_rating 
+    ? Math.round(menu.chef_details.average_rating * 10) / 10 
+    : menu.chef?.average_rating 
+    ? Math.round(menu.chef.average_rating * 10) / 10 
+    : 0,
+  reviewCount: menu.chef_details?.num_reviews || menu.chef?.num_reviews || 0,
   chefName:
-    `${menu.chef_details?.first_name || ""} ${menu.chef_details?.last_name || ""}`.trim(),
-  chefAvatar: menu.chef_details?.avatar || "",
+    `${menu.chef_details?.first_name || menu.chef?.first_name || ""} ${menu.chef_details?.last_name || menu.chef?.last_name || ""}`.trim(),
+  chefAvatar: menu.chef_details?.avatar || menu.chef?.avatar || "",
+  cuisine_types: menu.cuisine_types || [],
+  country: menu.chef_details?.country || menu.chef?.country,
+  currency: menu.chef_details?.currency || menu.chef?.currency,
 });
 
 const mapChefToItem = (chef: any) => ({
@@ -40,16 +47,20 @@ const mapServiceToItem = (service: any) => ({
   id: service.id,
   title: service.name,
   description: service.description,
-  price: service.price_per_person,
-  imageUrl: service.images?.find((img: any) => img.is_primary)?.image || "",
-  rating: service.chef_details?.average_rating || 0,
-  reviewCount: service.chef_details?.num_reviews || 0,
-  location: service.chef_details?.city || "Unknown location",
+  price: service.price_per_person || service.starting_price_per_person,
+  mainImageUrl: service.cover_image || "/menus/menu1.png",
+  rating: service.chef_details?.average_rating
+    ? Math.round(service.chef_details.average_rating * 10) / 10
+    : service.chef?.average_rating
+    ? Math.round(service.chef.average_rating * 10) / 10
+    : 0,
+  reviewCount: service.chef_details?.num_reviews || service.chef?.num_reviews || 0,
+  location: service.chef_details?.city || service.chef?.city || "Unknown location",
   services: [service.chef_service],
-  profileImageUrl: service.chef_details?.avatar || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-  isVerified: service.chef_details?.is_verified,
+  profileImageUrl: service.chef_details?.avatar || service.chef?.avatar || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+  isVerified: service.chef_details?.is_verified || service.chef?.is_verified,
   chefName:
-    `${service.chef_details?.first_name || ""} ${service.chef_details?.last_name || ""}`.trim(),
+    `${service.chef_details?.first_name || service.chef?.first_name || ""} ${service.chef_details?.last_name || service.chef?.last_name || ""}`.trim(),
 });
 
 // Skeleton Loader Component

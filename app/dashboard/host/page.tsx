@@ -2,12 +2,15 @@
 
 import React from "react";
 import { useAuthStore } from "@/lib/store/auth-store";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { MyBookingsPage } from "@/components/dashboard/host-dashboard";
+import { paymentsService } from '@/lib/api/payments';
+import { showToast } from '@/lib/utils/toast';
 
 const HostDashboard: React.FC = () => {
   const { user, isAuthenticated, userType } = useAuthStore();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   React.useEffect(() => {
     if (!isAuthenticated) {
@@ -19,7 +22,22 @@ const HostDashboard: React.FC = () => {
       router.push("/login");
       return;
     }
-  }, [isAuthenticated, userType, router]);
+
+    // Payment verification logic
+    const reference = searchParams.get('reference') || localStorage.getItem('payment_reference');
+    if (reference) {
+      paymentsService.verify(reference)
+        .then(() => {
+          showToast.success('Payment successful!');
+          localStorage.removeItem('payment_reference');
+          // Remove reference from URL
+          router.replace('/dashboard/host');
+        })
+        .catch(() => {
+          showToast.error('Payment verification failed.');
+        });
+    }
+  }, [isAuthenticated, userType, router, searchParams]);
 
   if (!isAuthenticated || userType !== "host") {
     return <div>Loading...</div>;

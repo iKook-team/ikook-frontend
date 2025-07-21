@@ -25,13 +25,12 @@ export const ChefCard: React.FC<ChefCardProps> = ({
   return (
     <article className="border border-[color:var(--Black-100,#E7E7E7)] shadow-[0px_4px_70px_0px_rgba(0,0,0,0.07)] bg-white pl-[15px] pr-[76px] py-[13px] rounded-lg border-solid max-md:max-w-full max-md:pr-5">
       <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
-        <div className="w-[28%] max-md:w-full max-md:ml-0">
+        <div className="w-[142px] h-[129px] flex-shrink-0 relative max-md:w-full max-md:ml-0">
           <Image
             alt={dishName}
-            className="object-contain shrink-0 max-w-full grow max-md:mt-[29px]"
-            height={129}
+            className="object-cover w-full h-full rounded-lg"
+            fill
             src={imageUrl}
-            width={142}
           />
         </div>
         <div className="w-[72%] ml-5 max-md:w-full max-md:ml-0">

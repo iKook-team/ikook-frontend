@@ -1,14 +1,18 @@
+"use client";
 import React from "react";
-
+import { useRouter } from "next/navigation";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
 interface EventDetailsProps {
   onNext: (data?: Record<string, any>) => void;
   onBack: () => void;
+  chefService?: string;
 }
 
-export const EventDetails: React.FC<EventDetailsProps> = ({ onNext, onBack }) => {
+export const EventDetails: React.FC<EventDetailsProps> = ({ onNext, onBack, chefService }) => {
+  const router = useRouter();
+  console.log("[EventDetails] chefService:", chefService);
   const cuisines = [
     "African",
     "Italian",
@@ -22,6 +26,20 @@ export const EventDetails: React.FC<EventDetailsProps> = ({ onNext, onBack }) =>
   ];
 
   const eventTypes = ["Wedding", "Birthday", "Bachelor's Party", "Night Party"];
+
+  const handleMessageChef = () => {
+    console.log("[EventDetails] Message Chef clicked. chefService:", chefService);
+    if (chefService && chefService.toLowerCase() === "cooking class") {
+      console.log("[EventDetails] Navigating to /booking/cooking-class");
+      router.push("/booking/cooking-class");
+    } else if (chefService && chefService.toLowerCase() === "eating coach") {
+      console.log("[EventDetails] Navigating to /booking/eating-coach");
+      router.push("/booking/eating-coach");
+    } else {
+      console.log("[EventDetails] Default behavior (not Cooking Class or Eating Coach)");
+      // Default behavior (could open chat, etc.)
+    }
+  };
 
   return (
     <section className="border border-[color:var(--Black-100,#E7E7E7)] w-full bg-white pt-[18px] pb-7 px-5 rounded-[15px] border-solid max-md:max-w-full max-md:mr-0.5">
@@ -132,7 +150,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({ onNext, onBack }) =>
           and the requirements you have, and you will get a quote that fits your
           budget
         </p>
-        <Button className="bg-[#FCC01C] hover:bg-[#e6ac19] text-white">
+        <Button className="bg-[#FCC01C] hover:bg-[#e6ac19] text-white" onClick={handleMessageChef}>
           Message Chef
         </Button>
       </div>
