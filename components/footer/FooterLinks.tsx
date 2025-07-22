@@ -23,26 +23,6 @@ export const FooterLinks: React.FC<FooterLinksProps> = ({ className = "" }) => {
         "Terms & Condition",
       ],
     },
-    {
-      title: "Services",
-      links: [
-        "Chef at Home",
-        "Large Event",
-        "Meal Prep",
-        "Fine Dining",
-        "More +",
-      ],
-    },
-    {
-      title: "Experience",
-      links: [
-        "Signup as Chef",
-        "Gift Expeience",
-        "Split Bills",
-        "Career",
-        "Blog",
-      ],
-    },
   ];
 
   const locationSection = {
@@ -104,45 +84,6 @@ export const FooterLinks: React.FC<FooterLinksProps> = ({ className = "" }) => {
           </li>
         </ul>
       </nav>
-
-      <div className="w-[150px]">
-        <div className="text-base text-[#323335] font-medium">
-          <h3 className="text-black text-justify text-xl">
-            {contactSection.title}
-          </h3>
-          <address className="not-italic mt-3">
-            {contactSection.info.map((info, index) => (
-              <div
-                key={index}
-                className={`text-[#323335] ${index > 0 ? "mt-3" : ""}`}
-              >
-                {index === 0 ? (
-                  <a
-                    href={`tel:${info.replace(/\s/g, "")}`}
-                    className="hover:text-black transition-colors"
-                  >
-                    {info}
-                  </a>
-                ) : index === 1 ? (
-                  <a
-                    href={`mailto:${info}`}
-                    className="hover:text-black transition-colors"
-                  >
-                    {info}
-                  </a>
-                ) : (
-                  <a
-                    href="/support"
-                    className="hover:text-black transition-colors"
-                  >
-                    {info}
-                  </a>
-                )}
-              </div>
-            ))}
-          </address>
-        </div>
-      </div>
     </div>
   );
 };

@@ -11,7 +11,6 @@ import { PaymentBadges } from "./PaymentBadges";
 export const Footer: React.FC = () => {
   return (
     <footer className="flex w-full flex-col items-stretch bg-[#FCC01C] pt-16 pb-6 px-12 max-md:max-w-full max-md:px-5">
-      <NewsletterSection />
       {/* <Image src="/footer-logo.png" alt="logo" width={79} height={100} /> */}
       <div className="flex w-full items-stretch gap-5 flex-wrap justify-between mt-[73px] max-md:max-w-full max-md:mr-0.5 max-md:mt-10">
         <SocialIcons />
