@@ -4,69 +4,173 @@ import * as React from "react";
 
 import { SearchInput } from "./search-input";
 import { ConversationItem } from "./conversation-item";
+import { chatService, type Chat } from "@/lib/api/chat";
 
-const CONVERSATIONS = [
-  {
-    id: 1,
-    name: "Chef Titilayo John",
-    lastMessage: "What about the menu are you sending...",
-    eventInfo: "Large event . 16 Oct, 2023",
-    timestamp: "05:20 PM",
-    avatar:
-      "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/4407ba15e24202d56f18b1d9f154a20b85a5c918?placeholderIfAbsent=true",
-  },
-  ...Array(9)
-    .fill(null)
-    .map((_, index) => ({
-      id: index + 2,
-      name: `Chef ${index + 1}`, // Make names unique for better debugging
-      lastMessage: `Message ${index + 1} about the menu...`,
-      eventInfo: `Event ${index + 1} • 16 Oct, 2023`,
-      timestamp: "05:20 PM",
-      avatar:
-        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/4407ba15e24202d56f18b1d9f154a20b85a5c918?placeholderIfAbsent=true",
-    })),
-];
+// Helper function to format date to time string (e.g., "05:20 PM")
+const formatTime = (dateString: string): string => {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  return date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
+};
 
-export function ConversationList() {
-  const [activeId, setActiveId] = React.useState<number | null>(1);
-  const [conversations, setConversations] = React.useState<
-    typeof CONVERSATIONS
-  >([]);
+interface ConversationListProps {
+  onChatSelect: (chatId: number) => void;
+  activeChatId: number | null;
+}
 
-  // Initialize conversations on client-side only
+export function ConversationList({ onChatSelect, activeChatId }: ConversationListProps) {
+  const [chats, setChats] = React.useState<Chat[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
+  
+  // Track if component is mounted to prevent state updates after unmount
+  const isMounted = React.useRef(true);
+
+  // Cleanup function
   React.useEffect(() => {
-    setConversations(CONVERSATIONS);
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
 
-  return (
-    <aside className="w-[37%] max-md:ml-0 max-md:w-full">
-      <div className="flex flex-col max-md:mt-6 max-md:max-w-full">
-        <div className="self-end max-w-full text-base text-gray-500 w-[445px] max-md:mr-2.5">
-          <SearchInput placeholder="Search Chef" />
-        </div>
+  // Fetch chats on component mount
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const response = await chatService.getChats();
+        
+        // Skip if component unmounted
+        if (!isMounted.current) return;
+        
+        // Handle response
+        if (!response || !response.results) {
+          throw new Error('No results received from server');
+        }
+        
+        const chatResults = Array.isArray(response.results) ? response.results : [];
+        setChats(chatResults);
+        
+        // Auto-select first chat if available and no chat is selected
+        if (chatResults.length > 0 && !activeChatId) {
+          onChatSelect(chatResults[0].id);
+        }
+        
+      } catch (err) {
+        console.error('Error loading chats:', err);
+        if (isMounted.current) {
+          setError('Failed to load conversations. Please try again.');
+        }
+      } finally {
+        if (isMounted.current) {
+          setIsLoading(false);
+        }
+      }
+    };
+    
+    fetchData();
+    
+    return () => {
+      isMounted.current = false;
+    };
+    // We only want this to run once on mount, so we use an empty dependency array
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Removed activeChatId and onChatSelect from dependencies
 
-        <div className="mt-6">
-          {conversations.map((conversation) => (
-            <button
-              key={conversation.id}
-              className={`w-full text-left ${
-                activeId === conversation.id ? "bg-amber-100" : ""
-              }`}
-              onClick={() => setActiveId(conversation.id)}
-            >
-              <ConversationItem
-                name={conversation.name}
-                lastMessage={conversation.lastMessage}
-                eventInfo={conversation.eventInfo}
-                timestamp={conversation.timestamp}
-                avatar={conversation.avatar}
-                isActive={activeId === conversation.id}
-              />
-            </button>
-          ))}
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex flex-col h-full px-4">
+        <div className="shrink-0 py-4">
+          <SearchInput placeholder="Search Chef" className="w-full" disabled />
+        </div>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-gray-500">Loading conversations...</div>
         </div>
       </div>
-    </aside>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="flex flex-col h-full px-4">
+        <div className="shrink-0 py-4">
+          <SearchInput placeholder="Search Chef" className="w-full" disabled />
+        </div>
+        <div className="flex-1 flex flex-col items-center justify-center text-center p-4">
+          <div className="text-red-500 mb-2">{error}</div>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 text-sm font-medium text-amber-600 hover:text-amber-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Empty state
+  if (chats.length === 0) {
+    return (
+      <div className="flex flex-col h-full px-4">
+        <div className="shrink-0 py-4">
+          <SearchInput placeholder="Search Chef" className="w-full" />
+        </div>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-gray-500">No conversations found</div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col h-full px-4">
+      <div className="shrink-0 py-4">
+        <SearchInput placeholder="Search Chef" className="w-full" />
+      </div>
+      
+      <div className="flex flex-col flex-1 overflow-y-auto w-full">
+        {chats.map((chat) => {
+          const lastMessageTime = chat.last_message?.created_at 
+            ? formatTime(chat.last_message.created_at) 
+            : '';
+
+          // Determine the other user in the chat (show chef's name since host is the current user)
+          const otherUser = chat.chef;
+          
+          // Create event info string from last booking
+          let eventInfo = 'No event details';
+          if (chat.last_booking) {
+            const { chef_service, status } = chat.last_booking;
+            eventInfo = `${chef_service} • ${status}`;
+          }
+          
+          return (
+            <div 
+              key={chat.id} 
+              className={`relative p-4 cursor-pointer hover:bg-gray-50 ${activeChatId === chat.id ? 'bg-amber-50' : ''}`}
+              onClick={() => onChatSelect(chat.id)}
+            >
+              <ConversationItem
+                name={`${otherUser?.first_name || 'User'} ${otherUser?.last_name || ''}`.trim()}
+                lastMessage={chat.last_message?.message || 'No messages yet'}
+                eventInfo={eventInfo}
+                timestamp={lastMessageTime}
+                avatar={otherUser?.avatar || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'}
+                isActive={activeChatId === chat.id}
+              />
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }

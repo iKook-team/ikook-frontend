@@ -18,26 +18,22 @@ export function ConversationItem({
   isActive = false,
 }: ConversationItemProps) {
   return (
-    <article
-      className={`flex gap-4 items-center mt-6 max-md:max-w-full ${isActive ? "bg-amber-100 px-12 py-3.5" : ""}`}
-    >
+    <div className="flex gap-4 items-center w-full">
       <img
         src={avatar}
-        className="object-contain shrink-0 self-stretch my-auto rounded-lg aspect-square w-[60px]"
+        className="shrink-0 rounded-full aspect-square w-[60px] h-[60px] object-cover"
         alt={`${name} avatar`}
       />
-      <div className="flex gap-10 items-center self-stretch my-auto min-w-60">
-        <div className="self-stretch my-auto min-w-60">
-          <h3 className="text-base font-semibold text-zinc-800">{name}</h3>
-          <div className="mt-1">
-            <p className="text-sm leading-none text-stone-950">{lastMessage}</p>
-            <p className="text-xs text-neutral-400">{eventInfo}</p>
-          </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex justify-between items-start">
+          <h3 className="text-base font-semibold text-zinc-800 truncate pr-2">{name}</h3>
+          <time className="text-xs text-neutral-500 whitespace-nowrap">{timestamp}</time>
         </div>
-        <time className="self-stretch my-auto text-xs text-neutral-500">
-          {timestamp}
-        </time>
+        <div className="mt-1">
+          <p className="text-sm text-stone-950 truncate">{lastMessage}</p>
+          <p className="text-xs text-neutral-400 mt-0.5">{eventInfo}</p>
+        </div>
       </div>
-    </article>
+    </div>
   );
 }
