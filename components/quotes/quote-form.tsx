@@ -1,12 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 
+import { Button } from "@/components/ui/button";
 import { FormField } from "../ui/form-field";
-
 import { MenuSection } from "./menu-section";
 
-export const QuoteForm: React.FC = () => {
+interface QuoteFormProps {
+  onPreview: (data: any) => void;
+}
+
+export const QuoteForm: React.FC<QuoteFormProps> = ({ onPreview }) => {
+  const [formData, setFormData] = useState({
+    // Add your form fields here
+    menuItems: [],
+    totalPrice: 0,
+    menuName: '',
+    // ... other form fields
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Just prevent default, don't trigger preview here
+    // The preview will be handled by the drawer's footer button
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
   return (
-    <div className="grow mt-6 max-md:mt-10 max-md:max-w-full">
+    <form id="quote-form" className="grow mt-6 max-md:mt-10 max-md:max-w-full">
       <div className="flex flex-col justify-center px-2.5 py-3 w-full bg-white rounded-md border-solid shadow-2xl border-[0.639px] border-neutral-200 max-md:max-w-full">
         <div className="flex gap-4 items-start">
           <img
@@ -30,18 +55,26 @@ export const QuoteForm: React.FC = () => {
         </div>
       </div>
 
-      <FormField
-        label="Menu name"
-        placeholder="Give this Quote a name"
-        className="mt-6 max-md:max-w-full"
-      />
+<div className="mt-6 max-md:max-w-full">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Menu name
+        </label>
+        <input
+          type="text"
+          name="menuName"
+          placeholder="Give this Quote a name"
+          value={formData.menuName}
+          onChange={handleInputChange}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
 
-      <div className="mt-6 max-md:max-w-full">
+<div className="mt-6 max-md:max-w-full">
         <MenuSection title="Starter Menu" />
         <MenuSection title="Main Menu" />
-        <MenuSection title="Desert Menu" />
+        <MenuSection title="Dessert Menu" />
         <MenuSection title="Side Menu" />
       </div>
-    </div>
+    </form>
   );
 };

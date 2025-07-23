@@ -26,6 +26,7 @@ export interface LastBooking {
   is_custom: boolean;
   chef_associations: string;
   selected_chef_id: string;
+  created_at: string;
 }
 
 export interface Chat {
@@ -75,34 +76,30 @@ export const chatService = {
     try {
       const response = await axios.get("/chats/");
       
-      if (!response?.data) {
-        throw new Error('No data received from server');
+      // Always ensure we have a response object
+      if (!response) {
+        throw new Error('No response from server');
       }
+
+      // Extract the data, defaulting to empty array if not found
+      const responseData = response?.data?.data || response?.data || [];
       
-      // Log the response for debugging
-      console.log('Chats API response:', response.data);
-      
-      // Handle different response formats
+      // Ensure we always return an array of chats
       let chatResults: Chat[] = [];
       
-      // Case 1: Response has a 'results' array (standard paginated response)
-      if (response.data.results && Array.isArray(response.data.results)) {
-        chatResults = response.data.results;
-      } 
-      // Case 2: Response is an array (direct array of chats)
-      else if (Array.isArray(response.data)) {
-        chatResults = response.data;
-      }
-      // Case 3: Response is a single chat object (for chefs with only one chat)
-      else if (response.data.id && (response.data.host || response.data.chef)) {
-        chatResults = [response.data];
+      if (Array.isArray(responseData)) {
+        chatResults = responseData;
+      } else if (responseData?.results && Array.isArray(responseData.results)) {
+        chatResults = responseData.results;
+      } else if (responseData?.id) {
+        chatResults = [responseData];
       }
       
-      // Return in the expected format
+      // Return a valid response structure in all cases
       return {
         count: chatResults.length,
-        next: response.data.next || null,
-        previous: response.data.previous || null,
+        next: null,
+        previous: null,
         current: 1,
         total: chatResults.length,
         results: chatResults

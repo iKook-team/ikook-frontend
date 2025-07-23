@@ -5,12 +5,29 @@ import { MessageBubble } from "./message-bubble";
 import { QuoteCard } from "./quote-card";
 import { chatService, type Message } from "@/lib/api/chat";
 
+import type { User } from "@/lib/api/chat";
+
 interface ChatAreaProps {
   activeChatId: number | null;
-  currentUserId: number; // Assuming we have the current user's ID
+  currentUserId: number;
+  chatPartner?: User | null;
+  lastBooking?: {
+    status: string;
+    created_at: string;
+  } | null;
 }
 
-export function ChatArea({ activeChatId, currentUserId }: ChatAreaProps) {
+// Format date to be more readable (e.g., "August 16, 2023")
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
+export function ChatArea({ activeChatId, currentUserId, chatPartner, lastBooking }: ChatAreaProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -63,42 +80,42 @@ export function ChatArea({ activeChatId, currentUserId }: ChatAreaProps) {
   }
   return (
     <section className="flex flex-col h-full w-full">
-      {/* Header Section */}
-      <div className="shrink-0 border-gray-200 px-2 py-2">
-        <div className="flex flex-wrap justify-between items-center px-2 py-2.5 rounded-md border border-solid border-gray-200">
-          <div className="flex flex-col self-stretch my-auto text-black">
-            <div className="flex gap-1 items-start self-start px-2.5 py-1.5 text-xs whitespace-nowrap bg-neutral-200 rounded-[30px]">
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/854fbc987f04d5db1e66f0babdee9a8a8d18031e?placeholderIfAbsent=true"
-                className="object-contain shrink-0 w-4 aspect-square"
-                alt="Enquiry icon"
-              />
-              <span>Enquiry</span>
-            </div>
-            <div className="flex gap-6 items-start mt-4 text-xs">
-              <div className="flex gap-2 items-center">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/3f07306ff168cdfbbc1ec048a31ae9cad545073c?placeholderIfAbsent=true"
-                  className="object-contain shrink-0 self-stretch my-auto w-4 aspect-square"
-                  alt="Date icon"
-                />
-                <span className="self-stretch my-auto">August 16, 2023</span>
+      {/* Booking Info Section - Only show if there is a lastBooking */}
+      {lastBooking && (
+        <div className="shrink-0 border-gray-200 px-2 py-2">
+          <div className="flex flex-wrap justify-between items-center px-2 py-2.5 rounded-md border border-solid border-gray-200">
+            <div className="flex flex-col self-stretch my-auto text-black">
+              {lastBooking.status && (
+                <div className="flex gap-1 items-start self-start px-2.5 py-1.5 text-xs whitespace-nowrap bg-neutral-200 rounded-[30px]">
+                  <img
+                    src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/854fbc987f04d5db1e66f0babdee9a8a8d18031e?placeholderIfAbsent=true"
+                    className="object-contain shrink-0 w-4 aspect-square"
+                    alt="Status icon"
+                  />
+                  <span className="capitalize">{lastBooking.status.toLowerCase()}</span>
+                </div>
+              )}
+              <div className="flex gap-6 items-start mt-4 text-xs">
+                {lastBooking.created_at && (
+                  <div className="flex gap-2 items-center">
+                    <img
+                      src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/3f07306ff168cdfbbc1ec048a31ae9cad545073c?placeholderIfAbsent=true"
+                      className="object-contain shrink-0 self-stretch my-auto w-4 aspect-square"
+                      alt="Date icon"
+                    />
+                    <span className="self-stretch my-auto">
+                      {formatDate(lastBooking.created_at)}
+                    </span>
+                  </div>
+                )}
               </div>
-              <div className="flex gap-2 items-center">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/09ddc772831e94523cc11b4412b9637a74f404bf?placeholderIfAbsent=true"
-                  className="object-contain shrink-0 self-stretch my-auto w-4 aspect-square"
-                  alt="Location icon"
-                />
-                <span className="self-stretch my-auto">London, UK</span>
-              </div>
             </div>
+            <button className="overflow-hidden gap-2 self-stretch px-4 py-2.5 my-auto text-sm font-semibold leading-none text-amber-400 whitespace-nowrap rounded-lg border border-solid shadow-sm border-amber-400 w-[110px]">
+              Details
+            </button>
           </div>
-          <button className="overflow-hidden gap-2 self-stretch px-4 py-2.5 my-auto text-sm font-semibold leading-none text-amber-400 whitespace-nowrap rounded-lg border border-solid shadow-sm border-amber-400 w-[110px]">
-            Details
-          </button>
         </div>
-      </div>
+      )}
 
       {/* Messages Container - Takes remaining space and scrolls */}
       <div className="flex-1 overflow-y-auto p-4">
