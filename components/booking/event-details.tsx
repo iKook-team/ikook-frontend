@@ -1,8 +1,9 @@
 "use client";
-import React from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 interface EventDetailsProps {
   onNext: (data?: Record<string, any>) => void;
@@ -27,8 +28,29 @@ export const EventDetails: React.FC<EventDetailsProps> = ({ onNext, onBack, chef
 
   const eventTypes = ["Wedding", "Birthday", "Bachelor's Party", "Night Party"];
 
+  const pathname = usePathname();
+  const setBookingService = useAuthStore((state) => state.setBookingService);
+  const bookingService = useAuthStore((state) => state.bookingService);
+
+  // Extract service ID from URL when component mounts
+  useEffect(() => {
+    const pathParts = pathname.split('/');
+    const serviceId = pathParts[pathParts.length - 1];
+    
+    if (serviceId && serviceId !== 'details') { // Make sure we have a valid ID
+      // Set the service ID in the auth store
+      setBookingService({ id: serviceId });
+    }
+  }, [pathname, setBookingService]);
+
   const handleMessageChef = () => {
     console.log("[EventDetails] Message Chef clicked. chefService:", chefService);
+    
+    if (!bookingService) {
+      console.error("[EventDetails] No booking service found in store");
+      return;
+    }
+    
     if (chefService && chefService.toLowerCase() === "cooking class") {
       console.log("[EventDetails] Navigating to /booking/cooking-class");
       router.push("/booking/cooking-class");

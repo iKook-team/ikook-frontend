@@ -4,12 +4,14 @@ interface ActionButtonsProps {
   onBack?: () => void;
   onContinue?: () => void;
   continueDisabled?: boolean;
+  continueText?: string;
 }
 
 export const ActionButtons: React.FC<ActionButtonsProps> = ({
   onBack,
   onContinue,
-  continueDisabled = false
+  continueDisabled = false,
+  continueText = 'Continue'
 }) => {
   return (
     <div className="inline-flex items-start gap-[22px] w-[276px] h-12">
@@ -35,7 +37,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
         <span className={`text-base font-semibold leading-6 ${
           continueDisabled ? 'text-gray-500' : 'text-white'
         }`}>
-          Continue
+{continueText}
         </span>
       </button>
     </div>

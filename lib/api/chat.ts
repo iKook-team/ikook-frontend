@@ -105,7 +105,6 @@ export const chatService = {
         results: chatResults
       };
     } catch (error) {
-      console.error('Error in chatService.getChats:', error);
       handleApiError(error, 'Failed to load conversations');
       throw error; // Re-throw to allow components to handle the error if needed
     }

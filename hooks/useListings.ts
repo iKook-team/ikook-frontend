@@ -85,7 +85,6 @@ const useListings = ({
       setListings(response?.results || []);
       setTotalCount(response?.count || 0);
     } catch (err) {
-      console.error("Error fetching listings:", err);
       setError("Failed to fetch listings. Please try again later.");
       setListings([]);
       setTotalCount(0);

@@ -49,7 +49,6 @@ export function ConversationList({ onChatSelect, activeChatId }: ConversationLis
           onChatSelect(chatResults[0]);
         }
       } catch (err) {
-        console.error('Error loading chats:', err);
         if (isMounted) {
           setError('Failed to load conversations. Please try again.');
         }

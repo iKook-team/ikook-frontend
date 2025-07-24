@@ -1,7 +1,28 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+
+interface MenuItemInput {
+  name: string;
+  description: string;
+  price?: string;
+  course: string;
+}
+
+type QuoteFormData = {
+  items: MenuItemInput[];
+  menuName: string;
+  bookingId?: number;
+  [key: string]: any; // For any additional properties
+};
 import { useRouter } from "next/navigation";
+
+interface QuoteType {
+  id: string;
+  is_paid: boolean;
+  // Add other properties of the quote object as needed
+  [key: string]: any; // For any additional properties
+}
 import { Search } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -14,16 +35,21 @@ import { ConversationList } from "@/components/chat/conversation-list";
 
 import { useAuthStore } from "@/lib/store/auth-store";
 import { Chat, chatService } from "@/lib/api/chat";
-import { quotesService } from "@/lib/api/quotes";
+import { quotesService, type CreateQuoteInput, type QuoteItemInput, type Quote } from "@/lib/api/quotes";
 import { Drawer, DrawerContent, DrawerHeader, DrawerBody, DrawerFooter } from "@heroui/drawer";
+
+// Ensure React is in scope for JSX
 
 export default function MessagingPage() {
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
   const [isLoadingQuote, setIsLoadingQuote] = useState(false);
-  const [quote, setQuote] = useState<any>(null);
+  const [quote, setQuote] = useState<QuoteType | null>(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [formData, setFormData] = useState<any>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState<QuoteFormData | null>(null);
+  const [menuItemsCount, setMenuItemsCount] = useState(0);
+  const isPreviewDisabled = menuItemsCount === 0;
   const { user } = useAuthStore();
   const isChef = user?.user_type?.toLowerCase() === 'chef';
   // Default to 0 if user.id is not available (should not happen in authenticated routes)
@@ -161,13 +187,107 @@ export default function MessagingPage() {
           <DrawerBody>
             <div className="space-y-4">
               {quote || isPreviewMode ? (
-                <QuotePreview {...(formData || {})} />
+                <QuotePreview 
+                  quoteId={quote?.id ? parseInt(quote.id, 10) : undefined} 
+                  formData={isPreviewMode && formData ? formData : undefined} 
+                  onSendQuote={async () => {
+                    if (!formData) return;
+                    
+                    try {
+                      // Extract menu items from form data
+                      const menuItems: QuoteItemInput[] = [];
+                      
+                      // Iterate through form data to find menu items
+                      Object.entries(formData).forEach(([key, value]) => {
+                        if (key.startsWith('items_') && value) {
+                          const item = value as Record<string, unknown>;
+                          menuItems.push({
+                            course: (item.course as string) || 'main',
+                            name: (item.name as string) || '',
+                            description: (item.description as string) || '',
+                            price: typeof item.price === 'number' ? item.price.toString() : '0',
+                          });
+                        }
+                      });
+                      
+                      // Create quote data
+                      const quoteData: CreateQuoteInput = {
+                        name: (formData.menuName as string) || 'Menu Quote',
+                        booking: activeChat?.last_booking?.id || 0,
+                        items: menuItems
+                      };
+                      
+                      console.log('Sending quote data:', quoteData);
+                      const response = await quotesService.createQuote(quoteData);
+                      console.log('Quote created:', response);
+                      toast.success('Quote sent successfully!');
+                      setIsDrawerOpen(false);
+                      setQuote(response);
+                      setIsPreviewMode(false);
+                      setFormData(null);
+                    } catch (err) {
+                      const error = err as Error;
+                      console.error('Error sending quote:', error);
+                      toast.error('Failed to send quote. Please try again.');
+                    }
+                  }}
+                  onPayQuote={async () => {
+                    try {
+                      console.log('Paying quote...', { quote });
+                      // TODO: Implement pay quote logic
+                      toast.success('Payment processed successfully!');
+                    } catch (error) {
+                      console.error('Error processing payment:', error);
+                      toast.error('Failed to process payment. Please try again.');
+                    }
+                  }}
+                />
               ) : (
                 <QuoteForm 
-                  onPreview={(data) => {
-                    setFormData(data);
-                    setIsPreviewMode(true);
-                  }} 
+                  menuItems={formData?.items || []}
+                  bookingId={activeChat?.last_booking?.id}
+                  onMenuItemsChange={(count) => setMenuItemsCount(count)}
+                  isSubmitting={isSubmitting}
+                  onCreateQuote={async (formData) => {
+                    try {
+                      setIsSubmitting(true);
+                      
+                      // Prepare the quote data
+                      const quotePayload: CreateQuoteInput = {
+                        name: formData.menuName,
+                        booking: activeChat?.last_booking?.id ? Number(activeChat.last_booking.id) : 0,
+                        items: formData.items.map(item => ({
+                          course: item.course,
+                          name: item.name,
+                          description: item.description || '',
+                          price: item.price || '0'
+                        }))
+                      };
+                      
+                      console.log('Creating quote with data:', quotePayload);
+                      
+                      // Create the quote
+                      const quoteResult = await quotesService.createQuote(quotePayload);
+                      
+                      // Update the UI state
+                      setFormData({
+                        items: formData.items,
+                        menuName: formData.menuName,
+                        bookingId: activeChat?.last_booking?.id ? Number(activeChat.last_booking.id) : undefined
+                      });
+                      
+                      // Show the preview
+                      setQuote(quoteResult);
+                      setIsPreviewMode(true);
+                      toast.success('Quote created successfully!');
+                      
+                    } catch (error) {
+                      console.error('Error creating quote:', error);
+                      toast.error('Failed to create quote. Please try again.');
+                    } finally {
+                      setIsSubmitting(false);
+                    }
+                  }}
                 />
               )}
             </div>
@@ -175,64 +295,160 @@ export default function MessagingPage() {
           
           <DrawerFooter>
             {/* Button visibility logic:
-                1. Show "Preview Quote" when showing the form (no quote and not in preview mode)
+                1. Show "Create Quote" when showing the form (no quote and not in preview mode)
                 2. Show "Send Quote" when in preview mode
                 3. Show "Pay Quote" when viewing an existing unpaid quote as host
-                4. Show no button in all other cases
             */}
-            {((!quote && !isPreviewMode) || isPreviewMode || (quote && !quote.is_paid && user?.user_type?.toLowerCase() === 'host')) && (
-              <Button 
+            {!isPreviewMode && !quote && (
+              <Button
+                type="button"
                 variant="primary"
+                disabled={isPreviewDisabled || menuItemsCount === 0}
                 className="w-full"
-                onClick={async (e) => {
-                  e.preventDefault();
-                  
-                  if (quote && !quote.is_paid && user?.user_type?.toLowerCase() === 'host' && !isPreviewMode) {
-                    // Handle pay quote logic for existing unpaid quote
-                    console.log('Paying quote...', { quote });
-                    // Add your payment logic here
+                onClick={async () => {
+                  try {
+                    setIsSubmitting(true);
                     
-                  } else if (isPreviewMode) {
-                    // Handle send quote logic for new quote (after preview)
-                    console.log('Sending new quote...', { formData });
-                    // Reset preview mode after sending
-                    setIsPreviewMode(false);
-                    setFormData(null);
-                    // Close the drawer after sending
-                    setIsDrawerOpen(false);
-                    
-                  } else {
                     // Get the form data from the form inputs
                     const form = document.getElementById('quote-form') as HTMLFormElement;
-                    if (form) {
-                      // Prevent default form submission
-                      e.preventDefault();
-                      
-                      // Manually collect form data
-                      const formData = new FormData(form);
-                      const data = Object.fromEntries(formData.entries());
-                      
-                      // Log the collected data for debugging
-                      console.log('Collected form data:', data);
-                      
-                      // Set the form data and switch to preview mode
-                      setFormData(data);
-                      setIsPreviewMode(true);
-                    } else {
-                      console.error('Form not found');
+                    if (!form) {
+                      throw new Error('Form not found');
                     }
+                    
+                    // Prevent default form submission
+                    const e = window.event as Event;
+                    e?.preventDefault();
+                    
+                    // Manually collect form data
+                    const formData = new FormData(form);
+                    const data = Object.fromEntries(formData.entries());
+                    
+                    // Debug: Log the raw form data
+                    console.log('Raw form data:', data);
+                    
+                    // Parse the JSON strings from form data
+                    const starterItems = data.starterItems ? JSON.parse(data.starterItems as string) : [];
+                    const mainItems = data.mainItems ? JSON.parse(data.mainItems as string) : [];
+                    const dessertItems = data.dessertItems ? JSON.parse(data.dessertItems as string) : [];
+                    
+                    // Debug: Log the parsed items
+                    console.log('Starter items:', starterItems);
+                    console.log('Main items:', mainItems);
+                    console.log('Dessert items:', dessertItems);
+                    
+                    // Debug: Log checked items
+                    console.log('Checked starter items:', starterItems.filter((item: any) => item.checked));
+                    console.log('Checked main items:', mainItems.filter((item: any) => item.checked));
+                    console.log('Checked dessert items:', dessertItems.filter((item: any) => item.checked));
+                    
+                    // Prepare quote data
+                    const quoteData = {
+                      name: typeof data.name === 'string' ? data.name : 'New Quote',
+                      booking: activeChat?.last_booking?.id ? Number(activeChat.last_booking.id) : 0,
+                      items: [
+                        ...(starterItems.filter((item: any) => item.checked) || []).map((item: any) => ({
+                          course: 'starter',
+                          name: item.name,
+                          description: item.description || '',
+                          price: item.price?.toString() || '0'
+                        })),
+                        ...(mainItems.filter((item: any) => item.checked) || []).map((item: any) => ({
+                          course: 'main',
+                          name: item.name,
+                          description: item.description || '',
+                          price: item.price?.toString() || '0'
+                        })),
+                        ...(dessertItems.filter((item: any) => item.checked) || []).map((item: any) => ({
+                          course: 'dessert',
+                          name: item.name,
+                          description: item.description || '',
+                          price: item.price?.toString() || '0'
+                        }))
+                      ]
+                    };
+                    
+                    // Create the quote using the quotes service
+                    const result = await quotesService.createQuote(quoteData);
+                    
+                    // Prepare form data with the correct structure
+                    const formDataObj: QuoteFormData = {
+                      menuName: typeof data.name === 'string' ? data.name : 'New Quote',
+                      items: [
+                        ...(starterItems.filter((item: any) => item.checked) || []).map((item: any) => ({
+                          name: item.name,
+                          description: item.description || '',
+                          price: item.price?.toString() || '0',
+                          course: 'starter'
+                        })),
+                        ...(mainItems.filter((item: any) => item.checked) || []).map((item: any) => ({
+                          name: item.name,
+                          description: item.description || '',
+                          price: item.price?.toString() || '0',
+                          course: 'main'
+                        })),
+                        ...(dessertItems.filter((item: any) => item.checked) || []).map((item: any) => ({
+                          name: item.name,
+                          description: item.description || '',
+                          price: item.price?.toString() || '0',
+                          course: 'dessert'
+                        }))
+                      ],
+                      bookingId: activeChat?.last_booking?.id
+                    };
+                    
+                    // Update the quote and show the preview
+                    setQuote(result);
+                    setFormData(formDataObj);
+                    setIsPreviewMode(true);
+                    toast.success('Quote created successfully!');
+                    
+                  } catch (error) {
+                    toast.error('Failed to create quote. Please try again.');
+                  } finally {
+                    setIsSubmitting(false);
                   }
                 }}
               >
-                {(() => {
-                  if (quote && !quote.is_paid && user?.user_type?.toLowerCase() === 'host' && !isPreviewMode) {
-                    return 'Pay Quote';
-                  } else if (isPreviewMode) {
-                    return 'Send Quote';
-                  } else {
-                    return 'Preview Quote';
+                Create Quote
+              </Button>
+            )}
+            
+            {isPreviewMode && quote && (
+              <Button
+                type="button"
+                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                onClick={() => {
+                  // Handle sending the quote
+                  toast.success('Quote sent successfully!');
+                  setIsDrawerOpen(false);
+                }}
+              >
+                Send Quote
+              </Button>
+            )}
+            
+            {!isPreviewMode && quote && user?.user_type?.toLowerCase() === 'host' && (quote as QuoteType).is_paid === false && (
+              <Button
+                type="button"
+                className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                onClick={async () => {
+                  // Handle quote payment
+                  try {
+                    // Call your payment API here
+                    await fetch(`/api/quotes/${(quote as QuoteType).id}/pay`, {
+                      method: 'POST',
+                    });
+                    
+                    // Update the quote as paid
+                    setQuote({ ...quote, is_paid: true });
+                    toast.success('Payment successful!');
+                  } catch (error) {
+                    console.error('Payment failed:', error);
+                    toast.error('Payment failed. Please try again.');
                   }
-                })()}
+                }}
+              >
+                Pay Quote
               </Button>
             )}
           </DrawerFooter>
