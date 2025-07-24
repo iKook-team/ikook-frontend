@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 interface BudgetFormProps {
   defaultBudget?: number;
   onBudgetChange?: (budget: number) => void;
-  onBudgetTypeChange?: (type: 'flexible' | 'fixed') => void;
+  onBudgetTypeChange?: (type: 'flexible' | 'fixed' | 'Flexible' | 'Fixed') => void;
 }
 
 export const BudgetForm: React.FC<BudgetFormProps> = ({
@@ -22,7 +22,9 @@ export const BudgetForm: React.FC<BudgetFormProps> = ({
 
   const handleBudgetTypeChange = (type: 'flexible' | 'fixed') => {
     setBudgetType(type);
-    onBudgetTypeChange?.(type);
+    // Convert to lowercase for internal state, but pass capitalized version to parent
+    const capitalizedType = type === 'fixed' ? 'Fixed' : 'Flexible';
+    onBudgetTypeChange?.(capitalizedType);
   };
 
   const formatBudget = (value: number) => {

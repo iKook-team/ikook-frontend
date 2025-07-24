@@ -6,6 +6,7 @@ import { ActionButtons } from './action-buttons';
 interface ClassDetailsFormProps {
   onNext: (data: ClassDetailsFormData) => void;
   onBack: () => void;
+  initialValues?: Partial<ClassDetailsFormData>;
 }
 
 export interface ClassDetailsFormData {
@@ -14,11 +15,12 @@ export interface ClassDetailsFormData {
   guests: number;
 }
 
-const ClassDetailsForm: React.FC<ClassDetailsFormProps> = ({ onNext, onBack }) => {
+const ClassDetailsForm: React.FC<ClassDetailsFormProps> = ({ onNext, onBack, initialValues = {} }) => {
   const [formData, setFormData] = useState<ClassDetailsFormData>({
     location: "",
     teaching: "",
     guests: 1,
+    ...initialValues
   });
 
   const progressSteps = [

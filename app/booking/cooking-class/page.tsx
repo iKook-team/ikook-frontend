@@ -27,66 +27,51 @@ const steps = [
 type Step = typeof steps[number];
 
 const CookingClassBookingPage = () => {
+  // All hooks must be called unconditionally at the top level
   const [currentStep, setCurrentStep] = useState<Step>(steps[0]);
   const [formData, setFormData] = useState<Record<string, any>>({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [isValidService, setIsValidService] = useState(false);
+  const [serviceId, setServiceId] = useState<number | null>(null);
   const router = useRouter();
   const { bookingService, setBookingService } = useAuthStore();
   
-  // Ensure we have a valid booking service
-  if (!bookingService || !bookingService.id) {
-    console.error("[CookingClassBookingPage] No booking service found in store");
-    router.push('/');
-    return null;
-  }
-  
-  const validatedServiceId = parseInt(bookingService.id, 10);
-  if (isNaN(validatedServiceId)) {
-    console.error("[CookingClassBookingPage] Invalid service ID in store:", bookingService.id);
-    router.push('/');
-    return null;
-  }
-
-  const [isLoading, setIsLoading] = useState(!bookingService);
-  
-  // Set the booking service when the component mounts
+  // Validate service from store
   useEffect(() => {
-    const fetchService = async () => {
-      try {
-        // Only fetch service details if we have a service ID and don't already have complete service details
-        if (validatedServiceId) {
-          const hasCompleteDetails = bookingService?.name && bookingService?.description && bookingService?.price;
-          
-          if (!hasCompleteDetails) {
-            console.log("[CookingClassBookingPage] Fetching service details for ID:", validatedServiceId);
-            const service = await listingService.getServiceById(validatedServiceId);
-            console.log("[CookingClassBookingPage] Fetched service:", service);
-            
-            // Only update if we got valid service data
-            if (service) {
-              setBookingService((prev: any) => ({
-                ...prev,
-                ...service,
-                id: validatedServiceId.toString()
-              }));
-            }
-          } else {
-            console.log("[CookingClassBookingPage] Using existing service details");
-          }
-        }
-      } catch (error) {
-        console.error('[CookingClassBookingPage] Error fetching service:', error);
-        showToast.error('Failed to load service details. Please try again.');
-        router.push('/');
-      }
-    };
-    
-    fetchService();
-    
-    // Clean up when component unmounts
-    return () => {
-      // Don't clear the booking service here as we need it during the booking flow
-    };
-  }, [validatedServiceId, bookingService, setBookingService, router]);
+    if (!bookingService?.id) {
+      console.log('[CookingClassBookingPage] No service found in store, redirecting to home');
+      router.push('/');
+      return;
+    }
+
+    const id = parseInt(bookingService.id, 10);
+    if (isNaN(id)) {
+      console.error('[CookingClassBookingPage] Invalid service ID in store, redirecting');
+      router.push('/');
+      return;
+    }
+
+    setServiceId(id);
+    setIsValidService(true);
+    setIsLoading(false);
+
+    // No need to fetch service details as they should be in the store
+    console.log('[CookingClassBookingPage] Using service from store:', bookingService);
+  }, [bookingService, router]);
+  
+  // Show loading state while checking service
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+  
+  // If service is not valid, show nothing (redirect will happen in useEffect)
+  if (!isValidService) {
+    return null;
+  }
 
   const handleNext = (data?: Record<string, any>) => {
     if (data) setFormData(prev => ({ ...prev, ...data }));
@@ -107,13 +92,43 @@ const CookingClassBookingPage = () => {
   let StepComponent;
   switch (currentStep) {
     case "class-details":
-      StepComponent = <ClassDetailsForm onNext={handleNext} onBack={handleBack} />;
+      StepComponent = (
+        <ClassDetailsForm 
+          onNext={handleNext} 
+          onBack={handleBack} 
+          initialValues={{
+            location: formData.location || "",
+            teaching: formData.teaching || "",
+            guests: formData.guests || 1
+          }}
+        />
+      );
       break;
     case "class-details2":
-      StepComponent = <ClassDetailsForm2 onNext={handleNext} onBack={handleBack} />;
+      StepComponent = (
+        <ClassDetailsForm2 
+          onNext={handleNext} 
+          onBack={handleBack} 
+          initialValues={{
+            appearance: formData.appearance || "",
+            experience: formData.experience || "",
+            days: formData.days || 1
+          }}
+        />
+      );
       break;
     case "class-details3":
-      StepComponent = <ClassDetailsForm3 onNext={handleNext} onBack={handleBack} />;
+      StepComponent = (
+        <ClassDetailsForm3 
+          onNext={handleNext} 
+          onBack={handleBack} 
+          initialValues={{
+            startDate: formData.startDate || "",
+            endDate: formData.endDate || "",
+            cuisines: formData.cuisines || []
+          }}
+        />
+      );
       break;
     case "class-rate":
       StepComponent = <ClassRate onNext={handleNext} onBack={handleBack} />;
@@ -155,7 +170,7 @@ const CookingClassBookingPage = () => {
           onNext={handleNext}
           onBack={handleBack}
           bookingData={formData}
-          serviceId={validatedServiceId}
+          serviceId={serviceId || undefined}
           service={bookingService}
           dietaryRestrictions={formData.dietaryRestrictions || []}
           budget={formData.budget}

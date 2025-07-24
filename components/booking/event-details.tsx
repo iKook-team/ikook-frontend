@@ -43,24 +43,38 @@ export const EventDetails: React.FC<EventDetailsProps> = ({ onNext, onBack, chef
     }
   }, [pathname, setBookingService]);
 
-  const handleMessageChef = () => {
+  const handleMessageChef = async () => {
     console.log("[EventDetails] Message Chef clicked. chefService:", chefService);
     
-    if (!bookingService) {
-      console.error("[EventDetails] No booking service found in store");
+    // Get the current path to extract service ID
+    const pathParts = pathname.split('/');
+    const serviceId = pathParts[pathParts.length - 1];
+    
+    if (!serviceId || serviceId === 'details') {
+      console.error("[EventDetails] No valid service ID found in URL");
       return;
     }
     
+    // Create a clean service object with just the ID
+    const serviceObj = { id: serviceId };
+    console.log("[EventDetails] Setting booking service with ID:", serviceId);
+    
+    // Set the booking service with the minimal required data
+    setBookingService(serviceObj);
+    
+    // Determine the target route based on chefService type
+    let targetRoute = '';
     if (chefService && chefService.toLowerCase() === "cooking class") {
-      console.log("[EventDetails] Navigating to /booking/cooking-class");
-      router.push("/booking/cooking-class");
+      targetRoute = "/booking/cooking-class";
     } else if (chefService && chefService.toLowerCase() === "eating coach") {
-      console.log("[EventDetails] Navigating to /booking/eating-coach");
-      router.push("/booking/eating-coach");
+      targetRoute = "/booking/eating-coach";
     } else {
       console.log("[EventDetails] Default behavior (not Cooking Class or Eating Coach)");
-      // Default behavior (could open chat, etc.)
+      return;
     }
+    
+    console.log(`[EventDetails] Navigating to ${targetRoute}`);
+    router.push(targetRoute);
   };
 
   return (

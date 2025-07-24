@@ -6,6 +6,7 @@ import { ActionButtons } from './action-buttons';
 interface ClassDetailsForm2Props {
   onNext: (data: ClassDetailsForm2Data) => void;
   onBack: () => void;
+  initialValues?: Partial<ClassDetailsForm2Data>;
 }
 
 export interface ClassDetailsForm2Data {
@@ -14,11 +15,12 @@ export interface ClassDetailsForm2Data {
   days: number;
 }
 
-const ClassDetailsForm2: React.FC<ClassDetailsForm2Props> = ({ onNext, onBack }) => {
+const ClassDetailsForm2: React.FC<ClassDetailsForm2Props> = ({ onNext, onBack, initialValues = {} }) => {
   const [formData, setFormData] = useState<ClassDetailsForm2Data>({
     appearance: "",
     experience: "",
     days: 1,
+    ...initialValues
   });
 
   const progressSteps = [

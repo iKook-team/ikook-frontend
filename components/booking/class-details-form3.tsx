@@ -7,6 +7,7 @@ import { ActionButtons } from './action-buttons';
 interface ClassDetailsForm3Props {
   onNext: (data: ClassDetailsForm3Data) => void;
   onBack: () => void;
+  initialValues?: Partial<ClassDetailsForm3Data>;
 }
 
 export interface ClassDetailsForm3Data {
@@ -26,11 +27,12 @@ const availableCuisines = [
   "Indian",
 ];
 
-const ClassDetailsForm3: React.FC<ClassDetailsForm3Props> = ({ onNext, onBack }) => {
+const ClassDetailsForm3: React.FC<ClassDetailsForm3Props> = ({ onNext, onBack, initialValues = {} }) => {
   const [formData, setFormData] = useState<ClassDetailsForm3Data>({
     startDate: "",
     endDate: "",
     cuisines: [],
+    ...initialValues
   });
 
   const progressSteps = [

@@ -31,7 +31,6 @@ const CookingClassMessageForm: React.FC<CookingClassMessageFormProps> = ({
 }) => {
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const { bookingService, setBooking } = useAuthStore();
   
   // Get service ID from auth store if not provided as prop
@@ -45,20 +44,26 @@ const CookingClassMessageForm: React.FC<CookingClassMessageFormProps> = ({
   ];
 
   const handleContinue = async () => {
-    if (!message.trim()) return;
-    setError(null);
+    if (!message.trim()) {
+      showToast.error("Please enter a message for the chef");
+      return;
+    }
+    
     setIsSubmitting(true);
 
     // Ensure service ID is a number
     if (!serviceIdToUse) {
-      setError('No service ID found. Please go back and select a service.');
+      const errorMsg = 'No service ID found. Please go back and select a service.';
+      showToast.error(errorMsg);
       setIsSubmitting(false);
       return;
     }
+    
     const serviceIdNum = typeof serviceIdToUse === 'string' ? parseInt(serviceIdToUse, 10) : serviceIdToUse;
     
     if (!serviceIdNum || isNaN(serviceIdNum)) {
-      setError("Invalid service ID");
+      const errorMsg = "Invalid service ID. Please try again or select a different service.";
+      showToast.error(errorMsg);
       setIsSubmitting(false);
       return;
     }
@@ -79,12 +84,27 @@ const CookingClassMessageForm: React.FC<CookingClassMessageFormProps> = ({
       end_date: bookingData.endDate || "",
       num_of_guests: bookingData.guests || 1,
       hob_type: bookingData.hobType || "Induction",
-      teaching_style: bookingData.teaching || "",
+      teaching: bookingData.teaching || "", // Changed from teaching_style to teaching to match API
       appearance: bookingData.appearance || "",
-      experience: bookingData.experience || "",
-      preferred_cuisines: preferredCuisines || [],
-      chef_rate_option: bookingData.chefRateOption || "",
+      experience: bookingData.experience === "One-time" ? "One time" : bookingData.experience,
+      // Only include valid cuisine options and ensure at least one is selected
+      preferred_cuisines: (preferredCuisines && preferredCuisines.length > 0) 
+        ? preferredCuisines.filter(cuisine => 
+            [
+              "Italian", 
+              "African", 
+              "Chinese", 
+              "Pastries", 
+              "French", 
+              "English", 
+              "Spicy Mediterranean", 
+              "Pizza"
+            ].includes(cuisine)
+          )
+        : ["Italian"], // Default to Italian if no valid cuisines are selected
+      chef_rate_option: bookingData.chefRateOption === "Per session" ? "Per Session" : (bookingData.chefRateOption || "Daily"), // Ensure correct format for API
       message: message,
+      delivery_time: "12:00:00", // Static delivery time as required by the API
       budget: budget || null,
       budget_type: budgetType || null,
     };
@@ -102,10 +122,28 @@ const CookingClassMessageForm: React.FC<CookingClassMessageFormProps> = ({
       onNext({ message, bookingId: result.data.id });
     } catch (err: any) {
       setIsSubmitting(false);
-      const errorMessage = err?.response?.data?.message || "Failed to create cooking class booking. Please try again.";
-      setError(errorMessage);
+      let errorMessage = "Failed to create cooking class booking. Please try again.";
+      
+      // Handle different types of errors
+      if (err?.response?.data) {
+        // Handle validation errors from API
+        if (err.response.data.detail) {
+          errorMessage = err.response.data.detail;
+        } else if (err.response.data.message) {
+          errorMessage = err.response.data.message;
+        } else if (err.response.status === 400) {
+          errorMessage = "Invalid booking details. Please check your information and try again.";
+        } else if (err.response.status === 401) {
+          errorMessage = "Please log in to complete your booking.";
+        } else if (err.response.status >= 500) {
+          errorMessage = "Our servers are currently experiencing issues. Please try again later.";
+        }
+      } else if (err.request) {
+        // The request was made but no response was received
+        errorMessage = "Unable to connect to the server. Please check your internet connection.";
+      }
+      
       showToast.error(errorMessage);
-      console.error("Booking error:", err);
     }
   };
 
@@ -163,10 +201,6 @@ const CookingClassMessageForm: React.FC<CookingClassMessageFormProps> = ({
             placeholder="Any special instructions or requests for the chef..."
           />
           
-          {error && (
-            <div className="text-red-500 text-sm mb-4">{error}</div>
-          )}
-
           <div className="mt-4">
             <ActionButtons
               onBack={onBack}
