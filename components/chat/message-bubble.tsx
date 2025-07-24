@@ -6,6 +6,7 @@ interface MessageBubbleProps {
   isOwn?: boolean;
   avatar?: string;
   image?: string;
+  isRead?: boolean;
 }
 
 export function MessageBubble({
@@ -14,45 +15,62 @@ export function MessageBubble({
   isOwn = false,
   avatar,
   image,
+  isRead = true,
 }: MessageBubbleProps) {
   if (isOwn) {
     return (
-      <div className="flex flex-col items-end self-end py-2.5 pr-2.5 mt-6 max-w-full bg-amber-100 rounded-md w-[584px]">
-        <p className="text-sm leading-5 text-right text-stone-950 max-md:max-w-full">
-          {content}
-        </p>
-        <time className="mt-2.5 text-xs text-neutral-500">{timestamp}</time>
+      <div className="flex flex-col items-end self-end py-2.5 px-4 mt-6 bg-amber-100 rounded-md max-w-[80%] w-auto">
+        {image && (
+          <div className="mb-2">
+            <img
+              src={image}
+              className="max-w-full rounded-lg object-contain max-h-60"
+              alt="Shared content"
+            />
+          </div>
+        )}
+        {content && (
+          <div className="text-sm leading-5 text-right text-stone-950 break-words">
+            {content}
+          </div>
+        )}
+        <div className="flex items-center gap-1.5 mt-1">
+          <time className="text-xs text-neutral-500">{timestamp}</time>
+          {!isRead && (
+            <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+          )}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-wrap gap-1 items-start self-start mt-6">
+    <div className="flex gap-3 items-start self-start mt-6 w-full">
       {avatar && (
         <img
           src={avatar}
-          className="object-contain shrink-0 w-10 rounded-lg aspect-square"
+          className="flex-shrink-0 w-10 h-10 rounded-full object-cover mt-1"
           alt="User avatar"
         />
       )}
-      <div className="p-2.5 rounded-none bg-stone-50 min-w-60 w-[497px] max-md:max-w-full">
-        {image ? (
-          <>
-            <img
-              src={image}
-              className="object-contain max-w-full rounded aspect-[3.8] w-[430px]"
-              alt="Shared"
-            />
-            <time className="mt-1 text-xs text-neutral-500">{timestamp}</time>
-          </>
-        ) : (
-          <>
-            <p className="text-sm leading-5 text-stone-950 max-md:max-w-full">
+      <div className="flex-1 min-w-0">
+        <div className="inline-block p-3 rounded-lg bg-stone-50 max-w-[80%] break-words">
+          {image && (
+            <div className="mb-2">
+              <img
+                src={image}
+                className="max-w-full rounded-lg object-contain max-h-60"
+                alt="Shared content"
+              />
+            </div>
+          )}
+          {content && (
+            <div className="text-sm leading-5 text-stone-950">
               {content}
-            </p>
-            <time className="mt-2.5 text-xs text-neutral-500">{timestamp}</time>
-          </>
-        )}
+            </div>
+          )}
+          <time className="mt-1 block text-xs text-neutral-500">{timestamp}</time>
+        </div>
       </div>
     </div>
   );

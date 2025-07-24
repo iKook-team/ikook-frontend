@@ -1,10 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { MessageBubble } from "./message-bubble";
 import { QuoteCard } from "./quote-card";
-import { chatService, type Message } from "@/lib/api/chat";
-
+import { chatService, type Message, type SendMessageData, type ApiResponse } from "@/lib/api/chat";
+import apiClient from "@/src/lib/axios";
+import { useChatWebSocket } from "@/hooks/useChatWebSocket";
+import { useAuthStore } from "@/lib/store/auth-store";
+import { getToken } from "@/src/lib/auth";
 import type { User } from "@/lib/api/chat";
 
 interface ChatAreaProps {
@@ -31,29 +34,151 @@ export function ChatArea({ activeChatId, currentUserId, chatPartner, lastBooking
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [newMessage, setNewMessage] = useState('');
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isSending, setIsSending] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const token = getToken();
+  
+  // Use the WebSocket hook
+  const { isConnected, messages: wsMessages, addLocalMessage } = useChatWebSocket(
+    activeChatId,
+    token || ''
+  );
 
+  // Update local messages when WebSocket messages change
   useEffect(() => {
-    const fetchMessages = async () => {
-      if (!activeChatId) {
-        setMessages([]);
-        return;
-      }
+    console.log('WebSocket messages updated in ChatArea:', wsMessages);
+    if (wsMessages.length > 0) {
+      console.log('Setting messages in ChatArea:', wsMessages);
+      setMessages(wsMessages);
+      // Auto-scroll to bottom when new messages arrive
+      scrollToBottom();
+    } else {
+      console.log('No WebSocket messages to display');
+    }
+  }, [wsMessages]);
 
-      setIsLoading(true);
-      setError(null);
-      
-      try {
-        const response = await chatService.getMessages(activeChatId);
-        setMessages(response.results);
-      } catch (err) {
-        setError('Failed to load messages. Please try again.');
-      } finally {
-        setIsLoading(false);
-      }
+  // Auto-scroll to bottom when messages change
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
+
+  // Scroll to bottom on initial load
+  useEffect(() => {
+    if (messages.length > 0) {
+      scrollToBottom();
+    }
+  }, [messages, scrollToBottom]);
+
+  // Handle sending a new message
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate image type
+    if (!file.type.startsWith('image/')) {
+      setError('Please select a valid image file');
+      return;
+    }
+
+    // Set the selected image and create a preview
+    setSelectedImage(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
     };
+    reader.readAsDataURL(file);
+  };
 
-    fetchMessages();
-  }, [activeChatId]);
+  const removeImage = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if ((!newMessage.trim() && !selectedImage) || !activeChatId || isSending) return;
+    
+    const formData = new FormData();
+    formData.append('chat', activeChatId.toString());
+    
+    if (newMessage.trim()) {
+      formData.append('message', newMessage.trim());
+    }
+    
+    if (selectedImage) {
+      formData.append('image', selectedImage);
+    }
+    
+    // Create a temporary ID for optimistic update
+    const tempId = Date.now().toString();
+    const optimisticMessage: Message = {
+      id: parseInt(tempId),
+      message: newMessage.trim(),
+      image: imagePreview,
+      is_read: true,
+      created_at: new Date().toISOString(),
+      chat: activeChatId,
+      sender: {
+        id: currentUserId,
+        username: 'You',
+        first_name: 'You',
+        last_name: '',
+        avatar: '',
+      },
+    };
+    
+    // Add the optimistic message
+    addLocalMessage(optimisticMessage);
+    setNewMessage('');
+    setSelectedImage(null);
+    setImagePreview(null);
+    setIsSending(true);
+    
+    try {
+      // Send the message to the server
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+      
+      const response = await apiClient.post<ApiResponse<Message>>(
+        '/chats/messages/',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      
+      if (!response?.data?.data) {
+        throw new Error('No data received from server');
+      }
+      
+      // Replace the optimistic message with the actual server response
+      setMessages(prev => 
+        prev.map(msg => 
+          msg.id === parseInt(tempId) ? { ...response.data.data, is_read: true } : msg
+        )
+      );
+    } catch (error) {
+      console.error('Failed to send message:', error);
+      // Remove the optimistic message on error
+      setMessages(prev => prev.filter(msg => msg.id !== parseInt(tempId)));
+      // Show an error message to the user
+      setError('Failed to send message. Please try again.');
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   if (!activeChatId) {
     return (
@@ -120,23 +245,29 @@ export function ChatArea({ activeChatId, currentUserId, chatPartner, lastBooking
       {/* Messages Container - Takes remaining space and scrolls */}
       <div className="flex-1 overflow-y-auto p-4">
         <div className="flex flex-col w-full space-y-4">
-          {messages.map((message) => (
-            <MessageBubble
-              key={message.id}
-              content={message.message}
-              timestamp={new Date(message.created_at).toLocaleString('en-US', {
-                month: 'short',
-                day: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-              avatar={message.sender.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(message.sender.first_name + ' ' + message.sender.last_name)}&background=random`}
-              isOwn={message.sender.id === currentUserId}
-              image={message.image || undefined}
-            />
-          ))}
-          {messages.length === 0 && (
+          {messages.map((message, index) => {
+            // Create a more unique key using message ID, sender ID, and index
+            const uniqueKey = `msg-${message.id}-${message.sender.id}-${index}`;
+            return (
+              <MessageBubble
+                key={uniqueKey}
+                content={message.message}
+                timestamp={new Date(message.created_at).toLocaleString('en-US', {
+                  month: 'short',
+                  day: '2-digit',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+                avatar={message.sender.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent((message.sender.first_name || '') + ' ' + (message.sender.last_name || '')).trim()}&background=random`}
+                isOwn={message.sender.id === currentUserId}
+                image={message.image || undefined}
+                isRead={message.is_read}
+              />
+            );
+          })}
+          <div ref={messagesEndRef} />
+          {messages.length === 0 && isConnected && (
             <div className="text-center text-gray-500 py-8">
               No messages yet. Start the conversation!
             </div>
@@ -145,47 +276,64 @@ export function ChatArea({ activeChatId, currentUserId, chatPartner, lastBooking
       </div>
 
       {/* Input Area - Fixed at bottom */}
-      <div className="shrink-0 border-t border-gray-200 p-4">
+      <form onSubmit={handleSendMessage} className="shrink-0 border-t border-gray-200 p-4">
+        {imagePreview && (
+          <div className="relative mb-3 max-w-xs">
+            <img 
+              src={imagePreview} 
+              alt="Preview" 
+              className="rounded-lg max-h-40 object-cover"
+            />
+            <button
+              type="button"
+              onClick={removeImage}
+              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"
+            >
+              ×
+            </button>
+          </div>
+        )}
         <div className="flex items-center gap-3">
           <input
+            type="file"
+            ref={fileInputRef}
+            accept="image/*"
+            onChange={handleImageSelect}
+            className="hidden"
+            id="image-upload"
+          />
+          <label
+            htmlFor="image-upload"
+            className="p-2 text-gray-500 hover:text-gray-700 cursor-pointer"
+            title="Attach image"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </label>
+          <input
             type="text"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Type a message..."
             className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent"
+            disabled={!isConnected || isSending}
           />
-          <div className="flex items-center gap-3">
+          <div className="flex items-center">
             <button 
-              type="button" 
-              className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100"
+              type="submit"
+              disabled={!newMessage.trim() || !isConnected || isSending}
+              className={`px-4 py-2 text-sm font-medium text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
+                !newMessage.trim() || !isConnected || isSending
+                  ? 'bg-amber-300 cursor-not-allowed'
+                  : 'bg-amber-400 hover:bg-amber-500 focus:ring-amber-400'
+              }`}
             >
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/8c6074a6356323c12040e09b9581f3c65d0ba51e?placeholderIfAbsent=true"
-                className="w-5 h-5"
-                alt="Attachment"
-                width={20}
-                height={20}
-              />
-            </button>
-            <button 
-              type="button" 
-              className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100"
-            >
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/98ea22f6d801dd72e6679354e0f0a82ac0811666?placeholderIfAbsent=true"
-                className="w-5 h-5"
-                alt="Emoji"
-                width={20}
-                height={20}
-              />
-            </button>
-            <button 
-              type="button"
-              className="px-4 py-2 text-sm font-medium text-white bg-amber-400 rounded-lg hover:bg-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 transition-colors"
-            >
-              Send
+              {isSending ? 'Sending...' : 'Send'}
             </button>
           </div>
         </div>
-      </div>
+      </form>
     </section>
   );
 }

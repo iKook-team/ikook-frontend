@@ -44,6 +44,7 @@ export interface Message {
   image: string | null;
   is_read: boolean;
   created_at: string;
+  chat: number;
 }
 
 export interface MessagesResponse {
@@ -65,10 +66,16 @@ export interface ChatsResponse {
 }
 
 // Response type that matches the actual API response structure
-interface ApiResponse<T> {
+export interface ApiResponse<T> {
   status: boolean;
   message: string;
   data: T;
+}
+
+export interface SendMessageData {
+  message: string;
+  image?: string | null;
+  chat: number;
 }
 
 export const chatService = {
@@ -112,7 +119,18 @@ export const chatService = {
 
   async getMessages(chatId: number): Promise<MessagesResponse> {
     try {
-      const response = await axios.get(
+      const response = await axios.get<{
+        status: boolean;
+        message: string;
+        data: {
+          count: number;
+          next: number | null;
+          previous: number | null;
+          current: number;
+          total: number;
+          results: Message[];
+        };
+      }>(
         `/chats/messages/`,
         { params: { chat: chatId } }
       );
@@ -124,30 +142,46 @@ export const chatService = {
       // Log the response for debugging
       console.log('Messages API response:', response.data);
       
-      // Handle different response formats
+      // Handle the nested response structure
+      const responseData = response.data.data || response.data;
       let messageResults: Message[] = [];
       
-      // Case 1: Response has a 'results' array (standard paginated response)
-      if (response.data.results && Array.isArray(response.data.results)) {
-        messageResults = response.data.results;
-      } 
-      // Case 2: Response is an array (direct array of messages)
-      else if (Array.isArray(response.data)) {
-        messageResults = response.data;
+      if (responseData.results && Array.isArray(responseData.results)) {
+        messageResults = responseData.results;
+      } else if (Array.isArray(responseData)) {
+        messageResults = responseData;
       }
       
       // Return in the expected format
       return {
-        count: messageResults.length,
-        next: response.data.next || null,
-        previous: response.data.previous || null,
-        current: 1,
-        total: messageResults.length,
+        count: responseData.count || messageResults.length,
+        next: responseData.next || null,
+        previous: responseData.previous || null,
+        current: responseData.current || 1,
+        total: responseData.total || messageResults.length,
         results: messageResults
       };
     } catch (error) {
       handleApiError(error, 'Failed to load messages');
       throw error; // Re-throw to allow components to handle the error if needed
+    }
+  },
+
+  async sendMessage(data: SendMessageData): Promise<Message> {
+    try {
+      const response = await axios.post<ApiResponse<Message>>(
+        '/chats/messages/',
+        data
+      );
+
+      if (!response?.data?.data) {
+        throw new Error('No data received from server');
+      }
+
+      return response.data.data;
+    } catch (error) {
+      handleApiError(error, 'Failed to send message');
+      throw error;
     }
   },
 };
