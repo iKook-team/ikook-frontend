@@ -9,6 +9,7 @@ interface EatingCoachFormProps {
 }
 
 export interface EatingCoachFormData {
+  location: string;
   hours: number;
   service: string;
   eventDate: string;
@@ -21,16 +22,17 @@ const frequencyOptions = ["Once Only", "Weekly", "Monthly"];
 
 const EatingCoachForm: React.FC<EatingCoachFormProps> = ({ onNext, onBack }) => {
   const [formData, setFormData] = useState<EatingCoachFormData>({
+    location: "",
     hours: 1,
     service: "Weight Loss",
     eventDate: "",
     guests: 1,
-    frequency: "Once Only",
+    frequency: "Once Only"
   });
 
   const progressSteps = [
     { label: 'Booking Details', completed: true, inProgress: true },
-    { label: 'Budget', completed: false },
+    { label: 'Preferences', completed: false },
     { label: 'Message', completed: false }
   ];
 
@@ -45,14 +47,17 @@ const EatingCoachForm: React.FC<EatingCoachFormProps> = ({ onNext, onBack }) => 
   return (
     <main className="w-[655px] h-[1000px] absolute left-[393px] top-[177px]">
       <div className="w-[654px] h-[960px] border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] absolute bg-white rounded-[15px] border-solid border-[#E7E7E7] left-px top-[38px]" />
+      
       <header className="absolute left-0 top-0">
         <h1 className="text-black text-xl font-medium leading-[30px] whitespace-nowrap w-auto h-[30px]">
           Eating Coach
         </h1>
       </header>
+
       <div className="absolute left-5 top-[69px]">
         <ProgressIndicator steps={progressSteps} />
       </div>
+
       <div className="absolute left-5 top-[132px]">
         <ChefCard
           chefName="Coach Jane Doe"
@@ -65,29 +70,34 @@ const EatingCoachForm: React.FC<EatingCoachFormProps> = ({ onNext, onBack }) => 
           reviewCount="(12 Reviews)"
         />
       </div>
+
       <div className="absolute left-5 top-[291px]">
         <svg width="613" height="1" viewBox="0 0 613 1" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M-0.00390625 0.5L613.003 0.5" stroke="#E7E7E7"></path>
         </svg>
       </div>
+
       <section className="absolute left-5 top-[307px] w-[613px]">
         <h2 className="text-black text-2xl font-medium leading-8 w-[200px] h-8 mb-[47px]">
           Booking Details
         </h2>
+        
         <form className="flex flex-col flex-1 w-full" onSubmit={e => { e.preventDefault(); handleContinue(); }}>
-          <label htmlFor="hours" className="text-[#344054] text-sm font-medium leading-none mb-2">Number of hours</label>
+          {/* Location Field */}
+          <label htmlFor="location" className="text-[#344054] text-sm font-medium leading-none mb-2">Location *</label>
           <input
-            type="number"
-            id="hours"
-            name="hours"
-            min="1"
-            value={formData.hours}
-            onChange={e => handleInputChange("hours", parseInt(e.target.value, 10) || 1)}
+            type="text"
+            id="location"
+            name="location"
+            value={formData.location}
+            onChange={e => handleInputChange("location", e.target.value)}
             className="border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] w-full text-base text-[#101828] font-normal bg-white mb-6 px-3.5 py-2.5 rounded-lg border-solid focus:outline-none focus:ring-1 focus:ring-amber-500"
-            placeholder="Enter number of hours"
+            placeholder="Enter your location (e.g., 123 Main St, City)"
             required
           />
-          <label htmlFor="service" className="text-[#344054] text-sm font-medium leading-none mb-2">Services</label>
+
+          {/* Service Selection */}
+          <label htmlFor="service" className="text-[#344054] text-sm font-medium leading-none mb-2">Service</label>
           <select
             id="service"
             name="service"
@@ -100,7 +110,23 @@ const EatingCoachForm: React.FC<EatingCoachFormProps> = ({ onNext, onBack }) => 
               <option key={option} value={option}>{option}</option>
             ))}
           </select>
-          <label htmlFor="eventDate" className="text-[#344054] text-sm font-medium leading-none mb-2">Event date</label>
+
+          {/* Hours */}
+          <label htmlFor="hours" className="text-[#344054] text-sm font-medium leading-none mb-2">Number of hours</label>
+          <input
+            type="number"
+            id="hours"
+            name="hours"
+            min="1"
+            value={formData.hours}
+            onChange={e => handleInputChange("hours", parseInt(e.target.value, 10) || 1)}
+            className="border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] w-full text-base text-[#101828] font-normal bg-white mb-6 px-3.5 py-2.5 rounded-lg border-solid focus:outline-none focus:ring-1 focus:ring-amber-500"
+            placeholder="Enter number of hours"
+            required
+          />
+
+          {/* Event Date */}
+          <label htmlFor="eventDate" className="text-[#344054] text-sm font-medium leading-none mb-2">Event Date</label>
           <input
             type="date"
             id="eventDate"
@@ -110,7 +136,9 @@ const EatingCoachForm: React.FC<EatingCoachFormProps> = ({ onNext, onBack }) => 
             className="border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] w-full text-base text-[#101828] font-normal bg-white mb-6 px-3.5 py-2.5 rounded-lg border-solid focus:outline-none focus:ring-1 focus:ring-amber-500"
             required
           />
-          <label htmlFor="guests" className="text-[#344054] text-sm font-medium leading-none mb-2">Guests</label>
+
+          {/* Number of Guests */}
+          <label htmlFor="guests" className="text-[#344054] text-sm font-medium leading-none mb-2">Number of guests</label>
           <input
             type="number"
             id="guests"
@@ -122,7 +150,9 @@ const EatingCoachForm: React.FC<EatingCoachFormProps> = ({ onNext, onBack }) => 
             placeholder="Enter number of guests"
             required
           />
-          <label htmlFor="frequency" className="text-[#344054] text-sm font-medium leading-none mb-2">How often</label>
+
+          {/* Frequency */}
+          <label htmlFor="frequency" className="text-[#344054] text-sm font-medium leading-none mb-2">Frequency</label>
           <select
             id="frequency"
             name="frequency"
@@ -137,16 +167,18 @@ const EatingCoachForm: React.FC<EatingCoachFormProps> = ({ onNext, onBack }) => 
           </select>
         </form>
       </section>
+
       <div className="absolute left-5 top-[900px]">
         <svg width="613" height="2" viewBox="0 0 613 2" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M0 1L613.007 1" stroke="#E7E7E7"></path>
         </svg>
       </div>
+
       <div className="absolute left-[357px] top-[920px]">
         <ActionButtons
           onBack={onBack}
           onContinue={handleContinue}
-          continueDisabled={formData.hours < 1 || !formData.service || !formData.eventDate || formData.guests < 1 || !formData.frequency}
+          continueDisabled={!formData.location || formData.hours < 1 || !formData.service || !formData.eventDate || formData.guests < 1 || !formData.frequency}
         />
       </div>
     </main>
@@ -154,4 +186,4 @@ const EatingCoachForm: React.FC<EatingCoachFormProps> = ({ onNext, onBack }) => 
 };
 
 export default EatingCoachForm;
-export { EatingCoachForm }; 
+export { EatingCoachForm };

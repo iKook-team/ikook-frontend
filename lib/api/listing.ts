@@ -163,8 +163,6 @@ export const listingService = {
       });
       return response.data;
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error("Error fetching services:", error);
       throw error;
     }
   },

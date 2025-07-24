@@ -3,12 +3,14 @@
 import React, { useState } from "react";
 import EatingCoachForm from "@/components/booking/eating-coach-form";
 import PreferencesForm from "@/components/booking/preferences";
-import MessagesForm from "@/components/booking/message-form";
+import EatingCoachMessageForm from "@/components/booking/eating-coach-message-form";
 import { StatusCard } from "@/components/booking/status-card";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 export default function EatingCoachBookingPage() {
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({});
+  const { bookingService } = useAuthStore();
 
   const handleNext = (data?: any) => {
     setFormData((prev: any) => ({ ...prev, ...data }));
@@ -25,12 +27,22 @@ export default function EatingCoachBookingPage() {
         <EatingCoachForm onNext={handleNext} onBack={handleBack} />
       )}
       {step === 1 && (
-        <PreferencesForm onNext={handleNext} onBack={handleBack} />
+        <PreferencesForm 
+          onNext={handleNext} 
+          onBack={handleBack}
+          formData={formData}
+          onChange={(data) => setFormData(prev => ({ ...prev, ...data }))}
+        />
       )}
       {step === 2 && (
-        <MessagesForm onNext={handleNext} onBack={handleBack} />
+        <EatingCoachMessageForm 
+          onNext={handleNext} 
+          onBack={handleBack}
+          bookingData={formData}
+          service={bookingService}
+        />
       )}
       {step === 3 && <StatusCard />}
     </>
   );
-} 
+}

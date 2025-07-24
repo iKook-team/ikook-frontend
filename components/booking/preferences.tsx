@@ -9,7 +9,7 @@ import { DietaryRestrictions } from "./dietary-restrictions";
 interface PreferencesFormProps {
   onNext: (data?: Record<string, any>) => void;
   onBack: () => void;
-  menu: any;
+  menu?: any; // Made optional
   formData: Record<string, any>;
   onChange: (data: Record<string, any>) => void;
 }
