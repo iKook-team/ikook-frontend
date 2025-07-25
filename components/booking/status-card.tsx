@@ -1,20 +1,31 @@
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 interface StatusCardProps {
   title?: string;
   description?: string;
   buttonText?: string;
   onButtonClick?: () => void;
+  bookingId?: string;
 }
 
-export const StatusCard: React.FC<StatusCardProps> = ({
-  title = "Details Sent",
-  description = "Congratulations, your booking is underway, continue your conversation with the chef, agree on menu and price, receive your quote and pay for your booking.",
-  buttonText = "View Message",
-  onButtonClick
-}) => {
+export const StatusCard: React.FC<StatusCardProps> = (props) => {
+  const {
+    title = "Details Sent",
+    description = "Congratulations, your booking is underway, continue your conversation with the chef, agree on menu and price, receive your quote and pay for your booking.",
+    buttonText = "View Message",
+    onButtonClick,
+    bookingId
+  } = props;
+  const router = useRouter();
+  
   const handleButtonClick = () => {
-    onButtonClick?.();
+    if (onButtonClick) {
+      onButtonClick();
+    } else if (props.bookingId) {
+      // Navigate to messages with the booking ID
+      router.push(`/messages?id=${bookingId}`);
+    }
   };
 
   return (

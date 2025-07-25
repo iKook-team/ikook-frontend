@@ -1,7 +1,11 @@
 import React from "react";
 import { useAuthStore } from '@/lib/store/auth-store';
 
-export const EventDetailsCard: React.FC = () => {
+interface EventDetailsCardProps {
+  isCustomBooking?: boolean;
+}
+
+export const EventDetailsCard: React.FC<EventDetailsCardProps> = ({ isCustomBooking = false }) => {
   const booking = useAuthStore((s) => s.booking);
   const menuName = booking?.menu_name || 'Menu';
   const chefName = booking?.chef_name || 'Chef';

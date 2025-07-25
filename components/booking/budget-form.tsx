@@ -32,87 +32,78 @@ export const BudgetForm: React.FC<BudgetFormProps> = ({
   };
 
   return (
-    <form className="flex flex-col gap-8">
-      <div className="flex w-[613px] flex-col items-start h-[74px]">
-        <div className="flex flex-col items-start gap-1.5 self-stretch">
-          <div className="flex flex-col items-start gap-1.5 self-stretch">
-            <label htmlFor="budget" className="text-[#344054] text-base font-normal leading-6">
-              Your budget
-            </label>
-            <div className="flex items-start self-stretch border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white rounded-lg border-solid border-[#D0D5DD]">
-              <div className="flex items-center pl-3.5 pr-3 py-2.5 rounded-[8px_0px_0px_8px]">
-                <span className="text-[#3F3E3D] text-base font-normal leading-6">
-                  £
-                </span>
-              </div>
-              <input
-                id="budget"
-                type="text"
-                value={formatBudget(budget)}
-                onChange={handleBudgetChange}
-                className="flex items-center gap-2 flex-[1_0_0] self-stretch border bg-white px-3.5 py-2.5 rounded-[0px_8px_8px_0px] border-solid border-[#D0D5DD] text-[#101828] text-base font-normal leading-6 focus:outline-none focus:ring-2 focus:ring-[#FCC01C] focus:border-transparent"
-                placeholder="Enter budget amount"
-              />
-            </div>
+    <form className="w-full max-w-2xl mx-auto p-6 space-y-6">
+      <div className="space-y-2">
+        <label htmlFor="budget" className="block text-sm font-medium text-gray-700">
+          Your budget
+        </label>
+        <div className="relative rounded-md shadow-sm">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span className="text-gray-500 sm:text-sm">£</span>
           </div>
+          <input
+            id="budget"
+            type="text"
+            value={formatBudget(budget)}
+            onChange={handleBudgetChange}
+            className="block w-full pl-7 pr-12 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500"
+            placeholder="0"
+          />
         </div>
       </div>
 
-      <fieldset className="inline-flex flex-col items-start gap-4 w-[98px] h-[100px]">
-        <legend className="text-black text-base font-normal leading-6">
-          Budget type
-        </legend>
-        <div className="flex flex-col items-start gap-3">
-          <label className="flex items-center gap-3 cursor-pointer">
-            <div className="flex justify-center items-center">
-              <input
-                type="radio"
-                name="budgetType"
-                value="flexible"
-                checked={budgetType === 'flexible'}
-                onChange={() => handleBudgetTypeChange('flexible')}
-                className="sr-only"
-              />
-              <div className={`w-5 h-5 border rounded-[10px] border-solid border-[#D0D5DD] ${
-                budgetType === 'flexible' 
-                  ? 'bg-[#FCC01C] border-[#FCC01C]' 
-                  : 'bg-white'
-              } flex items-center justify-center`}>
-                {budgetType === 'flexible' && (
-                  <div className="w-2 h-2 bg-white rounded-full" />
-                )}
-              </div>
+      <div className="space-y-4">
+        <p className="text-sm text-gray-700">
+          Is this a fixed or flexible budget?
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <button
+            type="button"
+            onClick={() => handleBudgetTypeChange('fixed')}
+            className={`flex items-center justify-between p-4 rounded-lg border-2 transition-colors ${
+              budgetType === 'fixed' 
+                ? 'border-amber-500 bg-amber-50' 
+                : 'border-gray-200 hover:border-gray-300 bg-white'
+            }`}
+          >
+            <span className="text-gray-900 font-medium">Fixed</span>
+            <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
+              budgetType === 'fixed' 
+                ? 'bg-amber-500 border-amber-500' 
+                : 'border-2 border-gray-300'
+            }`}>
+              {budgetType === 'fixed' && (
+                <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 12 12">
+                  <path d="M3.707 9.293a1 1 0 0 1-1.414 0l-1.5-1.5a1 1 0 0 1 1.414-1.414L3 7.086l5.293-5.293a1 1 0 0 1 1.414 1.414l-6 6z" />
+                </svg>
+              )}
             </div>
-            <span className="text-[#344054] text-base font-medium leading-6">
-              Flexible
-            </span>
-          </label>
-          <label className="flex items-center gap-3 cursor-pointer">
-            <div className="flex justify-center items-center">
-              <input
-                type="radio"
-                name="budgetType"
-                value="fixed"
-                checked={budgetType === 'fixed'}
-                onChange={() => handleBudgetTypeChange('fixed')}
-                className="sr-only"
-              />
-              <div className={`w-5 h-5 border rounded-[10px] border-solid border-[#D0D5DD] ${
-                budgetType === 'fixed' 
-                  ? 'bg-[#FCC01C] border-[#FCC01C]' 
-                  : 'bg-white'
-              } flex items-center justify-center`}>
-                {budgetType === 'fixed' && (
-                  <div className="w-2 h-2 bg-white rounded-full" />
-                )}
-              </div>
+          </button>
+          
+          <button
+            type="button"
+            onClick={() => handleBudgetTypeChange('flexible')}
+            className={`flex items-center justify-between p-4 rounded-lg border-2 transition-colors ${
+              budgetType === 'flexible' 
+                ? 'border-amber-500 bg-amber-50' 
+                : 'border-gray-200 hover:border-gray-300 bg-white'
+            }`}
+          >
+            <span className="text-gray-900 font-medium">Flexible</span>
+            <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
+              budgetType === 'flexible' 
+                ? 'bg-amber-500 border-amber-500' 
+                : 'border-2 border-gray-300'
+            }`}>
+              {budgetType === 'flexible' && (
+                <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 12 12">
+                  <path d="M3.707 9.293a1 1 0 0 1-1.414 0l-1.5-1.5a1 1 0 0 1 1.414-1.414L3 7.086l5.293-5.293a1 1 0 0 1 1.414 1.414l-6 6z" />
+                </svg>
+              )}
             </div>
-            <span className="text-[#344054] text-base font-medium leading-6">
-              Fixed
-            </span>
-          </label>
+          </button>
         </div>
-      </fieldset>
+      </div>
     </form>
   );
 };

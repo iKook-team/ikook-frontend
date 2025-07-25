@@ -9,7 +9,7 @@ import { BudgetForm } from "@/components/booking/custom/budget-form";
 import { PreferencesForm } from "@/components/booking/custom/preferences";
 import { HobSelectionForm } from "@/components/booking/custom/hob-selection-form";
 import { MessagesForm } from "@/components/booking/custom/message-form";
-import { SuccessCard } from "@/components/booking/custom/success-card";
+import { StatusCard } from "@/components/booking/status-card";
 
 type BookingStep =
   | "chef-finder"
@@ -19,7 +19,7 @@ type BookingStep =
   | "preferences"
   | "hob-selection"
   | "messages"
-  | "success";
+  | "status";
 
 const CustomBookingPage = () => {
   const [currentStep, setCurrentStep] = useState<BookingStep>("chef-finder");
@@ -38,7 +38,7 @@ const CustomBookingPage = () => {
       "preferences",
       "hob-selection",
       "messages",
-      "success",
+      "status",
     ];
 
     const currentIndex = steps.indexOf(currentStep);
@@ -56,7 +56,7 @@ const CustomBookingPage = () => {
       "preferences",
       "hob-selection",
       "messages",
-      "success",
+      "status",
     ];
 
     const currentIndex = steps.indexOf(currentStep);
@@ -70,7 +70,7 @@ const CustomBookingPage = () => {
       case "chef-finder":
         return <ChefFinderCard onNext={handleNext} />;
       case "service-selection":
-        return <ServiceSelection onNext={handleNext} onBack={handleBack} />;
+        return <ServiceSelection onNext={handleNext} onBack={handleBack} isCustomBooking={true} />;
       case "event-details":
         return <EventDetailsForm onNext={handleNext} onBack={handleBack} />;
       case "budget":
@@ -81,13 +81,8 @@ const CustomBookingPage = () => {
         return <HobSelectionForm onNext={handleNext} onBack={handleBack} />;
       case "messages":
         return <MessagesForm onNext={handleNext} onBack={handleBack} />;
-      case "success":
-        return (
-          <SuccessCard
-            isVisible={true}
-            onDashboardClick={() => (window.location.href = "/dashboard")}
-          />
-        );
+      case "status":
+        return <StatusCard />;
       default:
         return <ChefFinderCard onNext={handleNext} />;
     }

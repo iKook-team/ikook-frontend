@@ -1,67 +1,86 @@
-import React from 'react';
-
-export const TestimonialsSection: React.FC = () => {
-  return (
-    <section className="bg-[rgba(252,192,28,1)] self-stretch w-full mt-[134px] px-20 py-[100px] max-md:max-w-full max-md:mt-10 max-md:px-5">
-      <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
-        <div className="w-[41%] max-md:w-full max-md:ml-0">
-          <img
-            src="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/3d4c5f975f65ef7685fe3588ff79571cb159f96f?placeholderIfAbsent=true"
-            className="aspect-[0.89] object-contain w-full shadow-[0px_0px_0px_4px_rgba(255,255,255,0.01)] grow rounded-md max-md:max-w-full max-md:mt-10"
-            alt="Customer testimonial"
-          />
-        </div>
-        <div className="w-[59%] ml-5 max-md:w-full max-md:ml-0">
-          <div className="flex w-full flex-col items-stretch max-md:max-w-full max-md:mt-10">
-            <img
-              src="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/ba9b4844ef333cb1c8d9b3023e62da062f67d9ad?placeholderIfAbsent=true"
-              className="aspect-[333.33] object-contain w-full max-md:max-w-full max-md:mr-0.5"
-              alt="Quote decoration"
-            />
-            <h2 className="text-[#323335] text-[35px] font-medium self-center mt-[9px]">
-              What They Say
-            </h2>
-            <blockquote className="text-[#323335] text-[35px] font-medium mt-[106px] max-md:max-w-full max-md:mr-0.5 max-md:mt-10">
-              The food and service was excellent, I was very impressed, I'd
-              totally recommend ikook. Excellent way to find the professional
-              chef you need for your occasions.
-            </blockquote>
-            <img
-              src="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/ba9b4844ef333cb1c8d9b3023e62da062f67d9ad?placeholderIfAbsent=true"
-              className="aspect-[333.33] object-contain w-full mt-7 max-md:max-w-full"
-              alt="Quote decoration"
-            />
-            <div className="flex w-full items-stretch gap-5 flex-wrap justify-between mt-[13px] max-md:max-w-full max-md:mr-0.5">
-              <div className="text-3xl text-[#323335] font-medium text-justify">
-                <div className="text-[#323335]">
-                  Stephanie Moore
-                </div>
+export default function TestimonialsSection() {
+    return (
+      <section className="bg-[#FCC01C] py-16 px-4 lg:px-24">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Side - Image */}
+            <div>
+              <div className="aspect-[4/5] rounded-lg overflow-hidden">
                 <img
-                  src="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/1c61455e37f353e5b7a2820d9e211df2e7245509?placeholderIfAbsent=true"
-                  className="aspect-[4.72] object-contain w-[137px] max-w-full mt-3"
-                  alt="Rating stars"
+                  src="https://api.builder.io/api/v1/image/assets/TEMP/dae2e4ece8777447073e6e9d07f336a05db5602c?width=1004"
+                  alt="Customer testimonial"
+                  className="w-full h-full object-cover"
                 />
               </div>
-              <div className="flex items-stretch gap-[13px] mt-2">
-                <button className="hover:scale-105 transition-transform">
-                  <img
-                    src="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/5f87d7f9fb2055e9b00f163eeed0cd552a755ef3?placeholderIfAbsent=true"
-                    className="aspect-[1] object-contain w-[70px] shrink-0"
-                    alt="Previous testimonial"
-                  />
+            </div>
+  
+            {/* Right Side - Testimonial Content */}
+            <div className="space-y-8">
+              {/* Header */}
+              <div className="relative">
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#323335]/20"></div>
+                <div className="absolute bottom-8 left-0 right-0 h-0.5 bg-[#323335]/20"></div>
+                <h2 className="text-3xl lg:text-4xl font-medium text-[#323335] py-4 bg-[#FCC01C]">
+                  What They Say
+                </h2>
+              </div>
+  
+              {/* Quote */}
+              <div className="relative">
+                <div className="text-8xl lg:text-9xl font-bold text-white leading-none mb-4">
+                  "
+                </div>
+                <blockquote className="text-2xl lg:text-3xl font-medium text-[#323335] leading-relaxed">
+                  The food and service was excellent, I was very impressed, I'd totally recommend ikook. 
+                  Excellent way to find the professional chef you need for your occasions.
+                </blockquote>
+              </div>
+  
+              {/* Attribution */}
+              <div className="space-y-4">
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#323335]/20"></div>
+                <div className="pt-8">
+                  <h4 className="text-2xl lg:text-3xl font-medium text-[#323335] mb-2">
+                    Stephanie Moore
+                  </h4>
+                  <div className="flex items-center space-x-2">
+                    {[...Array(5)].map((_, i) => (
+                      <svg
+                        key={i}
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="text-[#323335]"
+                      >
+                        <path
+                          d="M17.3469 7.42896L12.4958 6.65262L10.3272 1.81152C10.2679 1.67897 10.1705 1.56167 9.05009 1.50645C9.74822 1.34234 9.38136 1.47909 9.23043 1.81152L7.06182 6.65262L2.21062 7.42896C2.07687 7.45 1.95458 7.51942 1.86096 7.62462C1.74777 7.75272 1.68541 7.92506 1.68755 8.10376C1.68971 8.28248 1.75618 8.45294 1.87242 8.57768L5.38233 12.3458L4.55309 17.6666C4.53366 17.9034 4.56609 18.1765 4.659 18.4404C4.75192 18.7043 4.89358 18.2512 5.07588 18.2504C5.22496 18.3006 5.38878 18.4227 5.43964 18.376L9.5879 15.8635L13.736 18.376C13.8364 18.4450 13.9740 18.4682 14.1058 18.4429C14.3826 18.3798 14.6618 18.0327 14.604 17.6666L13.7752 12.3458L17.285 8.57768C17.4007 8.4746 17.4844 8.33994 17.5284 8.19268C17.5944 7.82448 17.6813 7.4837 17.3469 7.42896Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+              </div>
+  
+              {/* Navigation Arrows */}
+              <div className="flex items-center justify-end space-x-4 pt-8">
+                <button className="w-16 h-16 rounded-full border-2 border-[#323335] flex items-center justify-center hover:bg-[#323335]/10 transition-colors">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 18L9 12L15 6" stroke="#323335" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
                 </button>
-                <button className="hover:scale-105 transition-transform">
-                  <img
-                    src="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/0224b4c9eb67b5b2b7b466980dd2e29b0a57546c?placeholderIfAbsent=true"
-                    className="aspect-[1] object-contain w-[70px] shrink-0"
-                    alt="Next testimonial"
-                  />
+                <button className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 18L15 12L9 6" stroke="#323335" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
                 </button>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  );
-};
+      </section>
+    );
+  }
+  

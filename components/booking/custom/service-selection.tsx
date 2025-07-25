@@ -6,24 +6,26 @@ import { ServiceCard } from "./service-card";
 interface ServiceSelectionProps {
   onNext: (data?: Record<string, any>) => void;
   onBack: () => void;
+  isCustomBooking?: boolean;
 }
 
 export const ServiceSelection: React.FC<ServiceSelectionProps> = ({
   onNext,
   onBack,
+  isCustomBooking = false,
 }) => {
   const services = [
     {
       imageSrc:
         "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/3401a0546ac1f09aa210faddfa300ccfaac8de9b?placeholderIfAbsent=true",
-      title: "Chef at home",
+      title: "Chef at Home",
       description: "Hire the best private chef for your mini event",
       titleAlignment: "left" as const,
     },
     {
       imageSrc:
         "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/979638d451296043ed838c953bfad548df06d5b9?placeholderIfAbsent=true",
-      title: "Large event",
+      title: "Large Event",
       description:
         "Events with more than 40 people here is the service for you",
       titleAlignment: "center" as const,
@@ -38,7 +40,7 @@ export const ServiceSelection: React.FC<ServiceSelectionProps> = ({
     {
       imageSrc:
         "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/683179e13a90b06aafeaad7fe0487faaefeaaee3?placeholderIfAbsent=true",
-      title: "Gormet Delivery",
+      title: "Meal Delivery",
       description: "Won't be home, Our chefs can deliver your meals",
       titleAlignment: "left" as const,
     },
@@ -63,12 +65,21 @@ export const ServiceSelection: React.FC<ServiceSelectionProps> = ({
   );
 
   const handleServiceSelect = (serviceTitle: string) => {
-    setSelectedService(serviceTitle);
+    if (isCustomBooking) {
+      // For custom booking, navigate directly to the service's booking page
+      const servicePath = serviceTitle.toLowerCase().replace(/\s+/g, '-');
+      window.location.href = `/booking/${servicePath}?is_custom=true`;
+    } else {
+      setSelectedService(serviceTitle);
+    }
   };
 
   const handleContinue = () => {
     if (selectedService) {
-      onNext({ service: selectedService });
+      onNext({ 
+        service: selectedService,
+        is_custom: isCustomBooking 
+      });
     } else {
       alert("Please select a service to continue");
     }

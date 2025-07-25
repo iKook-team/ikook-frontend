@@ -1,10 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { ProgressIndicator } from './progress-indicator';
 import { ChefCard } from "@/components/cart/chef-card";
 import { ActionButtons } from './action-buttons';
 import { bookingsService } from "@/lib/api/bookings";
 import { showToast } from "@/lib/utils/toast";
 import { useAuthStore } from '@/lib/store/auth-store';
+import { StatusCard } from './status-card';
+import { 
+  BookingPayload, 
+  ChefAtHomePayload, 
+  LargeEventPayload, 
+  MealPrepPayload,
+  isChefAtHomePayload,
+  isLargeEventPayload,
+  isMealPrepPayload
+} from '@/types/booking';
 
 export interface MessagesFormProps {
   onNext: (data?: Record<string, any>) => void;
@@ -17,6 +27,7 @@ export interface MessagesFormProps {
   budget?: number;
   budgetType?: 'Flexible' | 'Fixed' | null;
   preferredCuisines?: string[];
+  isCustomBooking?: boolean;
 }
 
 const MessagesForm: React.FC<MessagesFormProps> = ({
@@ -30,11 +41,14 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
   budget,
   budgetType,
   preferredCuisines = [],
+  isCustomBooking = false,
 }) => {
   const setBooking = useAuthStore((s) => s.setBooking);
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showStatusCard, setShowStatusCard] = useState(false);
+  const [bookingId, setBookingId] = useState<string | null>(null);
 
   const progressSteps = [
     { label: 'Event Details', completed: true, inProgress: true },
@@ -65,77 +79,197 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
     }
   };
 
-  const handleContinue = async () => {
-    if (!message.trim()) return;
-    setError(null);
-    setIsSubmitting(true);
-    // Compose payload for booking
-    const payload = {
-      is_custom: false,
-      chef_service: menu?.menu_type || menu?.type || "Large Event",
+  // Map venue values to valid API options
+  const formatVenue = (venue: string): string => {
+    if (!venue) return 'Home'; // Default to 'Home' if no venue is provided
+    
+    // Normalize the input for case-insensitive comparison
+    const normalizedVenue = venue.trim().toLowerCase();
+    
+    // Map variations to valid values
+    if (['home', 'my home', 'my place', 'my house'].includes(normalizedVenue)) {
+      return 'Home';
+    }
+    if (['relative', 'friends', 'friends home', "friend's home", 'relative home', 'relative/friends home', 'relative or friends home', 'relative\'s home'].includes(normalizedVenue)) {
+      return 'Relative/Friends Home';
+    }
+    if (['rented', 'rented venue', 'venue', 'rented place', 'rented space'].includes(normalizedVenue)) {
+      return 'Rented Venue';
+    }
+    
+    // If the input doesn't match any known variations, return it as is (will be validated by API)
+    return venue;
+  };
+
+  // Format date to YYYY-MM-DD format
+  const formatDate = (dateString: string): string => {
+    if (!dateString) return '';
+    
+    try {
+      // If it's already in YYYY-MM-DD format, return as is
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+        return dateString;
+      }
+      
+      // Otherwise, try to parse and reformat
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return ''; // Invalid date
+      
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      
+      return `${year}-${month}-${day}`;
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return '';
+    }
+  };
+
+  const buildPayload = (): BookingPayload => {
+    // Determine the service type first
+    const serviceType = menu?.menu_type || menu?.type || "";
+    
+    // Base payload with common fields
+    const basePayload: any = {
+      is_custom: isCustomBooking,
+      chef_service: serviceType || "Chef at Home", // Default to "Chef at Home" if no type is specified
       location: "POINT(0.0 0.0)",
       country: "Nigeria",
       address: bookingData.location || "",
       additional_address_info: "",
       city: bookingData.location || "",
-      dietary_restrictions: dietaryRestrictions,
+      dietary_restrictions: dietaryRestrictions || [],
       dietary_restrictions_details: bookingData.allergyDetails || "",
-      event_date: bookingData.eventDate || "",
-      event_time: bookingData.eventTime || "",
-      event_venue: venueValueToLabel(bookingData.venue || ""),
-      num_of_guests: bookingData.guests || 1,
-      hob_type: "Induction",
-      hob_size: "2 top",
-      has_oven: true,
-      menu_choices: selectedMenuItems.map(Number),
-      menu: menuId,
-      budget: budget || null,
-      budget_type: budgetType || null,
-      preferred_cuisines: preferredCuisines || [],
+      hob_type: bookingData.hobType || "Induction",
+      hob_size: bookingData.hobSize || "2 top",
+      has_oven: bookingData.hasOven || false,
     };
+
+    // Only include menu and menu_choices for non-custom bookings
+    if (!isCustomBooking) {
+      basePayload.menu_choices = selectedMenuItems.map(Number).filter(Boolean);
+      basePayload.menu = menu?.id || 0;
+    }
+    
+    if (serviceType === 'Meal Prep') {
+      return {
+        ...basePayload,
+        budget: bookingData.budget || "",
+        budget_type: bookingData.budgetType || 'Flexible',
+        appearance: bookingData.appearance || 'Weekly',
+        num_of_weeks: bookingData.numOfWeeks || 1,
+        num_of_weekly_visits: bookingData.numOfWeeklyVisits || 1,
+        experience: bookingData.experience || 'One time',
+        meal_type: bookingData.mealType || [],
+        delivery_option: bookingData.deliveryOption || 'Physical',
+        delivery_days: bookingData.deliveryDays || [],
+        start_date: formatDate(bookingData.startDate) || "",
+        end_date: formatDate(bookingData.endDate) || "",
+        delivery_time: bookingData.deliveryTime || "",
+        num_of_persons: bookingData.numOfPersons || 1,
+      } as MealPrepPayload;
+    } else if (['Large Event', 'Meal Delivery', 'Corporate Dining'].includes(serviceType)) {
+      return {
+        ...basePayload,
+        event_date: formatDate(bookingData.eventDate) || "",
+        event_time: bookingData.eventTime || "",
+        event_venue: formatVenue(bookingData.venue) || "Home",
+        num_of_guests: bookingData.guests || 1,
+        budget: bookingData.budget || "",
+        budget_type: bookingData.budgetType || 'Flexible',
+        preferred_cuisines: bookingData.preferredCuisines || [],
+      } as LargeEventPayload;
+    } else {
+      // Default to Chef at Home / Fine Dining
+      return {
+        ...basePayload,
+        event_date: formatDate(bookingData.eventDate) || "",
+        event_time: bookingData.eventTime || "",
+        event_venue: formatVenue(bookingData.venue) || "Home",
+        num_of_guests: bookingData.guests || 1,
+      } as ChefAtHomePayload;
+    }
+  };
+
+  const handleContinue = async () => {
+    if (!message.trim()) return;
+    setError(null);
+    setIsSubmitting(true);
+    
     try {
-      const result = await bookingsService.createBooking(payload);
+      const payload = buildPayload();
+      const formattedPayload = { 
+        ...payload, 
+        message: message.trim() 
+      } as any; // Temporary any to handle dynamic properties
+
+      // Only include preferred_cuisines if it's not a Chef at Home booking
+      const isChefAtHome = menu?.menu_type === 'Chef at Home' || menu?.type === 'Chef at Home';
+      if (!isChefAtHome && 'preferred_cuisines' in payload) {
+        formattedPayload.preferred_cuisines = preferredCuisines || [];
+      }
+
+      const result = await bookingsService.createBooking(formattedPayload);
+      
       setBooking({
         ...result.data,
         menu_price_per_person: menu?.price_per_person || 0,
         menu_name: menu?.name || '',
-      }); // Save booking to store
+      });
+      
       showToast.success("Booking created successfully!");
-      setIsSubmitting(false);
       setMessage("");
-      onNext({ message, bookingId: result.data.id });
+      
+      if (isCustomBooking) {
+        // For custom bookings, show the status card
+        setBookingId(result.data.id);
+        setShowStatusCard(true);
+      } else {
+        // For regular bookings, use the normal next step
+        onNext({ message, bookingId: result.data.id });
+      }
     } catch (err: any) {
       setIsSubmitting(false);
       showToast.error(err?.response?.data?.message || "Failed to create booking. Please try again.");
     }
   };
 
+  // If this is a custom booking and we should show the status card
+  if (isCustomBooking && showStatusCard && bookingId) {
+    return <StatusCard bookingId={bookingId} />;
+  }
+
   return (
     <main className="w-[655px] h-[852px] absolute left-[393px] top-[177px]">
       <div className="w-[654px] h-[814px] border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] absolute bg-white rounded-[15px] border-solid border-[#E7E7E7] left-px top-[38px]" />
 
-      <header className="absolute left-0 top-0">
-        <h1 className="text-black text-xl font-medium leading-[30px] w-[300px] h-[30px] truncate">
-          {menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
-        </h1>
-      </header>
+      {!isCustomBooking && (
+        <header className="absolute left-0 top-0">
+          <h1 className="text-black text-xl font-medium leading-[30px] w-[300px] h-[30px] truncate">
+            {menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
+          </h1>
+        </header>
+      )}
 
       <div className="absolute left-5 top-[69px]">
         <ProgressIndicator steps={progressSteps} />
       </div>
 
-      <div className="absolute left-5 top-[132px] w-full pr-5">
-        <ChefCard
-          chefName={menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
-          dishName={menu?.name || "Menu"}
-          imageUrl={menu?.images && menu.images.length > 0 && menu.images[0].image ? menu.images[0].image : "/menus/menu1.png"}
-          location={menu?.chef?.city || "Unknown"}
-          locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
-          rating={menu?.chef?.average_rating ? menu.chef.average_rating.toFixed(1) : "-"}
-          ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
-          reviewCount={menu?.chef?.num_reviews ? `(${menu.chef.num_reviews} Reviews)` : "(0 Reviews)"}
-        />
-      </div>
+      {!isCustomBooking && (
+        <div className="absolute left-5 top-[132px] w-full pr-5">
+          <ChefCard
+            chefName={menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
+            dishName={menu?.name || "Menu"}
+            imageUrl={menu?.images && menu.images.length > 0 && menu.images[0].image ? menu.images[0].image : "/menus/menu1.png"}
+            location={menu?.chef?.city || "Unknown"}
+            locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
+            rating={menu?.chef?.average_rating ? menu.chef.average_rating.toFixed(1) : "-"}
+            ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
+            reviewCount={menu?.chef?.num_reviews ? `(${menu.chef.num_reviews} Reviews)` : "(0 Reviews)"}
+          />
+        </div>
+      )}
 
       <div className="absolute left-5 top-[291px]">
         <svg width="613" height="1" viewBox="0 0 613 1" fill="none" xmlns="http://www.w3.org/2000/svg">

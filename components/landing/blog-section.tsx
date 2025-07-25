@@ -1,93 +1,93 @@
-import React from 'react';
+import { Button } from "../ui/button";
 
-interface BlogPostProps {
-  image: string;
-  title: string;
-  excerpt: string;
+const blogPosts = [
+  {
+    id: 1,
+    title: "How To Create A Luxury Private Dining Experience At Home",
+    excerpt: "You don't have to leave your home to create a fine dining experience...",
+    image: "https://api.builder.io/api/v1/image/assets/TEMP/f4b8b58012c47362abf1359d23385b5fb6cff17f?width=1216",
+    readTime: "5 min read"
+  },
+  {
+    id: 2,
+    title: "How To Plan A Menu For Your Event",
+    excerpt: "You don't have to leave your home to create a fine dining experience...",
+    image: "https://api.builder.io/api/v1/image/assets/TEMP/962d61e257213dccf160da83706d978aa1ecce27?width=1216",
+    readTime: "3 min read"
+  },
+  {
+    id: 3,
+    title: "Finger Food Ideas For Garden Party",
+    excerpt: "You don't have to leave your home to create a fine dining experience...",
+    image: "https://api.builder.io/api/v1/image/assets/TEMP/23e30eef5ba97cbeff584bbc1dfd327820e663fb?width=1216",
+    readTime: "4 min read"
+  },
+  {
+    id: 4,
+    title: "How To Create A Luxury Private Dining Experience At Home",
+    excerpt: "You don't have to leave your home to create a fine dining experience...",
+    image: "https://api.builder.io/api/v1/image/assets/TEMP/f4b8b58012c47362abf1359d23385b5fb6cff17f?width=1216",
+    readTime: "5 min read"
+  }
+];
+
+function BlogCard({ post }: { post: typeof blogPosts[0] }) {
+  return (
+    <article className="bg-white rounded-lg overflow-hidden shadow-sm group">
+      <div className="aspect-[4/3] overflow-hidden">
+        <img
+          src={post.image}
+          alt={post.title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        />
+      </div>
+      <div className="p-6 space-y-4">
+        <h3 className="text-xl lg:text-2xl font-medium text-[#323335] leading-tight line-clamp-2">
+          {post.title}
+        </h3>
+        <p className="text-gray-600 line-clamp-2">
+          {post.excerpt}
+        </p>
+        <div className="flex items-center justify-between">
+          <span className="text-[#FCC01C] font-medium hover:underline cursor-pointer">
+            Read More
+          </span>
+          <span className="text-sm text-gray-500">{post.readTime}</span>
+        </div>
+      </div>
+    </article>
+  );
 }
 
-const BlogPost: React.FC<BlogPostProps> = ({ image, title, excerpt }) => (
-  <article className="flex flex-col items-stretch font-normal max-md:max-w-full">
-    <img
-      src={image}
-      className="aspect-[1.34] object-contain w-full shadow-[0px_0px_0px_4px_rgba(255,255,255,0.01)] max-md:max-w-full"
-      alt={title}
-    />
-    <h3 className="text-[#323335] text-[25px] mt-5 max-md:max-w-full">
-      {title}
-    </h3>
-    <p className="text-[#323335] text-[17px] mt-4 max-md:max-w-full max-md:mr-2.5">
-      {excerpt}
-    </p>
-    <button className="text-[#FCC01C] text-xl font-medium mt-[21px] text-left hover:underline">
-      Read More
-    </button>
-  </article>
-);
-
-export const BlogSection: React.FC = () => {
+export default function BlogSection() {
   return (
-    <section className="w-full max-w-[1260px] mt-[157px] max-md:max-w-full max-md:mt-10">
-      <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
-        <div className="w-6/12 max-md:w-full max-md:ml-0">
-          <BlogPost
-            image="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/b168101e5e388845438cefd6ea7a498309689cdf?placeholderIfAbsent=true"
-            title="How To Create A Luxury Private Dining Experience At Home"
-            excerpt="You don't have to leave your home to create a fine dining experience..."
-          />
-        </div>
-        <div className="w-6/12 ml-5 max-md:w-full max-md:ml-0">
-          <div className="flex grow flex-col items-stretch text-[#323335] font-medium max-md:max-w-full max-md:mt-[38px]">
-            <img
-              src="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/4f38fb928906d37d7b2a82cacd5fd54522ef0db8?placeholderIfAbsent=true"
-              className="aspect-[333.33] object-contain w-full max-md:max-w-full"
-              alt="Blog decoration"
-            />
-            <h2 className="text-[#323335] text-[35px] self-center mt-3">
+    <section className="bg-white py-16 px-4 lg:px-24">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="relative">
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full max-w-2xl h-0.5 bg-gray-200"></div>
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-2xl h-0.5 bg-gray-200"></div>
+            <h2 className="text-3xl lg:text-4xl font-medium text-[#323335] py-6 bg-white inline-block px-8">
               Our Blog
             </h2>
-            <img
-              src="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/4f38fb928906d37d7b2a82cacd5fd54522ef0db8?placeholderIfAbsent=true"
-              className="aspect-[333.33] object-contain w-full mt-3 max-md:max-w-full"
-              alt="Blog decoration"
-            />
-            <div className="mt-[76px] max-md:mt-10">
-              <BlogPost
-                image="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/1f0bc6f47a114ab59eab51391d6596392ec550fd?placeholderIfAbsent=true"
-                title="How To Plan A Menu For Your Event"
-                excerpt="You don't have to leave your home to create a fine dining experience..."
-              />
-            </div>
           </div>
         </div>
-      </div>
-      
-      <div className="w-full max-w-[1260px] mt-[22px] max-md:max-w-full">
-        <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
-          <div className="w-6/12 max-md:w-full max-md:ml-0">
-            <BlogPost
-              image="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/a07dbd00f1b8685df19b87e1b60591a3c6ee80ea?placeholderIfAbsent=true"
-              title="Finger Food Ideas For Garden Party"
-              excerpt="You don't have to leave your home to create a fine dining experience..."
-            />
-          </div>
-          <div className="w-6/12 ml-5 max-md:w-full max-md:ml-0">
-            <div className="flex grow flex-col items-stretch font-normal mt-[111px] max-md:max-w-full max-md:mt-10">
-              <BlogPost
-                image="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/b168101e5e388845438cefd6ea7a498309689cdf?placeholderIfAbsent=true"
-                title="How To Create A Luxury Private Dining Experience At Home"
-                excerpt="You don't have to leave your home to create a fine dining experience..."
-              />
-            </div>
-          </div>
+
+        {/* Blog Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+          {blogPosts.map((post) => (
+            <BlogCard key={post.id} post={post} />
+          ))}
         </div>
-      </div>
-      
-      <div className="flex justify-center mt-[77px] max-md:mt-10">
-        <button className="shadow-[0px_0px_0px_4px_rgba(255,255,255,0.01)] flex w-[147px] max-w-full flex-col items-stretch text-base text-[#323335] font-semibold justify-center bg-[#FCC01C] px-9 py-[13px] hover:bg-[#FCC01C]/90 transition-colors max-md:px-5">
-          See More
-        </button>
+
+        {/* See More Button */}
+        <div className="text-center">
+          <Button className="bg-[#FCC01C] hover:bg-[#FCC01C]/90 text-[#323335] font-semibold px-8 py-3 rounded-md">
+            See More
+          </Button>
+        </div>
       </div>
     </section>
   );
-};
+}

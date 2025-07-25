@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/lib/store/auth-store";
 
 import { Cart } from "@/components/cart/cart";
@@ -19,6 +20,8 @@ type BookingStep =
   | "checkout";
 
 const FineDiningBookingPage = () => {
+  const searchParams = useSearchParams();
+  const isCustomBooking = searchParams.get('is_custom') === 'true';
   const bookingMenu = useAuthStore((s) => s.bookingMenu);
   const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
   const bookingMenuSelection = useAuthStore((s) => s.bookingMenuSelection);
@@ -27,7 +30,9 @@ const FineDiningBookingPage = () => {
     (bookingMenuSelection || []).map((id: any) => String(id))
   );
   const menu = bookingMenu;
-  const [currentStep, setCurrentStep] = useState<BookingStep>("cart");
+  const [currentStep, setCurrentStep] = useState<BookingStep>(
+    isCustomBooking ? "event-details" : "cart"
+  );
   const [bookingData, setBookingData] = useState<Record<string, any>>({});
   const [eventDetailsForm, setEventDetailsForm] = useState({
     location: "",

@@ -21,7 +21,10 @@ interface DietaryRestrictionsProps {
   onChange: (allergies: string[]) => void;
 }
 
-export const DietaryRestrictions: React.FC<DietaryRestrictionsProps> = ({ selectedAllergies, onChange }) => {
+export const DietaryRestrictions: React.FC<DietaryRestrictionsProps> = ({ 
+  selectedAllergies = [], 
+  onChange 
+}) => {
   const toggleAllergy = (allergy: string) => {
     if (selectedAllergies.includes(allergy)) {
       onChange(selectedAllergies.filter((item) => item !== allergy));

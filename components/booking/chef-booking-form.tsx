@@ -48,36 +48,47 @@ export const ChefBookingForm: React.FC = () => {
   };
 
   return (
-    <div className="w-full">
-      <header>
-        <h1 className="text-black text-xl font-medium">Chef Titilayo</h1>
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <header className="mb-6">
+        <h1 className="text-2xl font-semibold text-gray-900">{chefData.name}</h1>
       </header>
 
-      <section className="border border-[color:var(--Black-100,#E7E7E7)] shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] flex w-full flex-col items-stretch bg-white mt-2 py-8 rounded-[15px] border-solid">
-        <div className="flex w-full flex-col items-stretch px-[19px] max-md:max-w-full max-md:pr-5">
-          <ProgressIndicator steps={progressSteps} />
-
-          <ChefProfileCard {...chefData} />
-
-          <div className="text-black text-2xl font-medium leading-none mt-9">
-            Event Details
+      <section className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="p-6 space-y-8">
+          {/* Progress Indicator */}
+          <div className="px-2">
+            <ProgressIndicator steps={progressSteps} />
           </div>
 
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/46c8b21cf0d7b2f8b159fb09d61c3f987e263a20?placeholderIfAbsent=true"
-            alt="Divider"
-            className="aspect-[500] object-contain w-full stroke-[1px] stroke-[#E7E7E7] mt-1 max-md:max-w-full"
-          />
+          {/* Chef Profile Card */}
+          <div className="border-b border-gray-100 pb-6">
+            <ChefProfileCard {...chefData} />
+          </div>
 
-          <EventDetailsForm onNext={handleFormChange} onBack={() => {}} />
+          {/* Event Details Section */}
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900">Event Details</h2>
+              <div className="h-px bg-gray-200 mt-2" />
+            </div>
 
-          <hr className="w-full stroke-[1px] stroke-[#E7E7E7] mt-[231px] max-md:max-w-full max-md:mt-10 border-[#E7E7E7]" />
+            <EventDetailsForm 
+              onNext={handleFormChange} 
+              onBack={() => {}} 
+              formData={formData}
+              onChange={handleFormChange}
+              menu={{ num_of_guests: 1 }}
+            />
+          </div>
           
-          <NavigationButtons
-            onBack={handleBack}
-            onContinue={handleContinue}
-            canContinue={formData.guests > 0}
-          />
+          {/* Navigation Buttons */}
+          <div className="pt-6 border-t border-gray-100">
+            <NavigationButtons
+              onBack={handleBack}
+              onContinue={handleContinue}
+              canContinue={formData.guests > 0}
+            />
+          </div>
         </div>
       </section>
     </div>

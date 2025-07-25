@@ -10,9 +10,10 @@ import { MenuIncludes } from "@/components/checkout/menu-includes";
 
 interface CheckoutProps {
   bookingId?: number | null;
+  isCustomBooking?: boolean;
 }
 
-export const Checkout: React.FC<CheckoutProps> = ({ bookingId }) => {
+export const Checkout: React.FC<CheckoutProps> = ({ bookingId, isCustomBooking = false }) => {
   const [quote, setQuote] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -57,9 +58,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ bookingId }) => {
                     alt="Divider"
                   />
                 </div>
-
-                {/* <PaymentPlanSelector /> */}
-                <PaymentMethodSelector />
+                <PaymentMethodSelector isCustomBooking={isCustomBooking} />
               </section>
             </div>
 
@@ -70,7 +69,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ bookingId }) => {
                 {error && <div className="text-red-500 text-center py-4">{error}</div>}
                 {quote ? (
                   <>
-                    <OrderSummary quote={quote} />
+                    <OrderSummary isCustomBooking={isCustomBooking} quote={quote} />
                     <MenuIncludes quote={quote} />
                   </>
                 ) : (

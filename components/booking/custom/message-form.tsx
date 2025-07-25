@@ -1,16 +1,25 @@
 import React, { useState } from "react";
+import { useAuthStore } from '@/lib/store/auth-store';
+import { bookingsService } from "@/lib/api/bookings";
+import { showToast } from "@/lib/utils/toast";
 
 export interface MessagesFormProps {
   onNext: (data?: Record<string, any>) => void;
   onBack: () => void;
+  bookingData?: Record<string, any>;
+  isCustomBooking?: boolean;
 }
 
 export const MessagesForm: React.FC<MessagesFormProps> = ({
   onNext,
   onBack,
+  bookingData = {},
+  isCustomBooking = false,
 }) => {
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const setBooking = useAuthStore((s) => s.setBooking);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,20 +28,55 @@ export const MessagesForm: React.FC<MessagesFormProps> = ({
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Format the date to YYYY-MM-DD if it exists
+      const formatDate = (dateString: string): string => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return ''; // Return empty string for invalid dates
+        return date.toISOString().split('T')[0]; // Returns YYYY-MM-DD
+      };
 
-      // Submit the message and move to the next step
-      onNext({ message });
-      setMessage("");
-    } catch (error) {
-      // Log error in production with proper error handling
-      if (process.env.NODE_ENV !== "production") {
-        // eslint-disable-next-line no-console
-        console.error("Error sending message:", error);
+      const payload: any = {
+        is_custom: isCustomBooking,
+        chef_service: bookingData.service || "Custom Service",
+        location: "POINT(0.0 0.0)",
+        country: "Nigeria",
+        address: bookingData.location || "",
+        additional_address_info: "",
+        city: bookingData.location || "",
+        dietary_restrictions: bookingData.dietaryRestrictions || [],
+        dietary_restrictions_details: bookingData.allergyDetails || "",
+        event_date: formatDate(bookingData.eventDate),
+        event_time: bookingData.eventTime || "",
+        event_venue: bookingData.venue || "",
+        num_of_guests: bookingData.guests || 1,
+        hob_type: bookingData.hobType || "",
+        hob_size: bookingData.hobSize || "",
+        has_oven: bookingData.hasOven || false,
+        budget: bookingData.budget || null,
+        budget_type: bookingData.budgetType || null,
+        message: message.trim(),
+      };
+
+      // Only include preferred_cuisines if it's not a Chef at Home booking
+      if (bookingData.service !== 'Chef at Home') {
+        payload.preferred_cuisines = bookingData.preferredCuisines || [];
       }
-      // In a real app, you might want to use a toast or other UI notification
-      alert("Failed to send message. Please try again.");
+
+      const result = await bookingsService.createBooking(payload);
+      
+      setBooking({
+        ...result.data,
+        menu_price_per_person: 0, // Custom booking might not have a menu
+        menu_name: 'Custom Service',
+      });
+      
+      showToast.success("Booking request submitted successfully!");
+      // For custom bookings, proceed to the next step (status card)
+      onNext({ bookingId: result.data.id });
+    } catch (error: any) {
+      console.error("Error creating booking:", error);
+      showToast.error(error?.response?.data?.message || "Failed to create booking. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

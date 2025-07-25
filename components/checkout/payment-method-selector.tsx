@@ -2,7 +2,11 @@ import React, { useState } from "react";
 
 type PaymentMethod = "card" | "voucher";
 
-export const PaymentMethodSelector: React.FC = () => {
+interface PaymentMethodSelectorProps {
+  isCustomBooking?: boolean;
+}
+
+export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({ isCustomBooking = false }) => {
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>("card");
 
   return (

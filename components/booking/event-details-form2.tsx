@@ -10,6 +10,7 @@ interface EventDetailsForm2Props {
   menu: any;
   formData: EventFormData;
   onChange: (data: EventFormData) => void;
+  isCustomBooking?: boolean;
 }
 
 export interface EventFormData {
@@ -17,25 +18,49 @@ export interface EventFormData {
   preferredCuisines: string[];
 }
 
-const availableCuisines = [
-  "African",
-  "Modern English",
-  "Italian",
-  "French",
-  "Asian",
-  "Mediterranean",
-  "Mexican",
-  "Indian",
-];
+// Get cuisine options from the menu or use default options
+const getCuisineOptions = (menu: any) => {
+  // Check if menu has cuisine options
+  if (menu?.cuisines?.length > 0) {
+    return menu.cuisines.map((c: any) => c.name || c);
+  }
+  
+  // Default cuisine options
+  return [
+    "Italian",
+    "African",
+    "Chinese",
+    "Pastries",
+    "French",
+    "English",
+    "Spicy Mediterranean",
+    "Pizza"
+  ];
+};
 
-const EventDetailsForm2: React.FC<EventDetailsForm2Props> = ({ onNext, onBack, menu, formData, onChange }) => {
+const EventDetailsForm2: React.FC<EventDetailsForm2Props> = ({ 
+  onNext, 
+  onBack, 
+  menu, 
+  formData, 
+  onChange, 
+  isCustomBooking = false 
+}) => {
   const progressSteps = [
     { label: 'Event Details', completed: true, inProgress: true },
     { label: 'Budget', completed: false },
     { label: 'Message', completed: false }
   ];
 
+  // Get cuisine options based on menu
+  const cuisineOptions = React.useMemo(() => getCuisineOptions(menu), [menu]);
+  
+  // Debug log to check available cuisines and menu
+  console.log('Menu data:', menu);
+  console.log('Available cuisines in component:', cuisineOptions);
+
   const handleInputChange = (field: keyof EventFormData, value: any) => {
+    console.log('Field changed:', field, 'New value:', value);
     onChange({ ...formData, [field]: value });
   };
 
@@ -47,28 +72,32 @@ const EventDetailsForm2: React.FC<EventDetailsForm2Props> = ({ onNext, onBack, m
     <main className="w-[655px] h-[852px] absolute left-[393px] top-[177px]">
       <div className="w-[654px] h-[814px] border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] absolute bg-white rounded-[15px] border-solid border-[#E7E7E7] left-px top-[38px]" />
 
-      <header className="absolute left-0 top-0">
-        <h1 className="text-black text-xl font-medium leading-[30px] w-[126px] h-[30px]">
-          Chef Titilayo
-        </h1>
-      </header>
+      {!isCustomBooking && (
+        <header className="absolute left-0 top-0">
+          <h1 className="text-black text-xl font-medium leading-[30px] w-[126px] h-[30px]">
+            {menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
+          </h1>
+        </header>
+      )}
 
       <div className="absolute left-5 top-[69px]">
         <ProgressIndicator steps={progressSteps} />
       </div>
 
-      <div className="absolute left-5 right-5 top-[132px] w-auto">
-        <ChefCard
-          chefName={menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
-          dishName={menu?.name || "Menu"}
-          imageUrl={menu?.images && menu.images.length > 0 && menu.images[0].image ? menu.images[0].image : "/menus/menu1.png"}
-          location={menu?.chef?.city || "Unknown"}
-          locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
-          rating={menu?.chef?.average_rating ? menu.chef.average_rating.toFixed(1) : "-"}
-          ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
-          reviewCount={menu?.chef?.num_reviews ? `(${menu.chef.num_reviews} Reviews)` : "(0 Reviews)"}
-        />
-      </div>
+      {!isCustomBooking && (
+        <div className="absolute left-5 right-5 top-[132px] w-auto">
+          <ChefCard
+            chefName={menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
+            dishName={menu?.name || "Menu"}
+            imageUrl={menu?.images && menu.images.length > 0 && menu.images[0].image ? menu.images[0].image : "/menus/menu1.png"}
+            location={menu?.chef?.city || "Unknown"}
+            locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
+            rating={menu?.chef?.average_rating ? menu.chef.average_rating.toFixed(1) : "-"}
+            ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
+            reviewCount={menu?.chef?.num_reviews ? `(${menu.chef.num_reviews} Reviews)` : "(0 Reviews)"}
+          />
+        </div>
+      )}
 
       <div className="absolute left-5 top-[291px]">
         <svg width="613" height="1" viewBox="0 0 613 1" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -97,12 +126,22 @@ const EventDetailsForm2: React.FC<EventDetailsForm2Props> = ({ onNext, onBack, m
             <option value="graduation">Graduation</option>
           </select>
           <div className="mb-6">
-            <TagSelector
-              label="Preferred Cuisines"
-              tags={availableCuisines}
-              selectedTags={formData.preferredCuisines}
-              onTagsChange={tags => handleInputChange("preferredCuisines", tags)}
-            />
+            <div className="w-full">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Preferred Cuisines
+              </label>
+              <div className="border border-gray-300 rounded-md p-2 min-h-[45px]">
+                <div className="w-full">
+                  <TagSelector
+                    key={`cuisine-selector-${cuisineOptions.length}`}
+                    label=""
+                    tags={cuisineOptions}
+                    selectedTags={formData.preferredCuisines || []}
+                    onTagsChange={tags => handleInputChange("preferredCuisines", tags)}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </form>
       </section>

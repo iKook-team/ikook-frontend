@@ -6,6 +6,8 @@ import { ActionButtons } from './action-buttons';
 interface MealDetailsForm2Props {
   onNext: (data: MealForm2Data) => void;
   onBack: () => void;
+  isCustomBooking?: boolean;
+  menu?: any;
 }
 
 export interface MealForm2Data {
@@ -14,7 +16,12 @@ export interface MealForm2Data {
   experience: 'One-time' | 'Multiple' | '';
 }
 
-const MealDetailsForm2: React.FC<MealDetailsForm2Props> = ({ onNext, onBack }) => {
+const MealDetailsForm2: React.FC<MealDetailsForm2Props> = ({ 
+  onNext, 
+  onBack, 
+  isCustomBooking = false,
+  menu
+}) => {
   const [formData, setFormData] = useState<MealForm2Data>({
     numberOfWeeks: 1,
     weeklyVisits: 1,
@@ -35,97 +42,121 @@ const MealDetailsForm2: React.FC<MealDetailsForm2Props> = ({ onNext, onBack }) =
     onNext(formData);
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleContinue();
+  };
+
   return (
-    <main className="w-[655px] h-[852px] absolute left-[393px] top-[177px]">
-      <div className="w-[654px] h-[814px] border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] absolute bg-white rounded-[15px] border-solid border-[#E7E7E7] left-px top-[38px]" />
-      <header className="absolute left-0 top-0">
-        <h1 className="text-black text-xl font-medium leading-[30px] w-[126px] h-[30px]">
-          Chef Titilayo
-        </h1>
-      </header>
-      <div className="absolute left-5 top-[69px]">
-        <ProgressIndicator steps={progressSteps} />
-      </div>
-      <div className="absolute left-5 top-[132px]">
-        <ChefCard
-          chefName="Chef Titilayo John"
-          dishName="Braised Chicken With Lemon and Olives"
-          imageUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/231d86006c0dab5ed39c08a8a310d23841a29a6f?placeholderIfAbsent=true"
-          location="London"
-          locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
-          rating="4.6"
-          ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
-          reviewCount="(23 Reviews)"
-        />
-      </div>
-      <div className="absolute left-5 top-[291px]">
-        <svg width="613" height="1" viewBox="0 0 613 1" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M-0.00390625 0.5L613.003 0.5" stroke="#E7E7E7"></path>
-        </svg>
-      </div>
-      <section className="absolute left-5 top-[307px] w-[613px]">
-        <h2 className="text-black text-2xl font-medium leading-8 w-[200px] h-8 mb-[47px]">
-          Meal Details
-        </h2>
-        <form className="flex flex-col flex-1 w-full" onSubmit={e => { e.preventDefault(); handleContinue(); }}>
-          <label htmlFor="numberOfWeeks" className="text-[#344054] text-sm font-medium leading-none mb-2">Number of weeks</label>
-          <input
-            type="number"
-            id="numberOfWeeks"
-            name="numberOfWeeks"
-            min="1"
-            step="1"
-            value={formData.numberOfWeeks}
-            onChange={e => handleInputChange("numberOfWeeks", parseInt(e.target.value, 10) || 1)}
-            className="border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] w-full text-base text-[#101828] font-normal bg-white mb-6 px-3.5 py-2.5 rounded-lg border-solid focus:outline-none focus:ring-1 focus:ring-amber-500"
-            placeholder="Number of weeks"
-          />
-          <label htmlFor="weeklyVisits" className="text-[#344054] text-sm font-medium leading-none mb-2">Weekly visits/delivery</label>
-          <input
-            type="number"
-            id="weeklyVisits"
-            name="weeklyVisits"
-            min="1"
-            step="1"
-            value={formData.weeklyVisits}
-            onChange={e => handleInputChange("weeklyVisits", parseInt(e.target.value, 10) || 1)}
-            className="border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] w-full text-base text-[#101828] font-normal bg-white mb-6 px-3.5 py-2.5 rounded-lg border-solid focus:outline-none focus:ring-1 focus:ring-amber-500"
-            placeholder="Weekly visits/delivery"
-          />
-          <label className="text-[#344054] text-sm font-medium leading-none mb-2">Experience</label>
-          <div className="space-y-3 mb-6">
-            {['One-time', 'Multiple'].map((option) => (
-              <div key={option} className="flex items-center">
-                <input
-                  type="radio"
-                  name="experience"
-                  id={`experience-${option}`}
-                  value={option}
-                  checked={formData.experience === option}
-                  onChange={() => handleInputChange('experience', option)}
-                  className="h-4 w-4 text-amber-500 border-gray-300 focus:ring-amber-500"
-                />
-                <label htmlFor={`experience-${option}`} className="ml-2 text-base text-[#101828] font-normal cursor-pointer">
-                  {option}
-                </label>
-              </div>
-            ))}
+    <div className="flex justify-center items-start p-6">
+      <div className="w-full max-w-3xl bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        {/* Header Section */}
+        <div className="px-6 pt-6 pb-4 border-b border-gray-100">
+          {!isCustomBooking && (
+            <header className="mb-6">
+              <h1 className="text-2xl font-semibold text-gray-900 truncate">
+                {menu?.chef?.first_name && menu?.chef?.last_name 
+                  ? `${menu.chef.first_name} ${menu.chef.last_name}` 
+                  : "Chef"}
+              </h1>
+            </header>
+          )}
+          
+          <div className="mb-6">
+            <ProgressIndicator steps={progressSteps} />
           </div>
-        </form>
-      </section>
-      <div className="absolute left-5 top-[720px]">
-        <svg width="613" height="2" viewBox="0 0 613 2" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0 1L613.007 1" stroke="#E7E7E7"></path>
-        </svg>
+        </div>
+
+        {/* Chef Card Section */}
+        {!isCustomBooking && (
+          <div className="px-6 py-4 border-b border-gray-100">
+            <ChefCard
+              chefName={menu?.chef?.first_name && menu?.chef?.last_name 
+                ? `${menu.chef.first_name} ${menu.chef.last_name}` 
+                : "Chef"}
+              dishName={menu?.name || "Menu"}
+              imageUrl={menu?.images?.length > 0 ? menu.images[0].image : "/menus/menu1.png"}
+              location={menu?.chef?.city || "Unknown"}
+              locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
+              rating={menu?.chef?.average_rating?.toFixed(1) || "-"}
+              ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
+              reviewCount={menu?.chef?.num_reviews ? `(${menu.chef.num_reviews} Reviews)` : "(0 Reviews)"}
+            />
+          </div>
+        )}
+        {/* Form Section */}
+        <section className="p-6 space-y-6">
+          <h2 className="text-2xl font-semibold text-gray-900">
+            Meal Details
+          </h2>
+          
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="numberOfWeeks" className="block text-sm font-medium text-gray-700 mb-1">
+                Number of Weeks
+              </label>
+              <input
+                type="number"
+                id="numberOfWeeks"
+                name="numberOfWeeks"
+                min="1"
+                value={formData.numberOfWeeks}
+                onChange={(e) => handleInputChange("numberOfWeeks", parseInt(e.target.value, 10) || 1)}
+                className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-amber-500 focus:border-amber-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="weeklyVisits" className="block text-sm font-medium text-gray-700 mb-1">
+                Visits per Week
+              </label>
+              <input
+                type="number"
+                id="weeklyVisits"
+                name="weeklyVisits"
+                min="1"
+                max="7"
+                value={formData.weeklyVisits}
+                onChange={(e) => handleInputChange("weeklyVisits", Math.min(7, Math.max(1, parseInt(e.target.value, 10) || 1)))}
+                className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-amber-500 focus:border-amber-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                Experience
+              </label>
+              <div className="space-y-3">
+                {['One-time', 'Multiple'].map((option) => (
+                  <label key={option} className="flex items-center">
+                    <input
+                      type="radio"
+                      name="experience"
+                      value={option}
+                      checked={formData.experience === option}
+                      onChange={() => handleInputChange("experience", option as 'One-time' | 'Multiple')}
+                      className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300"
+                      required
+                    />
+                    <span className="ml-2 text-gray-700">{option}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-gray-200">
+              <ActionButtons
+                onBack={onBack}
+                onContinue={handleContinue}
+                continueDisabled={!formData.experience}
+              />
+            </div>
+          </form>
+        </section>
       </div>
-      <div className="absolute left-[357px] top-[772px]">
-        <ActionButtons
-          onBack={onBack}
-          onContinue={handleContinue}
-          continueDisabled={formData.numberOfWeeks < 1 || formData.weeklyVisits < 1 || !formData.experience}
-        />
-      </div>
-    </main>
+    </div>
   );
 };
 

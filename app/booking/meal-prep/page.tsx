@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/lib/store/auth-store";
 
 import { Cart } from "@/components/cart/cart";
@@ -27,7 +27,11 @@ type BookingStep =
 
 const MealPrepBookingPage = () => {
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState<BookingStep>("cart");
+  const searchParams = useSearchParams();
+  const isCustomBooking = searchParams.get('is_custom') === 'true';
+  const [currentStep, setCurrentStep] = useState<BookingStep>(
+    isCustomBooking ? "meal-details" : "cart"
+  );
   const [bookingData, setBookingData] = useState<Record<string, any>>({});
   const menu = useAuthStore((s) => s.bookingMenu);
   const [menuLoading, setMenuLoading] = useState(false);

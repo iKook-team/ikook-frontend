@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/lib/store/auth-store";
 
 import { Cart } from "@/components/cart/cart";
@@ -19,6 +20,8 @@ type BookingStep =
   | "checkout";
 
 const ChefAtHomeBookingPage = () => {
+  const searchParams = useSearchParams();
+  const isCustomBooking = searchParams.get('is_custom') === 'true';
   const bookingMenu = useAuthStore((s) => s.bookingMenu);
   const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
   const bookingMenuSelection = useAuthStore((s) => s.bookingMenuSelection);
@@ -27,7 +30,9 @@ const ChefAtHomeBookingPage = () => {
     (bookingMenuSelection || []).map((id: any) => String(id))
   );
   const menu = bookingMenu;
-  const [currentStep, setCurrentStep] = useState<BookingStep>("cart");
+  const [currentStep, setCurrentStep] = useState<BookingStep>(
+    isCustomBooking ? "event-details" : "cart"
+  );
   const [bookingData, setBookingData] = useState<Record<string, any>>({});
   const [eventDetailsForm, setEventDetailsForm] = useState({
     location: "",
@@ -89,6 +94,12 @@ const ChefAtHomeBookingPage = () => {
   };
 
   const renderStep = () => {
+    // Skip cart step for custom booking
+    if (isCustomBooking && currentStep === 'cart') {
+      handleNext();
+      return null;
+    }
+
     switch (currentStep) {
       case "cart":
         return (
@@ -105,11 +116,12 @@ const ChefAtHomeBookingPage = () => {
       case "event-details":
         return (
           <EventDetailsForm
-            onBack={handleBack}
+            onBack={isCustomBooking ? undefined : handleBack}
             onNext={handleNext}
-            menu={menu}
+            menu={isCustomBooking ? undefined : menu}
             formData={eventDetailsForm}
             onChange={setEventDetailsForm}
+            isCustomBooking={isCustomBooking}
           />
         );
       case "event-details3":
@@ -117,9 +129,10 @@ const ChefAtHomeBookingPage = () => {
           <EventDetailsForm3
             onBack={handleBack}
             onNext={handleNext}
-            menu={menu}
+            menu={isCustomBooking ? undefined : menu}
             formData={eventDetailsForm3}
             onChange={setEventDetailsForm3}
+            isCustomBooking={isCustomBooking}
           />
         );
       case "preferences":
@@ -127,9 +140,10 @@ const ChefAtHomeBookingPage = () => {
           <PreferencesForm
             onNext={(data) => handleNext(data)}
             onBack={handleBack}
-            menu={menu}
+            menu={isCustomBooking ? undefined : menu}
             formData={preferencesForm}
             onChange={(data) => setPreferencesForm({ allergyDetails: data.allergyDetails ?? "", dietaryRestrictions: data.dietaryRestrictions ?? [] })}
+            isCustomBooking={isCustomBooking}
           />
         );
       case "messages":
@@ -138,14 +152,15 @@ const ChefAtHomeBookingPage = () => {
             onBack={handleBack}
             onNext={handleNext}
             bookingData={bookingData}
-            selectedMenuItems={selectedMenuItems}
-            menuId={menu?.id ?? undefined}
-            menu={menu}
+            selectedMenuItems={isCustomBooking ? [] : selectedMenuItems}
+            menuId={isCustomBooking ? undefined : (menu?.id ?? undefined)}
+            menu={isCustomBooking ? undefined : menu}
             dietaryRestrictions={preferencesForm.dietaryRestrictions}
+            isCustomBooking={isCustomBooking}
           />
         );
       case "checkout":
-        return <Checkout bookingId={bookingId} />;
+        return <Checkout bookingId={bookingId} isCustomBooking={isCustomBooking} />;
       default:
         return (
           <Cart

@@ -5,7 +5,7 @@ import React, { useState } from "react";
 
 interface TagSelectorProps {
   label: string;
-  tags: string[];
+  tags: readonly string[] | string[];
   selectedTags?: string[];
   className?: string;
   onTagsChange?: (tags: string[]) => void;
@@ -13,12 +13,21 @@ interface TagSelectorProps {
 
 export const TagSelector: React.FC<TagSelectorProps> = ({
   label,
-  tags,
+  tags: propTags = [], // Default to empty array if undefined
   selectedTags = [],
   className = "",
   onTagsChange,
 }) => {
+  // Ensure tags is always an array and log if it's not
+  const tags = Array.isArray(propTags) ? [...propTags] : [];
+  
   const [isOpen, setIsOpen] = useState(false);
+  
+  // Debug info
+  React.useEffect(() => {
+    console.log('TagSelector Mounted - tags:', tags);
+    console.log('TagSelector Mounted - selectedTags:', selectedTags);
+  }, [tags, selectedTags]);
 
   const toggleTag = (tag: string) => {
     const newTags = selectedTags.includes(tag)
