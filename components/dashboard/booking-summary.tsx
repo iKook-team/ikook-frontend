@@ -52,10 +52,10 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
     <aside className="flex flex-col grow justify-center px-8 py-9 mt-9 w-full bg-white rounded-2xl border border-solid shadow-2xl border-[color:var(--Black-100,#E7E7E7)] max-md:px-5 max-md:mt-10">
       <div className="flex flex-col w-full">
         <button
-          className="overflow-hidden gap-2 self-stretch px-10 py-3 max-w-full text-base font-semibold text-white bg-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)] w-[310px] max-md:px-5"
+          className="overflow-hidden gap-2 self-stretch px-10 py-3 max-w-full text-base font-semibold text-white bg-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)] w-[310px] max-md:px-5 hover:bg-amber-500 transition-colors"
           onClick={() => router.push("/chat")}
         >
-          {userType === "chef" ? "Message Host" : "Message Chef"}
+          {userType === 'chef' ? 'Message Host' : 'Message Chef'}
         </button>
         <div className="flex flex-col items-start self-start mt-8 text-sm leading-none text-black">
           <div className="flex gap-2 items-center">
@@ -100,12 +100,33 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
           </div>
         </div>
         <div className="mt-8 w-full text-base font-semibold max-w-[310px]">
-          <button className="overflow-hidden gap-2 self-stretch px-5 py-2.5 w-full bg-white rounded-lg border border-solid shadow-sm border-[color:var(--Gray-100,#CFCFCE)] text-slate-700">
-            {isUpcoming ? "Mark as completed" : "Check review"}
-          </button>
-          {isCustom && isEnquiry && (
+          {userType === 'chef' && booking.status?.toLowerCase() === 'upcoming' && (
+            <button className="overflow-hidden gap-2 self-stretch px-5 py-2.5 w-full bg-white rounded-lg border border-solid shadow-sm border-[color:var(--Gray-100,#CFCFCE)] text-slate-700">
+              Mark as completed
+            </button>
+          )}
+          {userType === 'chef' && isCustom && isEnquiry && (
             <button className="overflow-hidden gap-2 self-stretch px-5 py-2.5 mt-3 w-full text-white bg-black rounded-lg border border-solid shadow-sm border-[color:var(--Black,#020101)]">
               Send Quote
+            </button>
+          )}
+          {userType === 'host' && booking.status?.toLowerCase() === 'pending' && (
+            <button 
+              onClick={() => {
+                // Navigate to checkout with booking ID and isCustomBooking flag
+                router.push(`/booking/checkout?bookingId=${booking.id}${booking.is_custom ? '&isCustomBooking=true' : ''}`);
+              }}
+              className="overflow-hidden gap-2 self-stretch px-5 py-2.5 mt-3 w-full text-white bg-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)] hover:bg-amber-500 transition-colors"
+            >
+              Make Payment
+            </button>
+          )}
+          {booking.status?.toLowerCase() === 'completed' && !booking.has_review && (
+            <button 
+              onClick={() => router.push(`/dashboard/reviews/create?bookingId=${booking.id}`)}
+              className="overflow-hidden gap-2 self-stretch px-5 py-2.5 mt-3 w-full text-white bg-blue-500 rounded-lg border border-solid shadow-sm hover:bg-blue-600 transition-colors"
+            >
+              Create Review
             </button>
           )}
         </div>

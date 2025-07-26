@@ -37,7 +37,9 @@ const LargeEventBookingPage = () => {
   const [currentStep, setCurrentStep] = useState<BookingStep>(
     isCustomBooking ? "event-details" : "cart"
   );
-  const [bookingData, setBookingData] = useState<Record<string, any>>({});
+  const [bookingData, setBookingData] = useState<Record<string, any>>({
+    service: 'Large Event' // Set the service type from the URL path
+  });
   const [eventDetailsForm, setEventDetailsForm] = useState({
     location: "",
     eventDate: "",

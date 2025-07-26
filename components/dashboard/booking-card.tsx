@@ -1,9 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { FaMoneyBillWave } from "react-icons/fa";
+import { chatService } from "@/lib/api/chat";
+import { handleApiError } from "@/lib/utils/toast";
 
 // Accept either a booking object or the old props for backward compatibility
 export type BookingCardProps =
@@ -21,6 +23,7 @@ export type BookingCardProps =
 
 export const BookingCard: React.FC<BookingCardProps> = (props) => {
   const router = useRouter();
+  const [isCreatingChat, setIsCreatingChat] = useState(false);
 
   // If booking prop is present, use new mapping
   if ("booking" in props) {
@@ -113,10 +116,31 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
         <div className="flex gap-3 items-start self-end mt-4 mr-9 text-sm font-semibold leading-none max-md:mr-2.5">
           <div className="flex items-start whitespace-nowrap rounded-lg text-slate-700">
             <button
-              className="overflow-hidden gap-2 self-stretch px-3.5 py-2 bg-white rounded-lg border border-solid shadow-sm border-[color:var(--Gray-100,#CFCFCE)] text-slate-700"
-              onClick={() => router.push("/chat")}
+              className="overflow-hidden gap-2 self-stretch px-3.5 py-2 bg-white rounded-lg border border-solid shadow-sm border-[color:var(--Gray-100,#CFCFCE)] text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={async () => {
+                try {
+                  setIsCreatingChat(true);
+                  // Get the other user's ID (if host is viewing, use chef ID and vice versa)
+                  const otherUserId = booking.chef_id || booking.host_id;
+                  if (!otherUserId) {
+                    throw new Error('Unable to determine chat participant');
+                  }
+                  
+                  // Create or get existing chat
+                  const chat = await chatService.getOrCreateChat(otherUserId);
+                  
+                  // Navigate to the chat
+                  router.push(`/chat`);
+                } catch (error) {
+                  console.error('Error creating chat:', error);
+                  handleApiError(error, 'Failed to start chat');
+                } finally {
+                  setIsCreatingChat(false);
+                }
+              }}
+              disabled={isCreatingChat}
             >
-              Message
+              {isCreatingChat ? 'Starting chat...' : 'Message'}
             </button>
           </div>
           <div className="flex items-start text-white rounded-lg">

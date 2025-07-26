@@ -1,29 +1,36 @@
-"use client";
+import React from 'react';
+import { Navigation } from '@/components/auth/Navigation';
+import HeroSection from '@/components/landing/hero-section';
+import ServicesSection from '@/components/landing/services-section';
+import WhyIkookSection from '@/components/landing/why-ikook-section';
+import TestimonialsSection from '@/components/landing/testimonials-section';
+import BlogSection from '@/components/landing/blog-section';
+import ExperienceSection from '@/components/landing/experience-section';
+import TopMenuSection from '@/components/landing/top-menu-section';
+import { Footer } from '@/components/footer/footer';
 
-import { useState } from "react";
-
-import { Footer } from "../components/footer/footer";
-
-import { Listing } from "@/components/listing";
-import { Navigation } from "@/components/auth/Navigation";
-import { Services } from "@/components/filter/Services";
-
-export default function Home() {
-  const [selectedService, setSelectedService] = useState("chef-at-home");
-
-  const handleServiceChange = (serviceId: string) => {
-    setSelectedService(serviceId);
-  };
-
+const Index = () => {
   return (
-    <>
+    <div className="bg-white flex flex-col overflow-hidden items-center">
       <Navigation />
-      <Services
-        onServiceChange={handleServiceChange}
-        selectedService={selectedService}
-      />
-      <Listing selectedService={selectedService} />
+      
+      <HeroSection />
+
+      <ServicesSection />
+
+      <ExperienceSection />
+
+      <TopMenuSection />
+      
+      <WhyIkookSection />
+
+      <TestimonialsSection />
+
+      <BlogSection />
+      
       <Footer />
-    </>
+    </div>
   );
-}
+};
+
+export default Index;

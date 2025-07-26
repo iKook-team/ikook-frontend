@@ -79,6 +79,50 @@ export interface SendMessageData {
 }
 
 export const chatService = {
+  async createChat(userId: number): Promise<Chat> {
+    try {
+      const response = await axios.post<ApiResponse<Chat>>('/chats/create/', { user_id: userId });
+      
+      if (!response.data.status) {
+        throw new Error(response.data.message || 'Failed to create chat');
+      }
+      
+      return response.data.data;
+    } catch (error) {
+      handleApiError(error, 'Failed to create chat');
+      throw error;
+    }
+  },
+  
+  async getOrCreateChat(userId: number): Promise<Chat> {
+    try {
+      console.log('Fetching existing chats for user:', userId);
+      const response = await axios.get<ApiResponse<ChatsResponse>>('/chats/');
+      
+      // Extract the chats from the nested response structure
+      const chats = response.data?.data?.results || [];
+      console.log('Found chats:', chats);
+      console.log('Processed chats:', chats);
+      
+      // Check if a chat with this user already exists
+      const existingChat = chats.find(chat => {
+        const exists = chat && (chat.chef?.id === userId || chat.host?.id === userId);
+        console.log('Checking chat:', { chat, userId, exists });
+        return exists;
+      });
+      
+      if (existingChat) {
+        console.log('Found existing chat:', existingChat);
+        return existingChat;
+      }
+      
+      // If no existing chat, create a new one
+      return this.createChat(userId);
+    } catch (error) {
+      console.error('Error getting or creating chat:', error);
+      throw error;
+    }
+  },
   async getChats(): Promise<ChatsResponse> {
     try {
       const response = await axios.get("/chats/");

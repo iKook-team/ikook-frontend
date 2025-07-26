@@ -21,20 +21,42 @@ export const Checkout: React.FC<CheckoutProps> = ({ bookingId, isCustomBooking =
   console.log('Checkout bookingId:', bookingId);
 
   useEffect(() => {
-    if (!bookingId) return;
-    setLoading(true);
-    setError(null);
-    console.log('Fetching quote for bookingId:', bookingId);
-    quotesService.getQuoteByBookingId(bookingId)
-      .then((data) => {
-        console.log('Quote API response:', data);
-        setQuote(data)
-      })
-      .catch((err) => {
+    let isMounted = true;
+    
+    const fetchQuote = async () => {
+      if (!bookingId) return;
+      
+      setLoading(true);
+      setError(null);
+      
+      try {
+        console.log('Fetching quote for bookingId:', bookingId);
+        const quoteData = await quotesService.getQuoteByBookingId(bookingId);
+        console.log('Quote API response:', quoteData);
+        
+        if (isMounted) {
+          if (!quoteData) {
+            throw new Error('No quote data received');
+          }
+          setQuote(quoteData);
+        }
+      } catch (err) {
         console.error('Failed to fetch quote details:', err);
-        setError("Failed to fetch quote details.")
-      })
-      .finally(() => setLoading(false));
+        if (isMounted) {
+          setError("Failed to load quote details. Please try again later.");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+    
+    fetchQuote();
+    
+    return () => {
+      isMounted = false;
+    };
   }, [bookingId]);
 
   return (

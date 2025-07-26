@@ -20,13 +20,27 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ quote, isCustomBooki
   const currency = getCurrencySymbol({ country: booking?.country });
 
   const handlePayment = async () => {
-    if (!quote?.id) return;
+    if (!quote?.id) {
+      console.error('No quote ID available');
+      return;
+    }
+    
     try {
+      console.log('Initiating payment for quote:', quote.id);
       const res = await paymentsService.pay(quote.id);
+      console.log('Payment response:', res);
+      
       if (res.checkout_url) {
+        console.log('Redirecting to checkout URL:', res.checkout_url);
         // Optionally save reference to localStorage for later verification
-        localStorage.setItem('payment_reference', res.reference);
-        window.location.href = res.checkout_url;
+        if (res.reference) {
+          localStorage.setItem('payment_reference', res.reference);
+        }
+        // Force a full page reload to ensure clean state
+        window.location.assign(res.checkout_url);
+      } else {
+        console.error('No checkout_url in response:', res);
+        alert('Failed to get payment URL. Please try again.');
       }
     } catch (err) {
       alert('Failed to initiate payment. Please try again.');

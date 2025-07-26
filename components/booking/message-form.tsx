@@ -133,7 +133,8 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
     // Base payload with common fields
     const basePayload: any = {
       is_custom: isCustomBooking,
-      chef_service: serviceType || "Chef at Home", // Default to "Chef at Home" if no type is specified
+      // Always use the service from bookingData if available, otherwise fall back to menu type or default
+      chef_service: bookingData.service || serviceType || "Chef at Home",
       location: "POINT(0.0 0.0)",
       country: "Nigeria",
       address: bookingData.location || "",

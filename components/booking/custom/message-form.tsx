@@ -38,7 +38,7 @@ export const MessagesForm: React.FC<MessagesFormProps> = ({
 
       const payload: any = {
         is_custom: isCustomBooking,
-        chef_service: bookingData.service || "Custom Service",
+        chef_service: bookingData.service === 'Large Event' ? 'Large Event' : (bookingData.service || 'Custom Service'),
         location: "POINT(0.0 0.0)",
         country: "Nigeria",
         address: bookingData.location || "",

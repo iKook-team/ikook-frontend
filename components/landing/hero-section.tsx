@@ -3,8 +3,10 @@
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function HeroSection() {
+  const router = useRouter();
   const [selectedService, setSelectedService] = useState("Chef at Home");
 
   return (
@@ -108,7 +110,10 @@ export default function HeroSection() {
 
           {/* Search Button */}
           <div className="flex justify-end">
-            <Button className="bg-[#323335] hover:bg-[#323335]/90 text-white px-8 py-4 text-xl font-medium rounded-md flex items-center space-x-3">
+            <Button 
+              onClick={() => router.push('/explore')}
+              className="bg-[#323335] hover:bg-[#323335]/90 text-white px-8 py-4 text-xl font-medium rounded-md flex items-center space-x-3"
+            >
               <svg
                 width="25"
                 height="25"
