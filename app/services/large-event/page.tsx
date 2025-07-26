@@ -2,11 +2,12 @@
 
 import React, { useState } from "react";
 
-import { Toggle } from "@/components/ui/toggle";
-import { TagSelector } from "@/components/ui/tag-selector";
+// Removed unused imports
 import Image from "next/image";
 
-export const EventForm: React.FC = () => {
+const EventForm = () => {
+  // Define tag type for better type safety
+  type Tag = string;
   const [isAvailable, setIsAvailable] = useState(true);
   const [startingPrice, setStartingPrice] = useState("000");
   const [minGuests, setMinGuests] = useState("");
@@ -41,11 +42,17 @@ export const EventForm: React.FC = () => {
                   <label className="text-[#020101] text-[15px] font-normal self-stretch w-[298px] my-auto">
                     Availability
                   </label>
-                  <Toggle
-                    checked={isAvailable}
-                    onChange={() => setIsAvailable(!isAvailable)}
-                    className="self-stretch my-auto"
-                  />
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={isAvailable}
+                    onClick={() => setIsAvailable(!isAvailable)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FCC01C] ${isAvailable ? 'bg-[#FCC01C]' : 'bg-gray-200'}`}
+                  >
+                    <span
+                      className={`${isAvailable ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                    />
+                  </button>
                 </div>
 
                 <div className="self-stretch ml-[22px] mr-[23px] mt-[18px] max-md:max-w-full max-md:mr-2.5">
@@ -94,24 +101,34 @@ export const EventForm: React.FC = () => {
 
                   {/* Cuisines Field */}
                   <div className="flex w-full max-w-[609px] flex-col items-stretch mt-6 pb-2.5 max-md:max-w-full">
-                    <TagSelector
-                      label="Cuisines"
-                      tags={selectedCuisines}
-                      selectedTags={selectedCuisines}
-                      onTagsChange={setSelectedCuisines}
-                      className="w-full"
-                    />
+                    <div className="w-full">
+                      <label className="text-[#3F3E3D] text-[15px] font-medium block mb-2">
+                        Cuisines
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedCuisines.map((cuisine) => (
+                          <span key={cuisine} className="px-3 py-1 bg-gray-100 rounded-full text-sm">
+                            {cuisine}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
 
                   {/* Event Field */}
                   <div className="flex w-full max-w-[534px] flex-col mt-6 pb-2.5">
-                    <TagSelector
-                      label="Event"
-                      tags={selectedEvents}
-                      selectedTags={selectedEvents}
-                      onTagsChange={setSelectedEvents}
-                      className="w-full"
-                    />
+                    <div className="w-full mt-4">
+                      <label className="text-[#3F3E3D] text-[15px] font-medium block mb-2">
+                        Event
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedEvents.map((event) => (
+                          <span key={event} className="px-3 py-1 bg-gray-100 rounded-full text-sm">
+                            {event}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
 

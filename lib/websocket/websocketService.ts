@@ -1,4 +1,4 @@
-import { Message } from '@/lib/api/chat';
+import { Message } from "@/lib/api/chat";
 
 type MessageHandler = (message: Message) => void;
 type ConnectionChangeHandler = (isConnected: boolean) => void;
@@ -27,7 +27,7 @@ export class WebSocketService {
   }
 
   public connect(chatId: number, accessToken: string): Promise<void> {
-    console.log('WebSocketService.connect called with chatId:', chatId);
+    // Removed console.log for production
     if (this.connectionPromise) {
       return this.connectionPromise;
     }
@@ -38,12 +38,14 @@ export class WebSocketService {
     this.connectionPromise = new Promise((resolve, reject) => {
       try {
         // Use the same base URL as the API but replace http(s) with ws(s)
-        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
-        const wsProtocol = apiBaseUrl.startsWith('https') ? 'wss:' : 'ws:';
-        const baseUrl = apiBaseUrl.replace(/^https?:\/\//, '');
-        const wsUrl = `${wsProtocol}//${baseUrl.replace(/\/$/, '')}/ws/chats/${chatId}/?token=${accessToken}`;
-        
-        console.log('Creating new WebSocket connection to:', wsUrl);
+        const apiBaseUrl =
+          process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+        const wsProtocol = apiBaseUrl.startsWith("https") ? "wss:" : "ws:";
+        const baseUrl = apiBaseUrl.replace(/^https?:\/\//, "");
+        const wsUrl = `${wsProtocol}//${baseUrl.replace(
+          /\/$/,
+          ""
+        )}/ws/chats/${chatId}/?token=${accessToken}`;
         this.socket = new WebSocket(wsUrl);
 
         this.socket.onopen = this.onOpen;
@@ -60,9 +62,7 @@ export class WebSocketService {
   }
 
   private onOpen = () => {
-    console.log('WebSocket connected successfully');
-    console.log('WebSocket URL:', this.socket?.url);
-    console.log('WebSocket readyState:', this.socket?.readyState);
+    // Connection logging removed for production
     this.reconnectAttempts = 0; // Reset retry count on successful connection
     this.isConnected = true;
     this.notifyConnectionChange(true);
@@ -74,18 +74,30 @@ export class WebSocketService {
   };
 
   private onMessage = (event: MessageEvent) => {
-    console.log('Raw WebSocket message received:', event.data);
     try {
       const message = JSON.parse(event.data);
-      console.log('Parsed WebSocket message:', message);
       this.notifyMessageHandlers(message as Message);
     } catch (error) {
-      console.error('Error parsing WebSocket message:', error);
+      // Error handling without console.error in production
+      this.notifyMessageHandlers({
+        id: 0,
+        chat: this.chatId || 0,
+        message: "Error processing message",
+        created_at: new Date().toISOString(),
+        sender: {
+          id: 0,
+          username: 'system',
+          first_name: 'System',
+          last_name: '',
+          avatar: ''
+        },
+        is_read: false,
+        image: null
+      });
     }
   };
 
   private onClose = () => {
-    console.log('WebSocket connection closed');
     this.isConnected = false;
     this.notifyConnectionChange(false);
     this.attemptReconnect();
@@ -98,14 +110,14 @@ export class WebSocketService {
 
   private attemptReconnect() {
     if (this.reconnectAttempts >= this.maxReconnectAttempts || !this.chatId || !this.accessToken) {
-      console.error('Max reconnection attempts reached');
+      // Max reconnection attempts reached
       return;
     }
 
     this.reconnectAttempts++;
     const delay = Math.min(this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1), this.maxReconnectDelay);
     
-    console.log(`Attempting to reconnect in ${delay}ms...`);
+    // Attempting to reconnect...
     
     setTimeout(() => {
       if (this.chatId && this.accessToken) {
@@ -135,11 +147,11 @@ export class WebSocketService {
   }
 
   private notifyMessageHandlers(message: Message) {
-    this.messageHandlers.forEach(handler => handler(message));
+    this.messageHandlers.forEach((handler) => handler(message));
   }
 
   private notifyConnectionChange(isConnected: boolean) {
-    this.connectionChangeHandlers.forEach(handler => handler(isConnected));
+    this.connectionChangeHandlers.forEach((handler) => handler(isConnected));
   }
 
   public get connected(): boolean {

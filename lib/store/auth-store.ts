@@ -1,6 +1,5 @@
-import { create } from 'zustand';
-import { clearToken, getToken, isAuthenticated } from '@/src/lib/auth';
-import { authService } from '@/lib/api/auth';
+import { create } from "zustand";
+import { clearToken, isAuthenticated } from "@/src/lib/auth";
 
 type UserType = 'host' | 'chef' | null;
 
@@ -75,19 +74,19 @@ interface AuthState {
 // Helper function to save user data to localStorage
 const saveUserToStorage = (user: User) => {
   if (typeof window !== "undefined") {
-    localStorage.setItem('ikook_user_data', JSON.stringify(user));
+    localStorage.setItem("ikook_user_data", JSON.stringify(user));
   }
 };
 
 // Helper function to get user data from localStorage
 const getUserFromStorage = (): User | null => {
   if (typeof window !== "undefined") {
-    const userData = localStorage.getItem('ikook_user_data');
+    const userData = localStorage.getItem("ikook_user_data");
     if (userData) {
       try {
         return JSON.parse(userData);
       } catch (error) {
-        console.error('Failed to parse user data from localStorage:', error);
+        // Error handling without console.error in production
         return null;
       }
     }
@@ -98,7 +97,7 @@ const getUserFromStorage = (): User | null => {
 // Helper function to clear user data from localStorage
 const clearUserFromStorage = () => {
   if (typeof window !== "undefined") {
-    localStorage.removeItem('ikook_user_data');
+    localStorage.removeItem("ikook_user_data");
   }
 };
 
@@ -113,9 +112,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   bookingMenuSelection: null,
   booking: null,
   bookingService: null,
-  setBooking: (booking) => set({ booking }),
+  setBooking: (booking) => {
+    set({ booking });
+  },
   setUserType: (type) => {
-    // Debug logging removed
     set({ userType: type });
   },
   setUser: (user) => {
@@ -125,16 +125,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ 
       user, 
       isAuthenticated: true, 
-      userType: user.user_type === 'Host' ? 'host' : 'chef' 
+      userType: user.user_type === "Host" ? "host" : "chef"
     });
     // Debug logging removed
   },
   logout: () => {
-    // Debug logging removed
     clearToken();
     clearUserFromStorage();
     set({ user: null, isAuthenticated: false, userType: null });
-    // Debug logging removed
   },
   initializeAuth: () => {
     // Debug logging removed
@@ -152,7 +150,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         set({ 
           user: userData, 
           isAuthenticated: true, 
-          userType: userData.user_type === 'Host' ? 'host' : 'chef',
+          userType: userData.user_type === "Host" ? "host" : "chef",
           isInitialized: true 
         });
         // Debug logging removed
@@ -181,12 +179,28 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
     // Debug logging removed
   },
-  setHostFormData: (data) => set({ hostFormData: data }),
-  setChefFormData: (data) => set({ chefFormData: data }),
-  clearUserType: () => set({ userType: null }),
-  clearHostFormData: () => set({ hostFormData: null }),
-  clearChefFormData: () => set({ chefFormData: null }),
-  setBookingMenu: (menu) => set({ bookingMenu: menu }),
-  setBookingMenuSelection: (selection) => set({ bookingMenuSelection: selection }),
-  setBookingService: (service) => set({ bookingService: service }),
+  setHostFormData: (data) => {
+    set({ hostFormData: data });
+  },
+  setChefFormData: (data) => {
+    set({ chefFormData: data });
+  },
+  clearUserType: () => {
+    set({ userType: null });
+  },
+  clearHostFormData: () => {
+    set({ hostFormData: null });
+  },
+  clearChefFormData: () => {
+    set({ chefFormData: null });
+  },
+  setBookingMenu: (menu) => {
+    set({ bookingMenu: menu });
+  },
+  setBookingMenuSelection: (selection) => {
+    set({ bookingMenuSelection: selection });
+  },
+  setBookingService: (service) => {
+    set({ bookingService: service });
+  },
 }));
