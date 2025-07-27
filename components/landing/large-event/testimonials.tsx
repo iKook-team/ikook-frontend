@@ -16,7 +16,7 @@ const Testimonials = () => {
           <article className="w-[57%] max-md:w-full max-md:ml-0">
             <div className="flex flex-col items-stretch text-[#323335] font-medium mt-1 max-md:max-w-full max-md:mt-10">
               <blockquote className="text-[#323335] text-[35px] max-md:max-w-full max-md:mr-0.5">
-                The food and service was excellent, I was very impressed, I'd
+                The food and service was excellent, I was very impressed, I&apos;d
                 totally recommend ikook. Excellent way to find the professional
                 chef you need for your occasions.
               </blockquote>
@@ -31,14 +31,14 @@ const Testimonials = () => {
               <img
                 src="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/22c99495a77d9c38bbfdbff469b721092dd596b8?placeholderIfAbsent=true"
                 className="aspect-[4.72] object-contain w-[137px] max-w-full mt-3"
-                alt="Customer photo"
+                alt="Customer"
               />
             </div>
           </article>
           <article className="w-[43%] ml-5 max-md:w-full max-md:ml-0">
             <div className="flex w-full flex-col items-stretch max-md:max-w-full max-md:mt-10">
               <blockquote className="text-[#323335] text-[35px] font-medium max-md:max-w-full">
-                The food and service was excellent, I was very impressed, I'd
+                The food and service was excellent, I was very impressed, I&apos;d
                 totally recommend ikook. Excellent way to find the professional
                 chef you need for your occasions.
               </blockquote>
@@ -53,7 +53,7 @@ const Testimonials = () => {
               <img
                 src="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/22c99495a77d9c38bbfdbff469b721092dd596b8?placeholderIfAbsent=true"
                 className="aspect-[4.72] object-contain w-[137px] max-w-full mt-3"
-                alt="Customer photo"
+                alt="Customer"
               />
               <div className="flex items-stretch gap-[13px] mr-[91px] mt-[26px] max-md:mr-2.5">
                 <button className="hover:scale-105 transition-transform">

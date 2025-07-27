@@ -56,7 +56,7 @@ const HowItWorks = () => {
                     </h3>
                     <p className="text-[#3F3E3D] text-base font-normal leading-6 mt-3">
                       Collaborate with the chef to design a bespoke menu that
-                      suits your event's ambiance.
+                      suits your event&apos;s ambiance.
                     </p>
                   </div>
                 </div>

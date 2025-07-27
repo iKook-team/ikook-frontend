@@ -16,7 +16,7 @@ const BookingSection = () => {
                 </h3>
                 <p className="text-[#3F3E3D] text-center text-lg font-normal leading-7 mt-3 max-md:max-w-full">
                   Choose the date and time that suits you. Our flexible
-                  scheduling ensures that you can enjoy a private chef's
+                  scheduling ensures that you can enjoy a private chef&apos;s
                   expertise whenever you desire.
                 </p>
               </div>

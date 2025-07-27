@@ -155,10 +155,19 @@ export function ConversationList({
           }
 
           return (
-            <div
+            <button
               key={chat.id}
-              className={`relative p-4 cursor-pointer hover:bg-gray-50 ${activeChatId === chat.id ? "bg-amber-50" : ""}`}
+              type="button"
+              className={`w-full text-left p-4 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50 ${
+                activeChatId === chat.id ? "bg-amber-50" : ""
+              }`}
               onClick={() => onChatSelect(chat)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onChatSelect(chat);
+                }
+              }}
             >
               <ConversationItem
                 name={
@@ -176,7 +185,7 @@ export function ConversationList({
                 }
                 isActive={activeChatId === chat.id}
               />
-            </div>
+            </button>
           );
         })}
       </div>

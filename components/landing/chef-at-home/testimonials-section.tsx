@@ -29,7 +29,7 @@ const Testimonial: React.FC<TestimonialProps> = ({
       <img
         src="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/22c99495a77d9c38bbfdbff469b721092dd596b8?placeholderIfAbsent=true"
         className="aspect-[4.72] object-contain w-[137px] max-w-full mt-3"
-        alt="Customer photo"
+        alt="Customer"
       />
     </article>
   );

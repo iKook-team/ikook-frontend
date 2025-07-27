@@ -25,7 +25,7 @@ const FeatureSection = () => {
               </h3>
               <p className="text-[#6F6E6D] text-xl font-normal leading-[35px] self-stretch mt-[31px] max-md:max-w-full">
                 Indulge in personalized menus crafted to your preferences.
-                Whether it's an intimate dinner for two or a festive gathering,
+                Whether it&apos;s an intimate dinner for two or a festive gathering,
                 our chefs create unforgettable dining experiences.
               </p>
               <img

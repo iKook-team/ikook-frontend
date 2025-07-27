@@ -28,10 +28,10 @@ export default function TestimonialsSection() {
             {/* Quote */}
             <div className="relative">
               <div className="text-8xl lg:text-9xl font-bold text-white leading-none mb-4">
-                "
+                &apos;
               </div>
               <blockquote className="text-2xl lg:text-3xl font-medium text-[#323335] leading-relaxed">
-                The food and service was excellent, I was very impressed, I'd
+                The food and service was excellent, I was very impressed, I&apos;d
                 totally recommend ikook. Excellent way to find the professional
                 chef you need for your occasions.
               </blockquote>

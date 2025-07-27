@@ -189,11 +189,10 @@ export const ServiceListing: React.FC<
   };
 
   return (
-    <article
-      className="w-full h-80 shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] relative cursor-pointer"
+    <button
+      className="w-full h-80 shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] relative text-left p-0 bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50"
       onClick={handleCardClick}
-      tabIndex={0}
-      role="button"
+      aria-label={`View details for ${name}`}
     >
       <div className="w-full h-72 shrink-0 border absolute bg-white rounded-[15px] border-solid border-[#E7E7E7] left-0 top-0" />
 
@@ -225,6 +224,6 @@ export const ServiceListing: React.FC<
         isVerified={isVerified}
         profileImageUrl={profileImageUrl}
       />
-    </article>
+    </button>
   );
 };
