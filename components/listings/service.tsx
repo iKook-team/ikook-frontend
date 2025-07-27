@@ -27,9 +27,7 @@ const StarRating = ({
           fill="#FCC01C"
         />
       </svg>
-      <span className="text-black text-sm font-medium ml-1">
-        {rating}
-      </span>
+      <span className="text-black text-sm font-medium ml-1">{rating}</span>
     </div>
     <span className="text-black text-xs font-normal ml-1">
       ({reviewCount} Reviews)
@@ -162,7 +160,9 @@ interface ServiceCardProps {
   title?: string;
 }
 
-export const ServiceListing: React.FC<ServiceCardProps & { id?: number; services?: string[] }> = ({
+export const ServiceListing: React.FC<
+  ServiceCardProps & { id?: number; services?: string[] }
+> = ({
   description,
   isVerified = true,
   location,
@@ -178,14 +178,23 @@ export const ServiceListing: React.FC<ServiceCardProps & { id?: number; services
 }) => {
   const router = useRouter();
   // Normalize service tag for comparison
-  const tag = (services && services[0]) ? String(services[0]).toLowerCase().replace(/[-_ ]/g, "") : "";
+  const tag =
+    services && services[0]
+      ? String(services[0]).toLowerCase().replace(/[-_ ]/g, "")
+      : "";
   const handleCardClick = () => {
     if (tag === "cookingclass" || tag === "eatingcoach") {
       router.push(`/booking/services/details/${id}`);
     }
   };
+
   return (
-    <article className="w-full h-80 shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] relative cursor-pointer" onClick={handleCardClick} tabIndex={0} role="button">
+    <article
+      className="w-full h-80 shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] relative cursor-pointer"
+      onClick={handleCardClick}
+      tabIndex={0}
+      role="button"
+    >
       <div className="w-full h-72 shrink-0 border absolute bg-white rounded-[15px] border-solid border-[#E7E7E7] left-0 top-0" />
 
       <div
@@ -206,19 +215,16 @@ export const ServiceListing: React.FC<ServiceCardProps & { id?: number; services
       )}
 
       <div className="absolute left-0 top-[225px] w-full px-4 pt-2">
-        <h2 className="text-[#323335] text-base font-bold leading-6">
-          {name}
-        </h2>
+        <h2 className="text-[#323335] text-base font-bold leading-6">{name}</h2>
         <div className="flex items-center">
           <StarRating rating={rating} reviewCount={reviewCount} />
         </div>
       </div>
 
-      <VerificationBadge 
-        isVerified={isVerified} 
+      <VerificationBadge
+        isVerified={isVerified}
         profileImageUrl={profileImageUrl}
       />
-
     </article>
   );
 };

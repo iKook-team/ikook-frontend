@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 
 interface MenuItem {
   id: string;
@@ -33,6 +33,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
 }) => {
   const handleItemToggle = (itemId: string) => {
     let newSelected: string[];
+
     if (selectedMenuItems.includes(itemId)) {
       newSelected = selectedMenuItems.filter((id) => id !== itemId);
     } else {
@@ -78,7 +79,9 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
                   >
                     <Image
                       alt={
-                        selectedMenuItems.includes(item.id) ? "Selected" : "Not selected"
+                        selectedMenuItems.includes(item.id)
+                          ? "Selected"
+                          : "Not selected"
                       }
                       className="object-contain self-stretch my-auto"
                       height={20}

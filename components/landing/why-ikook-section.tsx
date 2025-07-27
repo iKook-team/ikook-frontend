@@ -5,26 +5,29 @@ const features = [
     id: 1,
     number: "1",
     title: "Precious moments",
-    description: "Enjoy quality time with families and friends at home over some excellent food.",
-    icon: "https://api.builder.io/api/v1/image/assets/TEMP/527c198107f511946c0fda2a9d3849b9242a8ebd?width=127"
+    description:
+      "Enjoy quality time with families and friends at home over some excellent food.",
+    icon: "https://api.builder.io/api/v1/image/assets/TEMP/527c198107f511946c0fda2a9d3849b9242a8ebd?width=127",
   },
   {
     id: 2,
-    number: "2", 
+    number: "2",
     title: "Chef at Home",
-    description: "Professional chefs come to your home and prepare fresh meals for your special occasions.",
-    icon: "https://api.builder.io/api/v1/image/assets/TEMP/1b953a16850283e97b293dd77405c883d4ecb507?width=736"
+    description:
+      "Professional chefs come to your home and prepare fresh meals for your special occasions.",
+    icon: "https://api.builder.io/api/v1/image/assets/TEMP/1b953a16850283e97b293dd77405c883d4ecb507?width=736",
   },
   {
     id: 3,
     number: "3",
     title: "Ingredients - sorted!",
-    description: "Chefs take care of all ingredients, so you don't have to worry about shopping.",
-    icon: "https://api.builder.io/api/v1/image/assets/TEMP/feb030461af37f171913f04e21c4fe767c77307d?width=207"
-  }
+    description:
+      "Chefs take care of all ingredients, so you don't have to worry about shopping.",
+    icon: "https://api.builder.io/api/v1/image/assets/TEMP/feb030461af37f171913f04e21c4fe767c77307d?width=207",
+  },
 ];
 
-function FeatureCard({ feature }: { feature: typeof features[0] }) {
+function FeatureCard({ feature }: { feature: (typeof features)[0] }) {
   return (
     <div className="bg-white rounded-lg p-8 text-center shadow-sm relative">
       <div className="absolute top-4 left-4 text-6xl font-semibold text-black/10">
@@ -56,7 +59,7 @@ export default function WhyIKookSection() {
           <h2 className="text-4xl lg:text-5xl font-bold text-[#323335] mb-12">
             Why iKooK?
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map((feature) => (
               <FeatureCard key={feature.id} feature={feature} />
@@ -75,21 +78,22 @@ export default function WhyIKookSection() {
               />
             </div>
           </div>
-          
+
           <div className="order-1 lg:order-2 space-y-6">
             <h3 className="text-3xl lg:text-4xl font-semibold text-[#323335]">
               Booking a chef made easy
             </h3>
             <p className="text-[#323335]/70 text-lg leading-relaxed">
-              iKooK provides the quickest and most affordable way to book a private chef. 
-              Chefs can create set menus that can be booked quickly, or customised menus 
-              to suit the individual user's needs. Our chat feature allows you and the chef 
-              to communicate so everything in the booking goes smoothly.
+              iKooK provides the quickest and most affordable way to book a
+              private chef. Chefs can create set menus that can be booked
+              quickly, or customised menus to suit the individual user's needs.
+              Our chat feature allows you and the chef to communicate so
+              everything in the booking goes smoothly.
             </p>
             <p className="text-[#323335]/70 text-lg leading-relaxed">
-              The chef will make sure all the cookware used is left as it was found, so you 
-              can enjoy your meal with peace of mind, knowing that your chef has taken care 
-              of everything!
+              The chef will make sure all the cookware used is left as it was
+              found, so you can enjoy your meal with peace of mind, knowing that
+              your chef has taken care of everything!
             </p>
             <p className="text-[#323335]/70 text-lg leading-relaxed">
               Start searching now!
@@ -107,24 +111,26 @@ export default function WhyIKookSection() {
               Flexible booking and working
             </h3>
             <p className="text-[#323335]/70 text-lg leading-relaxed">
-              iKooK created a platform which allows you to make a booking at anytime you want 
-              with one of the best, top-rated private chefs.
+              iKooK created a platform which allows you to make a booking at
+              anytime you want with one of the best, top-rated private chefs.
             </p>
             <p className="text-[#323335]/70 text-lg leading-relaxed">
-              Chefs are able to set their own schedule and work whenever they want. As a chef, 
-              you can express your creativity through creating set menus, as well as customised 
-              menus for every individual booking.
+              Chefs are able to set their own schedule and work whenever they
+              want. As a chef, you can express your creativity through creating
+              set menus, as well as customised menus for every individual
+              booking.
             </p>
             <p className="text-[#323335]/70 text-lg leading-relaxed">
-              iKooK verifies that each chef is professionally trained with adequate certificates 
-              and comply with our SLA. We will also make sure that each chef completes the CPD 
-              accredited Covid19 safety course on how to protect themselves.
+              iKooK verifies that each chef is professionally trained with
+              adequate certificates and comply with our SLA. We will also make
+              sure that each chef completes the CPD accredited Covid19 safety
+              course on how to protect themselves.
             </p>
             <Button className="bg-[#FCC01C] hover:bg-[#FCC01C]/90 text-[#323335] font-semibold px-8 py-3 rounded-md border-2 border-[#323335]">
               Signup as Chef
             </Button>
           </div>
-          
+
           <div>
             <div className="aspect-[4/3] rounded-lg overflow-hidden">
               <img

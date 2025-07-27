@@ -20,6 +20,7 @@ const EmailVerificationPage: React.FC = () => {
     try {
       // Verify OTP using the real API
       const email = hostFormData?.email || chefFormData?.email;
+
       if (!email) {
         throw new Error("Email not found in form data");
       }

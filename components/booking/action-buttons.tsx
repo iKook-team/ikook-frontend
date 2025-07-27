@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface ActionButtonsProps {
   onBack?: () => void;
@@ -11,7 +11,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   onBack,
   onContinue,
   continueDisabled = false,
-  continueText = 'Continue'
+  continueText = "Continue",
 }) => {
   return (
     <div className="inline-flex items-start gap-[22px] w-[276px] h-12">
@@ -30,14 +30,16 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
         disabled={continueDisabled}
         className={`flex justify-center items-center gap-2 border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] px-7 py-3 rounded-lg border-solid transition-colors ${
           continueDisabled
-            ? 'bg-gray-300 border-gray-300 cursor-not-allowed'
-            : 'bg-[#FCC01C] border-[#FCC01C] hover:bg-[#E6AC19]'
+            ? "bg-gray-300 border-gray-300 cursor-not-allowed"
+            : "bg-[#FCC01C] border-[#FCC01C] hover:bg-[#E6AC19]"
         }`}
       >
-        <span className={`text-base font-semibold leading-6 ${
-          continueDisabled ? 'text-gray-500' : 'text-white'
-        }`}>
-{continueText}
+        <span
+          className={`text-base font-semibold leading-6 ${
+            continueDisabled ? "text-gray-500" : "text-white"
+          }`}
+        >
+          {continueText}
         </span>
       </button>
     </div>

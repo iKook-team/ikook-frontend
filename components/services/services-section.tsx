@@ -24,8 +24,8 @@ export const ServicesSection: React.FC = () => {
         ...acc,
         [service.name]: service.defaultActive,
       }),
-      {}
-    )
+      {},
+    ),
   );
 
   const handleServiceToggle = (serviceName: string, isActive: boolean) => {
@@ -51,12 +51,12 @@ export const ServicesSection: React.FC = () => {
                 service.name === "Large event"
                   ? () => router.push("/services/large-event")
                   : service.name === "Meal prep"
-                  ? () => router.push("/services/meal-prep")
-                  : service.name === "Meal delivery"
-                  ? () => router.push("/services/meal-delivery")
-                  : service.name === "Cooking class"
-                  ? () => router.push("/services/cooking-class")
-                  : undefined
+                    ? () => router.push("/services/meal-prep")
+                    : service.name === "Meal delivery"
+                      ? () => router.push("/services/meal-delivery")
+                      : service.name === "Cooking class"
+                        ? () => router.push("/services/cooking-class")
+                        : undefined
               }
             />
           </div>

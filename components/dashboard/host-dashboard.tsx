@@ -1,10 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import useBookings from "@/hooks/useBookings";
-import { BookingCard } from "./booking-card";
-import { useAuthStore } from "@/lib/store/auth-store";
 import { FiCopy } from "react-icons/fi";
+
+import { BookingCard } from "./booking-card";
+
+import useBookings from "@/hooks/useBookings";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 const STATUS_OPTIONS = [
   "Upcoming",
@@ -16,7 +18,9 @@ const STATUS_OPTIONS = [
 
 export const MyBookingsPage: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>("Upcoming");
-  const { bookings, loading, error, totalCount, refetch } = useBookings({ status: selectedStatus });
+  const { bookings, loading, error, totalCount, refetch } = useBookings({
+    status: selectedStatus,
+  });
   const { user } = useAuthStore();
   const referralCode = user?.username || "-";
 
@@ -39,7 +43,8 @@ export const MyBookingsPage: React.FC = () => {
               />
               <p className="self-stretch my-auto w-[335px]">
                 Payment is fully refundable{" "}
-                <span style={{ fontWeight: 700 }}>12 days </span>before the event
+                <span style={{ fontWeight: 700 }}>12 days </span>before the
+                event
               </p>
             </div>
           </div>
@@ -47,7 +52,9 @@ export const MyBookingsPage: React.FC = () => {
             <div className="flex flex-col self-stretch my-auto text-xs">
               <div className="text-neutral-500">Your referral code</div>
               <div className="flex gap-2 items-center self-start mt-1.5 font-bold text-black whitespace-nowrap">
-                <div className="self-stretch my-auto text-black">{referralCode}</div>
+                <div className="self-stretch my-auto text-black">
+                  {referralCode}
+                </div>
                 <FiCopy className="w-4 h-4 text-gray-500 cursor-pointer" />
               </div>
             </div>
@@ -78,7 +85,9 @@ export const MyBookingsPage: React.FC = () => {
 
         <section className="self-center mt-9 max-w-full w-[887px]">
           {loading ? (
-            <div className="text-center py-12 text-gray-500">Loading bookings...</div>
+            <div className="text-center py-12 text-gray-500">
+              Loading bookings...
+            </div>
           ) : error ? (
             <div className="text-center py-12">
               <p className="text-red-500 mb-4">{error}</p>
@@ -91,7 +100,9 @@ export const MyBookingsPage: React.FC = () => {
               </button>
             </div>
           ) : bookings.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">No bookings found for this status.</div>
+            <div className="text-center py-12 text-gray-500">
+              No bookings found for this status.
+            </div>
           ) : (
             <div className="grid grid-cols-2 gap-5 max-md:grid-cols-1">
               {bookings.map((booking, idx) => (

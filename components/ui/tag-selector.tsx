@@ -20,13 +20,13 @@ export const TagSelector: React.FC<TagSelectorProps> = ({
 }) => {
   // Ensure tags is always an array and log if it's not
   const tags = Array.isArray(propTags) ? [...propTags] : [];
-  
+
   const [isOpen, setIsOpen] = useState(false);
-  
+
   // Debug info
   React.useEffect(() => {
-    console.log('TagSelector Mounted - tags:', tags);
-    console.log('TagSelector Mounted - selectedTags:', selectedTags);
+    console.log("TagSelector Mounted - tags:", tags);
+    console.log("TagSelector Mounted - selectedTags:", selectedTags);
   }, [tags, selectedTags]);
 
   const toggleTag = (tag: string) => {
@@ -38,9 +38,7 @@ export const TagSelector: React.FC<TagSelectorProps> = ({
   };
 
   return (
-    <div
-      className={`relative flex flex-col pb-2.5 w-full ${className}`}
-    >
+    <div className={`relative flex flex-col pb-2.5 w-full ${className}`}>
       <label className="text-sm font-medium text-neutral-700">{label}</label>
       <button
         className="flex flex-wrap gap-2 items-center px-3.5 py-2.5 mt-1.5 w-full bg-white rounded-lg border border-solid shadow-sm border-stone-300 min-h-[45px]"

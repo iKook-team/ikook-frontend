@@ -5,7 +5,7 @@ type PaymentPlan = "full" | "split";
 export const PaymentPlanSelector: React.FC = () => {
   const [selectedPlan, setSelectedPlan] = useState<PaymentPlan>("split");
   const [guestEmails, setGuestEmails] = useState(
-    "hello@ikook.co.uk, ayo@ikook.co.uk"
+    "hello@ikook.co.uk, ayo@ikook.co.uk",
   );
 
   const handleSendInvite = () => {

@@ -14,11 +14,13 @@ export const ImageUploadArea: React.FC<ImageUploadAreaProps> = ({
 
   const handleClick = () => {
     const input = document.createElement("input");
+
     input.type = "file";
     input.multiple = true;
     input.accept = "image/*";
     input.onchange = (e) => {
       const target = e.target as HTMLInputElement;
+
       onImageSelect(target.files);
     };
     input.click();

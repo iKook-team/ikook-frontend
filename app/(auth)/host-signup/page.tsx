@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { HostRegistrationForm } from "@/components/auth/host-registration-form";
@@ -27,9 +27,11 @@ function getCountryFromPhone(phoneNumber?: string): string | undefined {
   if (!phoneNumber) return undefined;
   // Remove non-digit and non-plus
   const cleaned = phoneNumber.replace(/[^+\d]/g, "");
+
   if (cleaned.startsWith("+234")) return "Nigeria";
   if (cleaned.startsWith("+44")) return "United Kingdom";
   if (cleaned.startsWith("+27")) return "South Africa";
+
   return undefined;
 }
 
@@ -39,6 +41,7 @@ function getCountryFromCode(code?: string): string | undefined {
   if (code === "NG") return "Nigeria";
   if (code === "UK") return "United Kingdom";
   if (code === "ZA") return "South Africa";
+
   return undefined;
 }
 
@@ -49,6 +52,7 @@ const HostSignupPage: React.FC = () => {
   // Set initial step based on URL param only once on mount
   const initialStep = React.useMemo(() => {
     const verified = searchParams.get("verified") === "true";
+
     return verified ? 2 : 1;
   }, []);
   const [step, setStep] = useState(initialStep);
@@ -61,6 +65,7 @@ const HostSignupPage: React.FC = () => {
   const nextStep = () => {
     setStep((prev) => {
       console.log("Advancing to step", prev + 1);
+
       return prev + 1;
     });
   };
@@ -73,7 +78,7 @@ const HostSignupPage: React.FC = () => {
         : { otp: data };
 
     setFormData((prev) => ({ ...prev, ...newData }));
-    
+
     if (step === 2) {
       setIsSubmitting(true);
       try {
@@ -90,11 +95,12 @@ const HostSignupPage: React.FC = () => {
         handleApiError(error, "OTP verification failed. Please try again.");
         setIsSubmitting(false);
       }
+
       return;
     }
     if (step === 3) {
       setIsSubmitting(true);
-      
+
       try {
         if (!hostFormData) {
           throw new Error("Host form data not found");
@@ -102,16 +108,22 @@ const HostSignupPage: React.FC = () => {
 
         // Get user location from localStorage
         let location = "POINT(0.0 0.0)"; // Default location
+
         if (typeof window !== "undefined") {
           const userLocation = localStorage.getItem("userLocation");
+
           if (userLocation) {
             try {
               const coords = JSON.parse(userLocation);
+
               if (coords.latitude && coords.longitude) {
                 location = `POINT(${coords.longitude} ${coords.latitude})`;
               }
             } catch (error) {
-              console.warn("Failed to parse user location from localStorage:", error);
+              console.warn(
+                "Failed to parse user location from localStorage:",
+                error,
+              );
             }
           }
         }
@@ -131,6 +143,7 @@ const HostSignupPage: React.FC = () => {
           location: location,
           country: country,
         };
+
         if (hostFormData.referralCode) {
           signupData.referral_code = hostFormData.referralCode;
         }
@@ -145,12 +158,16 @@ const HostSignupPage: React.FC = () => {
 
         // Save user profile to auth store
         if (response.data) {
-          const { setUser } = require("@/lib/store/auth-store").useAuthStore.getState();
+          const { setUser } =
+            require("@/lib/store/auth-store").useAuthStore.getState();
+
           setUser(response.data);
         }
 
         // Show success toast
-        showToast.success("Host account created successfully! Welcome to iKook.");
+        showToast.success(
+          "Host account created successfully! Welcome to iKook.",
+        );
 
         // Clear form data from store
         clearHostFormData();
@@ -169,9 +186,7 @@ const HostSignupPage: React.FC = () => {
   const renderForm = () => {
     switch (step) {
       case 1:
-        return (
-          <HostRegistrationForm onSubmit={handleNext} />
-        );
+        return <HostRegistrationForm onSubmit={handleNext} />;
       case 2:
         return (
           <OTPVerification
@@ -196,9 +211,7 @@ const HostSignupPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen relative bg-[#FBFBFB] max-md:w-full max-md:max-w-screen-lg max-md:h-auto max-md:min-h-screen">
-      <main className="relative">
-        {renderForm()}
-      </main>
+      <main className="relative">{renderForm()}</main>
     </div>
   );
 };

@@ -20,9 +20,11 @@ export const saveTokens = (token: string, refreshToken: string): void => {
 export const getToken = (): string | null => {
   if (typeof window !== "undefined") {
     const token = localStorage.getItem(TOKEN_KEY);
+
     // Debug logging removed
     return token;
   }
+
   return null;
 };
 
@@ -30,9 +32,11 @@ export const getToken = (): string | null => {
 export const getRefreshToken = (): string | null => {
   if (typeof window !== "undefined") {
     const token = localStorage.getItem(REFRESH_TOKEN_KEY);
+
     // Debug logging removed
     return token;
   }
+
   return null;
 };
 
@@ -48,6 +52,7 @@ export const clearToken = (): void => {
 // Check if user is authenticated
 export const isAuthenticated = (): boolean => {
   const hasToken = getToken() !== null;
+
   // Debug logging removed
   return hasToken;
 };

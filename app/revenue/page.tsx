@@ -22,6 +22,7 @@ const RevenuePage = () => {
       try {
         const earningsData = await revenueService.getEarnings();
         const withdrawalsData = await revenueService.getWithdrawals();
+
         setEarnings(earningsData.data);
         setWithdrawals(withdrawalsData.data?.results || []);
       } catch (err: any) {
@@ -30,6 +31,7 @@ const RevenuePage = () => {
         setLoading(false);
       }
     };
+
     fetchData();
   }, []);
 
@@ -41,7 +43,9 @@ const RevenuePage = () => {
             {/* Revenue summary section */}
             {loading ? (
               <div className="flex justify-center items-center min-h-[200px] w-full">
-                <span className="text-lg text-gray-600">Loading revenue...</span>
+                <span className="text-lg text-gray-600">
+                  Loading revenue...
+                </span>
               </div>
             ) : error ? (
               <div className="flex justify-center items-center min-h-[200px] w-full">
@@ -50,7 +54,10 @@ const RevenuePage = () => {
             ) : (
               <>
                 <RevenueMetrics earnings={earnings} />
-                <WithdrawHistory withdrawals={withdrawals} onWithdraw={() => setShowWithdrawModal(true)} />
+                <WithdrawHistory
+                  withdrawals={withdrawals}
+                  onWithdraw={() => setShowWithdrawModal(true)}
+                />
                 <WithdrawalModal
                   open={showWithdrawModal}
                   onClose={() => setShowWithdrawModal(false)}

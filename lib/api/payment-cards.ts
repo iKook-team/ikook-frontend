@@ -24,11 +24,20 @@ export interface PaymentCardsResponse {
 export const paymentCardsService = {
   async getCards(): Promise<PaymentCardsResponse> {
     try {
-      const response = await apiClient.get<PaymentCardsResponse>("/payments/cards/");
+      const response =
+        await apiClient.get<PaymentCardsResponse>("/payments/cards/");
+
       return response.data;
     } catch (error) {
       // Return an empty result set instead of throwing to prevent UI crashes
-      return { count: 0, next: 0, previous: 0, current: 0, total: 0, results: [] };
+      return {
+        count: 0,
+        next: 0,
+        previous: 0,
+        current: 0,
+        total: 0,
+        results: [],
+      };
     }
   },
-}; 
+};

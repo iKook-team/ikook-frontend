@@ -26,34 +26,40 @@ export interface CreateQuoteInput {
 export const quotesService = {
   async getQuoteById(id: string | number) {
     const response = await axios.get(`/quotes/${id}/`);
+
     return response.data;
   },
   async getQuoteByBookingId(bookingId: string | number) {
     try {
       console.log(`Fetching quote for booking ID: ${bookingId}`);
       const response = await axios.get(`/quotes/?booking=${bookingId}`);
-      console.log('Quotes API response:', response.data);
-      
+
+      console.log("Quotes API response:", response.data);
+
       const results = response.data?.data?.results || response.data?.results;
-      
+
       if (results && results.length > 0) {
         console.log(`Found ${results.length} quotes for booking ${bookingId}`);
+
         return results[0];
       }
-      
-      throw new Error(`No quotes found for booking ${bookingId}. Response: ${JSON.stringify(response.data)}`);
+
+      throw new Error(
+        `No quotes found for booking ${bookingId}. Response: ${JSON.stringify(response.data)}`,
+      );
     } catch (error: any) {
-      console.error('Error in getQuoteByBookingId:', {
+      console.error("Error in getQuoteByBookingId:", {
         bookingId,
-        error: error?.message || 'Unknown error',
-        response: error?.response?.data
+        error: error?.message || "Unknown error",
+        response: error?.response?.data,
       });
       throw error;
     }
   },
-  
+
   async createQuote(data: CreateQuoteInput) {
-    const response = await axios.post('/quotes/', data);
+    const response = await axios.post("/quotes/", data);
+
     return response.data;
   },
 };

@@ -23,6 +23,7 @@ export class WebSocketService {
     if (!WebSocketService.instance) {
       WebSocketService.instance = new WebSocketService();
     }
+
     return WebSocketService.instance;
   }
 
@@ -44,8 +45,9 @@ export class WebSocketService {
         const baseUrl = apiBaseUrl.replace(/^https?:\/\//, "");
         const wsUrl = `${wsProtocol}//${baseUrl.replace(
           /\/$/,
-          ""
+          "",
         )}/ws/chats/${chatId}/?token=${accessToken}`;
+
         this.socket = new WebSocket(wsUrl);
 
         this.socket.onopen = this.onOpen;
@@ -53,7 +55,7 @@ export class WebSocketService {
         this.socket.onclose = this.onClose;
         this.socket.onerror = this.onError;
       } catch (error) {
-        console.error('Error creating WebSocket connection:', error);
+        console.error("Error creating WebSocket connection:", error);
         reject(error);
       }
     });
@@ -69,6 +71,7 @@ export class WebSocketService {
     // Resolve the connection promise
     if (this.connectionPromise) {
       const resolve = (this.connectionPromise as any).resolve;
+
       if (resolve) resolve();
     }
   };
@@ -76,6 +79,7 @@ export class WebSocketService {
   private onMessage = (event: MessageEvent) => {
     try {
       const message = JSON.parse(event.data);
+
       this.notifyMessageHandlers(message as Message);
     } catch (error) {
       // Error handling without console.error in production
@@ -86,13 +90,13 @@ export class WebSocketService {
         created_at: new Date().toISOString(),
         sender: {
           id: 0,
-          username: 'system',
-          first_name: 'System',
-          last_name: '',
-          avatar: ''
+          username: "system",
+          first_name: "System",
+          last_name: "",
+          avatar: "",
         },
         is_read: false,
-        image: null
+        image: null,
       });
     }
   };
@@ -109,16 +113,23 @@ export class WebSocketService {
   };
 
   private attemptReconnect() {
-    if (this.reconnectAttempts >= this.maxReconnectAttempts || !this.chatId || !this.accessToken) {
+    if (
+      this.reconnectAttempts >= this.maxReconnectAttempts ||
+      !this.chatId ||
+      !this.accessToken
+    ) {
       // Max reconnection attempts reached
       return;
     }
 
     this.reconnectAttempts++;
-    const delay = Math.min(this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1), this.maxReconnectDelay);
-    
+    const delay = Math.min(
+      this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1),
+      this.maxReconnectDelay,
+    );
+
     // Attempting to reconnect...
-    
+
     setTimeout(() => {
       if (this.chatId && this.accessToken) {
         this.connect(this.chatId, this.accessToken).catch(console.error);
@@ -138,11 +149,13 @@ export class WebSocketService {
 
   public addMessageHandler(handler: MessageHandler): () => void {
     this.messageHandlers.add(handler);
+
     return () => this.messageHandlers.delete(handler);
   }
 
   public onConnectionChange(handler: ConnectionChangeHandler): () => void {
     this.connectionChangeHandlers.add(handler);
+
     return () => this.connectionChangeHandlers.delete(handler);
   }
 

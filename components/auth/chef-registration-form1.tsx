@@ -76,6 +76,7 @@ export const ChefRegistrationForm1: React.FC<ChefRegistrationForm1Props> = ({
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+
       return;
     }
 
@@ -87,8 +88,9 @@ export const ChefRegistrationForm1: React.FC<ChefRegistrationForm1Props> = ({
       dateOfBirth: formData.dateOfBirth,
       serviceType: formData.serviceType,
     };
+
     setChefFormData(updatedChefData);
-    
+
     onSubmit(formData);
   };
 

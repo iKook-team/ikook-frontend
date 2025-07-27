@@ -39,11 +39,7 @@ export const MenuIncludes: React.FC<MenuIncludesProps> = ({ quote }) => {
       </div>
 
       {quote?.includedItems?.map((item: any) => (
-        <IncludeItem
-          key={item.id}
-          icon={item.icon}
-          text={item.text}
-        />
+        <IncludeItem key={item.id} icon={item.icon} text={item.text} />
       ))}
 
       <p className="text-[#3F3E3D] text-[8px] leading-5 max-md:mr-[9px]">

@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+
 import { ChefProfile } from "@/components/booking/chef-profile";
 import { EventDetails } from "@/components/booking/event-details";
 import { ReviewsSection } from "@/components/booking/reviews-section";
@@ -19,17 +20,26 @@ const ServiceDetailPage = () => {
   useEffect(() => {
     if (!id) return;
     setLoading(true);
-    listingService.getServiceById(id)
+    listingService
+      .getServiceById(id)
       .then((data) => setService(data))
       .catch(() => setError("Failed to fetch service details."))
       .finally(() => setLoading(false));
   }, [id]);
 
   if (loading) {
-    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        Loading...
+      </div>
+    );
   }
   if (error || !service) {
-    return <div className="flex justify-center items-center min-h-screen text-red-500">{error || "Service not found."}</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen text-red-500">
+        {error || "Service not found."}
+      </div>
+    );
   }
   console.log("[ServiceDetailPage] service:", service);
 
@@ -42,9 +52,15 @@ const ServiceDetailPage = () => {
         <div className="w-[64%] ml-5 max-md:w-full max-md:ml-0">
           <div className="grow max-md:max-w-full max-md:mt-[33px]">
             {service.data && service.data.chef_service ? (
-              <EventDetails chefService={service.data.chef_service} onNext={() => {}} onBack={() => {}} />
+              <EventDetails
+                chefService={service.data.chef_service}
+                onNext={() => {}}
+                onBack={() => {}}
+              />
             ) : (
-              <div className="text-red-500">No chef_service found in service details.</div>
+              <div className="text-red-500">
+                No chef_service found in service details.
+              </div>
             )}
             <ReviewsSection />
             <MenusSection />

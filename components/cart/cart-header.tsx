@@ -9,9 +9,7 @@ export const CartHeader: React.FC<CartHeaderProps> = ({ title, subtitle }) => {
   return (
     <header>
       <h1 className="text-black text-xl font-medium">{title}</h1>
-      {subtitle && (
-        <p className="text-gray-600 text-base mt-1">{subtitle}</p>
-      )}
+      {subtitle && <p className="text-gray-600 text-base mt-1">{subtitle}</p>}
     </header>
   );
 };

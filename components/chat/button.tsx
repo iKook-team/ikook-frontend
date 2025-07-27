@@ -13,20 +13,21 @@ export function Button({
   variant = "primary",
   size = "md",
   className = "",
-  onClick
+  onClick,
 }: ButtonProps) {
-  const baseClasses = "font-semibold rounded-lg border border-solid shadow-sm transition-colors";
+  const baseClasses =
+    "font-semibold rounded-lg border border-solid shadow-sm transition-colors";
 
   const variantClasses = {
     primary: "text-white bg-amber-400 border-amber-400 hover:bg-amber-500",
     secondary: "text-amber-400 bg-white border-amber-400 hover:bg-amber-50",
-    outline: "text-amber-400 border-amber-400 hover:bg-amber-50"
+    outline: "text-amber-400 border-amber-400 hover:bg-amber-50",
   };
 
   const sizeClasses = {
     sm: "px-3.5 py-2 text-sm",
     md: "px-5 py-3 text-base",
-    lg: "px-6 py-4 text-lg"
+    lg: "px-6 py-4 text-lg",
   };
 
   return (

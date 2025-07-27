@@ -7,6 +7,7 @@ import { HeroUIProvider } from "@heroui/system";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Toaster } from "react-hot-toast";
+
 import { useAuthStore } from "@/lib/store/auth-store";
 
 export interface ProvidersProps {
@@ -38,7 +39,7 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
     // Debug logging removed
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
       </div>
     );
   }
@@ -53,9 +54,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
   return (
     <HeroUIProvider navigate={router.push}>
       <NextThemesProvider {...themeProps}>
-        <AuthInitializer>
-          {children}
-        </AuthInitializer>
+        <AuthInitializer>{children}</AuthInitializer>
         <Toaster />
       </NextThemesProvider>
     </HeroUIProvider>

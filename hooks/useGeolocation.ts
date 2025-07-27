@@ -23,12 +23,14 @@ export const useGeolocation = (): GeolocationCoordinates => {
         error: "Geolocation is not supported by your browser",
         isLoading: false,
       }));
+
       return;
     }
 
     // Success callback
     const handleSuccess = (position: GeolocationPosition) => {
       const { latitude, longitude } = position.coords;
+
       setCoordinates({
         latitude,
         longitude,
@@ -39,7 +41,7 @@ export const useGeolocation = (): GeolocationCoordinates => {
       // Store in localStorage
       localStorage.setItem(
         "userLocation",
-        JSON.stringify({ latitude, longitude })
+        JSON.stringify({ latitude, longitude }),
       );
     };
 

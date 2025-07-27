@@ -8,6 +8,7 @@ export const ChefFinderCard: React.FC<ChefFinderCardProps> = ({ onNext }) => {
   const handleContinue = () => {
     onNext();
   };
+
   return (
     <div className="w-full flex justify-center">
       <main className="text-base max-w-[654px] w-full text-zinc-800">

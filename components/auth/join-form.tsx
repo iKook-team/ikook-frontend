@@ -29,6 +29,7 @@ export const JoinForm: React.FC<JoinFormProps> = ({
 
     if (!selectedUserType) {
       alert("Please select whether you want to join as a Host or Chef");
+
       return;
     }
 

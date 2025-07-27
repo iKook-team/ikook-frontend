@@ -1,8 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import useBookings from "@/hooks/useBookings";
+
 import { BookingCard } from "./booking-card";
 import { DocumentNotification } from "./document-notification";
+
+import useBookings from "@/hooks/useBookings";
 
 const STATUS_OPTIONS = [
   "Upcoming",
@@ -14,7 +16,9 @@ const STATUS_OPTIONS = [
 
 export const MyBookingsPage: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>("Upcoming");
-  const { bookings, loading, error, totalCount, refetch } = useBookings({ status: selectedStatus });
+  const { bookings, loading, error, totalCount, refetch } = useBookings({
+    status: selectedStatus,
+  });
 
   return (
     <div className="flex overflow-hidden flex-col bg-zinc-50">
@@ -48,7 +52,9 @@ export const MyBookingsPage: React.FC = () => {
 
         <section className="self-center mt-9 max-w-full w-[887px]">
           {loading ? (
-            <div className="text-center py-12 text-gray-500">Loading bookings...</div>
+            <div className="text-center py-12 text-gray-500">
+              Loading bookings...
+            </div>
           ) : error ? (
             <div className="text-center py-12">
               <p className="text-red-500 mb-4">{error}</p>
@@ -61,7 +67,9 @@ export const MyBookingsPage: React.FC = () => {
               </button>
             </div>
           ) : bookings.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">No bookings found for this status.</div>
+            <div className="text-center py-12 text-gray-500">
+              No bookings found for this status.
+            </div>
           ) : (
             <div className="grid grid-cols-2 gap-5 max-md:grid-cols-1">
               {bookings.map((booking, idx) => (

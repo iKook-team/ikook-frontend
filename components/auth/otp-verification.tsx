@@ -33,6 +33,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
 
   const handleOTPChange = (index: number, value: string) => {
     const newOtpValues = [...otpValues];
+
     newOtpValues[index] = value;
     setOtpValues(newOtpValues);
 
@@ -58,22 +59,31 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
     try {
       if (!email) {
         // Show error if email is missing
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
           // Only show toast in browser
-          const { showToast } = await import('@/lib/utils/toast');
-          showToast.error('Email not found. Please go back and re-enter your email.');
+          const { showToast } = await import("@/lib/utils/toast");
+
+          showToast.error(
+            "Email not found. Please go back and re-enter your email.",
+          );
         }
         setIsResending(false);
+
         return;
       }
-      const { showToast } = await import('@/lib/utils/toast');
-      await (await import('@/lib/api/auth')).authService.sendOtp(email);
-      showToast.success('Verification code resent to your email.');
+      const { showToast } = await import("@/lib/utils/toast");
+
+      await (await import("@/lib/api/auth")).authService.sendOtp(email);
+      showToast.success("Verification code resent to your email.");
       setOtpValues(["", "", "", "", "", ""]);
       inputRefs.current[0]?.focus();
     } catch (error) {
-      const { handleApiError } = await import('@/lib/utils/toast');
-      handleApiError(error, 'Failed to resend verification code. Please try again.');
+      const { handleApiError } = await import("@/lib/utils/toast");
+
+      handleApiError(
+        error,
+        "Failed to resend verification code. Please try again.",
+      );
     } finally {
       setIsResending(false);
     }
@@ -82,6 +92,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const otpCode = otpValues.join("");
+
     if (otpCode.length === 6) {
       onSubmit({ otp: otpCode });
     }

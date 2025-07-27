@@ -11,7 +11,10 @@ interface BookingDetailsProps {
   userType: "host" | "chef" | undefined;
 }
 
-export default function BookingDetails({ booking, userType }: BookingDetailsProps) {
+export default function BookingDetails({
+  booking,
+  userType,
+}: BookingDetailsProps) {
   const isCustom = true;
   const starterItems = [
     { id: "1", name: "Mediterranean Chicken Kebab with Garlic Sauce" },

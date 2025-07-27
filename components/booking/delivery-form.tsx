@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { ProgressIndicator } from './progress-indicator';
+
+import { ProgressIndicator } from "./progress-indicator";
+import { ActionButtons } from "./action-buttons";
+
 import { ChefCard } from "@/components/cart/chef-card";
 import { TagSelector } from "@/components/ui/tag-selector";
-import { ActionButtons } from './action-buttons';
 
 interface DeliveryFormProps {
   onNext: (data: DeliveryFormData) => void;
@@ -12,13 +14,13 @@ interface DeliveryFormProps {
 }
 
 export interface DeliveryFormData {
-  option: 'Physical' | 'Delivery' | '';
+  option: "Physical" | "Delivery" | "";
   days: string[];
 }
 
 const availableDays = [
   "Monday",
-  "Tuesday", 
+  "Tuesday",
   "Wednesday",
   "Thursday",
   "Friday",
@@ -26,21 +28,21 @@ const availableDays = [
   "Sunday",
 ];
 
-const DeliveryForm: React.FC<DeliveryFormProps> = ({ 
-  onNext, 
-  onBack, 
+const DeliveryForm: React.FC<DeliveryFormProps> = ({
+  onNext,
+  onBack,
   isCustomBooking = false,
-  menu
+  menu,
 }) => {
   const [formData, setFormData] = useState<DeliveryFormData>({
-    option: '',
+    option: "",
     days: [],
   });
 
   const progressSteps = [
-    { label: 'Meal Details', completed: true },
-    { label: 'Delivery', completed: false, inProgress: true },
-    { label: 'Message', completed: false }
+    { label: "Meal Details", completed: true },
+    { label: "Delivery", completed: false, inProgress: true },
+    { label: "Message", completed: false },
   ];
 
   const handleInputChange = (field: keyof DeliveryFormData, value: any) => {
@@ -64,13 +66,13 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
           {!isCustomBooking && (
             <header className="mb-6">
               <h1 className="text-2xl font-semibold text-gray-900 truncate">
-                {menu?.chef?.first_name && menu?.chef?.last_name 
-                  ? `${menu.chef.first_name} ${menu.chef.last_name}` 
+                {menu?.chef?.first_name && menu?.chef?.last_name
+                  ? `${menu.chef.first_name} ${menu.chef.last_name}`
                   : "Chef"}
               </h1>
             </header>
           )}
-          
+
           <div className="mb-6">
             <ProgressIndicator steps={progressSteps} />
           </div>
@@ -80,16 +82,26 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
         {!isCustomBooking && (
           <div className="px-6 py-4 border-b border-gray-100">
             <ChefCard
-              chefName={menu?.chef?.first_name && menu?.chef?.last_name 
-                ? `${menu.chef.first_name} ${menu.chef.last_name}` 
-                : "Chef"}
+              chefName={
+                menu?.chef?.first_name && menu?.chef?.last_name
+                  ? `${menu.chef.first_name} ${menu.chef.last_name}`
+                  : "Chef"
+              }
               dishName={menu?.name || "Menu"}
-              imageUrl={menu?.images?.length > 0 ? menu.images[0].image : "/menus/menu1.png"}
+              imageUrl={
+                menu?.images?.length > 0
+                  ? menu.images[0].image
+                  : "/menus/menu1.png"
+              }
               location={menu?.chef?.city || "Unknown"}
               locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
               rating={menu?.chef?.average_rating?.toFixed(1) || "-"}
               ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
-              reviewCount={menu?.chef?.num_reviews ? `(${menu.chef.num_reviews} Reviews)` : "(0 Reviews)"}
+              reviewCount={
+                menu?.chef?.num_reviews
+                  ? `(${menu.chef.num_reviews} Reviews)`
+                  : "(0 Reviews)"
+              }
             />
           </div>
         )}
@@ -98,21 +110,26 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
           <h2 className="text-2xl font-semibold text-gray-900">
             Delivery Options
           </h2>
-          
+
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 Select Option
               </label>
               <div className="space-y-3">
-                {['Physical', 'Delivery'].map((option) => (
+                {["Physical", "Delivery"].map((option) => (
                   <label key={option} className="flex items-center">
                     <input
                       type="radio"
                       name="deliveryOption"
                       value={option}
                       checked={formData.option === option}
-                      onChange={() => handleInputChange('option', option as 'Physical' | 'Delivery')}
+                      onChange={() =>
+                        handleInputChange(
+                          "option",
+                          option as "Physical" | "Delivery",
+                        )
+                      }
                       className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300"
                       required
                     />
@@ -122,17 +139,20 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
               </div>
             </div>
 
-            {formData.option === 'Delivery' && (
+            {formData.option === "Delivery" && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
                   Select Delivery Days
                 </label>
                 <div className="mb-2">
                   <TagSelector
-                    options={availableDays}
-                    selected={formData.days}
-                    onChange={(selected) => handleInputChange('days', selected)}
-                    placeholder="Select delivery days..."
+                    label="Delivery Days"
+                    tags={availableDays}
+                    selectedTags={formData.days}
+                    onTagsChange={(selected) =>
+                      handleInputChange("days", selected)
+                    }
+                    className="mb-2"
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-1">
@@ -145,7 +165,10 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
               <ActionButtons
                 onBack={onBack}
                 onContinue={handleContinue}
-                continueDisabled={!formData.option || (formData.option === 'Delivery' && formData.days.length === 0)}
+                continueDisabled={
+                  !formData.option ||
+                  (formData.option === "Delivery" && formData.days.length === 0)
+                }
               />
             </div>
           </form>

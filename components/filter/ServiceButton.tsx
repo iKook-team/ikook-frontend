@@ -1,17 +1,20 @@
 "use client";
 
 import * as React from "react";
-
 import clsx from "clsx";
 
-interface ServiceButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ServiceButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   isActive?: boolean;
   variant?: "default" | "active";
 }
 
 const ServiceButton = React.forwardRef<HTMLButtonElement, ServiceButtonProps>(
-  ({ className, children, isActive = false, variant = "default", ...props }, ref) => {
+  (
+    { className, children, isActive = false, variant = "default", ...props },
+    ref,
+  ) => {
     return (
       <button
         className={clsx(
@@ -19,7 +22,7 @@ const ServiceButton = React.forwardRef<HTMLButtonElement, ServiceButtonProps>(
           isActive || variant === "active"
             ? "text-white bg-[#FCC01C] border-[#F9DF98] border-2"
             : "text-[#060605] border-[#CFCFCE] border hover:bg-gray-50",
-          className
+          className,
         )}
         ref={ref}
         {...props}
@@ -27,7 +30,7 @@ const ServiceButton = React.forwardRef<HTMLButtonElement, ServiceButtonProps>(
         {children}
       </button>
     );
-  }
+  },
 );
 
 ServiceButton.displayName = "ServiceButton";

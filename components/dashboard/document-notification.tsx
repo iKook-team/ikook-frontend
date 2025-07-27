@@ -1,9 +1,9 @@
 import * as React from "react";
-
-import { useAuthStore } from "@/lib/store/auth-store";
 import { useRouter } from "next/navigation";
 
 import { UploadButton } from "./upload-button";
+
+import { useAuthStore } from "@/lib/store/auth-store";
 
 interface DocumentNotificationProps {
   onUpload?: () => void;
@@ -16,6 +16,7 @@ export function DocumentNotification({
 }: DocumentNotificationProps) {
   const user = useAuthStore((s) => s.user);
   const router = useRouter();
+
   // Only show if document_verified is false (or not present)
   if (user?.user_type !== "Chef" || user?.document_verified) {
     return null;

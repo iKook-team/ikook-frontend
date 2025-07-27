@@ -1,7 +1,8 @@
 "use client";
 
-import React from 'react';
-import { AddressCard } from './address-card';
+import React from "react";
+
+import { AddressCard } from "./address-card";
 
 interface Address {
   id: string;
@@ -13,38 +14,38 @@ interface Address {
 export const AddressList: React.FC = () => {
   const addresses: Address[] = [
     {
-      id: '1',
-      icon: 'https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/9b22f48483ac365f750c47187b4b785d78de7f32?placeholderIfAbsent=true',
-      title: 'Home Address',
-      address: '75, Olowookere street, VI, Lagos'
+      id: "1",
+      icon: "https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/9b22f48483ac365f750c47187b4b785d78de7f32?placeholderIfAbsent=true",
+      title: "Home Address",
+      address: "75, Olowookere street, VI, Lagos",
     },
     {
-      id: '2',
-      icon: 'https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/67b6c85ad514c14727bf2169065009ef296a277f?placeholderIfAbsent=true',
-      title: 'Home Address',
-      address: '75, Olowookere street, VI, Lagos'
+      id: "2",
+      icon: "https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/67b6c85ad514c14727bf2169065009ef296a277f?placeholderIfAbsent=true",
+      title: "Home Address",
+      address: "75, Olowookere street, VI, Lagos",
     },
     {
-      id: '3',
-      icon: 'https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/206a266796e055895a7e63be976cd99d5fb0e4e4?placeholderIfAbsent=true',
-      title: 'Home Address',
-      address: '75, Olowookere street, VI, Lagos'
+      id: "3",
+      icon: "https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/206a266796e055895a7e63be976cd99d5fb0e4e4?placeholderIfAbsent=true",
+      title: "Home Address",
+      address: "75, Olowookere street, VI, Lagos",
     },
     {
-      id: '4',
-      icon: 'https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/055d9588330482b5b4d790b45e25a75032cd7d81?placeholderIfAbsent=true',
-      title: 'Home Address',
-      address: '75, Olowookere street, VI, Lagos'
-    }
+      id: "4",
+      icon: "https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/055d9588330482b5b4d790b45e25a75032cd7d81?placeholderIfAbsent=true",
+      title: "Home Address",
+      address: "75, Olowookere street, VI, Lagos",
+    },
   ];
 
   const handleEditAddress = (addressId: string) => {
-    console.log('Edit address:', addressId);
+    console.log("Edit address:", addressId);
     // Implement edit functionality here
   };
 
   const handleAddNewAddress = () => {
-    console.log('Add new address');
+    console.log("Add new address");
     // Implement add new address functionality here
   };
 

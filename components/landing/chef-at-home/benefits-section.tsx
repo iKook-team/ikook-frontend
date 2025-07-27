@@ -1,23 +1,27 @@
-import React from 'react';
-import BenefitCard from './benefit-card';
+import React from "react";
+
+import BenefitCard from "./benefit-card";
 
 const BenefitsSection = () => {
   const benefits = [
     {
       icon: "🏡",
       title: "Comfort",
-      description: "Enjoy a five-star dining experience in the comfort of your home."
+      description:
+        "Enjoy a five-star dining experience in the comfort of your home.",
     },
     {
       icon: "💡",
       title: "Unique Experience",
-      description: "Enjoy a five-star dining experience in the comfort of your home."
+      description:
+        "Enjoy a five-star dining experience in the comfort of your home.",
     },
     {
       icon: "🕑",
       title: "Time-Saving",
-      description: "Eliminate the stress of cooking and spend more time with your loved ones."
-    }
+      description:
+        "Eliminate the stress of cooking and spend more time with your loved ones.",
+    },
   ];
 
   return (

@@ -14,8 +14,9 @@ export default class BaseService<T> {
     try {
       const response = await apiClient.get<ApiResponse<PaginatedResponse<T>>>(
         this.endpoint,
-        { params }
+        { params },
       );
+
       return handleSuccess<PaginatedResponse<T>>(response);
     } catch (error) {
       throw handleApiError(error);
@@ -26,8 +27,9 @@ export default class BaseService<T> {
   async getById(id: string | number): Promise<T> {
     try {
       const response = await apiClient.get<ApiResponse<T>>(
-        `${this.endpoint}/${id}`
+        `${this.endpoint}/${id}`,
       );
+
       return handleSuccess<T>(response);
     } catch (error) {
       throw handleApiError(error);
@@ -39,8 +41,9 @@ export default class BaseService<T> {
     try {
       const response = await apiClient.post<ApiResponse<ResponseT>>(
         this.endpoint,
-        data
+        data,
       );
+
       return handleSuccess<ResponseT>(response);
     } catch (error) {
       throw handleApiError(error);
@@ -50,13 +53,14 @@ export default class BaseService<T> {
   // Update item
   async update<UpdateDto, ResponseT = T>(
     id: string | number,
-    data: UpdateDto
+    data: UpdateDto,
   ): Promise<ResponseT> {
     try {
       const response = await apiClient.put<ApiResponse<ResponseT>>(
         `${this.endpoint}/${id}`,
-        data
+        data,
       );
+
       return handleSuccess<ResponseT>(response);
     } catch (error) {
       throw handleApiError(error);
@@ -67,8 +71,9 @@ export default class BaseService<T> {
   async delete(id: string | number): Promise<boolean> {
     try {
       const response = await apiClient.delete<ApiResponse<boolean>>(
-        `${this.endpoint}/${id}`
+        `${this.endpoint}/${id}`,
       );
+
       return handleSuccess<boolean>(response);
     } catch (error) {
       throw handleApiError(error);

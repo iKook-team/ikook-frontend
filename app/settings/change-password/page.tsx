@@ -13,7 +13,7 @@ interface FormErrors {
   confirmPassword?: string;
 }
 
-export const ChangePasswordForm: React.FC = () => {
+const ChangePasswordForm: React.FC = () => {
   const [formData, setFormData] = useState<PasswordFormData>({
     currentPassword: "",
     newPassword: "",
@@ -43,6 +43,7 @@ export const ChangePasswordForm: React.FC = () => {
     }
 
     setErrors(newErrors);
+
     return Object.keys(newErrors).length === 0;
   };
 
@@ -172,7 +173,9 @@ export const ChangePasswordForm: React.FC = () => {
                             }`}
                             aria-invalid={!!errors.newPassword}
                             aria-describedby={
-                              errors.newPassword ? "newPassword-error" : undefined
+                              errors.newPassword
+                                ? "newPassword-error"
+                                : undefined
                             }
                           />
                           {errors.newPassword && (

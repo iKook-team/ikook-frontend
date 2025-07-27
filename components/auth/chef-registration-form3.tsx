@@ -107,9 +107,12 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
   const [formData, setFormData] = useState(() => {
     const country = initialFormData.country || "United Kingdom";
     const cityOptions = getCityOptions(country);
+
     return {
       country,
-      city: initialFormData.city || (cityOptions.length > 0 ? cityOptions[0].value : ""),
+      city:
+        initialFormData.city ||
+        (cityOptions.length > 0 ? cityOptions[0].value : ""),
       postalCode: initialFormData.postalCode || "",
       address: initialFormData.address || "",
       workAuthorization: initialFormData.workAuthorization || "",
@@ -122,12 +125,14 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
     setFormData((prev) => {
       if (field === "country") {
         const cityOptions = getCityOptions(value);
+
         return {
           ...prev,
           country: value,
           city: cityOptions.length > 0 ? cityOptions[0].value : "",
         };
       }
+
       return { ...prev, [field]: value };
     });
     if (errors[field]) {
@@ -167,6 +172,7 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+
       return;
     }
 
@@ -179,8 +185,9 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
       address: formData.address,
       workAuthorization: formData.workAuthorization,
     };
+
     setChefFormData(updatedChefData);
-    
+
     onSubmit(formData);
   };
 

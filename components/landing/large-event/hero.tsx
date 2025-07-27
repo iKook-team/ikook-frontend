@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const Hero = () => {
   return (
@@ -22,9 +22,7 @@ const Hero = () => {
           </p>
           <div className="flex text-lg leading-loose mt-[26px] rounded-[30px]">
             <button className="justify-center items-center border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-[#FCC01C] flex min-w-60 gap-3 overflow-hidden px-7 py-4 rounded-[30px] border-solid border-[#FCC01C] max-md:px-5 hover:bg-[#e6ac19] transition-colors">
-              <span className="self-stretch my-auto">
-                Explore our Chefs
-              </span>
+              <span className="self-stretch my-auto">Explore our Chefs</span>
               <img
                 src="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/df85ea64fb942f518cf32d6a0620ed2495bc00ad?placeholderIfAbsent=true"
                 className="aspect-[1] object-contain w-6 self-stretch shrink-0 my-auto"

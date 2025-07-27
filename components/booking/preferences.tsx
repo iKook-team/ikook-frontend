@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { ProgressIndicator } from './progress-indicator';
-import { ChefCard } from "@/components/cart/chef-card";
-import { ActionButtons } from './action-buttons';
+import { ProgressIndicator } from "./progress-indicator";
+import { ActionButtons } from "./action-buttons";
 import { DietaryRestrictions } from "./dietary-restrictions";
+
+import { ChefCard } from "@/components/cart/chef-card";
 
 interface PreferencesFormProps {
   onNext: (data?: Record<string, any>) => void;
@@ -15,21 +15,21 @@ interface PreferencesFormProps {
   isCustomBooking?: boolean;
 }
 
-const PreferencesForm: React.FC<PreferencesFormProps> = ({ 
-  onNext, 
-  onBack, 
-  menu, 
-  formData, 
-  onChange, 
-  isCustomBooking = false 
+const PreferencesForm: React.FC<PreferencesFormProps> = ({
+  onNext,
+  onBack,
+  menu,
+  formData,
+  onChange,
+  isCustomBooking = false,
 }) => {
   const allergyDetails = formData.allergyDetails || "";
   const dietaryRestrictions = formData.dietaryRestrictions || [];
 
   const progressSteps = [
-    { label: 'Event Details', completed: true, inProgress: true },
-    { label: 'Preferences', completed: false },
-    { label: 'Message', completed: false }
+    { label: "Event Details", completed: true, inProgress: true },
+    { label: "Preferences", completed: false },
+    { label: "Message", completed: false },
   ];
 
   const handleContinue = () => {
@@ -43,7 +43,9 @@ const PreferencesForm: React.FC<PreferencesFormProps> = ({
       {!isCustomBooking && (
         <header className="absolute left-0 top-0">
           <h1 className="text-black text-xl font-medium leading-[30px] w-[300px] h-[30px] truncate">
-            {menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
+            {menu?.chef?.first_name && menu?.chef?.last_name
+              ? `${menu.chef.first_name} ${menu.chef.last_name}`
+              : "Chef"}
           </h1>
         </header>
       )}
@@ -55,23 +57,39 @@ const PreferencesForm: React.FC<PreferencesFormProps> = ({
       <div className="absolute left-5 top-[132px] w-full pr-5">
         {!isCustomBooking && menu && (
           <ChefCard
-            chefName={menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
+            chefName={
+              menu?.chef?.first_name && menu?.chef?.last_name
+                ? `${menu.chef.first_name} ${menu.chef.last_name}`
+                : "Chef"
+            }
             dishName={menu?.name || "Menu"}
-            imageUrl={menu?.images && menu.images.length > 0 && menu.images[0].image ? menu.images[0].image : "/menus/menu1.png"}
+            imageUrl={
+              menu?.images && menu.images.length > 0 && menu.images[0].image
+                ? menu.images[0].image
+                : "/menus/menu1.png"
+            }
             location={menu?.chef?.city || "Unknown"}
             locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
-            rating={menu?.chef?.average_rating ? menu.chef.average_rating.toFixed(1) : "-"}
+            rating={
+              menu?.chef?.average_rating
+                ? menu.chef.average_rating.toFixed(1)
+                : "-"
+            }
             ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
-            reviewCount={menu?.chef?.total_reviews || 0}
-            price={`$${menu?.price || 0}`}
-            pricePerPerson={menu?.price_per_person ? `/ ${menu.price_per_person} per person` : ""}
+            reviewCount={(menu?.chef?.total_reviews || 0).toString()}
           />
         )}
       </div>
 
       <div className="absolute left-5 top-[291px]">
-        <svg width="613" height="1" viewBox="0 0 613 1" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M-0.00390625 0.5L613.003 0.5" stroke="#E7E7E7"></path>
+        <svg
+          width="613"
+          height="1"
+          viewBox="0 0 613 1"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M-0.00390625 0.5L613.003 0.5" stroke="#E7E7E7" />
         </svg>
       </div>
 
@@ -79,14 +97,25 @@ const PreferencesForm: React.FC<PreferencesFormProps> = ({
         <h2 className="text-black text-2xl font-medium leading-8 w-[200px] h-0">
           Preferences
         </h2>
-        <form className="flex flex-col flex-1 w-full" onSubmit={e => { e.preventDefault(); handleContinue(); }}>
+        <form
+          className="flex flex-col flex-1 w-full"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleContinue();
+          }}
+        >
           <div className="mb-6">
             <DietaryRestrictions
               selectedAllergies={dietaryRestrictions}
-              onChange={(allergies) => onChange({ ...formData, dietaryRestrictions: allergies })}
+              onChange={(allergies) =>
+                onChange({ ...formData, dietaryRestrictions: allergies })
+              }
             />
           </div>
-          <label htmlFor="allergy-details" className="text-sm font-medium leading-none text-neutral-700 mb-2">
+          <label
+            htmlFor="allergy-details"
+            className="text-sm font-medium leading-none text-neutral-700 mb-2"
+          >
             Give us more details about guest allergies
           </label>
           <textarea
@@ -94,14 +123,22 @@ const PreferencesForm: React.FC<PreferencesFormProps> = ({
             id="allergy-details"
             placeholder="Enter a description..."
             value={allergyDetails}
-            onChange={(e) => onChange({ ...formData, allergyDetails: e.target.value })}
+            onChange={(e) =>
+              onChange({ ...formData, allergyDetails: e.target.value })
+            }
           />
         </form>
       </section>
 
       <div className="absolute left-5 top-[720px]">
-        <svg width="613" height="2" viewBox="0 0 613 2" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0 1L613.007 1" stroke="#E7E7E7"></path>
+        <svg
+          width="613"
+          height="2"
+          viewBox="0 0 613 2"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M0 1L613.007 1" stroke="#E7E7E7" />
         </svg>
       </div>
 

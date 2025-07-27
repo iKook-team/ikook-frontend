@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useAuthStore } from "@/lib/store/auth-store";
 
+import { useAuthStore } from "@/lib/store/auth-store";
 import { Cart } from "@/components/cart/cart";
 import { EventDetailsForm } from "@/components/booking/event-details-form";
 import { EventDetailsForm2 } from "@/components/booking/event-details-form2";
@@ -25,35 +25,39 @@ type BookingStep =
 
 const LargeEventBookingPage = () => {
   const searchParams = useSearchParams();
-  const isCustomBooking = searchParams.get('is_custom') === 'true';
+  const isCustomBooking = searchParams.get("is_custom") === "true";
   const bookingMenu = useAuthStore((s) => s.bookingMenu);
   const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
   const bookingMenuSelection = useAuthStore((s) => s.bookingMenuSelection);
-  const setBookingMenuSelection = useAuthStore((s) => s.setBookingMenuSelection);
+  const setBookingMenuSelection = useAuthStore(
+    (s) => s.setBookingMenuSelection,
+  );
   const [selectedMenuItems, setSelectedMenuItems] = useState<string[]>(
-    (bookingMenuSelection || []).map((id: any) => String(id))
+    (bookingMenuSelection || []).map((id: any) => String(id)),
   );
   const menu = bookingMenu;
   const [currentStep, setCurrentStep] = useState<BookingStep>(
-    isCustomBooking ? "event-details" : "cart"
+    isCustomBooking ? "event-details" : "cart",
   );
   const [bookingData, setBookingData] = useState<Record<string, any>>({
-    service: 'Large Event' // Set the service type from the URL path
+    service: "Large Event", // Set the service type from the URL path
   });
   const [eventDetailsForm, setEventDetailsForm] = useState({
     location: "",
     eventDate: "",
     guests: menu?.num_of_guests || 1,
   });
+
   interface EventDetailsForm2Data {
     eventType: string;
     preferredCuisines: string[];
   }
 
-  const [eventDetailsForm2, setEventDetailsForm2] = useState<EventDetailsForm2Data>({
-    eventType: "",
-    preferredCuisines: [],
-  });
+  const [eventDetailsForm2, setEventDetailsForm2] =
+    useState<EventDetailsForm2Data>({
+      eventType: "",
+      preferredCuisines: [],
+    });
   const [eventDetailsForm3, setEventDetailsForm3] = useState({
     eventTime: "",
     venue: "",
@@ -67,7 +71,9 @@ const LargeEventBookingPage = () => {
     dietaryRestrictions: [],
   });
   const menuLoading = false;
-  const menuError = !bookingMenu ? "No menu data found. Please start from the menu detail page." : null;
+  const menuError = !bookingMenu
+    ? "No menu data found. Please start from the menu detail page."
+    : null;
   const [bookingId, setBookingId] = useState<number | null>(null);
 
   const handleNext = (data?: Record<string, any>) => {
@@ -79,6 +85,7 @@ const LargeEventBookingPage = () => {
       if (data.bookingId) {
         setCurrentStep("checkout");
         window.scrollTo(0, 0);
+
         return;
       }
     }
@@ -95,6 +102,7 @@ const LargeEventBookingPage = () => {
     ];
 
     const currentIndex = steps.indexOf(currentStep);
+
     if (currentIndex < steps.length - 1) {
       setCurrentStep(steps[currentIndex + 1]);
       window.scrollTo(0, 0);
@@ -114,6 +122,7 @@ const LargeEventBookingPage = () => {
     ];
 
     const currentIndex = steps.indexOf(currentStep);
+
     if (currentIndex > 0) {
       setCurrentStep(steps[currentIndex - 1]);
       window.scrollTo(0, 0);
@@ -173,7 +182,12 @@ const LargeEventBookingPage = () => {
             onNext={(data) => {
               setBudgetStep({
                 budget: data.budget,
-                budgetType: data.budgetType === 'flexible' ? 'Flexible' : data.budgetType === 'fixed' ? 'Fixed' : null
+                budgetType:
+                  data.budgetType === "flexible"
+                    ? "Flexible"
+                    : data.budgetType === "fixed"
+                      ? "Fixed"
+                      : null,
               });
               handleNext(data);
             }}
@@ -186,7 +200,12 @@ const LargeEventBookingPage = () => {
             onBack={handleBack}
             menu={menu}
             formData={preferencesForm}
-            onChange={(data) => setPreferencesForm({ allergyDetails: data.allergyDetails ?? "", dietaryRestrictions: data.dietaryRestrictions ?? [] })}
+            onChange={(data) =>
+              setPreferencesForm({
+                allergyDetails: data.allergyDetails ?? "",
+                dietaryRestrictions: data.dietaryRestrictions ?? [],
+              })
+            }
           />
         );
       case "messages":

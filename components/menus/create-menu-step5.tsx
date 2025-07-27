@@ -37,13 +37,13 @@ export const CreateMenuStep5: React.FC<MenuCreationSuccessProps> = ({
     { id: "menu-images", label: "Menu Images", isCompleted: true },
     { id: "finish-upload", label: "Finish Upload", isCompleted: true },
   ];
+
   // Sync form data when component mounts
   React.useEffect(() => {
     if (updateFormData && formData) {
       updateFormData({ ...formData, isComplete: true });
     }
   }, [formData, updateFormData]);
-
 
   return (
     <div className="flex flex-col w-full max-w-[655px] mx-auto">

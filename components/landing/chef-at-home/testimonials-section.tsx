@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface TestimonialProps {
   quote: string;
@@ -6,9 +6,15 @@ interface TestimonialProps {
   className?: string;
 }
 
-const Testimonial: React.FC<TestimonialProps> = ({ quote, author, className = "" }) => {
+const Testimonial: React.FC<TestimonialProps> = ({
+  quote,
+  author,
+  className = "",
+}) => {
   return (
-    <article className={`flex flex-col items-stretch text-[#323335] font-medium ${className}`}>
+    <article
+      className={`flex flex-col items-stretch text-[#323335] font-medium ${className}`}
+    >
       <blockquote className="text-[#323335] text-[35px] max-md:max-w-full max-md:mr-0.5">
         {quote}
       </blockquote>
@@ -38,9 +44,7 @@ const TestimonialsSection = () => {
           className="aspect-[500] object-contain w-full max-w-[1259px] max-md:max-w-full"
           alt="Decorative element"
         />
-        <h2 className="text-[#323335] self-center mt-3">
-          What They Say
-        </h2>
+        <h2 className="text-[#323335] self-center mt-3">What They Say</h2>
       </div>
       <div className="w-full max-w-[1352px] mt-[115px] max-md:max-w-full max-md:mt-10">
         <div className="gap-5 flex max-md:flex-col max-md:items-stretch">

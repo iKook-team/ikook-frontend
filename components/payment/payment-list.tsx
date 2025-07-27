@@ -1,6 +1,7 @@
 "use client";
-import React from 'react';
-import { PaymentCard } from './payment-card';
+import React from "react";
+
+import { PaymentCard } from "./payment-card";
 
 interface PaymentMethod {
   id: string;
@@ -12,37 +13,41 @@ interface PaymentMethod {
 export const PaymentsList: React.FC = () => {
   const paymentMethods: PaymentMethod[] = [
     {
-      id: '1',
-      cardType: 'VISA',
-      cardNumber: '123************7678',
-      iconSrc: 'https://api.builder.io/api/v1/image/assets/TEMP/0ec22a48944ef07eb754a2ae5fba8767bf7767a9?placeholderIfAbsent=true'
+      id: "1",
+      cardType: "VISA",
+      cardNumber: "123************7678",
+      iconSrc:
+        "https://api.builder.io/api/v1/image/assets/TEMP/0ec22a48944ef07eb754a2ae5fba8767bf7767a9?placeholderIfAbsent=true",
     },
     {
-      id: '2',
-      cardType: 'Mastercard',
-      cardNumber: '123************7678',
-      iconSrc: 'https://api.builder.io/api/v1/image/assets/TEMP/8e5c30b354596f0df1258f9a98b0228783ec3c1c?placeholderIfAbsent=true'
+      id: "2",
+      cardType: "Mastercard",
+      cardNumber: "123************7678",
+      iconSrc:
+        "https://api.builder.io/api/v1/image/assets/TEMP/8e5c30b354596f0df1258f9a98b0228783ec3c1c?placeholderIfAbsent=true",
     },
     {
-      id: '3',
-      cardType: 'Verve',
-      cardNumber: '123************7678',
-      iconSrc: 'https://api.builder.io/api/v1/image/assets/TEMP/0bbcb836776468a8466ea81de21f70d7c581de4c?placeholderIfAbsent=true'
+      id: "3",
+      cardType: "Verve",
+      cardNumber: "123************7678",
+      iconSrc:
+        "https://api.builder.io/api/v1/image/assets/TEMP/0bbcb836776468a8466ea81de21f70d7c581de4c?placeholderIfAbsent=true",
     },
     {
-      id: '4',
-      cardType: 'Verve',
-      cardNumber: '123************7678',
-      iconSrc: 'https://api.builder.io/api/v1/image/assets/TEMP/8a6ed808e811837a68be25e7e097e2916e02a0e0?placeholderIfAbsent=true'
-    }
+      id: "4",
+      cardType: "Verve",
+      cardNumber: "123************7678",
+      iconSrc:
+        "https://api.builder.io/api/v1/image/assets/TEMP/8a6ed808e811837a68be25e7e097e2916e02a0e0?placeholderIfAbsent=true",
+    },
   ];
 
   const handleEditCard = (cardId: string) => {
-    console.log('Editing card:', cardId);
+    console.log("Editing card:", cardId);
   };
 
   const handleAddNewCard = () => {
-    console.log('Adding new card');
+    console.log("Adding new card");
   };
 
   return (

@@ -10,6 +10,7 @@ const CustomToggle: React.FC<{
 
   const handleToggle = () => {
     const newValue = !isChecked;
+
     setIsChecked(newValue);
     onChange?.(newValue);
   };
@@ -47,6 +48,7 @@ const CustomCheckbox: React.FC<{
 
   const handleChange = () => {
     const newValue = !isChecked;
+
     setIsChecked(newValue);
     onChange?.(newValue);
   };
@@ -95,6 +97,7 @@ export const CookingClassForm: React.FC = () => {
 
   const handleFileSelect = (file: File) => {
     const reader = new FileReader();
+
     reader.onload = (e) => {
       setUploadedImage(e.target?.result as string);
     };
@@ -126,12 +129,19 @@ export const CookingClassForm: React.FC = () => {
             </label>
             <div className="flex border border-solid border-[#CFCFCE] rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white">
               <div className="flex items-center px-3.5 py-2.5 bg-white rounded-l-lg">
-                <span className="text-[#3F3E3D] text-[15px] font-normal">£</span>
+                <span className="text-[#3F3E3D] text-[15px] font-normal">
+                  £
+                </span>
               </div>
               <input
                 type="number"
                 value={formData.startingPrice}
-                onChange={e => setFormData(prev => ({ ...prev, startingPrice: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    startingPrice: e.target.value,
+                  }))
+                }
                 className="flex-1 px-3.5 py-2.5 border-l border-solid border-[#CFCFCE] rounded-r-lg text-[#6F6E6D] text-base font-normal leading-6 focus:outline-none focus:ring-2 focus:ring-[#FCC01C]"
                 placeholder="000"
                 required
@@ -146,7 +156,12 @@ export const CookingClassForm: React.FC = () => {
             <input
               type="number"
               value={formData.minimumGuests}
-              onChange={e => setFormData(prev => ({ ...prev, minimumGuests: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  minimumGuests: e.target.value,
+                }))
+              }
               className="w-full px-3.5 py-2.5 border border-solid border-[#9F9F9E] rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white text-[#6F6E6D] text-base font-normal leading-6 focus:outline-none focus:ring-2 focus:ring-[#FCC01C]"
               placeholder="Enter Number"
               required
@@ -258,4 +273,4 @@ export const CookingClassForm: React.FC = () => {
       </div>
     </section>
   );
-}; 
+};

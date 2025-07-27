@@ -24,12 +24,15 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
     e.preventDefault();
     setError("");
     const numAmount = parseFloat(amount);
+
     if (isNaN(numAmount) || numAmount <= 0) {
       setError("Enter a valid amount");
+
       return;
     }
     if (numAmount > availableBalance) {
       setError("Amount exceeds available balance");
+
       return;
     }
     setSubmitting(true);
@@ -38,13 +41,16 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
       if (!user?.id) {
         setError("User not found");
         setSubmitting(false);
+
         return;
       }
       // Use bank_detail from user object
       const bankDetailId = (user as any).bank_details;
+
       if (!bankDetailId) {
         setError("No bank details found");
         setSubmitting(false);
+
         return;
       }
       await revenueService.requestWithdrawal(amount, bankDetailId);
@@ -58,6 +64,7 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
   };
 
   if (!open) return null;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950 bg-opacity-40">
       <dialog
@@ -80,7 +87,7 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
               <path
                 d="M10.4613 1.66797C5.85293 1.66797 2.12793 5.39297 2.12793 10.0013C2.12793 14.6096 5.85293 18.3346 10.4613 18.3346C15.0696 18.3346 18.7946 14.6096 18.7946 10.0013C18.7946 5.39297 15.0696 1.66797 10.4613 1.66797ZM14.0446 13.5846C13.9675 13.6619 13.8759 13.7232 13.7751 13.765C13.6743 13.8068 13.5662 13.8283 13.4571 13.8283C13.348 13.8283 13.2399 13.8068 13.1391 13.765C13.0383 13.7232 12.9467 13.6619 12.8696 13.5846L10.4613 11.1763L8.05293 13.5846C7.89711 13.7404 7.68578 13.828 7.46543 13.828C7.24507 13.828 7.03374 13.7404 6.87793 13.5846C6.72211 13.4288 6.63458 13.2175 6.63458 12.9971C6.63458 12.888 6.65607 12.78 6.69782 12.6792C6.73958 12.5784 6.80078 12.4868 6.87793 12.4096L9.28626 10.0013L6.87793 7.59297C6.72211 7.43715 6.63458 7.22582 6.63458 7.00547C6.63458 6.78511 6.72211 6.57378 6.87793 6.41797C7.03374 6.26215 7.24507 6.17462 7.46543 6.17462C7.68578 6.17462 7.89711 6.26215 8.05293 6.41797L10.4613 8.8263L12.8696 6.41797C12.9467 6.34082 13.0383 6.27962 13.1391 6.23786C13.2399 6.19611 13.348 6.17462 13.4571 6.17462C13.5662 6.17462 13.6742 6.19611 13.775 6.23786C13.8759 6.27962 13.9674 6.34082 14.0446 6.41797C14.1217 6.49512 14.1829 6.58671 14.2247 6.68752C14.2665 6.78832 14.2879 6.89636 14.2879 7.00547C14.2879 7.11458 14.2665 7.22262 14.2247 7.32342C14.1829 7.42422 14.1217 7.51582 14.0446 7.59297L11.6363 10.0013L14.0446 12.4096C14.3613 12.7263 14.3613 13.2596 14.0446 13.5846Z"
                 fill="#323335"
-              ></path>
+              />
             </svg>
           </button>
         </header>

@@ -26,8 +26,12 @@ export function ConversationItem({
       />
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-start">
-          <h3 className="text-base font-semibold text-zinc-800 truncate pr-2">{name}</h3>
-          <time className="text-xs text-neutral-500 whitespace-nowrap">{timestamp}</time>
+          <h3 className="text-base font-semibold text-zinc-800 truncate pr-2">
+            {name}
+          </h3>
+          <time className="text-xs text-neutral-500 whitespace-nowrap">
+            {timestamp}
+          </time>
         </div>
         <div className="mt-1">
           <p className="text-sm text-stone-950 truncate">{lastMessage}</p>

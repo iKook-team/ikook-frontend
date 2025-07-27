@@ -20,14 +20,17 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
             <div className="flex items-stretch gap-[19px]">
               {avatar ? (
                 <Image
-                  alt={`${chef?.first_name || ''} ${chef?.last_name || ''}`}
+                  alt={`${chef?.first_name || ""} ${chef?.last_name || ""}`}
                   className="object-contain shrink-0 rounded-lg"
                   height={80}
                   src={avatar}
                   width={80}
                 />
               ) : (
-                <div className="flex items-center justify-center bg-gray-200 rounded-lg" style={{ width: 80, height: 80 }}>
+                <div
+                  className="flex items-center justify-center bg-gray-200 rounded-lg"
+                  style={{ width: 80, height: 80 }}
+                >
                   <FiUser className="text-gray-500" size={40} />
                 </div>
               )}

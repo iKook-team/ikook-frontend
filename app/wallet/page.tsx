@@ -28,6 +28,7 @@ const Index: React.FC = () => {
       try {
         const walletDetails = await paymentsService.getWalletDetails();
         const txData = await paymentsService.getWalletTransactions();
+
         setWallet(walletDetails);
         setTransactions(txData.results || []);
       } catch (err: any) {
@@ -36,15 +37,16 @@ const Index: React.FC = () => {
         setLoading(false);
       }
     };
+
     fetchWalletData();
   }, []);
 
   // Filter transactions by type for tabs
   const redeemedTransactions = transactions.filter(
-    (tx) => tx.transaction_type === "Credit"
+    (tx) => tx.transaction_type === "Credit",
   );
   const debitsTransactions = transactions.filter(
-    (tx) => tx.transaction_type !== "Credit"
+    (tx) => tx.transaction_type !== "Credit",
   );
   const currentTransactions =
     activeTab === "redeemed" ? redeemedTransactions : debitsTransactions;
@@ -64,11 +66,16 @@ const Index: React.FC = () => {
             <WalletBalance balance={wallet?.balance} />
             {transactions.length > 0 ? (
               <>
-                <TransactionTabs activeTab={activeTab} onTabChange={setActiveTab} />
+                <TransactionTabs
+                  activeTab={activeTab}
+                  onTabChange={setActiveTab}
+                />
                 <TransactionList transactions={currentTransactions} />
               </>
             ) : (
-              <div className="text-center py-12 text-gray-500">No transactions found in your wallet yet.</div>
+              <div className="text-center py-12 text-gray-500">
+                No transactions found in your wallet yet.
+              </div>
             )}
           </>
         )}

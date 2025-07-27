@@ -20,7 +20,7 @@ export const CreateMenuStep3: React.FC<MenuImagesStepProps> = ({
   updateFormData,
 }) => {
   const [uploadedImages, setUploadedImages] = React.useState<File[]>(
-    formData.uploadedImages || []
+    formData.uploadedImages || [],
   );
 
   // Sync local state with parent form data
@@ -48,6 +48,7 @@ export const CreateMenuStep3: React.FC<MenuImagesStepProps> = ({
   const handleImageSelect = (files: FileList | null) => {
     if (!files) return;
     const newFiles = Array.from(files);
+
     setUploadedImages((prev) => [...prev, ...newFiles]);
   };
 
@@ -73,7 +74,8 @@ export const CreateMenuStep3: React.FC<MenuImagesStepProps> = ({
             Upload menu images
           </h2>
           <p className="text-sm text-gray-600 mb-6 text-center">
-            Upload high-quality images of your menu items. You can upload up to 5 images.
+            Upload high-quality images of your menu items. You can upload up to
+            5 images.
           </p>
           <div className="w-full flex justify-center">
             <ImageUploadArea onImageSelect={handleImageSelect} />

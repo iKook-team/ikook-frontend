@@ -11,8 +11,16 @@ const EventForm = () => {
   const [isAvailable, setIsAvailable] = useState(true);
   const [startingPrice, setStartingPrice] = useState("000");
   const [minGuests, setMinGuests] = useState("");
-  const [selectedCuisines, setSelectedCuisines] = useState(["African", "Modern English", "Italian"]);
-  const [selectedEvents, setSelectedEvents] = useState(["Wedding", "Naming", "BBQ"]);
+  const [selectedCuisines, setSelectedCuisines] = useState([
+    "African",
+    "Modern English",
+    "Italian",
+  ]);
+  const [selectedEvents, setSelectedEvents] = useState([
+    "Wedding",
+    "Naming",
+    "BBQ",
+  ]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,10 +55,10 @@ const EventForm = () => {
                     role="switch"
                     aria-checked={isAvailable}
                     onClick={() => setIsAvailable(!isAvailable)}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FCC01C] ${isAvailable ? 'bg-[#FCC01C]' : 'bg-gray-200'}`}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FCC01C] ${isAvailable ? "bg-[#FCC01C]" : "bg-gray-200"}`}
                   >
                     <span
-                      className={`${isAvailable ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                      className={`${isAvailable ? "translate-x-6" : "translate-x-1"} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
                     />
                   </button>
                 </div>
@@ -107,7 +115,10 @@ const EventForm = () => {
                       </label>
                       <div className="flex flex-wrap gap-2">
                         {selectedCuisines.map((cuisine) => (
-                          <span key={cuisine} className="px-3 py-1 bg-gray-100 rounded-full text-sm">
+                          <span
+                            key={cuisine}
+                            className="px-3 py-1 bg-gray-100 rounded-full text-sm"
+                          >
                             {cuisine}
                           </span>
                         ))}
@@ -123,7 +134,10 @@ const EventForm = () => {
                       </label>
                       <div className="flex flex-wrap gap-2">
                         {selectedEvents.map((event) => (
-                          <span key={event} className="px-3 py-1 bg-gray-100 rounded-full text-sm">
+                          <span
+                            key={event}
+                            className="px-3 py-1 bg-gray-100 rounded-full text-sm"
+                          >
                             {event}
                           </span>
                         ))}
@@ -137,7 +151,7 @@ const EventForm = () => {
                   role="button"
                   tabIndex={0}
                   onClick={handleFileUpload}
-                  onKeyDown={e => {
+                  onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       handleFileUpload();
                     }
@@ -145,7 +159,8 @@ const EventForm = () => {
                   className="justify-center items-center border flex min-h-[122px] w-[425px] max-w-full flex-col text-[10px] text-[#323335] text-center mt-[49px] px-2.5 py-6 rounded-xl border-dashed border-[#CFCFCE] max-md:mt-10 cursor-pointer hover:border-[#FCC01C] transition-colors"
                 >
                   <p className="text-[#323335] font-normal w-[272px]">
-                    (Recommended 1000px width, 1000px height.Maximum of 1MB file size)
+                    (Recommended 1000px width, 1000px height.Maximum of 1MB file
+                    size)
                   </p>
                   <button
                     type="button"

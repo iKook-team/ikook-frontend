@@ -62,7 +62,7 @@ const Index: React.FC = () => {
               Location access is required to continue with signup.
             </p>
           </div>
-          
+
           <div className="space-y-3">
             <Button
               className="w-full bg-[#FCC01C] hover:bg-[#E6AC19] text-white"
@@ -80,7 +80,10 @@ const Index: React.FC = () => {
           </div>
           <div className="text-xs text-gray-400 text-center mt-6">
             <p>Make sure to allow location access in your browser settings.</p>
-            <p>If the issue persists, try refreshing the page or using a different browser.</p>
+            <p>
+              If the issue persists, try refreshing the page or using a
+              different browser.
+            </p>
           </div>
         </div>
       </div>

@@ -1,4 +1,9 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from "axios";
+import axios, {
+  AxiosInstance,
+  AxiosResponse,
+  AxiosError,
+  InternalAxiosRequestConfig,
+} from "axios";
 
 import { getToken, clearToken } from "./auth";
 
@@ -15,16 +20,18 @@ const apiClient: AxiosInstance = axios.create({
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = getToken();
+
     if (token && config.headers) {
       // Safely set the Authorization header
       (config.headers as Record<string, string>).Authorization =
         `Bearer ${token}`;
     }
+
     return config;
   },
   (error: unknown) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response interceptor for error handling
@@ -39,8 +46,9 @@ apiClient.interceptors.response.use(
         window.location.href = "/login";
       }
     }
+
     return Promise.reject(error);
-  }
+  },
 );
 
 export default apiClient;

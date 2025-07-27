@@ -32,12 +32,12 @@ export interface QuoteFormData {
 export function isMenuItem(item: any): item is MenuItem {
   return (
     item &&
-    typeof item.id === 'string' &&
-    typeof item.name === 'string' &&
-    typeof item.description === 'string' &&
-    (typeof item.price === 'number' || typeof item.price === 'string') &&
-    typeof item.course === 'string' &&
-    typeof item.checked === 'boolean'
+    typeof item.id === "string" &&
+    typeof item.name === "string" &&
+    typeof item.description === "string" &&
+    (typeof item.price === "number" || typeof item.price === "string") &&
+    typeof item.course === "string" &&
+    typeof item.checked === "boolean"
   );
 }
 
@@ -46,9 +46,12 @@ export function toMenuItem(input: MenuItemInput): MenuItem {
   return {
     id: input.id || Math.random().toString(36).substr(2, 9),
     name: input.name,
-    description: input.description || '',
-    price: typeof input.price === 'string' ? parseFloat(input.price) || 0 : input.price || 0,
-    course: input.course || 'other',
-    checked: true
+    description: input.description || "",
+    price:
+      typeof input.price === "string"
+        ? parseFloat(input.price) || 0
+        : input.price || 0,
+    course: input.course || "other",
+    checked: true,
   };
 }

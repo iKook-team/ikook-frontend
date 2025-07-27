@@ -2,9 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { FaStar, FaRegHeart } from "react-icons/fa";
-import { Card, CardBody, CardFooter, User } from "@heroui/react";
+import { Card, CardBody, CardFooter } from "@heroui/react";
 import Image from "next/image";
-import { getCurrencySymbol } from '@/lib/utils/currency';
+
+import { getCurrencySymbol } from "@/lib/utils/currency";
 
 interface BadgeData {
   id: string;
@@ -104,7 +105,7 @@ export const MenuListing: React.FC<MenuListingProps> = ({
   const currencySymbol = getCurrencySymbol({ currency, country });
 
   return (
-    <div 
+    <div
       className="relative w-full max-w-lg h-80"
       onClick={handleCardClick}
       onKeyDown={(e: React.KeyboardEvent) => {
@@ -120,9 +121,7 @@ export const MenuListing: React.FC<MenuListingProps> = ({
         className="w-full h-full hover:shadow-lg transition-shadow duration-200 cursor-pointer"
         shadow="sm"
       >
-        <CardBody
-          className="overflow-visible p-0 relative h-48 bg-gray-100"
-        >
+        <CardBody className="overflow-visible p-0 relative h-48 bg-gray-100">
           <img
             src={img || "/menus/menu1.png"}
             alt={title}
@@ -131,13 +130,18 @@ export const MenuListing: React.FC<MenuListingProps> = ({
           />
           <FaRegHeart className="absolute top-2 right-2 text-white text-xl z-10" />
           <span className="absolute top-2 left-2 bg-white rounded-full px-4 py-1 text-xs z-10">
-            {cuisine_types && cuisine_types.length > 0 ? cuisine_types[0] : 'Cuisine'}
+            {cuisine_types && cuisine_types.length > 0
+              ? cuisine_types[0]
+              : "Cuisine"}
           </span>
         </CardBody>
         <CardFooter className="flex flex-col items-start gap-1.5 px-4 py-3">
           <div className="flex items-center justify-between w-full">
             <h3 className="text-base font-semibold text-gray-900">{title}</h3>
-            <span className="text-base font-semibold text-gray-900">{currencySymbol}{price}</span>
+            <span className="text-base font-semibold text-gray-900">
+              {currencySymbol}
+              {price}
+            </span>
           </div>
           <div className="flex items-center gap-1">
             <div className="flex items-center">
@@ -146,7 +150,9 @@ export const MenuListing: React.FC<MenuListingProps> = ({
                 {rating}
               </span>
             </div>
-            <span className="text-xs text-gray-500">({reviewCount} Reviews)</span>
+            <span className="text-xs text-gray-500">
+              ({reviewCount} Reviews)
+            </span>
           </div>
         </CardFooter>
         {/* Divider and badges section */}

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 
 import { FormField } from "../ui/form-field";
+
 import { MenuSection } from "./menu-section";
 
 export interface MenuItemInput {
@@ -13,111 +14,128 @@ export interface MenuItemInput {
 
 interface QuoteFormProps {
   menuItems: MenuItemInput[];
-  onCreateQuote: (data: { items: MenuItemInput[]; menuName: string }) => Promise<void>;
+  onCreateQuote: (data: {
+    items: MenuItemInput[];
+    menuName: string;
+  }) => Promise<void>;
   onMenuItemsChange?: (count: number) => void;
   isSubmitting?: boolean;
   bookingId?: number;
 }
 
-export const QuoteForm: React.FC<QuoteFormProps> = ({ 
-  menuItems = [], 
+export const QuoteForm: React.FC<QuoteFormProps> = ({
+  menuItems = [],
   onCreateQuote,
   onMenuItemsChange,
   isSubmitting = false,
-  bookingId
+  bookingId,
 }) => {
-  const [menuName, setMenuName] = useState('');
-  type CourseType = 'starter' | 'main' | 'dessert' | 'side';
-  
-  const [menuItemsState, setMenuItemsState] = useState<Record<CourseType, MenuItemInput[]>>(() => {
+  const [menuName, setMenuName] = useState("");
+
+  type CourseType = "starter" | "main" | "dessert" | "side";
+
+  const [menuItemsState, setMenuItemsState] = useState<
+    Record<CourseType, MenuItemInput[]>
+  >(() => {
     const initialItems: Record<CourseType, MenuItemInput[]> = {
       starter: [],
       main: [],
       dessert: [],
-      side: []
+      side: [],
     };
-    
+
     // Initialize with any provided menu items
-    (menuItems || []).forEach(item => {
+    (menuItems || []).forEach((item) => {
       if (item.course in initialItems) {
         const course = item.course as CourseType;
+
         initialItems[course].push(item);
       }
     });
-    
+
     return initialItems;
   });
 
-  const handleAddItem = (course: CourseType, item: { name: string; description: string; price?: string }) => {
+  const handleAddItem = (
+    course: CourseType,
+    item: { name: string; description: string; price?: string },
+  ) => {
     const newItem: MenuItemInput = {
       ...item,
-      course
+      course,
     };
-    
+
     const updatedItems = {
       ...menuItemsState,
-      [course]: [...menuItemsState[course], newItem]
+      [course]: [...menuItemsState[course], newItem],
     };
-    
+
     setMenuItemsState(updatedItems);
-    
+
     // Notify parent about the updated item count
     const allItems = Object.values(updatedItems).flat();
+
     onMenuItemsChange?.(allItems.length);
   };
 
   const handleRemoveItem = (course: CourseType, index: number) => {
     const updatedItems = {
       ...menuItemsState,
-      [course]: menuItemsState[course].filter((_item: MenuItemInput, i: number) => i !== index)
+      [course]: menuItemsState[course].filter(
+        (_item: MenuItemInput, i: number) => i !== index,
+      ),
     };
-    
+
     setMenuItemsState(updatedItems);
-    
+
     // Notify parent about the updated item count
     const allItems = Object.values(updatedItems).flat();
+
     onMenuItemsChange?.(allItems.length);
   };
-  
+
   // Update local state when menuItems prop changes
   React.useEffect(() => {
     const initialItems: Record<CourseType, MenuItemInput[]> = {
       starter: [],
       main: [],
       dessert: [],
-      side: []
+      side: [],
     };
-    
+
     // Initialize with any provided menu items
-    (menuItems || []).forEach(item => {
+    (menuItems || []).forEach((item) => {
       if (item.course in initialItems) {
         const course = item.course as CourseType;
+
         initialItems[course].push(item);
       }
     });
-    
+
     setMenuItemsState(initialItems);
   }, [menuItems]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const allItems = Object.values(menuItemsState).flat();
-    
+
     if (allItems.length === 0) {
-      toast.error('Please add at least one menu item');
+      toast.error("Please add at least one menu item");
+
       return;
     }
-    
+
     if (!menuName.trim()) {
-      toast.error('Please enter a name for this menu');
+      toast.error("Please enter a name for this menu");
+
       return;
     }
-    
+
     // Call parent handler with current form data
-    await onCreateQuote({ 
+    await onCreateQuote({
       items: allItems,
-      menuName: menuName.trim()
+      menuName: menuName.trim(),
     });
   };
 
@@ -145,7 +163,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
           </div>
         </div>
       </div>
-      
+
       {/* Menu Name Input */}
       <div className="my-6">
         <FormField
@@ -157,40 +175,40 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
           required
         />
       </div>
-      
+
       {/* Menu sections */}
       <MenuSection
         title="Starters"
         course="starter"
         items={menuItemsState.starter}
-        onAddItem={(item) => handleAddItem('starter', item)}
-        onRemoveItem={(index) => handleRemoveItem('starter', index)}
+        onAddItem={(item) => handleAddItem("starter", item)}
+        onRemoveItem={(index) => handleRemoveItem("starter", index)}
       />
-      
+
       <MenuSection
         title="Mains"
         course="main"
         items={menuItemsState.main}
-        onAddItem={(item) => handleAddItem('main', item)}
-        onRemoveItem={(index) => handleRemoveItem('main', index)}
+        onAddItem={(item) => handleAddItem("main", item)}
+        onRemoveItem={(index) => handleRemoveItem("main", index)}
       />
-      
+
       <MenuSection
         title="Desserts"
         course="dessert"
         items={menuItemsState.dessert}
-        onAddItem={(item) => handleAddItem('dessert', item)}
-        onRemoveItem={(index) => handleRemoveItem('dessert', index)}
+        onAddItem={(item) => handleAddItem("dessert", item)}
+        onRemoveItem={(index) => handleRemoveItem("dessert", index)}
       />
-      
+
       <MenuSection
         title="Sides"
         course="side"
         items={menuItemsState.side}
-        onAddItem={(item) => handleAddItem('side', item)}
-        onRemoveItem={(index) => handleRemoveItem('side', index)}
+        onAddItem={(item) => handleAddItem("side", item)}
+        onRemoveItem={(index) => handleRemoveItem("side", index)}
       />
-      
+
       {/* Submit Button */}
       <div className="mt-auto pt-4">
         <button
@@ -198,7 +216,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
           disabled={isSubmitting}
           className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-800 bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {isSubmitting ? 'Creating Quote...' : 'Create Quote'}
+          {isSubmitting ? "Creating Quote..." : "Create Quote"}
         </button>
       </div>
     </form>

@@ -1,49 +1,59 @@
 import React from "react";
-import { useAuthStore } from '@/lib/store/auth-store';
-import { getCurrencySymbol } from '@/lib/utils/currency';
-import { paymentsService } from '@/lib/api/payments';
+
+import { useAuthStore } from "@/lib/store/auth-store";
+import { getCurrencySymbol } from "@/lib/utils/currency";
+import { paymentsService } from "@/lib/api/payments";
 
 interface OrderSummaryProps {
   quote?: any;
   isCustomBooking?: boolean;
 }
 
-export const OrderSummary: React.FC<OrderSummaryProps> = ({ quote, isCustomBooking = false }) => {
+export const OrderSummary: React.FC<OrderSummaryProps> = ({
+  quote,
+  isCustomBooking = false,
+}) => {
   const booking = useAuthStore((s) => s.booking);
-  const chefName = booking?.chef_name || 'Chef';
-  const chefAvatar = booking?.chef_avatar || 'https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/b8c11ad88b00cdfbfd0dac9c16bd04c1ac816df3?placeholderIfAbsent=true';
-  const chefLocation = booking?.city || 'Unknown';
+  const chefName = booking?.chef_name || "Chef";
+  const chefAvatar =
+    booking?.chef_avatar ||
+    "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/b8c11ad88b00cdfbfd0dac9c16bd04c1ac816df3?placeholderIfAbsent=true";
+  const chefLocation = booking?.city || "Unknown";
   const guests = booking?.num_of_guests || 1;
-  const pricePerPerson = booking?.menu_price_per_person ? parseFloat(booking.menu_price_per_person) : 0;
+  const pricePerPerson = booking?.menu_price_per_person
+    ? parseFloat(booking.menu_price_per_person)
+    : 0;
   const total = quote?.total_cost ? parseFloat(quote.total_cost) : 0;
   const platformFee = Math.round(total * 0.025);
   const currency = getCurrencySymbol({ country: booking?.country });
 
   const handlePayment = async () => {
     if (!quote?.id) {
-      console.error('No quote ID available');
+      console.error("No quote ID available");
+
       return;
     }
-    
+
     try {
-      console.log('Initiating payment for quote:', quote.id);
+      console.log("Initiating payment for quote:", quote.id);
       const res = await paymentsService.pay(quote.id);
-      console.log('Payment response:', res);
-      
+
+      console.log("Payment response:", res);
+
       if (res.checkout_url) {
-        console.log('Redirecting to checkout URL:', res.checkout_url);
+        console.log("Redirecting to checkout URL:", res.checkout_url);
         // Optionally save reference to localStorage for later verification
         if (res.reference) {
-          localStorage.setItem('payment_reference', res.reference);
+          localStorage.setItem("payment_reference", res.reference);
         }
         // Force a full page reload to ensure clean state
         window.location.assign(res.checkout_url);
       } else {
-        console.error('No checkout_url in response:', res);
-        alert('Failed to get payment URL. Please try again.');
+        console.error("No checkout_url in response:", res);
+        alert("Failed to get payment URL. Please try again.");
       }
     } catch (err) {
-      alert('Failed to initiate payment. Please try again.');
+      alert("Failed to initiate payment. Please try again.");
     }
   };
 
@@ -80,11 +90,13 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ quote, isCustomBooki
                     alt="Rating"
                   />
                   <span className="text-[#6F6E6D] self-stretch w-7 my-auto">
-                    {booking?.chef_rating ? booking.chef_rating : '-'}
+                    {booking?.chef_rating ? booking.chef_rating : "-"}
                   </span>
                 </div>
                 <span className="text-[#6F6E6D] font-light self-stretch my-auto">
-                  {booking?.chef_num_reviews ? `(${booking.chef_num_reviews} Reviews)` : ''}
+                  {booking?.chef_num_reviews
+                    ? `(${booking.chef_num_reviews} Reviews)`
+                    : ""}
                 </span>
               </div>
             </div>
@@ -102,12 +114,21 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ quote, isCustomBooki
       <div className="text-[#323335] mt-[33px]">
         <div className="text-sm font-normal leading-none">
           <div className="flex gap-[40px_86px]">
-            <span className="text-[#323335] w-[209px]">{guests} Guests * {currency}{pricePerPerson}</span>
-            <span className="text-[#323335] text-right w-[35px]">{currency}{(guests * pricePerPerson).toLocaleString()}</span>
+            <span className="text-[#323335] w-[209px]">
+              {guests} Guests * {currency}
+              {pricePerPerson}
+            </span>
+            <span className="text-[#323335] text-right w-[35px]">
+              {currency}
+              {(guests * pricePerPerson).toLocaleString()}
+            </span>
           </div>
           <div className="flex gap-[40px_73px] mt-3">
             <span className="text-[#323335] w-[209px]">Platform fee 2.5%</span>
-            <span className="text-[#323335] text-right w-12">{currency}{platformFee.toLocaleString()}</span>
+            <span className="text-[#323335] text-right w-12">
+              {currency}
+              {platformFee.toLocaleString()}
+            </span>
           </div>
         </div>
         <div className="w-full max-w-[331px] text-base font-medium whitespace-nowrap mt-[17px]">
@@ -118,7 +139,10 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ quote, isCustomBooki
           />
           <div className="flex gap-[40px_74px] mt-[7px]">
             <span className="text-[#323335] w-[209px]">TOTAL</span>
-            <span className="text-[#323335] text-right w-12">{currency}{total.toLocaleString()}</span>
+            <span className="text-[#323335] text-right w-12">
+              {currency}
+              {total.toLocaleString()}
+            </span>
           </div>
         </div>
       </div>
@@ -128,7 +152,8 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ quote, isCustomBooki
         onClick={handlePayment}
         className="text-white border border-[color:var(--Yellow-Pry,#FCC01C)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] min-w-60 w-[331px] gap-2 overflow-hidden bg-[#FCC01C] px-5 py-3 rounded-lg border-solid text-base font-bold mt-[59px] max-md:mt-10"
       >
-        Make Payment ({currency}{total.toLocaleString()})
+        Make Payment ({currency}
+        {total.toLocaleString()})
       </button>
     </aside>
   );

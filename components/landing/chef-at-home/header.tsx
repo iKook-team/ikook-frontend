@@ -1,13 +1,19 @@
-import React from 'react';
+import React from "react";
 
 const Header = () => {
   return (
     <header className="flex w-[666px] max-w-full items-stretch gap-[40px_43px] flex-wrap">
       <nav className="flex gap-[40px_60px] text-base text-[#3F3E3D] font-medium grow shrink basis-auto my-auto">
-        <a href="#menu" className="text-[#3F3E3D] hover:text-[#FCC01C] transition-colors">
+        <a
+          href="#menu"
+          className="text-[#3F3E3D] hover:text-[#FCC01C] transition-colors"
+        >
           Explore Menu
         </a>
-        <a href="#how-it-works" className="text-[#3F3E3D] hover:text-[#FCC01C] transition-colors">
+        <a
+          href="#how-it-works"
+          className="text-[#3F3E3D] hover:text-[#FCC01C] transition-colors"
+        >
           How it works
         </a>
         <div className="flex flex-col relative aspect-[2] w-12 whitespace-nowrap">
@@ -16,7 +22,10 @@ const Header = () => {
             className="absolute h-full w-full object-cover inset-0"
             alt="Gift icon"
           />
-          <a href="#gift" className="relative text-[#3F3E3D] hover:text-[#FCC01C] transition-colors">
+          <a
+            href="#gift"
+            className="relative text-[#3F3E3D] hover:text-[#FCC01C] transition-colors"
+          >
             Gift
           </a>
         </div>
@@ -28,7 +37,10 @@ const Header = () => {
             className="aspect-[1] object-contain w-6 shrink-0"
             alt="User icon"
           />
-          <a href="#login" className="text-[#3F3E3D] hover:text-[#FCC01C] transition-colors">
+          <a
+            href="#login"
+            className="text-[#3F3E3D] hover:text-[#FCC01C] transition-colors"
+          >
             Login
           </a>
         </div>

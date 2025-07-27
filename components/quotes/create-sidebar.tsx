@@ -9,7 +9,10 @@ interface CreateSidebarProps {
   isSubmitting?: boolean;
 }
 
-export const CreateSidebar: React.FC<CreateSidebarProps> = ({ onPreview, isSubmitting = false }) => {
+export const CreateSidebar: React.FC<CreateSidebarProps> = ({
+  onPreview,
+  isSubmitting = false,
+}) => {
   return (
     <div className="px-8 pt-10 pb-28 w-full bg-white rounded-2xl border border-solid shadow-2xl border-neutral-200 text-zinc-800 max-md:px-5 max-md:pb-24 max-md:mt-7">
       <div className="flex flex-col w-full">
@@ -21,13 +24,13 @@ export const CreateSidebar: React.FC<CreateSidebarProps> = ({ onPreview, isSubmi
         />
         <EventDetails />
         <CostSummary />
-        <button 
+        <button
           onClick={onPreview}
           disabled={isSubmitting}
           className={`flex w-full justify-center items-center px-10 py-3 mt-7 text-base font-semibold text-white bg-amber-400 rounded-lg border border-amber-400 border-solid shadow-sm transition-colors ${
-            isSubmitting 
-              ? 'opacity-70 cursor-not-allowed' 
-              : 'hover:bg-amber-500'
+            isSubmitting
+              ? "opacity-70 cursor-not-allowed"
+              : "hover:bg-amber-500"
           }`}
         >
           <span className="self-stretch my-auto">Preview Quote</span>

@@ -9,10 +9,12 @@ interface ProgressStepProps {
 export function ProgressStep({
   label,
   isCompleted = true,
-  className = ""
+  className = "",
 }: ProgressStepProps) {
   return (
-    <div className={`flex relative flex-col shrink-0 gap-1 items-start ${className}`}>
+    <div
+      className={`flex relative flex-col shrink-0 gap-1 items-start ${className}`}
+    >
       <div className="relative h-1 w-full">
         <div className="absolute top-0 left-0 shrink-0 h-1 rounded bg-neutral-200 w-full" />
         {isCompleted && (

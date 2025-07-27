@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { MenuItemInput } from "@/components/quotes/quote-form";
 
+import { MenuItemInput } from "@/components/quotes/quote-form";
 import { QuoteForm } from "@/components/quotes/quote-form";
 import { CreateSidebar } from "@/components/quotes/create-sidebar";
 import { quotesService } from "@/lib/api/quotes";
@@ -33,16 +33,16 @@ const CreateQuotePage: React.FC = () => {
       setIsSubmitting(true);
 
       // Ensure all items have a price, providing a default if needed
-      const processedItems = data.items.map(item => ({
+      const processedItems = data.items.map((item) => ({
         ...item,
-        price: item.price || '0'  // Default to '0' if price is undefined or empty
+        price: item.price || "0", // Default to '0' if price is undefined or empty
       }));
 
       // Prepare the data for the API
       const quoteData = {
         name: data.menuName || formData.name,
         booking: formData.booking,
-        items: processedItems
+        items: processedItems,
       };
 
       // Create the quote
@@ -67,6 +67,7 @@ const CreateQuotePage: React.FC = () => {
     // The actual quote creation happens in handleCreateQuote
     toast.loading("Saving quote...");
   };
+
   return (
     <main className="flex flex-col items-center justify-center mt-9 max-w-full w-full px-4">
       <div className="w-full max-w-[885px]">

@@ -7,10 +7,9 @@ import CreateMenuStep2 from "@/components/menus/create-menu-step2";
 import CreateMenuStep3 from "@/components/menus/create-menu-step3";
 import CreateMenuStep4 from "@/components/menus/create-menu-step4";
 import CreateMenuStep5 from "@/components/menus/create-menu-step5";
-
 import { MenuFormData } from "@/types/menu-form";
 import { menuService } from "@/lib/api/menus";
-import { showToast, handleApiError } from "@/lib/utils/toast";
+import { handleApiError } from "@/lib/utils/toast";
 const CreateMenuPage: React.FC = () => {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
@@ -21,12 +20,12 @@ const CreateMenuPage: React.FC = () => {
   // Memoize navigation handlers
   const nextStep = useCallback(
     () => setCurrentStep((prev) => Math.min(prev + 1, 5)),
-    []
+    [],
   );
 
   const prevStep = useCallback(
     () => setCurrentStep((prev) => Math.max(prev - 1, 1)),
-    []
+    [],
   );
 
   // Memoize updateFormData to prevent unnecessary re-renders
@@ -34,7 +33,7 @@ const CreateMenuPage: React.FC = () => {
     setFormData((prev) => {
       // Only update if there are actual changes
       const hasChanges = Object.keys(newData).some(
-        (key) => JSON.stringify(prev[key]) !== JSON.stringify(newData[key])
+        (key) => JSON.stringify(prev[key]) !== JSON.stringify(newData[key]),
       );
 
       if (!hasChanges) return prev;
@@ -67,7 +66,9 @@ const CreateMenuPage: React.FC = () => {
         name: formData.menuName,
         price_per_person: formData.price,
         num_of_guests: formData.minimumGuests,
-        max_menu_selection: formData.maxMenuSelection ? parseInt(formData.maxMenuSelection, 10) : undefined,
+        max_menu_selection: formData.maxMenuSelection
+          ? parseInt(formData.maxMenuSelection, 10)
+          : undefined,
         event_types: formData.eventTypes,
         cuisine_types: formData.cuisineTypes,
         menu_type: formData.menuType,
@@ -82,17 +83,22 @@ const CreateMenuPage: React.FC = () => {
       const allItems = formData.menuItems || [];
       // Deduplicate by course and name
       const uniqueItems = Array.from(
-        new Map(allItems.map((item: any) => [item.course + '|' + item.name, item])).values()
+        new Map(
+          allItems.map((item: any) => [item.course + "|" + item.name, item]),
+        ).values(),
       );
+
       for (const item of uniqueItems) {
-        if (item && typeof item === 'object') {
+        if (item && typeof item === "object") {
           await menuService.createMenuItem({ ...item, menu: menuId });
         }
       }
       // 3. Upload images
       const images = formData.uploadedImages || [];
+
       for (const image of images) {
         const form = new FormData();
+
         form.append("image", image instanceof File ? image : "");
         form.append("menu", menuId);
         await menuService.uploadMenuImage(form);
@@ -102,7 +108,7 @@ const CreateMenuPage: React.FC = () => {
     } catch (err: any) {
       handleApiError(err, "Failed to create menu. Please try again.");
       setSubmitError(
-        err?.message || "Failed to create menu. Please try again."
+        err?.message || "Failed to create menu. Please try again.",
       );
     } finally {
       setIsSubmitting(false);
@@ -126,7 +132,7 @@ const CreateMenuPage: React.FC = () => {
       prevStep,
       handleSaveDraft,
       handleBackToMenus,
-    ]
+    ],
   );
 
   // Render the current step

@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+
 import { FormField } from "@/components/ui/form-field";
-import { Button } from "@/components/ui/button";
 
 const BankAccountForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -15,11 +15,14 @@ const BankAccountForm: React.FC = () => {
     sortCode: "",
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -40,8 +43,10 @@ const BankAccountForm: React.FC = () => {
               <div className="border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] flex flex-col items-stretch bg-white mt-[21px] pt-[29px] rounded-[15px] border-solid border-[#E7E7E7] max-md:max-w-full">
                 <form onSubmit={handleSubmit} className="ml-[17px] mr-[18px]">
                   <fieldset className="border-0 p-0 m-0">
-                    <legend className="sr-only">Bank Account Information</legend>
-                    
+                    <legend className="sr-only">
+                      Bank Account Information
+                    </legend>
+
                     <div className="w-full max-md:max-w-full">
                       <FormField
                         label="Billing Address"

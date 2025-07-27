@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+
 import { menuService } from "@/lib/api/menus";
 
 export const useMenu = (id?: string | number) => {
@@ -10,7 +11,8 @@ export const useMenu = (id?: string | number) => {
     if (!id) return;
     setLoading(true);
     setError(null);
-    menuService.getMenuById(id)
+    menuService
+      .getMenuById(id)
       .then((data) => {
         setMenu(data?.data || data || null);
       })
@@ -22,4 +24,4 @@ export const useMenu = (id?: string | number) => {
   }, [id]);
 
   return { menu, loading, error };
-}; 
+};

@@ -120,6 +120,7 @@ export const listingService = {
   // Get menu listings
   async getMenus(params: MenuListingParams = {}): Promise<ApiResponse<Menu>> {
     const requestParams = { ...params, page_size: 20 };
+
     console.log("Fetching menus with params:", requestParams);
 
     try {
@@ -141,13 +142,13 @@ export const listingService = {
 
       if (!response.data?.data?.results) {
         console.warn("No results array in menu response:", response.data);
+
         return { count: 0, next: null, previous: null, results: [] };
       }
 
       // Map the response to match the expected ApiResponse<Menu> format
       return response.data.data;
     } catch (error: any) {
-
       // Return an empty result set instead of throwing to prevent UI crashes
       return { count: 0, next: null, previous: null, results: [] };
     }
@@ -155,12 +156,13 @@ export const listingService = {
 
   // Get service listings
   async getServices(
-    params: ServiceListingParams = {}
+    params: ServiceListingParams = {},
   ): Promise<ApiResponse<Service>> {
     try {
       const response = await apiClient.get<ApiResponse<Service>>("/services/", {
         params: { ...params, page_size: 20 },
       });
+
       return response.data;
     } catch (error) {
       throw error;
@@ -178,8 +180,9 @@ export const listingService = {
             user_type: "Chef",
             page_size: 20,
           },
-        }
+        },
       );
+
       return response.data;
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -192,6 +195,7 @@ export const listingService = {
   getMenuById: async (id: string | number): Promise<Menu> => {
     try {
       const response = await apiClient.get(`/menus/${id}/`);
+
       return response.data;
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -204,6 +208,7 @@ export const listingService = {
   getServiceById: async (id: string | number) => {
     try {
       const response = await apiClient.get(`/services/${id}/`);
+
       return response.data;
     } catch (error) {
       throw error;
@@ -214,6 +219,7 @@ export const listingService = {
   getChefById: async (id: string | number) => {
     try {
       const response = await apiClient.get(`/users/profiles/${id}/`);
+
       return response.data;
     } catch (error) {
       throw error;

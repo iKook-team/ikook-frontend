@@ -1,4 +1,5 @@
 import React from "react";
+
 import { useAuthStore } from "@/lib/store/auth-store";
 import { getCurrencySymbol } from "@/lib/utils/currency";
 
@@ -11,9 +12,13 @@ interface TransactionItemProps {
 
 const getStatusStyle = (status: string) => {
   const s = status?.toLowerCase() || "";
+
   if (s.includes("pending")) return "bg-yellow-100 text-yellow-700";
-  if (s.includes("completed") || s.includes("success")) return "bg-emerald-100 text-green-600";
-  if (s.includes("failed") || s.includes("reject")) return "bg-red-100 text-red-600";
+  if (s.includes("completed") || s.includes("success"))
+    return "bg-emerald-100 text-green-600";
+  if (s.includes("failed") || s.includes("reject"))
+    return "bg-red-100 text-red-600";
+
   return "bg-gray-100 text-gray-600";
 };
 
@@ -33,7 +38,9 @@ const TransactionItem = ({
         <p className="overflow-hidden text-base font-bold text-ellipsis text-zinc-800">
           {amount}
         </p>
-        <div className={`flex gap-2.5 justify-center items-center p-1 rounded ${getStatusStyle(status)}`}>
+        <div
+          className={`flex gap-2.5 justify-center items-center p-1 rounded ${getStatusStyle(status)}`}
+        >
           <span className="text-xs font-semibold">{status}</span>
         </div>
       </div>
@@ -46,7 +53,10 @@ interface WithdrawHistoryProps {
   onWithdraw?: () => void;
 }
 
-export const WithdrawHistory: React.FC<WithdrawHistoryProps> = ({ withdrawals = [], onWithdraw }) => {
+export const WithdrawHistory: React.FC<WithdrawHistoryProps> = ({
+  withdrawals = [],
+  onWithdraw,
+}) => {
   const user = useAuthStore((s) => s.user);
   const currency = getCurrencySymbol({
     currency: (user as any)?.currency,
@@ -56,9 +66,12 @@ export const WithdrawHistory: React.FC<WithdrawHistoryProps> = ({ withdrawals = 
   const formatAmount = (amount?: string) => {
     if (!amount) return `${currency}0`;
     const num = Number(amount);
+
     if (isNaN(num)) return `${currency}0`;
+
     return `${currency}${num.toLocaleString()}`;
   };
+
   return (
     <section className="w-full max-w-4xl mx-auto px-5 py-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
@@ -72,13 +85,22 @@ export const WithdrawHistory: React.FC<WithdrawHistoryProps> = ({ withdrawals = 
 
       <div className="flex flex-col gap-3 w-full">
         {withdrawals.length === 0 ? (
-          <div className="text-center text-gray-500 py-8">No withdrawals yet.</div>
+          <div className="text-center text-gray-500 py-8">
+            No withdrawals yet.
+          </div>
         ) : (
           withdrawals.map((withdrawal, index) => (
             <TransactionItem
               key={withdrawal.id || index}
-              title={withdrawal.bank_detail?.bank_name ? `Withdrawal to ${withdrawal.bank_detail.bank_name}` : "Withdrawal"}
-              date={new Date(withdrawal.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+              title={
+                withdrawal.bank_detail?.bank_name
+                  ? `Withdrawal to ${withdrawal.bank_detail.bank_name}`
+                  : "Withdrawal"
+              }
+              date={new Date(withdrawal.created_at).toLocaleDateString(
+                "en-GB",
+                { day: "2-digit", month: "short", year: "numeric" },
+              )}
               amount={formatAmount(withdrawal.amount)}
               status={withdrawal.status}
             />

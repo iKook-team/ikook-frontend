@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { ChefRegistrationForm1 } from "@/components/auth/chef-registration-form1";
@@ -40,6 +40,7 @@ const ChefSignupPage: React.FC = () => {
   // Set initial step based on URL param only once on mount
   const initialStep = React.useMemo(() => {
     const verified = searchParams.get("verified") === "true";
+
     return verified ? 4 : 1;
   }, []);
   const [step, setStep] = useState(initialStep);
@@ -58,10 +59,10 @@ const ChefSignupPage: React.FC = () => {
         : { otp: data };
 
     setFormData((prev) => ({ ...prev, ...newData }));
-    
+
     if (step === 6) {
       setIsSubmitting(true);
-      
+
       try {
         if (!chefFormData) {
           throw new Error("Chef form data not found");
@@ -69,30 +70,37 @@ const ChefSignupPage: React.FC = () => {
 
         // Get user location from localStorage
         let location = "POINT(0.0 0.0)"; // Default location
+
         if (typeof window !== "undefined") {
           const userLocation = localStorage.getItem("userLocation");
+
           if (userLocation) {
             try {
               const coords = JSON.parse(userLocation);
+
               if (coords.latitude && coords.longitude) {
                 location = `POINT(${coords.longitude} ${coords.latitude})`;
               }
             } catch (error) {
-              console.warn("Failed to parse user location from localStorage:", error);
+              console.warn(
+                "Failed to parse user location from localStorage:",
+                error,
+              );
             }
           }
         }
 
         // Map work authorization to has_work_permit
         const hasWorkPermit = chefFormData.workAuthorization === "yes";
-        
+
         // Map criminal record to has_criminal_record
         const hasCriminalRecord = chefFormData.criminalRecord === "yes";
 
         // Determine chef services based on service type
-        const chefServices = chefFormData.serviceType === "Chef" 
-          ? ["Fine Dining", "Chef at Home"] 
-          : [];
+        const chefServices =
+          chefFormData.serviceType === "Chef"
+            ? ["Fine Dining", "Chef at Home"]
+            : [];
 
         // Combine data from all forms
         const signupData = {
@@ -130,12 +138,16 @@ const ChefSignupPage: React.FC = () => {
 
         // Save user profile to auth store
         if (response.data) {
-          const { setUser } = require("@/lib/store/auth-store").useAuthStore.getState();
+          const { setUser } =
+            require("@/lib/store/auth-store").useAuthStore.getState();
+
           setUser(response.data);
         }
 
         // Show success toast
-        showToast.success("Chef account created successfully! Welcome to iKook.");
+        showToast.success(
+          "Chef account created successfully! Welcome to iKook.",
+        );
 
         // Clear form data from store
         clearChefFormData();
@@ -209,9 +221,7 @@ const ChefSignupPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen relative bg-[#FBFBFB] max-md:w-full max-md:max-w-screen-lg max-md:h-auto max-md:min-h-screen">
-      <main className="relative">
-        {renderForm()}
-      </main>
+      <main className="relative">{renderForm()}</main>
     </div>
   );
 };

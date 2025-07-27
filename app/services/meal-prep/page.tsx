@@ -10,21 +10,37 @@ const MealPrepForm: React.FC = () => {
   const [availability, setAvailability] = useState(true);
   const [startingPrice, setStartingPrice] = useState("000");
   const [minGuests, setMinGuests] = useState("");
-  const [selectedCuisines, setSelectedCuisines] = useState(["African", "Modern English", "Italian"]);
-  const allCuisines = ["African", "Modern English", "Italian", "Chinese", "French", "English", "Spicy Mediterranean", "Pizza", "Pastries"];
+  const [selectedCuisines, setSelectedCuisines] = useState([
+    "African",
+    "Modern English",
+    "Italian",
+  ]);
+  const allCuisines = [
+    "African",
+    "Modern English",
+    "Italian",
+    "Chinese",
+    "French",
+    "English",
+    "Spicy Mediterranean",
+    "Pizza",
+    "Pastries",
+  ];
   const [appearance, setAppearance] = useState({
     weekly: false,
     monthly: true,
   });
   const [delivery, setDelivery] = useState({ physical: false, gourmet: true });
   const [uploadedImage, setUploadedImage] = useState<string | null>(
-    "https://api.builder.io/api/v1/image/assets/TEMP/aabf432e495c3e13e0904f13fdcb6a489c241245?width=1226"
+    "https://api.builder.io/api/v1/image/assets/TEMP/aabf432e495c3e13e0904f13fdcb6a489c241245?width=1226",
   );
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+
     if (file) {
       const reader = new FileReader();
+
       reader.onload = (e) => {
         setUploadedImage(e.target?.result as string);
       };
@@ -134,7 +150,7 @@ const MealPrepForm: React.FC = () => {
                   <Checkbox
                     id="weekly"
                     checked={appearance.weekly}
-                    onChange={e =>
+                    onChange={(e) =>
                       setAppearance((prev) => ({
                         ...prev,
                         weekly: e.target.checked,
@@ -152,7 +168,7 @@ const MealPrepForm: React.FC = () => {
                   <Checkbox
                     id="monthly"
                     checked={appearance.monthly}
-                    onChange={e =>
+                    onChange={(e) =>
                       setAppearance((prev) => ({
                         ...prev,
                         monthly: e.target.checked,
@@ -179,7 +195,7 @@ const MealPrepForm: React.FC = () => {
                   <Checkbox
                     id="physical"
                     checked={delivery.physical}
-                    onChange={e =>
+                    onChange={(e) =>
                       setDelivery((prev) => ({
                         ...prev,
                         physical: e.target.checked,
@@ -197,7 +213,7 @@ const MealPrepForm: React.FC = () => {
                   <Checkbox
                     id="gourmet"
                     checked={delivery.gourmet}
-                    onChange={e =>
+                    onChange={(e) =>
                       setDelivery((prev) => ({
                         ...prev,
                         gourmet: e.target.checked,

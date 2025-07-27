@@ -1,4 +1,5 @@
 import React from "react";
+
 import { useAuthStore } from "@/lib/store/auth-store";
 import { getCurrencySymbol } from "@/lib/utils/currency";
 
@@ -10,7 +11,9 @@ interface MetricCardProps {
 const MetricCard = ({ title, amount }: MetricCardProps) => (
   <div className="flex gap-24 items-center px-5 py-2 w-72 rounded-md border border-solid border-stone-300 max-md:min-w-[250px] max-md:w-[calc(33%_-_8px)] max-sm:w-full">
     <div className="flex flex-col items-start min-w-0">
-      <p className="text-base text-zinc-800 whitespace-nowrap overflow-hidden text-ellipsis w-full">{title}</p>
+      <p className="text-base text-zinc-800 whitespace-nowrap overflow-hidden text-ellipsis w-full">
+        {title}
+      </p>
       <p className="text-2xl font-bold text-zinc-800">{amount}</p>
     </div>
     <div className="flex gap-2.5 items-start p-2 bg-stone-50 rounded-[40px]">
@@ -42,17 +45,29 @@ export const RevenueMetrics: React.FC<RevenueMetricsProps> = ({ earnings }) => {
   const formatAmount = (amount?: string) => {
     if (!amount) return `${currency}0`;
     const num = Number(amount);
+
     if (isNaN(num)) return `${currency}0`;
+
     return `${currency}${num.toLocaleString()}`;
   };
+
   return (
     <section className="w-full max-w-4xl mx-auto px-5 py-6">
       <h1 className="text-2xl font-bold text-black mb-6">Revenue</h1>
 
       <div className="flex gap-4 w-full">
-        <MetricCard title="Available Balance" amount={formatAmount(earnings?.balance)} />
-        <MetricCard title="Withdraw" amount={formatAmount(earnings?.total_withdrawals)} />
-        <MetricCard title="Total" amount={formatAmount(earnings?.total_earnings)} />
+        <MetricCard
+          title="Available Balance"
+          amount={formatAmount(earnings?.balance)}
+        />
+        <MetricCard
+          title="Withdraw"
+          amount={formatAmount(earnings?.total_withdrawals)}
+        />
+        <MetricCard
+          title="Total"
+          amount={formatAmount(earnings?.total_earnings)}
+        />
       </div>
     </section>
   );

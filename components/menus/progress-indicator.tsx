@@ -17,15 +17,17 @@ const defaultSteps: Step[] = [
   { id: "details", label: "Details", isCompleted: true },
   { id: "menu-prices", label: "Menu & prices", isCompleted: true },
   { id: "menu-images", label: "Menu images", isCompleted: true },
-  { id: "finish-upload", label: "Finish upload", isCompleted: true }
+  { id: "finish-upload", label: "Finish upload", isCompleted: true },
 ];
 
 export function ProgressStepper({
   steps = defaultSteps,
-  className = ""
+  className = "",
 }: ProgressStepperProps) {
   return (
-    <section className={`box-border flex justify-between items-start w-[615px] mx-auto max-md:flex-wrap max-md:gap-6 max-md:justify-center max-sm:flex-col max-sm:gap-4 max-sm:items-center ${className}`}>
+    <section
+      className={`box-border flex justify-between items-start w-[615px] mx-auto max-md:flex-wrap max-md:gap-6 max-md:justify-center max-sm:flex-col max-sm:gap-4 max-sm:items-center ${className}`}
+    >
       {steps.map((step, index) => {
         let stepClassName = "";
 

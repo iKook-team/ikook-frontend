@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { AllergyTag } from "./custom/allergy-tags";
 
 const allergyOptions = [
@@ -21,9 +20,9 @@ interface DietaryRestrictionsProps {
   onChange: (allergies: string[]) => void;
 }
 
-export const DietaryRestrictions: React.FC<DietaryRestrictionsProps> = ({ 
-  selectedAllergies = [], 
-  onChange 
+export const DietaryRestrictions: React.FC<DietaryRestrictionsProps> = ({
+  selectedAllergies = [],
+  onChange,
 }) => {
   const toggleAllergy = (allergy: string) => {
     if (selectedAllergies.includes(allergy)) {

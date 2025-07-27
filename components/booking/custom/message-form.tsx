@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useAuthStore } from '@/lib/store/auth-store';
+
+import { useAuthStore } from "@/lib/store/auth-store";
 import { bookingsService } from "@/lib/api/bookings";
 import { showToast } from "@/lib/utils/toast";
 
@@ -20,7 +21,6 @@ export const MessagesForm: React.FC<MessagesFormProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const setBooking = useAuthStore((s) => s.setBooking);
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
@@ -30,15 +30,20 @@ export const MessagesForm: React.FC<MessagesFormProps> = ({
     try {
       // Format the date to YYYY-MM-DD if it exists
       const formatDate = (dateString: string): string => {
-        if (!dateString) return '';
+        if (!dateString) return "";
         const date = new Date(dateString);
-        if (isNaN(date.getTime())) return ''; // Return empty string for invalid dates
-        return date.toISOString().split('T')[0]; // Returns YYYY-MM-DD
+
+        if (isNaN(date.getTime())) return ""; // Return empty string for invalid dates
+
+        return date.toISOString().split("T")[0]; // Returns YYYY-MM-DD
       };
 
       const payload: any = {
         is_custom: isCustomBooking,
-        chef_service: bookingData.service === 'Large Event' ? 'Large Event' : (bookingData.service || 'Custom Service'),
+        chef_service:
+          bookingData.service === "Large Event"
+            ? "Large Event"
+            : bookingData.service || "Custom Service",
         location: "POINT(0.0 0.0)",
         country: "Nigeria",
         address: bookingData.location || "",
@@ -59,24 +64,27 @@ export const MessagesForm: React.FC<MessagesFormProps> = ({
       };
 
       // Only include preferred_cuisines if it's not a Chef at Home booking
-      if (bookingData.service !== 'Chef at Home') {
+      if (bookingData.service !== "Chef at Home") {
         payload.preferred_cuisines = bookingData.preferredCuisines || [];
       }
 
       const result = await bookingsService.createBooking(payload);
-      
+
       setBooking({
         ...result.data,
         menu_price_per_person: 0, // Custom booking might not have a menu
-        menu_name: 'Custom Service',
+        menu_name: "Custom Service",
       });
-      
+
       showToast.success("Booking request submitted successfully!");
       // For custom bookings, proceed to the next step (status card)
       onNext({ bookingId: result.data.id });
     } catch (error: any) {
       console.error("Error creating booking:", error);
-      showToast.error(error?.response?.data?.message || "Failed to create booking. Please try again.");
+      showToast.error(
+        error?.response?.data?.message ||
+          "Failed to create booking. Please try again.",
+      );
     } finally {
       setIsSubmitting(false);
     }

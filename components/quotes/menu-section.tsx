@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import { FormField } from "../ui/form-field";
 import { PriceInput } from "../ui/price-input";
 
@@ -13,7 +14,11 @@ interface MenuSectionProps {
   title: string;
   course: string;
   items: MenuItemInput[];
-  onAddItem: (item: { name: string; description: string; price?: string }) => void;
+  onAddItem: (item: {
+    name: string;
+    description: string;
+    price?: string;
+  }) => void;
   onRemoveItem: (index: number) => void;
 }
 
@@ -22,50 +27,51 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
   course,
   items = [],
   onAddItem,
-  onRemoveItem
+  onRemoveItem,
 }) => {
   const [itemInput, setItemInput] = useState({
-    name: '',
-    description: '',
-    price: ''
+    name: "",
+    description: "",
+    price: "",
   });
 
-  const handleInputChange = (field: 'name' | 'description' | 'price') => 
+  const handleInputChange =
+    (field: "name" | "description" | "price") =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      setItemInput(prev => ({ ...prev, [field]: e.target.value }));
+      setItemInput((prev) => ({ ...prev, [field]: e.target.value }));
     };
-    
+
   const handlePriceChange = (value: string) => {
-    setItemInput(prev => ({ ...prev, price: value }));
+    setItemInput((prev) => ({ ...prev, price: value }));
   };
 
   const handleAddItem = (e: React.MouseEvent) => {
     e.preventDefault();
     const { name, description, price } = itemInput;
+
     if (!name) return;
-    
+
     onAddItem({ name, description, price });
-    setItemInput({ name: '', description: '', price: '' });
+    setItemInput({ name: "", description: "", price: "" });
   };
+
   return (
     <div className="mt-6 max-md:max-w-full">
-      <h3 className="text-base font-medium text-black">
-        {title}
-      </h3>
+      <h3 className="text-base font-medium text-black">{title}</h3>
       <div className="mt-6 max-md:max-w-full">
         <div className="flex flex-col w-full">
           <FormField
             label="Menu item name"
             placeholder={`What's the ${course.toLowerCase()} name?`}
             value={itemInput.name}
-            onChange={handleInputChange('name')}
+            onChange={handleInputChange("name")}
           />
           <FormField
             label="Menu item description"
             className="mt-5"
             placeholder={`Describe the ${course.toLowerCase()}?`}
             value={itemInput.description}
-            onChange={handleInputChange('description')}
+            onChange={handleInputChange("description")}
           />
           <div className="mt-5">
             <PriceInput
@@ -87,13 +93,11 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
               </span>
             </div>
           </button>
-          
+
           {/* List of added items */}
           {items.length > 0 && (
             <div className="mt-5">
-              <h4 className="text-sm font-semibold mb-2">
-                Added {title}
-              </h4>
+              <h4 className="text-sm font-semibold mb-2">Added {title}</h4>
               <ul className="space-y-2">
                 {items.map((item, idx) => (
                   <li
@@ -104,7 +108,9 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
                       <div className="flex items-center justify-between">
                         <span className="font-medium">{item.name}</span>
                         {item.price && (
-                          <span className="ml-2 font-medium">${item.price}</span>
+                          <span className="ml-2 font-medium">
+                            ${item.price}
+                          </span>
                         )}
                       </div>
                       {item.description && (

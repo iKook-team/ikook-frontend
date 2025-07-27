@@ -1,20 +1,19 @@
-import React, { useState, useMemo } from "react";
-import { ProgressIndicator } from './progress-indicator';
+import React, { useState } from "react";
+
+import { ProgressIndicator } from "./progress-indicator";
+import { ActionButtons } from "./action-buttons";
+import { StatusCard } from "./status-card";
+
 import { ChefCard } from "@/components/cart/chef-card";
-import { ActionButtons } from './action-buttons';
 import { bookingsService } from "@/lib/api/bookings";
 import { showToast } from "@/lib/utils/toast";
-import { useAuthStore } from '@/lib/store/auth-store';
-import { StatusCard } from './status-card';
-import { 
-  BookingPayload, 
-  ChefAtHomePayload, 
-  LargeEventPayload, 
+import { useAuthStore } from "@/lib/store/auth-store";
+import {
+  BookingPayload,
+  ChefAtHomePayload,
+  LargeEventPayload,
   MealPrepPayload,
-  isChefAtHomePayload,
-  isLargeEventPayload,
-  isMealPrepPayload
-} from '@/types/booking';
+} from "@/types/booking";
 
 export interface MessagesFormProps {
   onNext: (data?: Record<string, any>) => void;
@@ -25,7 +24,7 @@ export interface MessagesFormProps {
   menu?: any;
   dietaryRestrictions?: string[];
   budget?: number;
-  budgetType?: 'Flexible' | 'Fixed' | null;
+  budgetType?: "Flexible" | "Fixed" | null;
   preferredCuisines?: string[];
   isCustomBooking?: boolean;
 }
@@ -51,9 +50,9 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
   const [bookingId, setBookingId] = useState<string | null>(null);
 
   const progressSteps = [
-    { label: 'Event Details', completed: true, inProgress: true },
-    { label: 'Budget', completed: false },
-    { label: 'Message', completed: false }
+    { label: "Event Details", completed: true, inProgress: true },
+    { label: "Budget", completed: false },
+    { label: "Message", completed: false },
   ];
 
   const VALID_DIETARY_RESTRICTIONS = [
@@ -72,64 +71,89 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
   // Map venue value to label
   const venueValueToLabel = (value: string) => {
     switch (value) {
-      case "home": return "Home";
-      case "relative": return "Relative/Friends Home";
-      case "rented": return "Rented Venue";
-      default: return value;
+      case "home":
+        return "Home";
+      case "relative":
+        return "Relative/Friends Home";
+      case "rented":
+        return "Rented Venue";
+      default:
+        return value;
     }
   };
 
   // Map venue values to valid API options
   const formatVenue = (venue: string): string => {
-    if (!venue) return 'Home'; // Default to 'Home' if no venue is provided
-    
+    if (!venue) return "Home"; // Default to 'Home' if no venue is provided
+
     // Normalize the input for case-insensitive comparison
     const normalizedVenue = venue.trim().toLowerCase();
-    
+
     // Map variations to valid values
-    if (['home', 'my home', 'my place', 'my house'].includes(normalizedVenue)) {
-      return 'Home';
+    if (["home", "my home", "my place", "my house"].includes(normalizedVenue)) {
+      return "Home";
     }
-    if (['relative', 'friends', 'friends home', "friend's home", 'relative home', 'relative/friends home', 'relative or friends home', 'relative\'s home'].includes(normalizedVenue)) {
-      return 'Relative/Friends Home';
+    if (
+      [
+        "relative",
+        "friends",
+        "friends home",
+        "friend's home",
+        "relative home",
+        "relative/friends home",
+        "relative or friends home",
+        "relative's home",
+      ].includes(normalizedVenue)
+    ) {
+      return "Relative/Friends Home";
     }
-    if (['rented', 'rented venue', 'venue', 'rented place', 'rented space'].includes(normalizedVenue)) {
-      return 'Rented Venue';
+    if (
+      [
+        "rented",
+        "rented venue",
+        "venue",
+        "rented place",
+        "rented space",
+      ].includes(normalizedVenue)
+    ) {
+      return "Rented Venue";
     }
-    
+
     // If the input doesn't match any known variations, return it as is (will be validated by API)
     return venue;
   };
 
   // Format date to YYYY-MM-DD format
   const formatDate = (dateString: string): string => {
-    if (!dateString) return '';
-    
+    if (!dateString) return "";
+
     try {
       // If it's already in YYYY-MM-DD format, return as is
       if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
         return dateString;
       }
-      
+
       // Otherwise, try to parse and reformat
       const date = new Date(dateString);
-      if (isNaN(date.getTime())) return ''; // Invalid date
-      
+
+      if (isNaN(date.getTime())) return ""; // Invalid date
+
       const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+
       return `${year}-${month}-${day}`;
     } catch (error) {
-      console.error('Error formatting date:', error);
-      return '';
+      console.error("Error formatting date:", error);
+
+      return "";
     }
   };
 
   const buildPayload = (): BookingPayload => {
     // Determine the service type first
     const serviceType = menu?.menu_type || menu?.type || "";
-    
+
     // Base payload with common fields
     const basePayload: any = {
       is_custom: isCustomBooking,
@@ -152,25 +176,27 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
       basePayload.menu_choices = selectedMenuItems.map(Number).filter(Boolean);
       basePayload.menu = menu?.id || 0;
     }
-    
-    if (serviceType === 'Meal Prep') {
+
+    if (serviceType === "Meal Prep") {
       return {
         ...basePayload,
         budget: bookingData.budget || "",
-        budget_type: bookingData.budgetType || 'Flexible',
-        appearance: bookingData.appearance || 'Weekly',
+        budget_type: bookingData.budgetType || "Flexible",
+        appearance: bookingData.appearance || "Weekly",
         num_of_weeks: bookingData.numOfWeeks || 1,
         num_of_weekly_visits: bookingData.numOfWeeklyVisits || 1,
-        experience: bookingData.experience || 'One time',
+        experience: bookingData.experience || "One time",
         meal_type: bookingData.mealType || [],
-        delivery_option: bookingData.deliveryOption || 'Physical',
+        delivery_option: bookingData.deliveryOption || "Physical",
         delivery_days: bookingData.deliveryDays || [],
         start_date: formatDate(bookingData.startDate) || "",
         end_date: formatDate(bookingData.endDate) || "",
         delivery_time: bookingData.deliveryTime || "",
         num_of_persons: bookingData.numOfPersons || 1,
       } as MealPrepPayload;
-    } else if (['Large Event', 'Meal Delivery', 'Corporate Dining'].includes(serviceType)) {
+    } else if (
+      ["Large Event", "Meal Delivery", "Corporate Dining"].includes(serviceType)
+    ) {
       return {
         ...basePayload,
         event_date: formatDate(bookingData.eventDate) || "",
@@ -178,7 +204,7 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
         event_venue: formatVenue(bookingData.venue) || "Home",
         num_of_guests: bookingData.guests || 1,
         budget: bookingData.budget || "",
-        budget_type: bookingData.budgetType || 'Flexible',
+        budget_type: bookingData.budgetType || "Flexible",
         preferred_cuisines: bookingData.preferredCuisines || [],
       } as LargeEventPayload;
     } else {
@@ -197,31 +223,33 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
     if (!message.trim()) return;
     setError(null);
     setIsSubmitting(true);
-    
+
     try {
       const payload = buildPayload();
-      const formattedPayload = { 
-        ...payload, 
-        message: message.trim() 
+      const formattedPayload = {
+        ...payload,
+        message: message.trim(),
       } as any; // Temporary any to handle dynamic properties
 
       // Only include preferred_cuisines if it's not a Chef at Home booking
-      const isChefAtHome = menu?.menu_type === 'Chef at Home' || menu?.type === 'Chef at Home';
-      if (!isChefAtHome && 'preferred_cuisines' in payload) {
+      const isChefAtHome =
+        menu?.menu_type === "Chef at Home" || menu?.type === "Chef at Home";
+
+      if (!isChefAtHome && "preferred_cuisines" in payload) {
         formattedPayload.preferred_cuisines = preferredCuisines || [];
       }
 
       const result = await bookingsService.createBooking(formattedPayload);
-      
+
       setBooking({
         ...result.data,
         menu_price_per_person: menu?.price_per_person || 0,
-        menu_name: menu?.name || '',
+        menu_name: menu?.name || "",
       });
-      
+
       showToast.success("Booking created successfully!");
       setMessage("");
-      
+
       if (isCustomBooking) {
         // For custom bookings, show the status card
         setBookingId(result.data.id);
@@ -232,7 +260,10 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
       }
     } catch (err: any) {
       setIsSubmitting(false);
-      showToast.error(err?.response?.data?.message || "Failed to create booking. Please try again.");
+      showToast.error(
+        err?.response?.data?.message ||
+          "Failed to create booking. Please try again.",
+      );
     }
   };
 
@@ -248,7 +279,9 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
       {!isCustomBooking && (
         <header className="absolute left-0 top-0">
           <h1 className="text-black text-xl font-medium leading-[30px] w-[300px] h-[30px] truncate">
-            {menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
+            {menu?.chef?.first_name && menu?.chef?.last_name
+              ? `${menu.chef.first_name} ${menu.chef.last_name}`
+              : "Chef"}
           </h1>
         </header>
       )}
@@ -260,21 +293,43 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
       {!isCustomBooking && (
         <div className="absolute left-5 top-[132px] w-full pr-5">
           <ChefCard
-            chefName={menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
+            chefName={
+              menu?.chef?.first_name && menu?.chef?.last_name
+                ? `${menu.chef.first_name} ${menu.chef.last_name}`
+                : "Chef"
+            }
             dishName={menu?.name || "Menu"}
-            imageUrl={menu?.images && menu.images.length > 0 && menu.images[0].image ? menu.images[0].image : "/menus/menu1.png"}
+            imageUrl={
+              menu?.images && menu.images.length > 0 && menu.images[0].image
+                ? menu.images[0].image
+                : "/menus/menu1.png"
+            }
             location={menu?.chef?.city || "Unknown"}
             locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
-            rating={menu?.chef?.average_rating ? menu.chef.average_rating.toFixed(1) : "-"}
+            rating={
+              menu?.chef?.average_rating
+                ? menu.chef.average_rating.toFixed(1)
+                : "-"
+            }
             ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
-            reviewCount={menu?.chef?.num_reviews ? `(${menu.chef.num_reviews} Reviews)` : "(0 Reviews)"}
+            reviewCount={
+              menu?.chef?.num_reviews
+                ? `(${menu.chef.num_reviews} Reviews)`
+                : "(0 Reviews)"
+            }
           />
         </div>
       )}
 
       <div className="absolute left-5 top-[291px]">
-        <svg width="613" height="1" viewBox="0 0 613 1" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M-0.00390625 0.5L613.003 0.5" stroke="#E7E7E7"></path>
+        <svg
+          width="613"
+          height="1"
+          viewBox="0 0 613 1"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M-0.00390625 0.5L613.003 0.5" stroke="#E7E7E7" />
         </svg>
       </div>
 
@@ -282,8 +337,17 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
         <h2 className="text-black text-2xl font-medium leading-8 w-[200px] h-8 mb-[47px]">
           Message
         </h2>
-        <form className="flex flex-col flex-1 w-full" onSubmit={e => { e.preventDefault(); handleContinue(); }}>
-          <label htmlFor="message-input" className="text-sm font-medium leading-none text-neutral-700 mb-2">
+        <form
+          className="flex flex-col flex-1 w-full"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleContinue();
+          }}
+        >
+          <label
+            htmlFor="message-input"
+            className="text-sm font-medium leading-none text-neutral-700 mb-2"
+          >
             Your Message
           </label>
           <textarea
@@ -300,8 +364,14 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
       </section>
 
       <div className="absolute left-5 top-[720px]">
-        <svg width="613" height="2" viewBox="0 0 613 2" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0 1L613.007 1" stroke="#E7E7E7"></path>
+        <svg
+          width="613"
+          height="2"
+          viewBox="0 0 613 2"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M0 1L613.007 1" stroke="#E7E7E7" />
         </svg>
       </div>
 

@@ -29,7 +29,7 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
       onCountryChange,
       ...props
     },
-    ref
+    ref,
   ) => {
     const [selectedCountry, setSelectedCountry] = useState(countries[0]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -92,7 +92,7 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
         {error && <span className="text-red-500 text-sm">{error}</span>}
       </div>
     );
-  }
+  },
 );
 
 PhoneInput.displayName = "PhoneInput";

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+
 import {
   listingService,
   type ServiceTag,
@@ -79,6 +80,7 @@ const useListings = ({
         setListings([]);
         setTotalCount(0);
         setLoading(false);
+
         return;
       }
 

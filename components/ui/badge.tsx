@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import React from "react";
 
-
 interface BadgeProps {
   children: React.ReactNode;
   variant?: "default" | "yellow";
@@ -34,7 +33,7 @@ export const Badge: React.FC<BadgeProps> = ({
         baseClasses,
         variantClasses[variant],
         sizeClasses[size],
-        className
+        className,
       )}
     >
       {children}

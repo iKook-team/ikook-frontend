@@ -27,7 +27,7 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
   const selectedItems = items.filter((item) => item.isSelected);
   const totalItems = selectedItems.reduce(
     (sum, item) => sum + item.quantity,
-    0
+    0,
   );
   const subtotal = 56; // This would be calculated from actual prices
   const platformFee = 20;

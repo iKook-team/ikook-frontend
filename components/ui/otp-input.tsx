@@ -28,7 +28,7 @@ export const OTPInput = forwardRef<HTMLInputElement, OTPInputProps>(
       className,
       "aria-label": ariaLabel,
     },
-    ref
+    ref,
   ) => {
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -40,6 +40,7 @@ export const OTPInput = forwardRef<HTMLInputElement, OTPInputProps>(
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       const newValue = e.target.value;
+
       if (newValue.length <= 1 && /^[0-9]*$/.test(newValue)) {
         onChange(newValue);
       }
@@ -62,14 +63,14 @@ export const OTPInput = forwardRef<HTMLInputElement, OTPInputProps>(
         onFocus={onFocus}
         className={clsx(
           "w-[50px] h-[50px] border text-center text-lg font-medium bg-white rounded-md border-solid border-[#DAE0E6] focus:outline-none focus:ring-2 focus:ring-[#FCC01C] focus:border-[#FCC01C] max-sm:w-[42px] max-sm:h-[42px] max-sm:text-base",
-          className
+          className,
         )}
         aria-label={ariaLabel}
         inputMode="numeric"
         pattern="[0-9]*"
       />
     );
-  }
+  },
 );
 
 OTPInput.displayName = "OTPInput";

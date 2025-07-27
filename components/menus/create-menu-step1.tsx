@@ -28,11 +28,13 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
 }) => {
   const chefFormData = useAuthStore((s) => s.chefFormData);
   const country = chefFormData?.country;
+
   function getCurrencySymbol(country?: string) {
     if (!country) return "£";
     if (country === "Nigeria") return "₦";
     if (country === "South Africa") return "R";
     if (country === "United Kingdom") return "£";
+
     return "£";
   }
   const currency = getCurrencySymbol(country);
@@ -53,11 +55,7 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
     { id: "finish-upload", label: "Finish upload", isCompleted: false },
   ];
 
-  const eventTypeOptions = [
-    "Naming",
-    "Wedding",
-    "Gathering",
-  ];
+  const eventTypeOptions = ["Naming", "Wedding", "Gathering"];
   const cuisineTypeOptions = [
     "Italian",
     "African",
@@ -81,18 +79,23 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
     (field: keyof MenuFormData) =>
     (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const newData = { ...localFormData, [field]: event.target.value };
+
       setLocalFormData(newData);
       updateFormData(newData);
     };
 
   const handleValueChange = (field: keyof MenuFormData) => (value: string) => {
     const newData = { ...localFormData, [field]: value };
+
     setLocalFormData(newData);
     updateFormData(newData);
   };
 
-  const handleTagsChange = (field: keyof Pick<MenuFormData, "eventTypes" | "cuisineTypes">) => (tags: string[]) => {
+  const handleTagsChange =
+    (field: keyof Pick<MenuFormData, "eventTypes" | "cuisineTypes">) =>
+    (tags: string[]) => {
       const newData = { ...localFormData, [field]: tags };
+
       setLocalFormData(newData);
       updateFormData(newData);
     };
@@ -107,8 +110,10 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
     !!localFormData.price &&
     !!localFormData.minimumGuests &&
     !!localFormData.maxMenuSelection &&
-    Array.isArray(localFormData.eventTypes) && localFormData.eventTypes.length > 0 &&
-    Array.isArray(localFormData.cuisineTypes) && localFormData.cuisineTypes.length > 0 &&
+    Array.isArray(localFormData.eventTypes) &&
+    localFormData.eventTypes.length > 0 &&
+    Array.isArray(localFormData.cuisineTypes) &&
+    localFormData.cuisineTypes.length > 0 &&
     !!localFormData.menuType;
 
   return (
@@ -211,7 +216,7 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
           />
         </div>
 
-        <FormNavigationFooter 
+        <FormNavigationFooter
           onBack={onBack}
           onContinue={handleContinueClick}
           disabled={!isStepValid}

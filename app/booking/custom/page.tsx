@@ -42,6 +42,7 @@ const CustomBookingPage = () => {
     ];
 
     const currentIndex = steps.indexOf(currentStep);
+
     if (currentIndex < steps.length - 1) {
       setCurrentStep(steps[currentIndex + 1]);
     }
@@ -60,6 +61,7 @@ const CustomBookingPage = () => {
     ];
 
     const currentIndex = steps.indexOf(currentStep);
+
     if (currentIndex > 0) {
       setCurrentStep(steps[currentIndex - 1]);
     }
@@ -70,7 +72,13 @@ const CustomBookingPage = () => {
       case "chef-finder":
         return <ChefFinderCard onNext={handleNext} />;
       case "service-selection":
-        return <ServiceSelection onNext={handleNext} onBack={handleBack} isCustomBooking={true} />;
+        return (
+          <ServiceSelection
+            onNext={handleNext}
+            onBack={handleBack}
+            isCustomBooking={true}
+          />
+        );
       case "event-details":
         return <EventDetailsForm onNext={handleNext} onBack={handleBack} />;
       case "budget":

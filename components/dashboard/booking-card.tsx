@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Image from "next/image";
 import { FaMoneyBillWave } from "react-icons/fa";
+
 import { chatService } from "@/lib/api/chat";
 import { handleApiError } from "@/lib/utils/toast";
 
@@ -37,7 +38,9 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
     const location = booking.city || "-";
     const title = booking.chef_service || "-";
     const status = booking.status || "-";
-    const attendees = booking.num_of_guests ? `${booking.num_of_guests} guests` : "-";
+    const attendees = booking.num_of_guests
+      ? `${booking.num_of_guests} guests`
+      : "-";
     const description = booking.description || "";
     const imageUrl = booking.imageUrl || "";
     const eventVenue = booking.event_venue || "-";
@@ -90,12 +93,12 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
             {/* Event venue and guests with vertical divider */}
             <div className="flex items-center gap-3">
               <span className="text-neutral-700">{eventVenue}</span>
-              <span className="h-4 border-l border-gray-300 mx-2 inline-block align-middle"></span>
+              <span className="h-4 border-l border-gray-300 mx-2 inline-block align-middle" />
               <span className="text-neutral-700">{attendees}</span>
             </div>
           </div>
         </div>
-        {(imageUrl && imageUrl.trim() !== "") ? (
+        {imageUrl && imageUrl.trim() !== "" ? (
           <Image
             alt={`Booking for ${title}`}
             className="object-contain mt-4 w-full aspect-[500] stroke-[1px] stroke-stone-300 max-md:max-w-full"
@@ -122,31 +125,34 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
                   setIsCreatingChat(true);
                   // Get the other user's ID (if host is viewing, use chef ID and vice versa)
                   const otherUserId = booking.chef_id || booking.host_id;
+
                   if (!otherUserId) {
-                    throw new Error('Unable to determine chat participant');
+                    throw new Error("Unable to determine chat participant");
                   }
-                  
+
                   // Create or get existing chat
                   const chat = await chatService.getOrCreateChat(otherUserId);
-                  
+
                   // Navigate to the chat
                   router.push(`/chat`);
                 } catch (error) {
-                  console.error('Error creating chat:', error);
-                  handleApiError(error, 'Failed to start chat');
+                  console.error("Error creating chat:", error);
+                  handleApiError(error, "Failed to start chat");
                 } finally {
                   setIsCreatingChat(false);
                 }
               }}
               disabled={isCreatingChat}
             >
-              {isCreatingChat ? 'Starting chat...' : 'Message'}
+              {isCreatingChat ? "Starting chat..." : "Message"}
             </button>
           </div>
           <div className="flex items-start text-white rounded-lg">
             <button
               className="overflow-hidden gap-2 self-stretch px-3.5 py-2 text-white bg-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)]"
-              onClick={() => router.push(`/dashboard/booking-details?id=${booking.id}`)}
+              onClick={() =>
+                router.push(`/dashboard/booking-details?id=${booking.id}`)
+              }
             >
               Booking details
             </button>
@@ -157,7 +163,17 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
   }
 
   // fallback to old props for backward compatibility
-  const { user, title, date, location, price, description, attendees, imageUrl } = props as any;
+  const {
+    user,
+    title,
+    date,
+    location,
+    price,
+    description,
+    attendees,
+    imageUrl,
+  } = props as any;
+
   return (
     <article className="flex flex-col px-px py-4 mx-auto w-full rounded-2xl border border-solid border-[color:var(--Black-200,#CFCFCE)] max-md:mt-9 max-md:max-w-full">
       <div className="flex flex-col items-start self-start ml-5 max-md:ml-2.5">
@@ -218,7 +234,7 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
           </div>
         </div>
       </div>
-      {(imageUrl && imageUrl.trim() !== "") ? (
+      {imageUrl && imageUrl.trim() !== "" ? (
         <Image
           alt={`Booking for ${title}`}
           className="object-contain mt-4 w-full aspect-[500] stroke-[1px] stroke-stone-300 max-md:max-w-full"
@@ -248,7 +264,11 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
         <div className="flex items-start text-white rounded-lg">
           <button
             className="overflow-hidden gap-2 self-stretch px-3.5 py-2 text-white bg-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)]"
-            onClick={() => router.push(`/dashboard/booking-details?id=${(props as any).id || ''}`)}
+            onClick={() =>
+              router.push(
+                `/dashboard/booking-details?id=${(props as any).id || ""}`,
+              )
+            }
           >
             {user === "host" ? "Enquiry" : "Booking"} details
           </button>

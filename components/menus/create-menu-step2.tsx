@@ -28,11 +28,13 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
 }) => {
   const chefFormData = useAuthStore((s) => s.chefFormData);
   const country = chefFormData?.country;
+
   function getCurrencySymbol(country?: string) {
     if (!country) return "£";
     if (country === "Nigeria") return "₦";
     if (country === "South Africa") return "R";
     if (country === "United Kingdom") return "£";
+
     return "£";
   }
   const currency = getCurrencySymbol(country);
@@ -48,19 +50,23 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
   const [menuSelection, setMenuSelection] = useState<Record<string, string>>(
     () => {
       const initial: Record<string, string> = {};
+
       (formData.courses || courseLabels).forEach((course: string) => {
         initial[course] = "1";
       });
+
       return initial;
-    }
+    },
   );
   const [additionalStarterCharge, setAdditionalStarterCharge] = useState<
     Record<string, string>
   >(() => {
     const initial: Record<string, string> = {};
+
     (formData.courses || courseLabels).forEach((course: string) => {
       initial[course] = "";
     });
+
     return initial;
   });
 
@@ -68,16 +74,20 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
     setCourseItems(formData.courseItems || {});
     setMenuSelection(() => {
       const initial: Record<string, string> = {};
+
       (formData.courses || courseLabels).forEach((course: string) => {
         initial[course] = "1";
       });
+
       return initial;
     });
     setAdditionalStarterCharge(() => {
       const initial: Record<string, string> = {};
+
       (formData.courses || courseLabels).forEach((course: string) => {
         initial[course] = "";
       });
+
       return initial;
     });
   }, [formData]);
@@ -104,12 +114,14 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
   const handleAddItem = (e: React.MouseEvent) => {
     e.preventDefault();
     const { name, description } = itemInput;
+
     if (!name) return;
     const newItem = { name, description };
     const updated = {
       ...courseItems,
       [currentCourse]: [...(courseItems[currentCourse] || []), newItem],
     };
+
     setCourseItems(updated);
     setItemInput({ name: "", description: "" });
   };
@@ -118,9 +130,10 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
     const updated = {
       ...courseItems,
       [currentCourse]: (courseItems[currentCourse] || []).filter(
-        (_, i) => i !== idx
+        (_, i) => i !== idx,
       ),
     };
+
     setCourseItems(updated);
   };
 
@@ -130,13 +143,19 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
       setItemInput({ name: "", description: "" });
     } else {
       // Last course, continue to next step
-      const courseKeys = Object.keys(courseItems).filter((key: string) => (courseItems[key] && courseItems[key].length > 0));
+      const courseKeys = Object.keys(courseItems).filter(
+        (key: string) => courseItems[key] && courseItems[key].length > 0,
+      );
       const coursesArr = courseKeys;
       const coursesSelectionLimit: Record<string, number> = {};
       const coursesExtraChargePerPerson: Record<string, string> = {};
+
       courseKeys.forEach((course: string) => {
         const itemCount = courseItems[course]?.length || 0;
-        let limit = menuSelection[course] ? parseInt(menuSelection[course], 10) : 1;
+        let limit = menuSelection[course]
+          ? parseInt(menuSelection[course], 10)
+          : 1;
+
         if (itemCount < 1) return; // skip if no items
         limit = Math.max(1, Math.min(limit, itemCount));
         coursesSelectionLimit[course] = limit;
@@ -150,8 +169,9 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
           course,
           name: item.name,
           description: item.description,
-        }))
+        })),
       );
+
       updateFormData({
         ...formData,
         courseItems,
@@ -171,13 +191,19 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
       setCurrentCourseIdx(currentCourseIdx - 1);
       setItemInput({ name: "", description: "" });
     } else {
-      const courseKeys = Object.keys(courseItems).filter((key: string) => (courseItems[key] && courseItems[key].length > 0));
+      const courseKeys = Object.keys(courseItems).filter(
+        (key: string) => courseItems[key] && courseItems[key].length > 0,
+      );
       const coursesArr = courseKeys;
       const coursesSelectionLimit: Record<string, number> = {};
       const coursesExtraChargePerPerson: Record<string, string> = {};
+
       courseKeys.forEach((course: string) => {
         const itemCount = courseItems[course]?.length || 0;
-        let limit = menuSelection[course] ? parseInt(menuSelection[course], 10) : 1;
+        let limit = menuSelection[course]
+          ? parseInt(menuSelection[course], 10)
+          : 1;
+
         if (itemCount < 1) return; // skip if no items
         limit = Math.max(1, Math.min(limit, itemCount));
         coursesSelectionLimit[course] = limit;
@@ -191,8 +217,9 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
           course,
           name: item.name,
           description: item.description,
-        }))
+        })),
       );
+
       updateFormData({
         ...formData,
         courseItems,

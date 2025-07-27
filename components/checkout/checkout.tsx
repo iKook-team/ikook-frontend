@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { quotesService } from "@/lib/api/quotes";
 
+import { quotesService } from "@/lib/api/quotes";
 import { ProgressIndicator } from "@/components/ui/progress-indicator";
 import { EventDetailsCard } from "@/components/checkout/event-details-card";
-import { PaymentPlanSelector } from "@/components/checkout/payment-plan-selector";
 import { PaymentMethodSelector } from "@/components/checkout/payment-method-selector";
 import { OrderSummary } from "@/components/checkout/order-summary";
 import { MenuIncludes } from "@/components/checkout/menu-includes";
@@ -13,35 +12,39 @@ interface CheckoutProps {
   isCustomBooking?: boolean;
 }
 
-export const Checkout: React.FC<CheckoutProps> = ({ bookingId, isCustomBooking = false }) => {
+export const Checkout: React.FC<CheckoutProps> = ({
+  bookingId,
+  isCustomBooking = false,
+}) => {
   const [quote, setQuote] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  console.log('Checkout bookingId:', bookingId);
+  console.log("Checkout bookingId:", bookingId);
 
   useEffect(() => {
     let isMounted = true;
-    
+
     const fetchQuote = async () => {
       if (!bookingId) return;
-      
+
       setLoading(true);
       setError(null);
-      
+
       try {
-        console.log('Fetching quote for bookingId:', bookingId);
+        console.log("Fetching quote for bookingId:", bookingId);
         const quoteData = await quotesService.getQuoteByBookingId(bookingId);
-        console.log('Quote API response:', quoteData);
-        
+
+        console.log("Quote API response:", quoteData);
+
         if (isMounted) {
           if (!quoteData) {
-            throw new Error('No quote data received');
+            throw new Error("No quote data received");
           }
           setQuote(quoteData);
         }
       } catch (err) {
-        console.error('Failed to fetch quote details:', err);
+        console.error("Failed to fetch quote details:", err);
         if (isMounted) {
           setError("Failed to load quote details. Please try again later.");
         }
@@ -51,9 +54,9 @@ export const Checkout: React.FC<CheckoutProps> = ({ bookingId, isCustomBooking =
         }
       }
     };
-    
+
     fetchQuote();
-    
+
     return () => {
       isMounted = false;
     };
@@ -87,17 +90,30 @@ export const Checkout: React.FC<CheckoutProps> = ({ bookingId, isCustomBooking =
             {/* Right Column - Order Summary */}
             <div className="w-[36%] ml-5 max-md:w-full max-md:ml-0">
               <div className="flex flex-col">
-                {loading && <div className="text-gray-500 text-center py-4">Loading quote...</div>}
-                {error && <div className="text-red-500 text-center py-4">{error}</div>}
+                {loading && (
+                  <div className="text-gray-500 text-center py-4">
+                    Loading quote...
+                  </div>
+                )}
+                {error && (
+                  <div className="text-red-500 text-center py-4">{error}</div>
+                )}
                 {quote ? (
                   <>
-                    <OrderSummary isCustomBooking={isCustomBooking} quote={quote} />
+                    <OrderSummary
+                      isCustomBooking={isCustomBooking}
+                      quote={quote}
+                    />
                     <MenuIncludes quote={quote} />
                   </>
                 ) : (
                   <div className="bg-white rounded-[15px] shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] p-6 min-h-[300px] flex flex-col items-center justify-center text-gray-400">
-                    <div className="text-lg font-medium mb-2">Order Summary</div>
-                    <div className="text-sm">No quote loaded. Your order summary will appear here.</div>
+                    <div className="text-lg font-medium mb-2">
+                      Order Summary
+                    </div>
+                    <div className="text-sm">
+                      No quote loaded. Your order summary will appear here.
+                    </div>
                   </div>
                 )}
               </div>

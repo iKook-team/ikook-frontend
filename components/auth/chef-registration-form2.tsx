@@ -65,24 +65,26 @@ export const ChefRegistrationForm2: React.FC<ChefRegistrationForm2Props> = ({
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+
       return;
     }
 
     try {
       // Set user type to 'chef' in global state
-      setUserType('chef');
-      
+      setUserType("chef");
+
       // Update chef form data with email and phone
       const updatedChefData = {
         ...chefFormData,
         email: formData.email,
         phoneNumber: formData.phoneNumber,
       };
+
       setChefFormData(updatedChefData);
-      
+
       // Send OTP to email using the real API
       await authService.sendOtp(formData.email);
-      
+
       // Notify parent to advance to OTP step
       if (onSubmit) {
         onSubmit(formData);

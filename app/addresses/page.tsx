@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AddressList } from "@/components/address/address-list"
+import { AddressList } from "@/components/address/address-list";
 
 const Index: React.FC = () => {
   return (

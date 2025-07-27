@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+
 import { useAuthStore } from "@/lib/store/auth-store";
 
 interface PricingSidebarProps {
@@ -17,10 +18,12 @@ function getCurrencySymbol(menu: any): string {
   }
   if (menu?.chef?.country) {
     const country = menu.chef.country;
+
     if (country === "Nigeria") return "₦";
     if (country === "South Africa") return "R";
     if (country === "United Kingdom") return "£";
   }
+
   return "₦";
 }
 
@@ -28,10 +31,12 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
   menu,
   selectedItems,
 }) => {
-  console.log('PricingSidebar component loaded - DEBUG');
+  console.log("PricingSidebar component loaded - DEBUG");
   const router = useRouter();
   const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
-  const setBookingMenuSelection = useAuthStore((s) => s.setBookingMenuSelection);
+  const setBookingMenuSelection = useAuthStore(
+    (s) => s.setBookingMenuSelection,
+  );
   const [location, setLocation] = useState("");
   const [eventDate, setEventDate] = useState("");
   const [guests, setGuests] = useState("");
@@ -48,7 +53,7 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
       ? menu.courses.reduce(
           (sum: number, course: string) =>
             sum + (menu.courses_selection_limit[course] || 1),
-          0
+          0,
         )
       : 0;
   const progressPercent =
@@ -67,11 +72,13 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
   const handleProceedToCart = () => {
     if (!menu?.menu_type) {
       console.log("No menu_type found!", menu);
+
       return;
     }
     let path = "/booking/chef-at-home";
     const type = String(menu.menu_type).toLowerCase().replace(/[-_ ]/g, "");
-    console.log('Normalized menu_type:', type);
+
+    console.log("Normalized menu_type:", type);
     if (type === "finedining") {
       path = "/booking/fine-dining";
     } else if (type === "largeevent") {
@@ -92,6 +99,7 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
     const selectedIds = selectedItems
       ? Object.values(selectedItems).flatMap((set) => Array.from(set))
       : [];
+
     setBookingMenuSelection(selectedIds);
     router.push(path);
   };
@@ -125,7 +133,7 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
           <div className="text-[#0F0E0C] text-[10px] font-normal leading-[18px] mt-1">
             {totalPossible > 0
               ? `${totalSelected} of ${totalPossible} dishes selected`
-              : '0 dishes selected'}
+              : "0 dishes selected"}
           </div>
         </div>
 
@@ -226,7 +234,7 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
             console.log("Proceed to Cart button clicked");
             handleProceedToCart();
           }}
-          className={`flex text-base text-white font-bold mt-10 rounded-lg ${totalSelected === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`flex text-base text-white font-bold mt-10 rounded-lg ${totalSelected === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
           type="button"
           disabled={totalSelected === 0}
         >

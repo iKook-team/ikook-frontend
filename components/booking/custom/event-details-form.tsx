@@ -7,7 +7,10 @@ interface EventDetailsFormProps {
   onBack: () => void;
 }
 
-export const EventDetailsForm: React.FC<EventDetailsFormProps> = ({ onNext, onBack }) => {
+export const EventDetailsForm: React.FC<EventDetailsFormProps> = ({
+  onNext,
+  onBack,
+}) => {
   return (
     <section className="flex flex-col items-center px-14 pt-9 pb-20 mt-16 max-w-full bg-white rounded-2xl border border-solid shadow-lg border-[color:var(--Black-100,#E7E7E7)] w-[654px] max-md:px-5 max-md:mt-10">
       <h1 className="ml-4 text-2xl font-bold leading-none text-black">
@@ -69,13 +72,13 @@ export const EventDetailsForm: React.FC<EventDetailsFormProps> = ({ onNext, onBa
       </div>
 
       <div className="flex gap-6 items-start mt-96 text-base font-semibold whitespace-nowrap max-md:mt-10">
-        <button 
+        <button
           onClick={onBack}
           className="overflow-hidden gap-2 self-stretch px-5 py-3 text-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)] w-[150px] hover:bg-amber-50 transition-colors"
         >
           Back
         </button>
-        <button 
+        <button
           onClick={() => onNext()}
           className="overflow-hidden gap-2 self-stretch px-5 py-3 text-white bg-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)] w-[150px] hover:bg-amber-500 transition-colors"
         >

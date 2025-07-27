@@ -3,7 +3,6 @@
 import React from "react";
 // import Image from "next/image";
 
-import { NewsletterSection } from "./NewsletterSection";
 import { SocialIcons } from "./SocialIcons";
 import { FooterLinks } from "./FooterLinks";
 import { PaymentBadges } from "./PaymentBadges";

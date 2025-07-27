@@ -101,7 +101,6 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
               onChange={(e) => handleInputChange("username", e.target.value)}
             />
 
-
             <FormField
               required
               className="w-full"

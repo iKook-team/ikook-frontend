@@ -6,12 +6,18 @@ interface BudgetInputProps {
   onChange: (value: string) => void;
 }
 
-export const BudgetInput: React.FC<BudgetInputProps> = ({ value, onChange }) => {
+export const BudgetInput: React.FC<BudgetInputProps> = ({
+  value,
+  onChange,
+}) => {
   return (
     <div className="w-full">
       <div className="w-full max-md:max-w-full">
         <div className="w-full max-md:max-w-full">
-          <label htmlFor="budget" className="text-base font-medium text-neutral-700">
+          <label
+            htmlFor="budget"
+            className="text-base font-medium text-neutral-700"
+          >
             Your Budget
           </label>
           <div className="flex flex-wrap mt-1.5 w-full text-base whitespace-nowrap bg-white rounded-lg border border-solid shadow-sm border-[color:var(--Gray-100,#CFCFCE)] max-md:max-w-full">

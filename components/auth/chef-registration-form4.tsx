@@ -67,6 +67,7 @@ export const ChefRegistrationForm4: React.FC<ChefRegistrationForm4Props> = ({
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+
       return;
     }
 
@@ -77,8 +78,9 @@ export const ChefRegistrationForm4: React.FC<ChefRegistrationForm4Props> = ({
       instagramAccount: formData.instagramAccount,
       website: formData.website,
     };
+
     setChefFormData(updatedChefData);
-    
+
     onSubmit(formData);
   };
 

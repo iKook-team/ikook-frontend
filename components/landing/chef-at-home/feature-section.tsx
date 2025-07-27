@@ -1,5 +1,6 @@
-import React from 'react';
-import FeatureCard from './feature-card';
+import React from "react";
+
+import FeatureCard from "./feature-card";
 
 const FeatureSection = () => {
   return (
@@ -24,8 +25,8 @@ const FeatureSection = () => {
               </h3>
               <p className="text-[#6F6E6D] text-xl font-normal leading-[35px] self-stretch mt-[31px] max-md:max-w-full">
                 Indulge in personalized menus crafted to your preferences.
-                Whether it's an intimate dinner for two or a festive
-                gathering, our chefs create unforgettable dining experiences.
+                Whether it's an intimate dinner for two or a festive gathering,
+                our chefs create unforgettable dining experiences.
               </p>
               <img
                 src="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/c47073a167363356b6c63313bf9dbc08e2273f76?placeholderIfAbsent=true"

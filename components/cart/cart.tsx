@@ -32,7 +32,9 @@ export const Cart: React.FC<CartProps> = ({
     title: course.title || course.name || course,
     quantity: course.quantity || 1,
     items: (menu.items || [])
-      .filter((item: any) => item.course === (course.title || course.name || course))
+      .filter(
+        (item: any) => item.course === (course.title || course.name || course),
+      )
       .map((item: any) => ({ id: String(item.id), name: item.name })),
   }));
 
@@ -65,14 +67,30 @@ export const Cart: React.FC<CartProps> = ({
       <div className="border border-[color:var(--Black-100,#E7E7E7)] shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] flex w-full flex-col items-stretch bg-white mt-2 py-[33px] rounded-[15px] border-solid max-md:max-w-full">
         <div className="flex w-full flex-col items-stretch px-[19px] max-md:max-w-full max-md:pr-5">
           <ChefCard
-            chefName={menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
+            chefName={
+              menu?.chef?.first_name && menu?.chef?.last_name
+                ? `${menu.chef.first_name} ${menu.chef.last_name}`
+                : "Chef"
+            }
             dishName={menu?.name || "Menu"}
-            imageUrl={menu?.images && menu.images.length > 0 && menu.images[0].image ? menu.images[0].image : "/menus/menu1.png"}
+            imageUrl={
+              menu?.images && menu.images.length > 0 && menu.images[0].image
+                ? menu.images[0].image
+                : "/menus/menu1.png"
+            }
             location={menu?.chef?.city || "Unknown"}
             locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
-            rating={menu?.chef?.average_rating ? menu.chef.average_rating.toFixed(1) : "-"}
+            rating={
+              menu?.chef?.average_rating
+                ? menu.chef.average_rating.toFixed(1)
+                : "-"
+            }
             ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
-            reviewCount={menu?.chef?.num_reviews ? `(${menu.chef.num_reviews} Reviews)` : "(0 Reviews)"}
+            reviewCount={
+              menu?.chef?.num_reviews
+                ? `(${menu.chef.num_reviews} Reviews)`
+                : "(0 Reviews)"
+            }
           />
 
           <MenuSection
@@ -81,7 +99,11 @@ export const Cart: React.FC<CartProps> = ({
             selectedMenuItems={selectedMenuItems}
             setSelectedMenuItems={setSelectedMenuItems}
             menuName={menu?.name || "Menu"}
-            chefName={menu?.chef?.first_name && menu?.chef?.last_name ? `${menu.chef.first_name} ${menu.chef.last_name}` : "Chef"}
+            chefName={
+              menu?.chef?.first_name && menu?.chef?.last_name
+                ? `${menu.chef.first_name} ${menu.chef.last_name}`
+                : "Chef"
+            }
           />
 
           <IncludedServices services={includedServices} />

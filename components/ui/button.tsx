@@ -1,5 +1,4 @@
 import React, { ButtonHTMLAttributes, forwardRef } from "react";
-
 import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
 
@@ -30,7 +29,7 @@ const buttonVariants = cva(
       variant: "primary",
       size: "md",
     },
-  }
+  },
 );
 
 export interface ButtonProps
@@ -50,7 +49,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {children}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";

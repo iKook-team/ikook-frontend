@@ -1,6 +1,7 @@
 "use client";
 import * as React from "react";
 import Image from "next/image";
+
 import { TagSelector } from "@/components/ui/tag-selector";
 
 interface FormData {
@@ -12,7 +13,7 @@ interface FormData {
   deliveryHours: string;
 }
 
-export const GourmetDeliveryForm: React.FC = () => {
+const GourmetDeliveryForm: React.FC = () => {
   const [isAvailable, setIsAvailable] = React.useState(true);
   const [formData, setFormData] = React.useState<FormData>({
     startingPrice: "000",
@@ -20,15 +21,33 @@ export const GourmetDeliveryForm: React.FC = () => {
     maxGuests: "",
     cuisines: ["African", "Modern English", "Italian"],
     events: ["Wedding", "Naming", "BBQ"],
-    deliveryHours: ""
+    deliveryHours: "",
   });
-  const allCuisines = ["African", "Modern English", "Italian", "Chinese", "French", "English", "Spicy Mediterranean", "Pizza", "Pastries"];
-  const allEvents = ["Wedding", "Naming", "BBQ", "Birthday", "Corporate", "Anniversary", "Festival"];
+  const allCuisines = [
+    "African",
+    "Modern English",
+    "Italian",
+    "Chinese",
+    "French",
+    "English",
+    "Spicy Mediterranean",
+    "Pizza",
+    "Pastries",
+  ];
+  const allEvents = [
+    "Wedding",
+    "Naming",
+    "BBQ",
+    "Birthday",
+    "Corporate",
+    "Anniversary",
+    "Festival",
+  ];
 
   const handleInputChange = (field: keyof FormData, value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -53,15 +72,17 @@ export const GourmetDeliveryForm: React.FC = () => {
                 type="button"
                 onClick={() => setIsAvailable(!isAvailable)}
                 className={`flex flex-col justify-center px-1 py-0.5 rounded-[33.333px] border-[0.667px] border-solid ${
-                  isAvailable 
-                    ? 'bg-[#FCC01C] border-[#F9DF98]' 
-                    : 'bg-gray-300 border-gray-400'
+                  isAvailable
+                    ? "bg-[#FCC01C] border-[#F9DF98]"
+                    : "bg-gray-300 border-gray-400"
                 }`}
                 aria-label="Toggle availability"
               >
-                <div className={`flex w-[18px] shrink-0 h-[17px] bg-white rounded-[50%] transition-transform ${
-                  isAvailable ? 'translate-x-0' : 'translate-x-4'
-                }`} />
+                <div
+                  className={`flex w-[18px] shrink-0 h-[17px] bg-white rounded-[50%] transition-transform ${
+                    isAvailable ? "translate-x-0" : "translate-x-4"
+                  }`}
+                />
               </button>
             </div>
           </div>
@@ -75,12 +96,16 @@ export const GourmetDeliveryForm: React.FC = () => {
                     </label>
                     <div className="items-stretch border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full font-normal whitespace-nowrap flex-wrap bg-white mt-1.5 rounded-lg border-solid border-[#CFCFCE] max-md:max-w-full">
                       <div className="flex items-center text-[15px] text-[#3F3E3D] pl-3.5 pr-3 py-2.5 rounded-[8px_0px_0px_8px]">
-                        <span className="text-[#3F3E3D] self-stretch my-auto">£</span>
+                        <span className="text-[#3F3E3D] self-stretch my-auto">
+                          £
+                        </span>
                       </div>
                       <input
                         type="text"
                         value={formData.startingPrice}
-                        onChange={(e) => handleInputChange('startingPrice', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("startingPrice", e.target.value)
+                        }
                         className="items-center border flex min-w-60 gap-2 overflow-hidden text-base text-[#6F6E6D] h-full flex-1 shrink basis-[0%] bg-white px-3.5 py-2.5 rounded-[0px_8px_8px_0px] border-solid border-[#CFCFCE] max-md:max-w-full focus:outline-none focus:ring-2 focus:ring-[#FCC01C]"
                         placeholder="000"
                       />
@@ -97,7 +122,9 @@ export const GourmetDeliveryForm: React.FC = () => {
                       <input
                         type="text"
                         value={formData.minGuests}
-                        onChange={(e) => handleInputChange('minGuests', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("minGuests", e.target.value)
+                        }
                         className="items-center border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#6F6E6D] font-normal bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid border-[#9F9F9E] max-md:max-w-full focus:outline-none focus:ring-2 focus:ring-[#FCC01C]"
                         placeholder="Enter Number"
                       />
@@ -114,7 +141,9 @@ export const GourmetDeliveryForm: React.FC = () => {
                       <input
                         type="text"
                         value={formData.maxGuests}
-                        onChange={(e) => handleInputChange('maxGuests', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("maxGuests", e.target.value)
+                        }
                         className="items-center border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#6F6E6D] font-normal bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid border-[#9F9F9E] max-md:max-w-full focus:outline-none focus:ring-2 focus:ring-[#FCC01C]"
                         placeholder="Enter Number"
                       />
@@ -122,25 +151,29 @@ export const GourmetDeliveryForm: React.FC = () => {
                   </div>
                 </div>
 
-            <div className="space-y-1.5 mt-6">
-              <TagSelector
-                label="Cuisines"
-                tags={allCuisines}
-                selectedTags={formData.cuisines}
-                onTagsChange={cuisines => setFormData(prev => ({ ...prev, cuisines }))}
-                className="w-full"
-              />
-            </div>
+                <div className="space-y-1.5 mt-6">
+                  <TagSelector
+                    label="Cuisines"
+                    tags={allCuisines}
+                    selectedTags={formData.cuisines}
+                    onTagsChange={(cuisines) =>
+                      setFormData((prev) => ({ ...prev, cuisines }))
+                    }
+                    className="w-full"
+                  />
+                </div>
 
-            <div className="space-y-1.5 mt-6">
-              <TagSelector
-                label="Event"
-                tags={allEvents}
-                selectedTags={formData.events}
-                onTagsChange={events => setFormData(prev => ({ ...prev, events }))}
-                className="w-full"
-              />
-            </div>
+                <div className="space-y-1.5 mt-6">
+                  <TagSelector
+                    label="Event"
+                    tags={allEvents}
+                    selectedTags={formData.events}
+                    onTagsChange={(events) =>
+                      setFormData((prev) => ({ ...prev, events }))
+                    }
+                    className="w-full"
+                  />
+                </div>
 
                 <div className="w-full mt-6">
                   <div className="w-full max-md:max-w-full">
@@ -151,7 +184,9 @@ export const GourmetDeliveryForm: React.FC = () => {
                       <input
                         type="text"
                         value={formData.deliveryHours}
-                        onChange={(e) => handleInputChange('deliveryHours', e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("deliveryHours", e.target.value)
+                        }
                         className="items-center border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#6F6E6D] font-normal bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid border-[#9F9F9E] max-md:max-w-full focus:outline-none focus:ring-2 focus:ring-[#FCC01C]"
                         placeholder="Enter Number"
                       />
@@ -163,7 +198,8 @@ export const GourmetDeliveryForm: React.FC = () => {
 
             <div className="justify-center items-center border flex min-h-[122px] w-[425px] max-w-full flex-col text-[10px] text-[#323335] text-center mt-[62px] px-2.5 py-6 rounded-xl border-dashed border-[#CFCFCE] max-md:mt-10">
               <p className="text-[#323335] font-normal w-[272px]">
-                (Recommended 1000px width, 1000px height.Maximum of 1MB file size)
+                (Recommended 1000px width, 1000px height.Maximum of 1MB file
+                size)
               </p>
               <button
                 type="button"
@@ -201,7 +237,9 @@ export const GourmetDeliveryForm: React.FC = () => {
                 type="submit"
                 className="justify-center items-center border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-[422px] max-w-full gap-2 overflow-hidden bg-[#FCC01C] ml-[11px] px-7 py-3 rounded-lg border-solid border-[#FCC01C] max-md:px-5 hover:bg-[#E6AB19] transition-colors"
               >
-                <span className="text-white self-stretch my-auto">Save changes</span>
+                <span className="text-white self-stretch my-auto">
+                  Save changes
+                </span>
               </button>
             </div>
           </form>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+
 import { TagSelector } from "@/components/ui/tag-selector";
 
 const ChefProfileForm = () => {
@@ -138,7 +139,9 @@ const ChefProfileForm = () => {
                           <input
                             type="email"
                             value={formData.email}
-                            onChange={(e) => handleInputChange("email", e.target.value)}
+                            onChange={(e) =>
+                              handleInputChange("email", e.target.value)
+                            }
                             className="self-stretch flex min-w-60 w-full items-center gap-2 flex-1 shrink basis-[0%] my-auto max-md:max-w-full bg-transparent border-none outline-none text-[#6F6E6D]"
                           />
                         </div>
@@ -180,7 +183,9 @@ const ChefProfileForm = () => {
                             }
                             className="self-stretch flex min-w-60 items-center gap-2 flex-1 shrink basis-[0%] my-auto max-md:max-w-full bg-transparent border-none outline-none text-[#667085]"
                           >
-                            <option value="United Kingdom">United Kingdom</option>
+                            <option value="United Kingdom">
+                              United Kingdom
+                            </option>
                             <option value="United States">United States</option>
                             <option value="Canada">Canada</option>
                             <option value="Australia">Australia</option>
@@ -205,7 +210,9 @@ const ChefProfileForm = () => {
                           <input
                             type="text"
                             value={formData.city}
-                            onChange={(e) => handleInputChange("city", e.target.value)}
+                            onChange={(e) =>
+                              handleInputChange("city", e.target.value)
+                            }
                             className="self-stretch flex min-w-60 items-center gap-2 flex-1 shrink basis-[0%] my-auto max-md:max-w-full bg-transparent border-none outline-none text-[#0F0E0C]"
                           />
                           <img

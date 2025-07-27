@@ -1,9 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { Button } from "../ui/button";
 
 import { MenuItem } from "./menu-item";
-import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
+
 import { listingService } from "@/lib/api/listing";
 
 export const MyMenusPage: React.FC = () => {
@@ -17,6 +19,7 @@ export const MyMenusPage: React.FC = () => {
       setLoading(true);
       try {
         const data = await listingService.getMenus({ status });
+
         setMenus(data.results || []);
       } catch (error) {
         setMenus([]);
@@ -24,6 +27,7 @@ export const MyMenusPage: React.FC = () => {
         setLoading(false);
       }
     };
+
     fetchMenus();
   }, [status]);
 
@@ -68,9 +72,7 @@ export const MyMenusPage: React.FC = () => {
           ) : menus.length === 0 ? (
             <div>No menus found.</div>
           ) : (
-            menus.map((menu) => (
-              <MenuItem key={menu.id} {...menu} />
-            ))
+            menus.map((menu) => <MenuItem key={menu.id} {...menu} />)
           )}
         </div>
       </main>

@@ -23,13 +23,10 @@ export const BudgetForm: React.FC<BudgetFormProps> = ({ onNext, onBack }) => {
         Budget
       </header>
       <div className="flex flex-col self-stretch mt-14 max-md:mt-10 max-md:max-w-full">
-        <BudgetInput 
-          value={budget} 
-          onChange={setBudget} 
-        />
-        <BudgetTypeSelector 
-          selectedType={budgetType} 
-          onTypeChange={setBudgetType} 
+        <BudgetInput value={budget} onChange={setBudget} />
+        <BudgetTypeSelector
+          selectedType={budgetType}
+          onTypeChange={setBudgetType}
         />
       </div>
       <div className="flex gap-6 items-start mt-64 text-base font-semibold whitespace-nowrap max-md:mt-10">

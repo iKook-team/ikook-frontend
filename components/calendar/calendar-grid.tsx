@@ -6,7 +6,6 @@ import DateHeaders from "./date-headers";
 import TimeSlots from "./time-slots";
 import CalendarCell from "./calendar-cell";
 import EventBlock from "./event-block";
-import CalendarControls from "./calendar-controls";
 
 export default function CalendarGrid() {
   return (
@@ -16,34 +15,34 @@ export default function CalendarGrid() {
         <div
           dangerouslySetInnerHTML={{
             __html:
-              "<svg width=\"1440\" height=\"2\" viewBox=\"0 0 1440 2\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"calendar-line-1\" style=\"width: 1440px; height: 0; stroke-width: 1px; stroke: rgba(0,0,0,0.10); position: absolute; left: 0; top: 0\"> <path d=\"M0 1H1440\" stroke=\"black\" stroke-opacity=\"0.1\"></path> </svg>",
+              '<svg width="1440" height="2" viewBox="0 0 1440 2" fill="none" xmlns="http://www.w3.org/2000/svg" class="calendar-line-1" style="width: 1440px; height: 0; stroke-width: 1px; stroke: rgba(0,0,0,0.10); position: absolute; left: 0; top: 0"> <path d="M0 1H1440" stroke="black" stroke-opacity="0.1"></path> </svg>',
           }}
         />
         <div
           dangerouslySetInnerHTML={{
             __html:
-              "<svg width=\"1440\" height=\"2\" viewBox=\"0 0 1440 2\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"calendar-line-2\" style=\"width: 1440px; height: 0; stroke-width: 1px; stroke: rgba(0,0,0,0.10); position: absolute; left: 0; top: 108px\"> <path d=\"M0 1H1440\" stroke=\"black\" stroke-opacity=\"0.1\"></path> </svg>",
+              '<svg width="1440" height="2" viewBox="0 0 1440 2" fill="none" xmlns="http://www.w3.org/2000/svg" class="calendar-line-2" style="width: 1440px; height: 0; stroke-width: 1px; stroke: rgba(0,0,0,0.10); position: absolute; left: 0; top: 108px"> <path d="M0 1H1440" stroke="black" stroke-opacity="0.1"></path> </svg>',
           }}
         />
 
         {/* Vertical Lines */}
-        {[119, 241, 350, 470, 593, 700, 813, 937, 1055, 1173, 1307].map((left, index) => (
-          <div
-            key={index}
-            dangerouslySetInnerHTML={{
-              __html:
-                `<svg width="2" height="772" viewBox="0 0 2 772" fill="none" xmlns="http://www.w3.org/2000/svg" class="vertical-line-${index + 1}" style="width: 0; height: 773px; stroke-width: 1px; stroke: rgba(0,0,0,0.10); position: absolute; left: ${left}px; top: 108px"> <path d="M1 0V773" stroke="black" stroke-opacity="0.1"></path> </svg>`,
-            }}
-          />
-        ))}
+        {[119, 241, 350, 470, 593, 700, 813, 937, 1055, 1173, 1307].map(
+          (left, index) => (
+            <div
+              key={index}
+              dangerouslySetInnerHTML={{
+                __html: `<svg width="2" height="772" viewBox="0 0 2 772" fill="none" xmlns="http://www.w3.org/2000/svg" class="vertical-line-${index + 1}" style="width: 0; height: 773px; stroke-width: 1px; stroke: rgba(0,0,0,0.10); position: absolute; left: ${left}px; top: 108px"> <path d="M1 0V773" stroke="black" stroke-opacity="0.1"></path> </svg>`,
+              }}
+            />
+          ),
+        )}
 
         {/* Horizontal Lines */}
         {[292, 483, 675].map((top, index) => (
           <div
             key={index}
             dangerouslySetInnerHTML={{
-              __html:
-                `<svg width="1321" height="2" viewBox="0 0 1321 2" fill="none" xmlns="http://www.w3.org/2000/svg" class="horizontal-line-${index + 1}" style="width: 1321px; height: 0; stroke-width: 1px; stroke: rgba(0,0,0,0.10); position: absolute; left: 119px; top: ${top}px"> <path d="M0 1L1321 1" stroke="black" stroke-opacity="0.1"></path> </svg>`,
+              __html: `<svg width="1321" height="2" viewBox="0 0 1321 2" fill="none" xmlns="http://www.w3.org/2000/svg" class="horizontal-line-${index + 1}" style="width: 1321px; height: 0; stroke-width: 1px; stroke: rgba(0,0,0,0.10); position: absolute; left: 119px; top: ${top}px"> <path d="M0 1L1321 1" stroke="black" stroke-opacity="0.1"></path> </svg>`,
             }}
           />
         ))}
@@ -77,7 +76,12 @@ export default function CalendarGrid() {
           { left: 1060, top: 496 },
           { left: 1060, top: 685 },
         ].map((cell, index) => (
-          <CalendarCell key={index} left={cell.left} top={cell.top} type="available" />
+          <CalendarCell
+            key={index}
+            left={cell.left}
+            top={cell.top}
+            type="available"
+          />
         ))}
 
         {/* Unavailable labels */}

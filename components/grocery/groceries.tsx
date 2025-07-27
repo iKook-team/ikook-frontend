@@ -111,13 +111,14 @@ export default function Index() {
     price: string;
   }) => {
     const existingItem = cartItems.find((item) => item.id === product.id);
+
     if (existingItem) {
       setCartItems(
         cartItems.map((item) =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
+            : item,
+        ),
       );
     } else {
       setCartItems([
@@ -136,8 +137,8 @@ export default function Index() {
   const handleToggleSelect = (id: string) => {
     setCartItems(
       cartItems.map((item) =>
-        item.id === id ? { ...item, isSelected: !item.isSelected } : item
-      )
+        item.id === id ? { ...item, isSelected: !item.isSelected } : item,
+      ),
     );
   };
 

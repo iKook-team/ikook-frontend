@@ -81,63 +81,70 @@ export interface SendMessageData {
 export const chatService = {
   async createChat(userId: number): Promise<Chat> {
     try {
-      const response = await axios.post<ApiResponse<Chat>>('/chats/create/', { user_id: userId });
-      
+      const response = await axios.post<ApiResponse<Chat>>("/chats/create/", {
+        user_id: userId,
+      });
+
       if (!response.data.status) {
-        throw new Error(response.data.message || 'Failed to create chat');
+        throw new Error(response.data.message || "Failed to create chat");
       }
-      
+
       return response.data.data;
     } catch (error) {
-      handleApiError(error, 'Failed to create chat');
+      handleApiError(error, "Failed to create chat");
       throw error;
     }
   },
-  
+
   async getOrCreateChat(userId: number): Promise<Chat> {
     try {
-      console.log('Fetching existing chats for user:', userId);
-      const response = await axios.get<ApiResponse<ChatsResponse>>('/chats/');
-      
+      console.log("Fetching existing chats for user:", userId);
+      const response = await axios.get<ApiResponse<ChatsResponse>>("/chats/");
+
       // Extract the chats from the nested response structure
       const chats = response.data?.data?.results || [];
-      console.log('Found chats:', chats);
-      console.log('Processed chats:', chats);
-      
+
+      console.log("Found chats:", chats);
+      console.log("Processed chats:", chats);
+
       // Check if a chat with this user already exists
-      const existingChat = chats.find(chat => {
-        const exists = chat && (chat.chef?.id === userId || chat.host?.id === userId);
-        console.log('Checking chat:', { chat, userId, exists });
+      const existingChat = chats.find((chat) => {
+        const exists =
+          chat && (chat.chef?.id === userId || chat.host?.id === userId);
+
+        console.log("Checking chat:", { chat, userId, exists });
+
         return exists;
       });
-      
+
       if (existingChat) {
-        console.log('Found existing chat:', existingChat);
+        console.log("Found existing chat:", existingChat);
+
         return existingChat;
       }
-      
+
       // If no existing chat, create a new one
       return this.createChat(userId);
     } catch (error) {
-      console.error('Error getting or creating chat:', error);
+      console.error("Error getting or creating chat:", error);
       throw error;
     }
   },
   async getChats(): Promise<ChatsResponse> {
     try {
       const response = await axios.get("/chats/");
-      
+
       // Always ensure we have a response object
       if (!response) {
-        throw new Error('No response from server');
+        throw new Error("No response from server");
       }
 
       // Extract the data, defaulting to empty array if not found
       const responseData = response?.data?.data || response?.data || [];
-      
+
       // Ensure we always return an array of chats
       let chatResults: Chat[] = [];
-      
+
       if (Array.isArray(responseData)) {
         chatResults = responseData;
       } else if (responseData?.results && Array.isArray(responseData.results)) {
@@ -145,7 +152,7 @@ export const chatService = {
       } else if (responseData?.id) {
         chatResults = [responseData];
       }
-      
+
       // Return a valid response structure in all cases
       return {
         count: chatResults.length,
@@ -153,10 +160,10 @@ export const chatService = {
         previous: null,
         current: 1,
         total: chatResults.length,
-        results: chatResults
+        results: chatResults,
       };
     } catch (error) {
-      handleApiError(error, 'Failed to load conversations');
+      handleApiError(error, "Failed to load conversations");
       throw error; // Re-throw to allow components to handle the error if needed
     }
   },
@@ -174,28 +181,25 @@ export const chatService = {
           total: number;
           results: Message[];
         };
-      }>(
-        `/chats/messages/`,
-        { params: { chat: chatId } }
-      );
-      
+      }>(`/chats/messages/`, { params: { chat: chatId } });
+
       if (!response?.data) {
-        throw new Error('No data received from server');
+        throw new Error("No data received from server");
       }
-      
+
       // Log the response for debugging
-      console.log('Messages API response:', response.data);
-      
+      console.log("Messages API response:", response.data);
+
       // Handle the nested response structure
       const responseData = response.data.data || response.data;
       let messageResults: Message[] = [];
-      
+
       if (responseData.results && Array.isArray(responseData.results)) {
         messageResults = responseData.results;
       } else if (Array.isArray(responseData)) {
         messageResults = responseData;
       }
-      
+
       // Return in the expected format
       return {
         count: responseData.count || messageResults.length,
@@ -203,10 +207,10 @@ export const chatService = {
         previous: responseData.previous || null,
         current: responseData.current || 1,
         total: responseData.total || messageResults.length,
-        results: messageResults
+        results: messageResults,
       };
     } catch (error) {
-      handleApiError(error, 'Failed to load messages');
+      handleApiError(error, "Failed to load messages");
       throw error; // Re-throw to allow components to handle the error if needed
     }
   },
@@ -214,17 +218,17 @@ export const chatService = {
   async sendMessage(data: SendMessageData): Promise<Message> {
     try {
       const response = await axios.post<ApiResponse<Message>>(
-        '/chats/messages/',
-        data
+        "/chats/messages/",
+        data,
       );
 
       if (!response?.data?.data) {
-        throw new Error('No data received from server');
+        throw new Error("No data received from server");
       }
 
       return response.data.data;
     } catch (error) {
-      handleApiError(error, 'Failed to send message');
+      handleApiError(error, "Failed to send message");
       throw error;
     }
   },

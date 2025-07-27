@@ -32,20 +32,20 @@ interface LargeEventPayload extends BaseBookingPayload {
   event_venue: string;
   num_of_guests: number;
   budget: string;
-  budget_type: 'Flexible' | 'Fixed';
+  budget_type: "Flexible" | "Fixed";
   preferred_cuisines: string[]; // Required for these types
 }
 
 // Meal Prep
 interface MealPrepPayload extends BaseBookingPayload {
   budget: string;
-  budget_type: 'Flexible' | 'Fixed';
-  appearance: 'Monthly' | 'Weekly';
+  budget_type: "Flexible" | "Fixed";
+  appearance: "Monthly" | "Weekly";
   num_of_weeks: number;
   num_of_weekly_visits: number;
-  experience: 'One time' | 'Multiple';
+  experience: "One time" | "Multiple";
   meal_type: string[];
-  delivery_option: 'Physical' | 'Virtual';
+  delivery_option: "Physical" | "Virtual";
   delivery_days: string[];
   start_date: string;
   end_date: string;
@@ -57,16 +57,28 @@ interface MealPrepPayload extends BaseBookingPayload {
 type BookingPayload = ChefAtHomePayload | LargeEventPayload | MealPrepPayload;
 
 // Type guard functions
-function isChefAtHomePayload(payload: BookingPayload): payload is ChefAtHomePayload {
-  return 'event_date' in payload && !('budget' in payload || 'appearance' in payload);
+function isChefAtHomePayload(
+  payload: BookingPayload,
+): payload is ChefAtHomePayload {
+  return (
+    "event_date" in payload && !("budget" in payload || "appearance" in payload)
+  );
 }
 
-function isLargeEventPayload(payload: BookingPayload): payload is LargeEventPayload {
-  return 'preferred_cuisines' in payload && 'budget' in payload && !('appearance' in payload);
+function isLargeEventPayload(
+  payload: BookingPayload,
+): payload is LargeEventPayload {
+  return (
+    "preferred_cuisines" in payload &&
+    "budget" in payload &&
+    !("appearance" in payload)
+  );
 }
 
-function isMealPrepPayload(payload: BookingPayload): payload is MealPrepPayload {
-  return 'appearance' in payload && 'num_of_weeks' in payload;
+function isMealPrepPayload(
+  payload: BookingPayload,
+): payload is MealPrepPayload {
+  return "appearance" in payload && "num_of_weeks" in payload;
 }
 
 export type {
@@ -74,11 +86,7 @@ export type {
   ChefAtHomePayload,
   LargeEventPayload,
   MealPrepPayload,
-  BookingPayload
+  BookingPayload,
 };
 
-export {
-  isChefAtHomePayload,
-  isLargeEventPayload,
-  isMealPrepPayload
-};
+export { isChefAtHomePayload, isLargeEventPayload, isMealPrepPayload };

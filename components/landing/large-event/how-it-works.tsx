@@ -1,8 +1,11 @@
-import React from 'react';
+import React from "react";
 
 const HowItWorks = () => {
   return (
-    <section id="how-it-works" className="justify-center w-full max-w-[1388px] overflow-hidden bg-[#FCC01C] mt-[100px] pt-[37px] pb-[60px] px-[65px] rounded-[20px] max-md:max-w-full max-md:mt-10 max-md:px-5">
+    <section
+      id="how-it-works"
+      className="justify-center w-full max-w-[1388px] overflow-hidden bg-[#FCC01C] mt-[100px] pt-[37px] pb-[60px] px-[65px] rounded-[20px] max-md:max-w-full max-md:mt-10 max-md:px-5"
+    >
       <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
         <div className="w-6/12 max-md:w-full max-md:ml-0">
           <div className="flex grow flex-col items-stretch max-md:max-w-full max-md:mt-10">

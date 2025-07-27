@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface StepCardProps {
   number: string;
@@ -7,9 +7,16 @@ interface StepCardProps {
   className?: string;
 }
 
-const StepCard: React.FC<StepCardProps> = ({ number, title, description, className = "" }) => {
+const StepCard: React.FC<StepCardProps> = ({
+  number,
+  title,
+  description,
+  className = "",
+}) => {
   return (
-    <div className={`overflow-hidden bg-[#FFFCF5] px-8 py-[30px] rounded-[20px] max-md:max-w-full max-md:px-5 ${className}`}>
+    <div
+      className={`overflow-hidden bg-[#FFFCF5] px-8 py-[30px] rounded-[20px] max-md:max-w-full max-md:px-5 ${className}`}
+    >
       <div className="flex w-[50px] flex-col items-center text-4xl text-[#FCC01C] font-bold whitespace-nowrap tracking-[-0.72px] leading-none justify-center h-[50px] bg-[#FDEEC5] px-[18px] rounded-[5px]">
         <div className="text-[#FCC01C]">{number}</div>
       </div>

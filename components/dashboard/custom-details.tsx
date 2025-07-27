@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { BudgetCard } from "./budget-card";
 import { SectionWithTags } from "./section-with-tags";
@@ -66,11 +66,7 @@ export const CustomDetailsForm: React.FC<CustomDetailsFormProps> = ({
         editable={false}
       />
 
-      <TextSection
-        title="Message"
-        content={message}
-        editable={false}
-      />
+      <TextSection title="Message" content={message} editable={false} />
     </div>
   );
 };

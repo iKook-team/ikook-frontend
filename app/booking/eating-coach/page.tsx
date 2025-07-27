@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+
 import EatingCoachForm from "@/components/booking/eating-coach-form";
 import PreferencesForm from "@/components/booking/preferences";
 import EatingCoachMessageForm from "@/components/booking/eating-coach-message-form";
@@ -27,16 +28,16 @@ export default function EatingCoachBookingPage() {
         <EatingCoachForm onNext={handleNext} onBack={handleBack} />
       )}
       {step === 1 && (
-        <PreferencesForm 
-          onNext={handleNext} 
+        <PreferencesForm
+          onNext={handleNext}
           onBack={handleBack}
           formData={formData}
-          onChange={(data) => setFormData(prev => ({ ...prev, ...data }))}
+          onChange={(data) => setFormData((prev) => ({ ...prev, ...data }))}
         />
       )}
       {step === 2 && (
-        <EatingCoachMessageForm 
-          onNext={handleNext} 
+        <EatingCoachMessageForm
+          onNext={handleNext}
           onBack={handleBack}
           bookingData={formData}
           service={bookingService}

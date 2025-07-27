@@ -1,12 +1,13 @@
 import { create } from "zustand";
+
 import { clearToken, isAuthenticated } from "@/src/lib/auth";
 
-type UserType = 'host' | 'chef' | null;
+type UserType = "host" | "chef" | null;
 
 interface User {
   id: number;
   email: string;
-  user_type: 'Host' | 'Chef';
+  user_type: "Host" | "Chef";
   username: string;
   is_active: boolean;
   first_name: string;
@@ -82,6 +83,7 @@ const saveUserToStorage = (user: User) => {
 const getUserFromStorage = (): User | null => {
   if (typeof window !== "undefined") {
     const userData = localStorage.getItem("ikook_user_data");
+
     if (userData) {
       try {
         return JSON.parse(userData);
@@ -91,6 +93,7 @@ const getUserFromStorage = (): User | null => {
       }
     }
   }
+
   return null;
 };
 
@@ -122,10 +125,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // Debug logging removed
     // Save user data to localStorage for persistence
     saveUserToStorage(user);
-    set({ 
-      user, 
-      isAuthenticated: true, 
-      userType: user.user_type === "Host" ? "host" : "chef"
+    set({
+      user,
+      isAuthenticated: true,
+      userType: user.user_type === "Host" ? "host" : "chef",
     });
     // Debug logging removed
   },
@@ -139,41 +142,41 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // Check if user has existing tokens
     const hasToken = isAuthenticated();
     // Debug logging removed
-    
+
     if (hasToken) {
       // Try to get user data from localStorage first
       const userData = getUserFromStorage();
       // Debug logging removed
-      
+
       if (userData) {
         // We have both token and user data, restore the session
-        set({ 
-          user: userData, 
-          isAuthenticated: true, 
+        set({
+          user: userData,
+          isAuthenticated: true,
           userType: userData.user_type === "Host" ? "host" : "chef",
-          isInitialized: true 
+          isInitialized: true,
         });
         // Debug logging removed
-        
+
         // Skip token validation for now to avoid 500 errors
         // The token will be validated on the next API call that requires it
         // Debug logging removed
       } else {
         // We have token but no user data, set basic authenticated state
-        set({ 
-          isAuthenticated: true, 
-          isInitialized: true 
+        set({
+          isAuthenticated: true,
+          isInitialized: true,
         });
         // Debug logging removed
       }
     } else {
       // No token, clear everything
       clearUserFromStorage();
-      set({ 
-        user: null, 
-        isAuthenticated: false, 
-        userType: null, 
-        isInitialized: true 
+      set({
+        user: null,
+        isAuthenticated: false,
+        userType: null,
+        isInitialized: true,
       });
       // Debug logging removed
     }

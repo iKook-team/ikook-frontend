@@ -1,32 +1,36 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const Newsletter = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: ''
+    name: "",
+    email: "",
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle newsletter subscription
-    console.log('Newsletter subscription:', formData);
+    console.log("Newsletter subscription:", formData);
     // Reset form
-    setFormData({ name: '', email: '' });
+    setFormData({ name: "", email: "" });
   };
 
   return (
     <section className="self-stretch flex w-full flex-col items-stretch bg-[#FCC01C] mt-[100px] pt-16 pb-6 px-12 max-md:max-w-full max-md:mt-10 max-md:px-5">
-      <form onSubmit={handleSubmit} className="flex items-center gap-[40px_120px] flex-wrap max-md:max-w-full">
+      <form
+        onSubmit={handleSubmit}
+        className="flex items-center gap-[40px_120px] flex-wrap max-md:max-w-full"
+      >
         <h2 className="text-[#060605] text-justify text-3xl font-medium leading-none self-stretch my-auto">
           Join our Newsletter
         </h2>
@@ -62,9 +66,7 @@ const Newsletter = () => {
               type="submit"
               className="justify-center items-center border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex gap-2 overflow-hidden bg-[#060605] px-7 py-4 rounded-[40px] border-solid border-[#060605] max-md:px-5 hover:bg-[#1a1a1a] transition-colors"
             >
-              <span className="text-white self-stretch my-auto">
-                Subscribe
-              </span>
+              <span className="text-white self-stretch my-auto">Subscribe</span>
             </button>
           </div>
         </div>

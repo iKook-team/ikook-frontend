@@ -3,14 +3,17 @@ import axios from "@/src/lib/axios";
 export const revenueService = {
   async getEarnings() {
     const response = await axios.get("/earnings/");
+
     return response.data;
   },
   async getWithdrawals(params = {}) {
     const response = await axios.get("/earnings/withdrawals/", { params });
+
     return response.data;
   },
   async getBankDetails(chefId: number) {
     const response = await axios.get(`/earnings/bank-details/${chefId}/`);
+
     return response.data;
   },
   async requestWithdrawal(amount: string, bankDetailId: number) {
@@ -18,6 +21,7 @@ export const revenueService = {
       amount,
       bank_detail: bankDetailId,
     });
+
     return response.data;
   },
-}; 
+};

@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-
 import { Button, Select, SelectItem } from "@heroui/react";
 
 import { ServiceButton } from "./ServiceButton";
@@ -37,7 +36,7 @@ export function Services({ selectedService, onServiceChange }: ServicesProps) {
   const [isFilterOpen, setIsFilterOpen] = React.useState<boolean>(false);
 
   const handleCustomBookingClick = () => {
-    router.push('/booking/custom');
+    router.push("/booking/custom");
   };
 
   const handleServiceClick = (serviceId: string) => {
@@ -99,9 +98,9 @@ export function Services({ selectedService, onServiceChange }: ServicesProps) {
             <div className="w-2/3 text-xs sm:text-sm">
               Cant find what you want? use the custom booking
             </div>
-            <Button 
-              radius="full" 
-              size="sm" 
+            <Button
+              radius="full"
+              size="sm"
               className="bg-yellow-400 text-white"
               onClick={handleCustomBookingClick}
             >

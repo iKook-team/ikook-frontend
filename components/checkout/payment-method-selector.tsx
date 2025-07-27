@@ -6,7 +6,9 @@ interface PaymentMethodSelectorProps {
   isCustomBooking?: boolean;
 }
 
-export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({ isCustomBooking = false }) => {
+export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
+  isCustomBooking = false,
+}) => {
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>("card");
 
   return (
@@ -29,7 +31,9 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({ is
           <div className="flex items-center flex-wrap max-md:max-w-full">
             <div className="self-stretch flex flex-col items-stretch my-auto">
               <div className="flex items-center gap-2 text-sm text-black font-semibold leading-none">
-                <span id="card-label" className="self-stretch my-auto">Credit/Debit Card</span>
+                <span id="card-label" className="self-stretch my-auto">
+                  Credit/Debit Card
+                </span>
                 <img
                   src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/8d3753d4d2a5402d27486dc1e685ee01528f9155?placeholderIfAbsent=true"
                   className="aspect-[1] object-contain w-3 self-stretch shrink-0 my-auto"
@@ -62,7 +66,9 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({ is
           <div className="flex items-center flex-wrap max-md:max-w-full">
             <div className="self-stretch my-auto">
               <div className="flex items-center gap-2 text-sm text-black font-semibold leading-none">
-                <span id="voucher-label" className="self-stretch my-auto">Gift Voucher</span>
+                <span id="voucher-label" className="self-stretch my-auto">
+                  Gift Voucher
+                </span>
                 <img
                   src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/3c9e46055b4c1766714b93d1583d55d5c8f01958?placeholderIfAbsent=true"
                   className="aspect-[1] object-contain w-3 self-stretch shrink-0 my-auto"

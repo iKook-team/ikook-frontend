@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface MenuCardProps {
   title: string;
@@ -38,7 +38,10 @@ export const MenuCard: React.FC<MenuCardProps> = ({
                 <span className="self-stretch w-[45px] my-auto">{cuisine}</span>
               </div>
             </div>
-            <button className="ml-auto p-1 hover:opacity-70 transition-opacity" aria-label="Add to favorites">
+            <button
+              className="ml-auto p-1 hover:opacity-70 transition-opacity"
+              aria-label="Add to favorites"
+            >
               <img
                 src="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/fe20cc20690e9e4dbb5ef466698ad5cf9d163ab7?placeholderIfAbsent=true"
                 alt="Favorite"
@@ -63,7 +66,9 @@ export const MenuCard: React.FC<MenuCardProps> = ({
               className="aspect-[1] object-contain w-10 shrink-0"
             />
             <div className="flex flex-col items-stretch mt-[5px]">
-              <div className="text-[#323335] text-xs font-semibold">{chefName}</div>
+              <div className="text-[#323335] text-xs font-semibold">
+                {chefName}
+              </div>
               <div className="flex items-stretch gap-0.5 text-[10px] text-[#323335] font-normal whitespace-nowrap">
                 <img
                   src="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/c5276b0491d93a2d4dceeb6c4d8c347c0b8ac9f0?placeholderIfAbsent=true"
@@ -82,9 +87,13 @@ export const MenuCard: React.FC<MenuCardProps> = ({
                   alt="Rating"
                   className="aspect-[1.08] object-contain w-3.5 self-stretch shrink-0 my-auto"
                 />
-                <span className="text-[#323335] self-stretch w-[23px] my-auto">{rating}</span>
+                <span className="text-[#323335] self-stretch w-[23px] my-auto">
+                  {rating}
+                </span>
               </div>
-              <div className="text-[#323335] text-[10px] font-normal">({reviewCount} Reviews)</div>
+              <div className="text-[#323335] text-[10px] font-normal">
+                ({reviewCount} Reviews)
+              </div>
             </div>
           </div>
         </div>

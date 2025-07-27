@@ -1,4 +1,7 @@
-export function getCurrencySymbol(user?: { currency?: string; country?: string }): string {
+export function getCurrencySymbol(user?: {
+  currency?: string;
+  country?: string;
+}): string {
   if (user?.currency) {
     if (user.currency === "NGN") return "₦";
     if (user.currency === "ZAR") return "R";
@@ -9,5 +12,6 @@ export function getCurrencySymbol(user?: { currency?: string; country?: string }
     if (user.country === "South Africa") return "R";
     if (user.country === "United Kingdom") return "£";
   }
+
   return "₦";
-} 
+}

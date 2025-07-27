@@ -17,7 +17,7 @@ export const NewsletterSection: React.FC = () => {
 
   const handleInputChange = (
     field: keyof NewsletterFormData,
-    value: string
+    value: string,
   ) => {
     setFormData((prev) => ({
       ...prev,
@@ -30,11 +30,13 @@ export const NewsletterSection: React.FC = () => {
 
     if (!formData.name.trim() || !formData.email.trim()) {
       setMessage("Please fill in all fields");
+
       return;
     }
 
     if (!isValidEmail(formData.email)) {
       setMessage("Please enter a valid email address");
+
       return;
     }
 
@@ -55,6 +57,7 @@ export const NewsletterSection: React.FC = () => {
 
   const isValidEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     return emailRegex.test(email);
   };
 

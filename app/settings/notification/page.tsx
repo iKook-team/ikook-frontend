@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import { Toggle } from '@/components/ui/toggle';
+import { Toggle } from "@/components/ui/toggle";
 
-export const NotificationSettings: React.FC = () => {
+const NotificationSettings: React.FC = () => {
   const [emailNotification, setEmailNotification] = useState(true);
   const [smsNotification, setSmsNotification] = useState(true);
 
   const handleSaveChanges = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Saving notification settings:', {
+    console.log("Saving notification settings:", {
       emailNotification,
       smsNotification,
     });
@@ -23,11 +23,17 @@ export const NotificationSettings: React.FC = () => {
         <h1 className="text-black text-2xl font-semibold leading-8 mb-[53px]">
           Notification
         </h1>
-        
-        <form onSubmit={handleSaveChanges} className="w-[654px] border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] bg-white rounded-[15px] border-solid border-[#E7E7E7]">
+
+        <form
+          onSubmit={handleSaveChanges}
+          className="w-[654px] border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] bg-white rounded-[15px] border-solid border-[#E7E7E7]"
+        >
           <div className="pt-[34px] pb-0 px-[18px]">
             <div className="flex items-center justify-between mb-6">
-              <label htmlFor="email-notification" className="text-[#020101] text-[15px] font-normal">
+              <label
+                htmlFor="email-notification"
+                className="text-[#020101] text-[15px] font-normal"
+              >
                 Email notification
               </label>
               <Toggle
@@ -35,18 +41,18 @@ export const NotificationSettings: React.FC = () => {
                 onChange={setEmailNotification}
               />
             </div>
-            
+
             <div className="flex items-center justify-between mb-6">
-              <label htmlFor="sms-notification" className="text-[#020101] text-[15px] font-normal">
+              <label
+                htmlFor="sms-notification"
+                className="text-[#020101] text-[15px] font-normal"
+              >
                 SMS notification
               </label>
-              <Toggle
-                checked={smsNotification}
-                onChange={setSmsNotification}
-              />
+              <Toggle checked={smsNotification} onChange={setSmsNotification} />
             </div>
           </div>
-          
+
           <div className="bg-white pl-[127px] pr-[106px] pt-[33px] pb-[23px] rounded-[0px_0px_15px_15px] border-t-[#E7E7E7] border-t border-solid">
             <button
               type="submit"

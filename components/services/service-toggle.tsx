@@ -17,15 +17,19 @@ export const ServiceToggle: React.FC<ServiceToggleProps> = ({
 
   const handleToggle = () => {
     const newState = !active;
+
     setActive(newState);
     onToggle?.(serviceName, newState);
   };
 
-  const mainProps = onClick ? { onClick, style: { cursor: 'pointer' } } : {};
+  const mainProps = onClick ? { onClick, style: { cursor: "pointer" } } : {};
 
   if (active) {
     return (
-      <div className="flex items-center flex-wrap max-md:max-w-full" {...mainProps}>
+      <div
+        className="flex items-center flex-wrap max-md:max-w-full"
+        {...mainProps}
+      >
         <div className="text-[#020101] text-lg font-normal leading-loose self-stretch w-[298px] my-auto">
           {serviceName}
         </div>
@@ -44,7 +48,10 @@ export const ServiceToggle: React.FC<ServiceToggleProps> = ({
   }
 
   return (
-    <div className="flex items-center text-lg text-[#020101] font-normal leading-loose flex-wrap max-md:max-w-full" {...mainProps}>
+    <div
+      className="flex items-center text-lg text-[#020101] font-normal leading-loose flex-wrap max-md:max-w-full"
+      {...mainProps}
+    >
       <div className="text-[#020101] self-stretch w-[298px] my-auto">
         {serviceName}
       </div>

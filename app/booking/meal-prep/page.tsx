@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuthStore } from "@/lib/store/auth-store";
 
+import { useAuthStore } from "@/lib/store/auth-store";
 import { Cart } from "@/components/cart/cart";
 import MealDetailsForm from "@/components/booking/meal-details-form";
 import MealDetailsForm2 from "@/components/booking/meal-details-form2";
@@ -28,9 +28,9 @@ type BookingStep =
 const MealPrepBookingPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const isCustomBooking = searchParams.get('is_custom') === 'true';
+  const isCustomBooking = searchParams.get("is_custom") === "true";
   const [currentStep, setCurrentStep] = useState<BookingStep>(
-    isCustomBooking ? "meal-details" : "cart"
+    isCustomBooking ? "meal-details" : "cart",
   );
   const [bookingData, setBookingData] = useState<Record<string, any>>({});
   const menu = useAuthStore((s) => s.bookingMenu);
@@ -59,6 +59,7 @@ const MealPrepBookingPage = () => {
     ];
 
     const currentIndex = steps.indexOf(currentStep);
+
     if (currentIndex < steps.length - 1) {
       setCurrentStep(steps[currentIndex + 1]);
       window.scrollTo(0, 0); // Scroll to top on step change
@@ -79,6 +80,7 @@ const MealPrepBookingPage = () => {
     ];
 
     const currentIndex = steps.indexOf(currentStep);
+
     if (currentIndex > 0) {
       setCurrentStep(steps[currentIndex - 1]);
       window.scrollTo(0, 0); // Scroll to top on step change
@@ -114,6 +116,8 @@ const MealPrepBookingPage = () => {
           <PreferencesForm
             onNext={(data) => handleNext(data)}
             onBack={handleBack}
+            formData={{}}
+            onChange={() => {}}
           />
         );
       case "messages":

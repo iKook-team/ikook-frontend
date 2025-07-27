@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface ReferralItem {
   id: string;
@@ -9,13 +9,13 @@ interface ReferralItem {
 
 const ReferralList = () => {
   const referrals: ReferralItem[] = [
-    { id: '1', name: 'Kemi smallz', date: '15 October, 2023', points: 10 },
-    { id: '2', name: 'Kemi smallz', date: '15 October, 2023', points: 10 },
-    { id: '3', name: 'Kemi smallz', date: '15 October, 2023', points: 10 },
-    { id: '4', name: 'Kemi smallz', date: '15 October, 2023', points: 10 },
-    { id: '5', name: 'Kemi smallz', date: '15 October, 2023', points: 10 },
-    { id: '6', name: 'Kemi smallz', date: '15 October, 2023', points: 10 },
-    { id: '7', name: 'Kemi smallz', date: '15 October, 2023', points: 10 },
+    { id: "1", name: "Kemi smallz", date: "15 October, 2023", points: 10 },
+    { id: "2", name: "Kemi smallz", date: "15 October, 2023", points: 10 },
+    { id: "3", name: "Kemi smallz", date: "15 October, 2023", points: 10 },
+    { id: "4", name: "Kemi smallz", date: "15 October, 2023", points: 10 },
+    { id: "5", name: "Kemi smallz", date: "15 October, 2023", points: 10 },
+    { id: "6", name: "Kemi smallz", date: "15 October, 2023", points: 10 },
+    { id: "7", name: "Kemi smallz", date: "15 October, 2023", points: 10 },
   ];
 
   return (

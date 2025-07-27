@@ -1,9 +1,10 @@
 "use client";
 
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 export default function HeroSection() {
   const router = useRouter();
@@ -86,7 +87,10 @@ export default function HeroSection() {
             </label>
             <div className="flex flex-wrap gap-4">
               {["Chef at Home", "Large Event", "Meal Prep"].map((service) => (
-                <label key={service} className="flex items-center space-x-3 cursor-pointer">
+                <label
+                  key={service}
+                  className="flex items-center space-x-3 cursor-pointer"
+                >
                   <div className="relative">
                     <input
                       type="radio"
@@ -98,7 +102,7 @@ export default function HeroSection() {
                     />
                     <div className="w-7 h-7 border-2 border-[#323335] rounded-sm flex items-center justify-center">
                       {selectedService === service && (
-                        <div className="w-5 h-5 bg-[#323335] rounded-sm"></div>
+                        <div className="w-5 h-5 bg-[#323335] rounded-sm" />
                       )}
                     </div>
                   </div>
@@ -110,8 +114,8 @@ export default function HeroSection() {
 
           {/* Search Button */}
           <div className="flex justify-end">
-            <Button 
-              onClick={() => router.push('/explore')}
+            <Button
+              onClick={() => router.push("/explore")}
               className="bg-[#323335] hover:bg-[#323335]/90 text-white px-8 py-4 text-xl font-medium rounded-md flex items-center space-x-3"
             >
               <svg

@@ -1,18 +1,25 @@
 import React from "react";
-import { useAuthStore } from '@/lib/store/auth-store';
+
+import { useAuthStore } from "@/lib/store/auth-store";
 
 interface EventDetailsCardProps {
   isCustomBooking?: boolean;
 }
 
-export const EventDetailsCard: React.FC<EventDetailsCardProps> = ({ isCustomBooking = false }) => {
+export const EventDetailsCard: React.FC<EventDetailsCardProps> = ({
+  isCustomBooking = false,
+}) => {
   const booking = useAuthStore((s) => s.booking);
-  const menuName = booking?.menu_name || 'Menu';
-  const chefName = booking?.chef_name || 'Chef';
-  const chefAvatar = booking?.chef_avatar || 'https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/231d86006c0dab5ed39c08a8a310d23841a29a6f?placeholderIfAbsent=true';
-  const chefLocation = booking?.city || 'Unknown';
-  const chefRating = booking?.chef_rating || '-';
-  const chefNumReviews = booking?.chef_num_reviews ? `(${booking.chef_num_reviews} Reviews)` : '';
+  const menuName = booking?.menu_name || "Menu";
+  const chefName = booking?.chef_name || "Chef";
+  const chefAvatar =
+    booking?.chef_avatar ||
+    "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/231d86006c0dab5ed39c08a8a310d23841a29a6f?placeholderIfAbsent=true";
+  const chefLocation = booking?.city || "Unknown";
+  const chefRating = booking?.chef_rating || "-";
+  const chefNumReviews = booking?.chef_num_reviews
+    ? `(${booking.chef_num_reviews} Reviews)`
+    : "";
 
   return (
     <article className="border border-[color:var(--Black-100,#E7E7E7)] shadow-[0px_4px_70px_0px_rgba(0,0,0,0.07)] bg-white mt-[31px] pl-[15px] pr-[76px] py-[13px] rounded-lg border-solid max-md:max-w-full max-md:pr-5">

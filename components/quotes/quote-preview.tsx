@@ -1,22 +1,48 @@
+import React, { useState, useEffect, useMemo } from "react";
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { quotesService } from '@/lib/api/quotes';
-import { useAuthStore } from '@/lib/store/auth-store';
-import { getCurrencySymbol } from '@/lib/utils/currency';
+import { quotesService } from "@/lib/api/quotes";
+import { useAuthStore } from "@/lib/store/auth-store";
+import { getCurrencySymbol } from "@/lib/utils/currency";
 
-const DEFAULT_CURRENCY = 'GBP'; // Default currency if not specified
-import type { MenuItem, MenuItemInput, QuoteFormData } from '@/types/quote';
-import { toMenuItem } from '@/types/quote';
+const DEFAULT_CURRENCY = "GBP"; // Default currency if not specified
+
+import type { MenuItem, MenuItemInput, QuoteFormData } from "@/types/quote";
+
+import { toMenuItem } from "@/types/quote";
 
 // Test data for the QuotePreview component
 const TEST_QUOTE_DATA: QuoteFormData = {
-  menuName: 'Test Menu',
+  menuName: "Test Menu",
   items: [
-    { id: '1', name: 'Bruschetta', description: 'Toasted bread with tomatoes', price: 8.99, course: 'starter' },
-    { id: '2', name: 'Caesar Salad', description: 'Fresh romaine with caesar dressing', price: 10.99, course: 'starter' },
-    { id: '3', name: 'Grilled Salmon', description: 'Fresh salmon with lemon butter', price: 24.99, course: 'main' },
-    { id: '4', name: 'Chocolate Mousse', description: 'Rich chocolate dessert', price: 7.99, course: 'dessert' },
-  ]
+    {
+      id: "1",
+      name: "Bruschetta",
+      description: "Toasted bread with tomatoes",
+      price: 8.99,
+      course: "starter",
+    },
+    {
+      id: "2",
+      name: "Caesar Salad",
+      description: "Fresh romaine with caesar dressing",
+      price: 10.99,
+      course: "starter",
+    },
+    {
+      id: "3",
+      name: "Grilled Salmon",
+      description: "Fresh salmon with lemon butter",
+      price: 24.99,
+      course: "main",
+    },
+    {
+      id: "4",
+      name: "Chocolate Mousse",
+      description: "Rich chocolate dessert",
+      price: 7.99,
+      course: "dessert",
+    },
+  ],
 };
 
 interface QuoteImage {
@@ -52,70 +78,93 @@ export const QuotePreview: React.FC<QuotePreviewProps> = ({
   quoteId,
   formData,
   onSendQuote = () => {},
-  onPayQuote = () => {}
+  onPayQuote = () => {},
 }) => {
   const [quote, setQuote] = useState<QuoteDetails | null>(null);
   const { user } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
-  const currency = { currency: 'GBP' }; // Default currency
+  const currency = { currency: "GBP" }; // Default currency
   const [error, setError] = useState<string | null>(null);
   const [menuItems, setMenuItems] = useState<Record<string, MenuItem[]>>({});
   const [totalCost, setTotalCost] = useState<number>(0);
-  
+
   const currencySymbol = getCurrencySymbol({
     currency: user?.currency,
-    country: user?.country
+    country: user?.country,
   });
-  
+
   // Format date from API
   const formatDate = (dateString: string) => {
-    if (!dateString) return '';
+    if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
   // Use the quote directly since there's no .data property in the QuoteDetails type
   const quoteData = quote || {};
-  
+
   // Use formData if provided, otherwise use the quote from API, fallback to test data in development
-  const displayData = formData || (quote ? {
-    menuName: quote.name || 'Quote Details',
-    items: (quote.items || []).map(item => ({
-      id: item?.id?.toString() || '',
-      name: item?.name || 'Unnamed Item',
-      description: item?.description || '',
-      price: item?.price || 0,
-      course: item?.course || 'main',
-      checked: true // Make sure items are checked by default
-    }))
-  } : (process.env.NODE_ENV === 'development' ? TEST_QUOTE_DATA : { menuName: 'Quote Details', items: [] }));
-  
-  const quoteName = displayData?.menuName || 'Quote Details';
-  const quoteDate = (quoteData as any)?.created_at ? formatDate((quoteData as any).created_at) : new Date().toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-  
+  const displayData =
+    formData ||
+    (quote
+      ? {
+          menuName: quote.name || "Quote Details",
+          items: (quote.items || []).map((item) => ({
+            id: item?.id?.toString() || "",
+            name: item?.name || "Unnamed Item",
+            description: item?.description || "",
+            price: item?.price || 0,
+            course: item?.course || "main",
+            checked: true, // Make sure items are checked by default
+          })),
+        }
+      : process.env.NODE_ENV === "development"
+        ? TEST_QUOTE_DATA
+        : { menuName: "Quote Details", items: [] });
+
+  const quoteName = displayData?.menuName || "Quote Details";
+  const quoteDate = (quoteData as any)?.created_at
+    ? formatDate((quoteData as any).created_at)
+    : new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
   // Group items by course
   const groupedItems = useMemo(() => {
-    const groups: Record<string, Array<MenuItemInput & { id: string; checked: boolean }>> = {};
-    (displayData?.items || []).forEach(item => {
-      const course = item.course || 'other';
+    const groups: Record<
+      string,
+      Array<MenuItemInput & { id: string; checked: boolean }>
+    > = {};
+
+    (displayData?.items || []).forEach((item) => {
+      const course = item.course || "other";
+
       if (!groups[course]) {
         groups[course] = [];
       }
-      groups[course].push({
+      // Create a new item with default values for any missing properties
+      const menuItem: MenuItem = {
         ...item,
         id: item.id || Math.random().toString(36).substr(2, 9),
-        checked: item.checked !== false, // Default to true if not set
-        course: course as 'starter' | 'main' | 'dessert' | 'side' | 'other'
-      });
+        checked: true, // Default to true for all items
+        description: item.description || "",
+        price:
+          typeof item.price === "string"
+            ? parseFloat(item.price) || 0
+            : item.price || 0,
+        course: course as "starter" | "main" | "dessert" | "side" | "other",
+      };
+
+      groups[course].push(menuItem);
     });
+
     return groups;
   }, [displayData?.items]);
 
@@ -123,11 +172,13 @@ export const QuotePreview: React.FC<QuotePreviewProps> = ({
   const courseTypes = useMemo(() => {
     if (!formData?.items) return [];
     const courses = new Set<string>();
-    formData.items.forEach(item => {
+
+    formData.items.forEach((item) => {
       if (item.course) {
         courses.add(item.course);
       }
     });
+
     return Array.from(courses);
   }, [formData?.items]);
 
@@ -135,64 +186,78 @@ export const QuotePreview: React.FC<QuotePreviewProps> = ({
   useEffect(() => {
     const fetchQuote = async () => {
       if (!quoteId) return;
-      
+
       setIsLoading(true);
       setError(null);
-      
+
       try {
-        console.log('Fetching quote with ID:', quoteId);
+        console.log("Fetching quote with ID:", quoteId);
         const response = await quotesService.getQuoteById(quoteId);
-        console.log('Received quote response:', response);
-        
+
+        console.log("Received quote response:", response);
+
         // Extract data from the response
         const data = response?.data || response;
-        console.log('Extracted quote data:', data);
-        
+
+        console.log("Extracted quote data:", data);
+
         // Set the full quote data including status and message
         setQuote(response);
-        
+
         // Process menu items from the API response
         const itemsByCourse: Record<string, MenuItem[]> = {};
-        
+
         // Get menu items from the nested data structure
         const menuItemsData = data?.menus || [];
-        console.log('Menu items data:', menuItemsData);
-        
+
+        console.log("Menu items data:", menuItemsData);
+
         if (Array.isArray(menuItemsData) && menuItemsData.length > 0) {
           menuItemsData.forEach((menuItem: any) => {
             if (!menuItem) return;
-            
-            const course = (menuItem.course || 'other').toLowerCase().trim();
+
+            const course = (menuItem.course || "other").toLowerCase().trim();
+
             if (!itemsByCourse[course]) {
               itemsByCourse[course] = [];
             }
-            
-            const newItem = {
-              id: menuItem.id?.toString() || Math.random().toString(36).substr(2, 9),
-              name: menuItem.name || 'Unnamed Item',
+
+            const newItem: MenuItem = {
+              id:
+                menuItem.id?.toString() ||
+                Math.random().toString(36).substr(2, 9),
+              name: menuItem.name || "Unnamed Item",
               checked: false,
               price: parseFloat(menuItem.price) || 0,
-              description: menuItem.description || '',
+              description: menuItem.description || "",
+              course: course as
+                | "starter"
+                | "main"
+                | "dessert"
+                | "side"
+                | "other",
             };
+
             itemsByCourse[course].push(newItem);
           });
         }
-        
+
         // Set the menu items state
         setMenuItems(itemsByCourse);
-        
-              // Calculate total cost from the fetched quote
+
+        // Calculate total cost from the fetched quote
         if (response?.data?.items) {
           const total = response.data.items.reduce(
             (sum: number, item: any) => sum + (parseFloat(item.price) || 0),
-            0
+            0,
           );
+
           // Update the total cost state
           setTotalCost(total);
         }
       } catch (err) {
-        console.error('Error fetching quote details:', err);
-        setError('Failed to load quote details');
+        console.error("Error fetching quote details:", err);
+        setError("Failed to load quote details");
       } finally {
         setIsLoading(false);
       }
@@ -204,27 +269,36 @@ export const QuotePreview: React.FC<QuotePreviewProps> = ({
   // Get menu items for a specific course
   const getMenuItems = (course: string): MenuItem[] => {
     if (!formData?.items) return [];
+
     return formData.items
-      .filter(item => item.course === course)
-      .map(item => toMenuItem(item));
+      .filter((item) => item.course === course)
+      .map((item) => toMenuItem(item));
   };
 
   // Toggle menu item selection
   const toggleMenuItem = (course: string, itemId: string) => {
-    setMenuItems(prev => ({
+    setMenuItems((prev) => ({
       ...prev,
-      [course]: (prev[course] || []).map(item =>
-        item.id === itemId ? { ...item, checked: !item.checked } : item
-      )
+      [course]: (prev[course] || []).map((item) =>
+        item.id === itemId ? { ...item, checked: !item.checked } : item,
+      ),
     }));
   };
 
   // Calculate total cost from form data
   const calculatedTotalCost = useMemo(() => {
     if (!displayData?.items) return 0;
+
     return displayData.items.reduce((sum, item) => {
-      if (item.checked === false) return sum; // Skip unchecked items
-      const price = typeof item.price === 'string' ? parseFloat(item.price) : item.price || 0;
+      // Type assertion to handle the checked property
+      const menuItem = item as unknown as MenuItem;
+
+      if (menuItem.checked === false) return sum; // Skip unchecked items
+      const price =
+        typeof item.price === "string"
+          ? parseFloat(item.price)
+          : item.price || 0;
+
       return isNaN(price) ? sum : sum + price;
     }, 0);
   }, [displayData?.items]);
@@ -247,7 +321,8 @@ export const QuotePreview: React.FC<QuotePreviewProps> = ({
         <div className="flex justify-between items-center">
           <span className="text-lg font-medium">Total</span>
           <span className="text-xl font-bold">
-            {getCurrencySymbol(currency)}{calculatedTotalCost.toFixed(2)}
+            {getCurrencySymbol(currency)}
+            {calculatedTotalCost.toFixed(2)}
           </span>
         </div>
       </div>
@@ -266,13 +341,17 @@ export const QuotePreview: React.FC<QuotePreviewProps> = ({
                     <span className="flex-1 text-gray-900">
                       {item.name}
                       {item.description && (
-                        <p className="text-sm text-gray-500">{item.description}</p>
+                        <p className="text-sm text-gray-500">
+                          {item.description}
+                        </p>
                       )}
                     </span>
                     {item.price !== undefined && (
                       <span className="text-gray-600 ml-2 whitespace-nowrap">
                         {getCurrencySymbol(currency)}
-                        {typeof item.price === 'number' ? item.price.toFixed(2) : (parseFloat(item.price as string) || 0).toFixed(2)}
+                        {typeof item.price === "number"
+                          ? item.price.toFixed(2)
+                          : (parseFloat(item.price as string) || 0).toFixed(2)}
                       </span>
                     )}
                   </li>
@@ -281,7 +360,9 @@ export const QuotePreview: React.FC<QuotePreviewProps> = ({
             </div>
           ))
         ) : (
-          <div className="text-center py-4 text-gray-500">No menu items available</div>
+          <div className="text-center py-4 text-gray-500">
+            No menu items available
+          </div>
         )}
       </div>
 
@@ -293,20 +374,17 @@ export const QuotePreview: React.FC<QuotePreviewProps> = ({
               className="aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto"
               alt="Date"
             />
-            <div className="self-stretch my-auto">
-              {quoteDate}
-            </div>
+            <div className="self-stretch my-auto">{quoteDate}</div>
           </div>
         </div>
-        
+
         <div className="text-[#323335] mt-7 max-md:max-w-full">
           <div className="text-lg font-semibold whitespace-nowrap leading-loose max-md:max-w-full">
             <div className="flex max-md:max-w-full">
-              <div className="text-[#323335] w-[209px]">
-                TOTAL
-              </div>
+              <div className="text-[#323335] w-[209px]">TOTAL</div>
               <div className="text-[#323335] text-right">
-                {getCurrencySymbol(currency)}{calculatedTotalCost.toFixed(2)}
+                {getCurrencySymbol(currency)}
+                {calculatedTotalCost.toFixed(2)}
               </div>
             </div>
           </div>

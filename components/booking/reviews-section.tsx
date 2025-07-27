@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import { Button } from '../ui/button';
+import { Button } from "../ui/button";
 
 interface Review {
   name: string;
@@ -13,28 +13,36 @@ export const ReviewsSection: React.FC = () => {
   const reviews: Review[] = [
     {
       name: "Michael Owen",
-      rating: "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/570a383b112f5314bb10f9c04439eb12ab6f999d?placeholderIfAbsent=true",
-      comment: "The food and service was excellent, I was very impressed, I'd totally recommend ikook. Excellent way to find the professional chef you need for your occasions and event party",
-      date: "January 2022"
+      rating:
+        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/570a383b112f5314bb10f9c04439eb12ab6f999d?placeholderIfAbsent=true",
+      comment:
+        "The food and service was excellent, I was very impressed, I'd totally recommend ikook. Excellent way to find the professional chef you need for your occasions and event party",
+      date: "January 2022",
     },
     {
       name: "Michael Owen",
-      rating: "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/d6e534b4825da9a307019f974ef8152dbfb030e6?placeholderIfAbsent=true",
-      comment: "The food and service was excellent, I was very impressed, I'd totally recommend ikook. Excellent way to find the professional chef you need for your occasions and event party",
-      date: "January 2022"
+      rating:
+        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/d6e534b4825da9a307019f974ef8152dbfb030e6?placeholderIfAbsent=true",
+      comment:
+        "The food and service was excellent, I was very impressed, I'd totally recommend ikook. Excellent way to find the professional chef you need for your occasions and event party",
+      date: "January 2022",
     },
     {
       name: "Michael Owen",
-      rating: "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/9b7ce81acd3b429c72931357b2e762be39e45da2?placeholderIfAbsent=true",
-      comment: "The food and service was excellent, I was very impressed, I'd totally recommend ikook. Excellent way to find the professional chef you need for your occasions and event party",
-      date: "January 2022"
+      rating:
+        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/9b7ce81acd3b429c72931357b2e762be39e45da2?placeholderIfAbsent=true",
+      comment:
+        "The food and service was excellent, I was very impressed, I'd totally recommend ikook. Excellent way to find the professional chef you need for your occasions and event party",
+      date: "January 2022",
     },
     {
       name: "Michael Owen",
-      rating: "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/a0c89b7c3bd5656e995b9b264c293c8995250baa?placeholderIfAbsent=true",
-      comment: "The food and service was excellent, I was very impressed, I'd totally recommend ikook. Excellent way to find the professional chef you need for your occasions and event party",
-      date: "January 2022"
-    }
+      rating:
+        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/a0c89b7c3bd5656e995b9b264c293c8995250baa?placeholderIfAbsent=true",
+      comment:
+        "The food and service was excellent, I was very impressed, I'd totally recommend ikook. Excellent way to find the professional chef you need for your occasions and event party",
+      date: "January 2022",
+    },
   ];
 
   return (
@@ -53,9 +61,7 @@ export const ReviewsSection: React.FC = () => {
                       <article key={index} className="w-full">
                         <div className="flex flex-col items-stretch">
                           <div className="text-[17px] text-[#323335] font-semibold">
-                            <h3 className="text-[#323335]">
-                              {review.name}
-                            </h3>
+                            <h3 className="text-[#323335]">{review.name}</h3>
                             <img
                               src={review.rating}
                               className="aspect-[5.52] object-contain w-[105px] max-w-full mt-1.5"
@@ -79,9 +85,7 @@ export const ReviewsSection: React.FC = () => {
                       <article key={index + 2} className="w-full">
                         <div className="flex flex-col items-stretch">
                           <div className="text-[17px] text-[#323335] font-semibold">
-                            <h3 className="text-[#323335]">
-                              {review.name}
-                            </h3>
+                            <h3 className="text-[#323335]">{review.name}</h3>
                             <img
                               src={review.rating}
                               className="aspect-[5.52] object-contain w-[105px] max-w-full mt-1.5"

@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+
 import { DiscountItem } from "./discount-item";
+
 import { getDiscounts } from "@/lib/api/discounts";
 
 export const DiscountList: React.FC = () => {
@@ -52,11 +54,15 @@ export const DiscountList: React.FC = () => {
 
         <div className="flex flex-col gap-2 w-full">
           {loading ? (
-            <div className="text-center py-8 text-gray-500">Loading discounts...</div>
+            <div className="text-center py-8 text-gray-500">
+              Loading discounts...
+            </div>
           ) : error ? (
             <div className="text-center py-8 text-red-500">{error}</div>
           ) : discounts.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">No discounts found.</div>
+            <div className="text-center py-8 text-gray-500">
+              No discounts found.
+            </div>
           ) : (
             discounts.map((discount, index) => (
               <DiscountItem

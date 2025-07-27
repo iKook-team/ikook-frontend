@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface PaymentCardProps {
   cardType: string;
@@ -7,11 +7,11 @@ interface PaymentCardProps {
   onEdit: () => void;
 }
 
-export const PaymentCard: React.FC<PaymentCardProps> = ({ 
-  cardType, 
-  cardNumber, 
-  iconSrc, 
-  onEdit 
+export const PaymentCard: React.FC<PaymentCardProps> = ({
+  cardType,
+  cardNumber,
+  iconSrc,
+  onEdit,
 }) => {
   return (
     <article className="flex items-center flex-wrap mt-8 max-md:max-w-full first:mt-0">
@@ -34,7 +34,7 @@ export const PaymentCard: React.FC<PaymentCardProps> = ({
           </p>
         </div>
       </div>
-      <button 
+      <button
         onClick={onEdit}
         className="items-center self-stretch flex gap-2.5 w-6 h-6 bg-[#FFFCF5] my-auto p-1 rounded-[30px]"
         aria-label={`Edit ${cardType} card`}

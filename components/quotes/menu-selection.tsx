@@ -83,12 +83,12 @@ export const MenuSelection = () => {
   const handleItemChange = (
     section: keyof typeof menuItems,
     itemId: string,
-    checked: boolean
+    checked: boolean,
   ) => {
     setMenuItems((prev) => ({
       ...prev,
       [section]: prev[section].map((item) =>
-        item.id === itemId ? { ...item, checked } : item
+        item.id === itemId ? { ...item, checked } : item,
       ),
     }));
   };

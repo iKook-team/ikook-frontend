@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+
 import { bookingsService, BookingQueryParams } from "@/lib/api/bookings";
 
 interface UseBookingsProps {
@@ -25,6 +26,7 @@ const useBookings = ({ status, page = 1, pageSize = 10 }: UseBookingsProps) => {
       const response = await bookingsService.getBookings(params);
       // Handle backend response structure
       const data = response?.data || {};
+
       setBookings(data.results || []);
       setTotalCount(data.count || 0);
     } catch (err) {
@@ -66,7 +68,8 @@ export const useBooking = (id?: string | number) => {
     if (!id) return;
     setLoading(true);
     setError(null);
-    bookingsService.getBookingById(id)
+    bookingsService
+      .getBookingById(id)
       .then((data) => {
         // Handle backend response structure
         setBooking(data?.data || null);
@@ -79,4 +82,4 @@ export const useBooking = (id?: string | number) => {
   }, [id]);
 
   return { booking, loading, error };
-}; 
+};

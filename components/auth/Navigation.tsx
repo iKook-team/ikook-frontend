@@ -10,6 +10,7 @@ import { useAuthStore } from "@/lib/store/auth-store";
 
 export const Navigation: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
+
   return (
     <nav className="w-full h-[117px] relative max-md:h-20 max-sm:h-[70px]">
       <div className="w-full h-[117px] shadow-[0px_4px_30px_0px_rgba(0,0,0,0.05)] absolute bg-white left-0 top-0 max-md:h-20 max-sm:h-[70px]" />

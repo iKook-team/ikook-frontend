@@ -5,6 +5,7 @@ export const handleApiError = (error: any): ApiError => {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx
     const { data, status } = error.response;
+
     return {
       message: data?.message || "An error occurred",
       status: status || 500,
@@ -17,6 +18,7 @@ export const handleApiError = (error: any): ApiError => {
       status: 0,
     };
   }
+
   // Something happened in setting up the request that triggered an Error
   return {
     message: error.message || "An unexpected error occurred",
@@ -37,5 +39,6 @@ export const handleSuccess = <T>(response: { data: ApiResponse<T> }): T => {
       },
     };
   }
+
   return response.data.data as T;
 };

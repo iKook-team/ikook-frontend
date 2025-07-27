@@ -1,5 +1,4 @@
 import apiClient from "@/src/lib/axios";
-
 import { getRefreshToken } from "@/src/lib/auth";
 
 type VerifyAction = "send_token" | "verify_token";
@@ -30,6 +29,7 @@ export const authService = {
   // Send or verify OTP
   verifyEmail: async (data: VerifyEmailPayload) => {
     const response = await apiClient.post(`/users/auth/verify/`, data);
+
     return response.data;
   },
 
@@ -40,6 +40,7 @@ export const authService = {
         action: "send_token",
         email,
       });
+
       return true;
     } catch (error) {
       throw error;
@@ -54,6 +55,7 @@ export const authService = {
         email,
         otp,
       });
+
       return true;
     } catch (error) {
       throw error;
@@ -63,12 +65,14 @@ export const authService = {
   // Login user
   login: async (data: LoginPayload) => {
     const response = await apiClient.post(`/users/auth/login/`, data);
+
     return response.data;
   },
 
   // Validate token and get user data
   validateToken: async () => {
     const token = localStorage.getItem("ikook_auth_token");
+
     if (!token) {
       throw new Error("No token found");
     }
@@ -79,6 +83,7 @@ export const authService = {
           user_type: "Host", // This will be filtered by the backend
         },
       });
+
       return {
         success: true,
         message: "Token is valid",
@@ -109,8 +114,9 @@ export const authService = {
             refresh_token: refreshToken,
             Authorization: accessToken ? `Bearer ${accessToken}` : undefined,
           },
-        }
+        },
       );
+
       // Debug logging removed
       return response.data;
     } catch (error: any) {
@@ -122,6 +128,7 @@ export const authService = {
   // Sign up a new user
   signup: async (data: any) => {
     const response = await apiClient.post(`/users/auth/signup/`, data);
+
     return response.data;
   },
 };

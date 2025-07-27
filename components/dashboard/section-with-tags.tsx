@@ -10,12 +10,12 @@ interface SectionWithTagsProps {
   multiSelect?: boolean;
 }
 
-export const SectionWithTags: React.FC<SectionWithTagsProps> = ({ 
-  title, 
-  tags, 
-  selectedTags = [], 
+export const SectionWithTags: React.FC<SectionWithTagsProps> = ({
+  title,
+  tags,
+  selectedTags = [],
   onTagClick,
-  multiSelect = true
+  multiSelect = true,
 }) => {
   const handleTagClick = (tag: string) => {
     if (onTagClick) {
@@ -28,10 +28,10 @@ export const SectionWithTags: React.FC<SectionWithTagsProps> = ({
       <h3 className="text-black text-[15px] font-medium max-sm:text-sm">
         {title}
       </h3>
-      <div 
+      <div
         className="flex items-start content-start gap-[8px_4px] flex-wrap w-full"
         role="group"
-        aria-labelledby={`${title.toLowerCase().replace(/\s+/g, '-')}-heading`}
+        aria-labelledby={`${title.toLowerCase().replace(/\s+/g, "-")}-heading`}
       >
         {tags.map((tag, index) => (
           <TagChip
@@ -39,7 +39,7 @@ export const SectionWithTags: React.FC<SectionWithTagsProps> = ({
             label={tag}
             selected={selectedTags.includes(tag)}
             onClick={() => handleTagClick(tag)}
-            variant={selectedTags.includes(tag) ? 'selected' : 'default'}
+            variant={selectedTags.includes(tag) ? "selected" : "default"}
           />
         ))}
       </div>

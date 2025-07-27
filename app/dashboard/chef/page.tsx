@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { useAuthStore } from "@/lib/store/auth-store";
 import { useRouter } from "next/navigation";
+
+import { useAuthStore } from "@/lib/store/auth-store";
 import { MyBookingsPage } from "@/components/dashboard/chef-dashboard";
 
 const ChefDashboard: React.FC = () => {
@@ -12,11 +13,13 @@ const ChefDashboard: React.FC = () => {
   React.useEffect(() => {
     if (!isAuthenticated) {
       router.push("/login");
+
       return;
     }
-    
+
     if (userType !== "chef") {
       router.push("/login");
+
       return;
     }
   }, [isAuthenticated, userType, router]);

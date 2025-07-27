@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { ProgressIndicator } from './progress-indicator';
+
+import { ProgressIndicator } from "./progress-indicator";
+import { ActionButtons } from "./action-buttons";
+
 import { ChefCard } from "@/components/cart/chef-card";
-import { ActionButtons } from './action-buttons';
 
 interface ClassDetailsFormProps {
   onNext: (data: ClassDetailsFormData) => void;
@@ -15,18 +17,22 @@ export interface ClassDetailsFormData {
   guests: number;
 }
 
-const ClassDetailsForm: React.FC<ClassDetailsFormProps> = ({ onNext, onBack, initialValues = {} }) => {
+const ClassDetailsForm: React.FC<ClassDetailsFormProps> = ({
+  onNext,
+  onBack,
+  initialValues = {},
+}) => {
   const [formData, setFormData] = useState<ClassDetailsFormData>({
     location: "",
     teaching: "",
     guests: 1,
-    ...initialValues
+    ...initialValues,
   });
 
   const progressSteps = [
-    { label: 'Class Detail', completed: true, inProgress: true },
-    { label: 'Preferences', completed: false },
-    { label: 'Message', completed: false }
+    { label: "Class Detail", completed: true, inProgress: true },
+    { label: "Preferences", completed: false },
+    { label: "Message", completed: false },
   ];
 
   const handleInputChange = (field: keyof ClassDetailsFormData, value: any) => {
@@ -49,9 +55,11 @@ const ClassDetailsForm: React.FC<ClassDetailsFormProps> = ({ onNext, onBack, ini
         {/* Header Section */}
         <div className="px-6 pt-6 pb-4 border-b border-gray-100">
           <header className="mb-6">
-            <h1 className="text-2xl font-semibold text-gray-900">Chef Titilayo</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">
+              Chef Titilayo
+            </h1>
           </header>
-          
+
           <div className="mb-4">
             <ProgressIndicator steps={progressSteps} />
           </div>
@@ -76,10 +84,13 @@ const ClassDetailsForm: React.FC<ClassDetailsFormProps> = ({ onNext, onBack, ini
           <h2 className="text-2xl font-semibold text-gray-900">
             Class Details
           </h2>
-          
+
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="location"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Location
               </label>
               <input
@@ -99,23 +110,29 @@ const ClassDetailsForm: React.FC<ClassDetailsFormProps> = ({ onNext, onBack, ini
                 Teaching Format
               </label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {["Individual", "Conventional"].map(option => (
-                  <label 
+                {["Individual", "Conventional"].map((option) => (
+                  <label
                     key={option}
                     className={`flex items-center justify-between p-4 rounded-lg border-2 transition-colors ${
                       formData.teaching === option
-                        ? 'border-amber-500 bg-amber-50'
-                        : 'border-gray-200 hover:border-gray-300 bg-white'
+                        ? "border-amber-500 bg-amber-50"
+                        : "border-gray-200 hover:border-gray-300 bg-white"
                     }`}
                   >
                     <span className="text-gray-900 font-medium">{option}</span>
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                      formData.teaching === option
-                        ? 'bg-amber-500 border-amber-500'
-                        : 'border-2 border-gray-300'
-                    }`}>
+                    <div
+                      className={`w-5 h-5 rounded-full flex items-center justify-center ${
+                        formData.teaching === option
+                          ? "bg-amber-500 border-amber-500"
+                          : "border-2 border-gray-300"
+                      }`}
+                    >
                       {formData.teaching === option && (
-                        <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 12 12">
+                        <svg
+                          className="h-3 w-3 text-white"
+                          fill="currentColor"
+                          viewBox="0 0 12 12"
+                        >
                           <path d="M3.707 9.293a1 1 0 0 1-1.414 0l-1.5-1.5a1 1 0 0 1 1.414-1.414L3 7.086l5.293-5.293a1 1 0 0 1 1.414 1.414l-6 6z" />
                         </svg>
                       )}
@@ -135,7 +152,10 @@ const ClassDetailsForm: React.FC<ClassDetailsFormProps> = ({ onNext, onBack, ini
             </div>
 
             <div>
-              <label htmlFor="guests" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="guests"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Number of Guests
               </label>
               <input
@@ -145,7 +165,9 @@ const ClassDetailsForm: React.FC<ClassDetailsFormProps> = ({ onNext, onBack, ini
                 min="1"
                 step="1"
                 value={formData.guests}
-                onChange={(e) => handleInputChange("guests", parseInt(e.target.value, 10) || 1)}
+                onChange={(e) =>
+                  handleInputChange("guests", parseInt(e.target.value, 10) || 1)
+                }
                 className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500"
                 placeholder="Enter number of guests"
                 required
@@ -157,7 +179,11 @@ const ClassDetailsForm: React.FC<ClassDetailsFormProps> = ({ onNext, onBack, ini
               <ActionButtons
                 onBack={onBack}
                 onContinue={handleContinue}
-                continueDisabled={!formData.location || !formData.teaching || formData.guests < 1}
+                continueDisabled={
+                  !formData.location ||
+                  !formData.teaching ||
+                  formData.guests < 1
+                }
               />
             </div>
           </form>
@@ -168,4 +194,4 @@ const ClassDetailsForm: React.FC<ClassDetailsFormProps> = ({ onNext, onBack, ini
 };
 
 export default ClassDetailsForm;
-export { ClassDetailsForm }; 
+export { ClassDetailsForm };

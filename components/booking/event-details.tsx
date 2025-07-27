@@ -1,8 +1,10 @@
 "use client";
 import React, { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
+
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+
 import { useAuthStore } from "@/lib/store/auth-store";
 
 interface EventDetailsProps {
@@ -11,8 +13,13 @@ interface EventDetailsProps {
   chefService?: string;
 }
 
-export const EventDetails: React.FC<EventDetailsProps> = ({ onNext, onBack, chefService }) => {
+export const EventDetails: React.FC<EventDetailsProps> = ({
+  onNext,
+  onBack,
+  chefService,
+}) => {
   const router = useRouter();
+
   console.log("[EventDetails] chefService:", chefService);
   const cuisines = [
     "African",
@@ -34,45 +41,55 @@ export const EventDetails: React.FC<EventDetailsProps> = ({ onNext, onBack, chef
 
   // Extract service ID from URL when component mounts
   useEffect(() => {
-    const pathParts = pathname.split('/');
+    const pathParts = pathname.split("/");
     const serviceId = pathParts[pathParts.length - 1];
-    
-    if (serviceId && serviceId !== 'details') { // Make sure we have a valid ID
+
+    if (serviceId && serviceId !== "details") {
+      // Make sure we have a valid ID
       // Set the service ID in the auth store
       setBookingService({ id: serviceId });
     }
   }, [pathname, setBookingService]);
 
   const handleMessageChef = async () => {
-    console.log("[EventDetails] Message Chef clicked. chefService:", chefService);
-    
+    console.log(
+      "[EventDetails] Message Chef clicked. chefService:",
+      chefService,
+    );
+
     // Get the current path to extract service ID
-    const pathParts = pathname.split('/');
+    const pathParts = pathname.split("/");
     const serviceId = pathParts[pathParts.length - 1];
-    
-    if (!serviceId || serviceId === 'details') {
+
+    if (!serviceId || serviceId === "details") {
       console.error("[EventDetails] No valid service ID found in URL");
+
       return;
     }
-    
+
     // Create a clean service object with just the ID
     const serviceObj = { id: serviceId };
+
     console.log("[EventDetails] Setting booking service with ID:", serviceId);
-    
+
     // Set the booking service with the minimal required data
     setBookingService(serviceObj);
-    
+
     // Determine the target route based on chefService type
-    let targetRoute = '';
+    let targetRoute = "";
+
     if (chefService && chefService.toLowerCase() === "cooking class") {
       targetRoute = "/booking/cooking-class";
     } else if (chefService && chefService.toLowerCase() === "eating coach") {
       targetRoute = "/booking/eating-coach";
     } else {
-      console.log("[EventDetails] Default behavior (not Cooking Class or Eating Coach)");
+      console.log(
+        "[EventDetails] Default behavior (not Cooking Class or Eating Coach)",
+      );
+
       return;
     }
-    
+
     console.log(`[EventDetails] Navigating to ${targetRoute}`);
     router.push(targetRoute);
   };
@@ -186,7 +203,10 @@ export const EventDetails: React.FC<EventDetailsProps> = ({ onNext, onBack, chef
           and the requirements you have, and you will get a quote that fits your
           budget
         </p>
-        <Button className="bg-[#FCC01C] hover:bg-[#e6ac19] text-white" onClick={handleMessageChef}>
+        <Button
+          className="bg-[#FCC01C] hover:bg-[#e6ac19] text-white"
+          onClick={handleMessageChef}
+        >
           Message Chef
         </Button>
       </div>

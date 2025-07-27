@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+
 import { ProgressIndicator } from "../ui/progress-indicator";
 
 interface PaymentSuccessProps {

@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { ChefProfileCard } from "./chef-profile-card";
 import { EventDetailsForm, EventFormData } from "./event-details-form";
 import { NavigationButtons } from "./navigation-buttons";
+
 import { ProgressIndicator } from "@/components/ui/progress-indicator";
 
 export const ChefBookingForm: React.FC = () => {
@@ -42,6 +43,7 @@ export const ChefBookingForm: React.FC = () => {
   const handleContinue = () => {
     if (formData.guests < 40) {
       alert("Minimum number of guests is 40");
+
       return;
     }
     console.log("Form submitted:", formData);
@@ -50,7 +52,9 @@ export const ChefBookingForm: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <header className="mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900">{chefData.name}</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">
+          {chefData.name}
+        </h1>
       </header>
 
       <section className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -68,19 +72,21 @@ export const ChefBookingForm: React.FC = () => {
           {/* Event Details Section */}
           <div className="space-y-6">
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">Event Details</h2>
+              <h2 className="text-xl font-semibold text-gray-900">
+                Event Details
+              </h2>
               <div className="h-px bg-gray-200 mt-2" />
             </div>
 
-            <EventDetailsForm 
-              onNext={handleFormChange} 
-              onBack={() => {}} 
+            <EventDetailsForm
+              onNext={handleFormChange}
+              onBack={() => {}}
               formData={formData}
               onChange={handleFormChange}
               menu={{ num_of_guests: 1 }}
             />
           </div>
-          
+
           {/* Navigation Buttons */}
           <div className="pt-6 border-t border-gray-100">
             <NavigationButtons

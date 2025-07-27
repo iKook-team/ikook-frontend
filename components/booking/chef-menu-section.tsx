@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { useMemo } from "react";
 
 interface ChefMenuSectionProps {
   menu: any;
   selectedItems: Record<string, Set<number>>;
-  setSelectedItems: React.Dispatch<React.SetStateAction<Record<string, Set<number>> | null>>;
+  setSelectedItems: React.Dispatch<
+    React.SetStateAction<Record<string, Set<number>> | null>
+  >;
 }
 
 function getCurrencySymbol(menu: any): string {
@@ -17,18 +18,25 @@ function getCurrencySymbol(menu: any): string {
   }
   if (menu?.chef?.country) {
     const country = menu.chef.country;
+
     if (country === "Nigeria") return "₦";
     if (country === "South Africa") return "R";
     if (country === "United Kingdom") return "£";
   }
+
   return "₦";
 }
 
-export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({ menu, selectedItems, setSelectedItems }) => {
+export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({
+  menu,
+  selectedItems,
+  setSelectedItems,
+}) => {
   const [activeTab, setActiveTab] = useState<"sharing" | "plated">("sharing");
 
   // Group items by course
   const itemsByCourse: Record<string, any[]> = {};
+
   (menu.items || []).forEach((item: any) => {
     if (!itemsByCourse[item.course]) itemsByCourse[item.course] = [];
     itemsByCourse[item.course].push(item);
@@ -39,6 +47,7 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({ menu, selected
       if (!prev) return prev;
       const limit = menu.courses_selection_limit?.[course] || 1;
       const newSet = new Set(prev[course]);
+
       if (newSet.has(id)) {
         newSet.delete(id);
       } else {
@@ -46,6 +55,7 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({ menu, selected
           newSet.add(id);
         }
       }
+
       return { ...prev, [course]: newSet };
     });
   };
@@ -60,7 +70,9 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({ menu, selected
           <button
             onClick={() => handleItemToggle(course, item.id)}
             className={`border-[color:var(--Gray-300,#D0D5DD)] self-stretch flex min-h-[30px] w-[30px] h-[30px] my-auto rounded-[9px] border-[1.5px] border-solid ${
-              selectedItems[course]?.has(item.id) ? "bg-[#FCC01C] border-[#FCC01C]" : "bg-white"
+              selectedItems[course]?.has(item.id)
+                ? "bg-[#FCC01C] border-[#FCC01C]"
+                : "bg-white"
             }`}
           >
             {selectedItems[course]?.has(item.id) && (
@@ -136,9 +148,11 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({ menu, selected
             type="button"
             onClick={() => setActiveTab("sharing")}
             className={`w-1/2 h-[30px] absolute left-[5px] top-1 rounded-sm transition-all z-10
-              ${activeTab === "sharing"
-                ? "bg-[#FCC01C] text-white shadow-[0.568px_0px_5.683px_0px_rgba(0,0,0,0.10)]"
-                : "bg-transparent text-[#020101]"}
+              ${
+                activeTab === "sharing"
+                  ? "bg-[#FCC01C] text-white shadow-[0.568px_0px_5.683px_0px_rgba(0,0,0,0.10)]"
+                  : "bg-transparent text-[#020101]"
+              }
             `}
             aria-pressed={activeTab === "sharing"}
           >
@@ -150,9 +164,11 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({ menu, selected
             type="button"
             onClick={() => setActiveTab("plated")}
             className={`w-1/2 h-[30px] absolute right-[5px] top-1 rounded-sm transition-all z-10
-              ${activeTab === "plated"
-                ? "bg-[#FCC01C] text-white shadow-[0.568px_0px_5.683px_0px_rgba(0,0,0,0.10)]"
-                : "bg-transparent text-[#020101]"}
+              ${
+                activeTab === "plated"
+                  ? "bg-[#FCC01C] text-white shadow-[0.568px_0px_5.683px_0px_rgba(0,0,0,0.10)]"
+                  : "bg-transparent text-[#020101]"
+              }
             `}
             aria-pressed={activeTab === "plated"}
           >
@@ -174,12 +190,16 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({ menu, selected
             <div className="flex max-w-full w-[690px] flex-col items-stretch">
               <div>
                 <h3 className="text-black text-2xl font-semibold leading-none">
-                  {course} Menu (Select {menu.courses_selection_limit?.[course] || 1})
+                  {course} Menu (Select{" "}
+                  {menu.courses_selection_limit?.[course] || 1})
                 </h3>
                 <p className="text-[#6f6e6d] text-sm font-normal leading-none mt-1">
-                  Extra dish cost{' '}
-                  <span style={{ fontWeight: 500, color: 'rgba(252,192,28,1)' }}>
-                    {getCurrencySymbol(menu)}{menu.courses_extra_charge_per_person?.[course] || 0}pp
+                  Extra dish cost{" "}
+                  <span
+                    style={{ fontWeight: 500, color: "rgba(252,192,28,1)" }}
+                  >
+                    {getCurrencySymbol(menu)}
+                    {menu.courses_extra_charge_per_person?.[course] || 0}pp
                   </span>
                 </p>
               </div>
@@ -190,7 +210,9 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({ menu, selected
               />
             </div>
             <div className="max-w-full w-[690px] mt-6 space-y-3">
-              {(itemsByCourse[course] || []).map((item) => renderMenuItem(item, course))}
+              {(itemsByCourse[course] || []).map((item) =>
+                renderMenuItem(item, course),
+              )}
             </div>
           </div>
         ))}

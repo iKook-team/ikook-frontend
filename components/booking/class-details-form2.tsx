@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { ProgressIndicator } from './progress-indicator';
+
+import { ProgressIndicator } from "./progress-indicator";
+import { ActionButtons } from "./action-buttons";
+
 import { ChefCard } from "@/components/cart/chef-card";
-import { ActionButtons } from './action-buttons';
 
 interface ClassDetailsForm2Props {
   onNext: (data: ClassDetailsForm2Data) => void;
@@ -15,21 +17,28 @@ export interface ClassDetailsForm2Data {
   days: number;
 }
 
-const ClassDetailsForm2: React.FC<ClassDetailsForm2Props> = ({ onNext, onBack, initialValues = {} }) => {
+const ClassDetailsForm2: React.FC<ClassDetailsForm2Props> = ({
+  onNext,
+  onBack,
+  initialValues = {},
+}) => {
   const [formData, setFormData] = useState<ClassDetailsForm2Data>({
     appearance: "",
     experience: "",
     days: 1,
-    ...initialValues
+    ...initialValues,
   });
 
   const progressSteps = [
-    { label: 'Class Detail', completed: true },
-    { label: 'Class Preferences', completed: true, inProgress: true },
-    { label: 'Message', completed: false }
+    { label: "Class Detail", completed: true },
+    { label: "Class Preferences", completed: true, inProgress: true },
+    { label: "Message", completed: false },
   ];
 
-  const handleInputChange = (field: keyof ClassDetailsForm2Data, value: any) => {
+  const handleInputChange = (
+    field: keyof ClassDetailsForm2Data,
+    value: any,
+  ) => {
     setFormData({ ...formData, [field]: value });
   };
 
@@ -49,9 +58,11 @@ const ClassDetailsForm2: React.FC<ClassDetailsForm2Props> = ({ onNext, onBack, i
         {/* Header Section */}
         <div className="px-6 pt-6 pb-4 border-b border-gray-100">
           <header className="mb-6">
-            <h1 className="text-2xl font-semibold text-gray-900">Chef Titilayo</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">
+              Chef Titilayo
+            </h1>
           </header>
-          
+
           <div className="mb-4">
             <ProgressIndicator steps={progressSteps} />
           </div>
@@ -76,30 +87,36 @@ const ClassDetailsForm2: React.FC<ClassDetailsForm2Props> = ({ onNext, onBack, i
           <h2 className="text-2xl font-semibold text-gray-900">
             Class Preferences
           </h2>
-          
+
           <form className="space-y-8" onSubmit={handleSubmit}>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 Appearance
               </label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {["Physical", "Virtual"].map(option => (
-                  <label 
+                {["Physical", "Virtual"].map((option) => (
+                  <label
                     key={option}
                     className={`flex items-center justify-between p-4 rounded-lg border-2 transition-colors ${
                       formData.appearance === option
-                        ? 'border-amber-500 bg-amber-50'
-                        : 'border-gray-200 hover:border-gray-300 bg-white'
+                        ? "border-amber-500 bg-amber-50"
+                        : "border-gray-200 hover:border-gray-300 bg-white"
                     }`}
                   >
                     <span className="text-gray-900 font-medium">{option}</span>
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                      formData.appearance === option
-                        ? 'bg-amber-500 border-amber-500'
-                        : 'border-2 border-gray-300'
-                    }`}>
+                    <div
+                      className={`w-5 h-5 rounded-full flex items-center justify-center ${
+                        formData.appearance === option
+                          ? "bg-amber-500 border-amber-500"
+                          : "border-2 border-gray-300"
+                      }`}
+                    >
                       {formData.appearance === option && (
-                        <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 12 12">
+                        <svg
+                          className="h-3 w-3 text-white"
+                          fill="currentColor"
+                          viewBox="0 0 12 12"
+                        >
                           <path d="M3.707 9.293a1 1 0 0 1-1.414 0l-1.5-1.5a1 1 0 0 1 1.414-1.414L3 7.086l5.293-5.293a1 1 0 0 1 1.414 1.414l-6 6z" />
                         </svg>
                       )}
@@ -123,23 +140,29 @@ const ClassDetailsForm2: React.FC<ClassDetailsForm2Props> = ({ onNext, onBack, i
                 Experience Type
               </label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {["One-time", "Multiple"].map(option => (
-                  <label 
+                {["One-time", "Multiple"].map((option) => (
+                  <label
                     key={option}
                     className={`flex items-center justify-between p-4 rounded-lg border-2 transition-colors ${
                       formData.experience === option
-                        ? 'border-amber-500 bg-amber-50'
-                        : 'border-gray-200 hover:border-gray-300 bg-white'
+                        ? "border-amber-500 bg-amber-50"
+                        : "border-gray-200 hover:border-gray-300 bg-white"
                     }`}
                   >
                     <span className="text-gray-900 font-medium">{option}</span>
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                      formData.experience === option
-                        ? 'bg-amber-500 border-amber-500'
-                        : 'border-2 border-gray-300'
-                    }`}>
+                    <div
+                      className={`w-5 h-5 rounded-full flex items-center justify-center ${
+                        formData.experience === option
+                          ? "bg-amber-500 border-amber-500"
+                          : "border-2 border-gray-300"
+                      }`}
+                    >
                       {formData.experience === option && (
-                        <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 12 12">
+                        <svg
+                          className="h-3 w-3 text-white"
+                          fill="currentColor"
+                          viewBox="0 0 12 12"
+                        >
                           <path d="M3.707 9.293a1 1 0 0 1-1.414 0l-1.5-1.5a1 1 0 0 1 1.414-1.414L3 7.086l5.293-5.293a1 1 0 0 1 1.414 1.414l-6 6z" />
                         </svg>
                       )}
@@ -159,7 +182,10 @@ const ClassDetailsForm2: React.FC<ClassDetailsForm2Props> = ({ onNext, onBack, i
             </div>
 
             <div>
-              <label htmlFor="days" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="days"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Number of Days
               </label>
               <input
@@ -168,7 +194,9 @@ const ClassDetailsForm2: React.FC<ClassDetailsForm2Props> = ({ onNext, onBack, i
                 name="days"
                 min="1"
                 value={formData.days}
-                onChange={e => handleInputChange("days", parseInt(e.target.value, 10) || 1)}
+                onChange={(e) =>
+                  handleInputChange("days", parseInt(e.target.value, 10) || 1)
+                }
                 className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500"
                 placeholder="Enter number of days"
                 required
@@ -180,7 +208,11 @@ const ClassDetailsForm2: React.FC<ClassDetailsForm2Props> = ({ onNext, onBack, i
               <ActionButtons
                 onBack={onBack}
                 onContinue={handleContinue}
-                continueDisabled={!formData.appearance || !formData.experience || formData.days < 1}
+                continueDisabled={
+                  !formData.appearance ||
+                  !formData.experience ||
+                  formData.days < 1
+                }
               />
             </div>
           </form>
@@ -191,4 +223,4 @@ const ClassDetailsForm2: React.FC<ClassDetailsForm2Props> = ({ onNext, onBack, i
 };
 
 export default ClassDetailsForm2;
-export { ClassDetailsForm2 }; 
+export { ClassDetailsForm2 };

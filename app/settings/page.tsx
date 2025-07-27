@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import React from "react";
+
 import { useAuthStore } from "@/lib/store/auth-store";
 
 interface SettingsItem {
@@ -19,7 +20,7 @@ const settingsItems: SettingsItem[] = [
   { label: "Manage account", href: "/settings/manage-account" },
 ];
 
-export const AccountSettings: React.FC = () => {
+const AccountSettings: React.FC = () => {
   const { userType } = useAuthStore();
   const router = useRouter();
   const handleItemClick = (item: SettingsItem) => {
@@ -31,13 +32,14 @@ export const AccountSettings: React.FC = () => {
   };
 
   // Hide chef-specific items for hosts
-  const filteredItems = userType === "host"
-    ? settingsItems.filter(
-        (item) =>
-          item.label !== "Distance Serviceable" &&
-          item.label !== "Bank Account"
-      )
-    : settingsItems;
+  const filteredItems =
+    userType === "host"
+      ? settingsItems.filter(
+          (item) =>
+            item.label !== "Distance Serviceable" &&
+            item.label !== "Bank Account",
+        )
+      : settingsItems;
 
   return (
     <section className="flex w-[390px] max-w-full flex-col items-stretch ml-[278px] mt-[43px] max-md:ml-2.5 max-md:mt-10">

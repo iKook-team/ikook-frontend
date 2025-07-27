@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface AddressCardProps {
   icon: string;
@@ -7,7 +7,12 @@ interface AddressCardProps {
   onEdit: () => void;
 }
 
-export const AddressCard: React.FC<AddressCardProps> = ({ icon, title, address, onEdit }) => {
+export const AddressCard: React.FC<AddressCardProps> = ({
+  icon,
+  title,
+  address,
+  onEdit,
+}) => {
   return (
     <article className="flex items-center flex-wrap max-md:max-w-full">
       <div className="self-stretch flex min-w-60 items-center gap-3.5 w-[263px] my-auto">
@@ -29,7 +34,7 @@ export const AddressCard: React.FC<AddressCardProps> = ({ icon, title, address, 
           </p>
         </div>
       </div>
-      <button 
+      <button
         onClick={onEdit}
         aria-label={`Edit ${title}`}
         className="hover:opacity-70 transition-opacity"

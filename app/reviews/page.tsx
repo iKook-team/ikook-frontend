@@ -22,9 +22,13 @@ const Index: React.FC = () => {
         const transformed = results.map((review: any) => ({
           ...review,
           averageRating: (
-            (review.performance_rating + review.service_rating + review.punctuality_rating) / 3
+            (review.performance_rating +
+              review.service_rating +
+              review.punctuality_rating) /
+            3
           ).toFixed(1),
         }));
+
         setReviews(transformed);
       } catch (err: any) {
         setError(err.message || "Failed to load reviews");
@@ -32,6 +36,7 @@ const Index: React.FC = () => {
         setLoading(false);
       }
     };
+
     fetchReviews();
   }, []);
 
@@ -59,7 +64,9 @@ const Index: React.FC = () => {
             <ReviewSection />
             {loading ? (
               <div className="flex justify-center items-center min-h-[200px] w-full">
-                <span className="text-lg text-gray-600">Loading reviews...</span>
+                <span className="text-lg text-gray-600">
+                  Loading reviews...
+                </span>
               </div>
             ) : error ? (
               <div className="flex justify-center items-center min-h-[200px] w-full">

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { PaymentsList } from "@/components/payment/payments-list"
+import { PaymentsList } from "@/components/payment/payments-list";
 
 const Index: React.FC = () => {
   return (

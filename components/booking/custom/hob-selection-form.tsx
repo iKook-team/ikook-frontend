@@ -13,13 +13,17 @@ interface HobSelectionFormProps {
   onBack: () => void;
 }
 
-export const HobSelectionForm: React.FC<HobSelectionFormProps> = ({ onNext, onBack }) => {
+export const HobSelectionForm: React.FC<HobSelectionFormProps> = ({
+  onNext,
+  onBack,
+}) => {
   const [selectedHobType, setSelectedHobType] = useState<string>("");
   const [selectedHobTop, setSelectedHobTop] = useState<string>("");
 
   const handleContinue = () => {
     if (!selectedHobType || !selectedHobTop) {
       alert("Please select both hob type and hob top configuration");
+
       return;
     }
 

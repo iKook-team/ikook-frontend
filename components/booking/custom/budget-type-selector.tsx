@@ -8,11 +8,14 @@ interface BudgetTypeSelectorProps {
 
 export const BudgetTypeSelector: React.FC<BudgetTypeSelectorProps> = ({
   selectedType,
-  onTypeChange
+  onTypeChange,
 }) => {
   return (
     <div className="self-start mt-7">
-      <label htmlFor="budgetType" className="text-base font-medium text-neutral-700">
+      <label
+        htmlFor="budgetType"
+        className="text-base font-medium text-neutral-700"
+      >
         Budget type
       </label>
       <div className="flex flex-col mt-4">
@@ -27,7 +30,10 @@ export const BudgetTypeSelector: React.FC<BudgetTypeSelectorProps> = ({
               className="flex self-stretch my-auto w-5 h-5 bg-white rounded-xl border border-solid border-[color:var(--Gray-100,#CFCFCE)] min-h-5"
             />
           </div>
-          <label htmlFor="budgetType" className="self-stretch my-auto text-base font-medium text-slate-700">
+          <label
+            htmlFor="budgetType"
+            className="self-stretch my-auto text-base font-medium text-slate-700"
+          >
             Flexible
           </label>
         </div>
@@ -42,7 +48,10 @@ export const BudgetTypeSelector: React.FC<BudgetTypeSelectorProps> = ({
               className="flex self-stretch my-auto w-5 h-5 bg-white rounded-xl border border-solid border-[color:var(--Gray-100,#CFCFCE)] min-h-5"
             />
           </div>
-          <label htmlFor="budgetType" className="self-stretch my-auto text-base font-medium text-slate-700">
+          <label
+            htmlFor="budgetType"
+            className="self-stretch my-auto text-base font-medium text-slate-700"
+          >
             Fixed
           </label>
         </div>

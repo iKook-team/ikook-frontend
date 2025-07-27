@@ -17,6 +17,7 @@ export default function CalendarPage() {
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
+
   return (
     <div className="px-4 py-6 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
@@ -29,9 +30,7 @@ export default function CalendarPage() {
       {showBookingDetails && (
         <BookingDetails onClose={() => setShowBookingDetails(false)} />
       )}
-      {isModalOpen && (
-        <SetAvailabilityModal onClose={handleCloseModal} />
-      )}
+      {isModalOpen && <SetAvailabilityModal onClose={handleCloseModal} />}
     </div>
   );
 }

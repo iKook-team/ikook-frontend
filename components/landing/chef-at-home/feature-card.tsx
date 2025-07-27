@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface FeatureCardProps {
   title: string;
@@ -13,10 +13,12 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   description,
   imageSrc,
   imageAlt,
-  className = ""
+  className = "",
 }) => {
   return (
-    <article className={`grow overflow-hidden w-full bg-[#FFFCF5] pl-7 pt-[25px] rounded-[20px] max-md:max-w-full max-md:mt-4 ${className}`}>
+    <article
+      className={`grow overflow-hidden w-full bg-[#FFFCF5] pl-7 pt-[25px] rounded-[20px] max-md:max-w-full max-md:mt-4 ${className}`}
+    >
       <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
         <div className="w-[44%] max-md:w-full max-md:ml-0">
           <div className="flex mr-[-210px] flex-col self-stretch items-stretch my-auto max-md:mt-10">

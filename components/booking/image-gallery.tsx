@@ -5,7 +5,11 @@ interface ImageGalleryProps {
   images: Array<{ id: number; image: string }>;
 }
 
-const renderImageOrPlaceholder = (src?: string, alt?: string, className = "") => {
+const renderImageOrPlaceholder = (
+  src?: string,
+  alt?: string,
+  className = "",
+) => {
   if (src) {
     return (
       <div className={`relative w-full h-full ${className}`}>
@@ -19,12 +23,19 @@ const renderImageOrPlaceholder = (src?: string, alt?: string, className = "") =>
       </div>
     );
   }
-  return <div className={`w-full h-full rounded-[15px] bg-gray-200 flex items-center justify-center ${className}`} />;
+
+  return (
+    <div
+      className={`w-full h-full rounded-[15px] bg-gray-200 flex items-center justify-center ${className}`}
+    />
+  );
 };
 
 export const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
   // Always render 5 slots
-  const galleryImages = images && images.length > 0 ? images.map(img => img.image) : [];
+  const galleryImages =
+    images && images.length > 0 ? images.map((img) => img.image) : [];
+
   // Pad to 5 slots
   while (galleryImages.length < 5) galleryImages.push("");
 

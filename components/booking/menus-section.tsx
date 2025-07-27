@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import { Button } from '../ui/button';
+import { Button } from "../ui/button";
 
 interface MenuCard {
   image: string;
@@ -13,26 +13,32 @@ interface MenuCard {
 export const MenusSection: React.FC = () => {
   const menus: MenuCard[] = [
     {
-      image: "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/1abf8321a13811b531ddddc68013542ba0053650?placeholderIfAbsent=true",
+      image:
+        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/1abf8321a13811b531ddddc68013542ba0053650?placeholderIfAbsent=true",
       cuisine: "Italian",
       title: "Grilled Barbeque Dishes",
       price: "£20pp",
-      heartIcon: "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/b4e3e77d45a59345b763f6043f3ffb954e5f5364?placeholderIfAbsent=true"
+      heartIcon:
+        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/b4e3e77d45a59345b763f6043f3ffb954e5f5364?placeholderIfAbsent=true",
     },
     {
-      image: "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/0a0b187a2d6331d0606e74e55027b7bd0278189b?placeholderIfAbsent=true",
+      image:
+        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/0a0b187a2d6331d0606e74e55027b7bd0278189b?placeholderIfAbsent=true",
       cuisine: "Italian",
       title: "Grilled Barbeque Dishes",
       price: "£20pp",
-      heartIcon: "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/2d50f9c10e0a61a271d0704d904880744ca43793?placeholderIfAbsent=true"
+      heartIcon:
+        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/2d50f9c10e0a61a271d0704d904880744ca43793?placeholderIfAbsent=true",
     },
     {
-      image: "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/febb8420de2e72ae4d3f21727bfed1ce336ef3c9?placeholderIfAbsent=true",
+      image:
+        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/febb8420de2e72ae4d3f21727bfed1ce336ef3c9?placeholderIfAbsent=true",
       cuisine: "Italian",
       title: "Grilled Barbeque Dishes",
       price: "£20pp",
-      heartIcon: "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/abb936b34363d30a8df0f0411c7c10288f2f7add?placeholderIfAbsent=true"
-    }
+      heartIcon:
+        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/abb936b34363d30a8df0f0411c7c10288f2f7add?placeholderIfAbsent=true",
+    },
   ];
 
   return (

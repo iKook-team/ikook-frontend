@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const Testimonials = () => {
   return (
@@ -9,9 +9,7 @@ const Testimonials = () => {
           className="aspect-[500] object-contain w-full max-w-[1259px] max-md:max-w-full"
           alt="Decorative stars"
         />
-        <h2 className="text-[#323335] self-center mt-3">
-          What They Say
-        </h2>
+        <h2 className="text-[#323335] self-center mt-3">What They Say</h2>
       </div>
       <div className="w-full max-w-[1352px] mt-[115px] max-md:max-w-full max-md:mt-10 mx-auto px-4">
         <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
@@ -19,8 +17,8 @@ const Testimonials = () => {
             <div className="flex flex-col items-stretch text-[#323335] font-medium mt-1 max-md:max-w-full max-md:mt-10">
               <blockquote className="text-[#323335] text-[35px] max-md:max-w-full max-md:mr-0.5">
                 The food and service was excellent, I was very impressed, I'd
-                totally recommend ikook. Excellent way to find the
-                professional chef you need for your occasions.
+                totally recommend ikook. Excellent way to find the professional
+                chef you need for your occasions.
               </blockquote>
               <img
                 src="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/ba9b4844ef333cb1c8d9b3023e62da062f67d9ad?placeholderIfAbsent=true"
@@ -41,8 +39,8 @@ const Testimonials = () => {
             <div className="flex w-full flex-col items-stretch max-md:max-w-full max-md:mt-10">
               <blockquote className="text-[#323335] text-[35px] font-medium max-md:max-w-full">
                 The food and service was excellent, I was very impressed, I'd
-                totally recommend ikook. Excellent way to find the
-                professional chef you need for your occasions.
+                totally recommend ikook. Excellent way to find the professional
+                chef you need for your occasions.
               </blockquote>
               <img
                 src="https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/a042c0fedfad6e8fd7448679c90c7caf4c05a995?placeholderIfAbsent=true"

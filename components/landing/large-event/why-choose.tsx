@@ -1,22 +1,25 @@
-import React from 'react';
+import React from "react";
 
 const WhyChoose = () => {
   const features = [
     {
       icon: "🥂",
       title: "Grand Impressions",
-      description: "Make a lasting impact with culinary creations tailored for your event."
+      description:
+        "Make a lasting impact with culinary creations tailored for your event.",
     },
     {
       icon: "💐",
       title: "Event Coordination",
-      description: "Collaborate with chefs who understand the dynamics of large gatherings."
+      description:
+        "Collaborate with chefs who understand the dynamics of large gatherings.",
     },
     {
       icon: "⏳",
       title: "Effortless Planning",
-      description: "Enjoy a stress-free event planning process with our expert chefs at your service."
-    }
+      description:
+        "Enjoy a stress-free event planning process with our expert chefs at your service.",
+    },
   ];
 
   return (
@@ -31,7 +34,10 @@ const WhyChoose = () => {
       </h2>
       <div className="self-center flex gap-6 flex-wrap mt-6 max-md:max-w-full">
         {features.map((feature, index) => (
-          <article key={index} className="shadow-[0px_4px_70px_0px_rgba(0,0,0,0.07)] min-w-60 overflow-hidden w-[398px] bg-[#FFFCF5] pt-6 pb-[71px] px-8 rounded-[20px] max-md:px-5">
+          <article
+            key={index}
+            className="shadow-[0px_4px_70px_0px_rgba(0,0,0,0.07)] min-w-60 overflow-hidden w-[398px] bg-[#FFFCF5] pt-6 pb-[71px] px-8 rounded-[20px] max-md:px-5"
+          >
             <div className="flex w-[50px] flex-col items-center text-2xl text-[#FCC01C] font-semibold whitespace-nowrap leading-none justify-center h-[50px] bg-white px-[13px] rounded-[5px]">
               <span className="text-[#FCC01C]">{feature.icon}</span>
             </div>

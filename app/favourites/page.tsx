@@ -1,7 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import { FavouritesSection } from '@/components/favourites/favourrites-section';
-
+import { FavouritesSection } from "@/components/favourites/favourrites-section";
 
 const Index = () => {
   return (

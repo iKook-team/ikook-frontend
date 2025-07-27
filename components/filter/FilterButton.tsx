@@ -4,7 +4,8 @@ import * as React from "react";
 import { ChevronDown } from "lucide-react";
 import clsx from "clsx";
 
-interface FilterButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface FilterButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   isActive?: boolean;
   showIcon?: boolean;
@@ -21,7 +22,7 @@ const FilterButton = React.forwardRef<HTMLButtonElement, FilterButtonProps>(
           isActive
             ? "bg-black text-white hover:bg-gray-800"
             : "text-black hover:bg-gray-50",
-          className
+          className,
         )}
         ref={ref}
         {...props}
@@ -30,7 +31,7 @@ const FilterButton = React.forwardRef<HTMLButtonElement, FilterButtonProps>(
         {showIcon && <ChevronDown className="w-4 h-4 my-auto" />}
       </button>
     );
-  }
+  },
 );
 
 FilterButton.displayName = "FilterButton";

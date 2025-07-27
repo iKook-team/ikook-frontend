@@ -36,9 +36,7 @@ export function MessageBubble({
         )}
         <div className="flex items-center gap-1.5 mt-1">
           <time className="text-xs text-neutral-500">{timestamp}</time>
-          {!isRead && (
-            <span className="w-2 h-2 rounded-full bg-amber-400"></span>
-          )}
+          {!isRead && <span className="w-2 h-2 rounded-full bg-amber-400" />}
         </div>
       </div>
     );
@@ -65,11 +63,11 @@ export function MessageBubble({
             </div>
           )}
           {content && (
-            <div className="text-sm leading-5 text-stone-950">
-              {content}
-            </div>
+            <div className="text-sm leading-5 text-stone-950">{content}</div>
           )}
-          <time className="mt-1 block text-xs text-neutral-500">{timestamp}</time>
+          <time className="mt-1 block text-xs text-neutral-500">
+            {timestamp}
+          </time>
         </div>
       </div>
     </div>

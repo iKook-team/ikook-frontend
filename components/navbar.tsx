@@ -7,17 +7,19 @@ import {
   NavbarBrand,
   NavbarItem,
   NavbarMenuItem,
-} from "@heroui/navbar";
-import { Button, Link, Input, Divider, Image } from "@heroui/react";
+  Button,
+  Link,
+  Input,
+  Divider,
+  Image,
+} from "@heroui/react";
 import { FiShoppingCart } from "react-icons/fi";
 import NextLink from "next/link";
 import { CiSearch } from "react-icons/ci";
 import { IoMenu } from "react-icons/io5";
 import { FiUser } from "react-icons/fi";
 
-import {
-  Logo,
-} from "@/components/icons";
+import { Logo } from "@/components/icons";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { UserMenu } from "@/components/auth/user-menu";
 
@@ -40,7 +42,12 @@ export const Navbar = () => {
         placeholder="Location"
         className="w-full md:w-auto"
         classNames={{
-          inputWrapper: ["bg-transparent", "shadow-none", "hover:bg-transparent", "group-data-[focus=true]:bg-transparent"],
+          inputWrapper: [
+            "bg-transparent",
+            "shadow-none",
+            "hover:bg-transparent",
+            "group-data-[focus=true]:bg-transparent",
+          ],
         }}
       />
       <Divider orientation="vertical" className="hidden md:block" />
@@ -51,7 +58,12 @@ export const Navbar = () => {
         type="text"
         className="w-full md:w-auto"
         classNames={{
-          inputWrapper: ["bg-transparent", "shadow-none", "hover:bg-transparent", "group-data-[focus=true]:bg-transparent"],
+          inputWrapper: [
+            "bg-transparent",
+            "shadow-none",
+            "hover:bg-transparent",
+            "group-data-[focus=true]:bg-transparent",
+          ],
         }}
       />
       <Divider orientation="vertical" className="hidden md:block" />
@@ -61,15 +73,30 @@ export const Navbar = () => {
         placeholder="Guest"
         className="w-full md:w-auto"
         classNames={{
-          inputWrapper: ["bg-transparent", "shadow-none", "hover:bg-transparent", "group-data-[focus=true]:bg-transparent"],
+          inputWrapper: [
+            "bg-transparent",
+            "shadow-none",
+            "hover:bg-transparent",
+            "group-data-[focus=true]:bg-transparent",
+          ],
         }}
       />
-      <Button radius="full" startContent={<CiSearch />} className="w-full md:w-auto text-white bg-yellow-400">Search</Button>
+      <Button
+        radius="full"
+        startContent={<CiSearch />}
+        className="w-full md:w-auto text-white bg-yellow-400"
+      >
+        Search
+      </Button>
     </div>
   );
 
   return (
-    <HeroUINavbar maxWidth="xl" position="sticky" className="drop-shadow-sm py-2">
+    <HeroUINavbar
+      maxWidth="xl"
+      position="sticky"
+      className="drop-shadow-sm py-2"
+    >
       <NavbarContent className="basis-1/2 md:basis-1/5" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
@@ -104,23 +131,20 @@ export const Navbar = () => {
 
       {/* Desktop Search Bar */}
       <NavbarContent className="hidden md:flex basis-3/5">
-        <NavbarItem className="w-full">
-          {searchInput}
-        </NavbarItem>
+        <NavbarItem className="w-full">{searchInput}</NavbarItem>
       </NavbarContent>
 
       {/* Desktop Login/User Buttons */}
-      <NavbarContent
-        className="hidden md:flex basis-1/5 gap-4"
-        justify="end"
-      >
+      <NavbarContent className="hidden md:flex basis-1/5 gap-4" justify="end">
         <NavbarItem className="flex items-center gap-3">
           <FiShoppingCart />
           {isAuthenticated ? (
             <UserMenu />
           ) : (
             <div className="flex items-center gap-2">
-              <Link href="/login" className="text-sm text-gray-800">Login</Link>
+              <Link href="/login" className="text-sm text-gray-800">
+                Login
+              </Link>
             </div>
           )}
         </NavbarItem>
@@ -128,7 +152,9 @@ export const Navbar = () => {
           <Button
             radius="full"
             size="sm"
-            startContent={<FiUser className="text-yellow-400 bg-purple-50 p-1 rounded-full" />}
+            startContent={
+              <FiUser className="text-yellow-400 bg-purple-50 p-1 rounded-full" />
+            }
             endContent={<IoMenu className="text-xl" />}
             variant="bordered"
             className="border-1"
@@ -146,12 +172,10 @@ export const Navbar = () => {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-50 flex flex-col bg-white pt-20">
-          <div className="p-4">
-            {searchInput}
-          </div>
+          <div className="p-4">{searchInput}</div>
           <NavbarMenuItem>
-            <Link 
-              href="/cart" 
+            <Link
+              href="/cart"
               className="w-full text-gray-800 py-2 flex items-center gap-2 px-4 hover:bg-gray-100"
               onClick={() => setIsMobileMenuOpen(false)}
             >
@@ -165,8 +189,8 @@ export const Navbar = () => {
                 <UserMenu />
               </div>
             ) : (
-              <Link 
-                href="/login" 
+              <Link
+                href="/login"
                 className="w-full text-gray-800 py-3 px-4 block hover:bg-gray-100"
                 onClick={() => setIsMobileMenuOpen(false)}
               >

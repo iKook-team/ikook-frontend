@@ -61,13 +61,14 @@ export const ServiceSelection: React.FC<ServiceSelectionProps> = ({
   ];
 
   const [selectedService, setSelectedService] = React.useState<string | null>(
-    null
+    null,
   );
 
   const handleServiceSelect = (serviceTitle: string) => {
     if (isCustomBooking) {
       // For custom booking, navigate directly to the service's booking page
-      const servicePath = serviceTitle.toLowerCase().replace(/\s+/g, '-');
+      const servicePath = serviceTitle.toLowerCase().replace(/\s+/g, "-");
+
       window.location.href = `/booking/${servicePath}?is_custom=true`;
     } else {
       setSelectedService(serviceTitle);
@@ -76,9 +77,9 @@ export const ServiceSelection: React.FC<ServiceSelectionProps> = ({
 
   const handleContinue = () => {
     if (selectedService) {
-      onNext({ 
+      onNext({
         service: selectedService,
-        is_custom: isCustomBooking 
+        is_custom: isCustomBooking,
       });
     } else {
       alert("Please select a service to continue");

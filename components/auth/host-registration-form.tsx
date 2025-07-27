@@ -24,7 +24,9 @@ interface HostRegistrationFormProps {
   onSubmit?: (data: FormData) => void;
 }
 
-export const HostRegistrationForm: React.FC<HostRegistrationFormProps> = ({ onSubmit }) => {
+export const HostRegistrationForm: React.FC<HostRegistrationFormProps> = ({
+  onSubmit,
+}) => {
   const router = useRouter();
   const { setUserType, setHostFormData } = useAuthStore();
   // Track selected country code for phone input
@@ -48,24 +50,27 @@ export const HostRegistrationForm: React.FC<HostRegistrationFormProps> = ({ onSu
   const onLocalSubmit = async (data: FormData) => {
     try {
       // Set user type to 'host' in global state
-      setUserType('host');
-      
+      setUserType("host");
+
       // Save form data locally
       setHostFormData({ ...data, countryCode });
-      
+
       // Send OTP to email using the real API
       await authService.sendOtp(data.email);
-      
+
       // Show success toast
       showToast.success("Verification code sent to your email");
-      
+
       // Remove navigation to /email-verification so the OTP step stays in the flow
       // router.push("/email-verification");
       if (onSubmit) {
         onSubmit({ ...data, countryCode });
       }
     } catch (error) {
-      handleApiError(error, "Failed to send verification code. Please try again.");
+      handleApiError(
+        error,
+        "Failed to send verification code. Please try again.",
+      );
     }
   };
 

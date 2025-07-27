@@ -6,7 +6,10 @@ interface UploadedImageProps {
   onDelete: () => void;
 }
 
-export const UploadedImage: React.FC<UploadedImageProps> = ({ imageUrl, onDelete }) => {
+export const UploadedImage: React.FC<UploadedImageProps> = ({
+  imageUrl,
+  onDelete,
+}) => {
   return (
     <div className="relative h-[257px] w-[613px] max-md:w-[calc(100%_-_42px)] max-sm:h-auto">
       <img

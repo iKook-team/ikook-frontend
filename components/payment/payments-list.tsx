@@ -1,15 +1,23 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import { PaymentCard } from './payment-card';
-import { paymentCardsService, PaymentCard as APIPaymentCard } from '@/lib/api/payment-cards';
+import React, { useEffect, useState } from "react";
+
+import { PaymentCard } from "./payment-card";
+
+import {
+  paymentCardsService,
+  PaymentCard as APIPaymentCard,
+} from "@/lib/api/payment-cards";
 
 const CARD_ICONS: Record<string, string> = {
-  VISA: 'https://api.builder.io/api/v1/image/assets/TEMP/0ec22a48944ef07eb754a2ae5fba8767bf7767a9?placeholderIfAbsent=true',
-  Mastercard: 'https://api.builder.io/api/v1/image/assets/TEMP/8e5c30b354596f0df1258f9a98b0228783ec3c1c?placeholderIfAbsent=true',
-  Verve: 'https://api.builder.io/api/v1/image/assets/TEMP/0bbcb836776468a8466ea81de21f70d7c581de4c?placeholderIfAbsent=true',
+  VISA: "https://api.builder.io/api/v1/image/assets/TEMP/0ec22a48944ef07eb754a2ae5fba8767bf7767a9?placeholderIfAbsent=true",
+  Mastercard:
+    "https://api.builder.io/api/v1/image/assets/TEMP/8e5c30b354596f0df1258f9a98b0228783ec3c1c?placeholderIfAbsent=true",
+  Verve:
+    "https://api.builder.io/api/v1/image/assets/TEMP/0bbcb836776468a8466ea81de21f70d7c581de4c?placeholderIfAbsent=true",
 };
-const DEFAULT_ICON = 'https://api.builder.io/api/v1/image/assets/TEMP/8a6ed808e811837a68be25e7e097e2916e02a0e0?placeholderIfAbsent=true';
+const DEFAULT_ICON =
+  "https://api.builder.io/api/v1/image/assets/TEMP/8a6ed808e811837a68be25e7e097e2916e02a0e0?placeholderIfAbsent=true";
 
 export const PaymentsList: React.FC = () => {
   const [cards, setCards] = useState<APIPaymentCard[]>([]);
@@ -17,23 +25,24 @@ export const PaymentsList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    paymentCardsService.getCards()
+    paymentCardsService
+      .getCards()
       .then((res) => {
         setCards(res.results || []);
         setLoading(false);
       })
       .catch((err) => {
-        setError('Failed to load payment cards.');
+        setError("Failed to load payment cards.");
         setLoading(false);
       });
   }, []);
 
   const handleEditCard = (cardId: number) => {
-    console.log('Editing card:', cardId);
+    console.log("Editing card:", cardId);
   };
 
   const handleAddNewCard = () => {
-    console.log('Adding new card');
+    console.log("Adding new card");
   };
 
   return (
@@ -48,15 +57,17 @@ export const PaymentsList: React.FC = () => {
           {!loading && !error && cards.length === 0 && (
             <div className="text-gray-500">No payment cards found.</div>
           )}
-          {!loading && !error && cards.map((card) => (
-            <PaymentCard
-              key={card.id}
-              cardType={card.card_type}
-              cardNumber={`**** **** **** ${card.last4}`}
-              iconSrc={CARD_ICONS[card.card_type] || DEFAULT_ICON}
-              onEdit={() => handleEditCard(card.id)}
-            />
-          ))}
+          {!loading &&
+            !error &&
+            cards.map((card) => (
+              <PaymentCard
+                key={card.id}
+                cardType={card.card_type}
+                cardNumber={`**** **** **** ${card.last4}`}
+                iconSrc={CARD_ICONS[card.card_type] || DEFAULT_ICON}
+                onEdit={() => handleEditCard(card.id)}
+              />
+            ))}
         </div>
         <button
           onClick={handleAddNewCard}

@@ -27,9 +27,7 @@ export const ServiceIncludes: React.FC<ServiceIncludesProps> = ({ items }) => {
                   {item.icon}
                 </div>
               </div>
-              <span className="text-sm text-neutral-700">
-                {item.title}
-              </span>
+              <span className="text-sm text-neutral-700">{item.title}</span>
             </div>
             {item.description && (
               <p className="mt-1 ml-9 text-xs text-neutral-700">

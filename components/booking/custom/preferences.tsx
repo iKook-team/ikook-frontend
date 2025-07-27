@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import { DietaryRestrictions } from "../dietary-restrictions";
 
 interface PreferencesFormProps {
@@ -8,11 +9,19 @@ interface PreferencesFormProps {
   onBack: () => void;
 }
 
-export const PreferencesForm: React.FC<PreferencesFormProps> = ({ onNext, onBack }) => {
+export const PreferencesForm: React.FC<PreferencesFormProps> = ({
+  onNext,
+  onBack,
+}) => {
   const [allergyDetails, setAllergyDetails] = useState("");
+  const [selectedAllergies, setSelectedAllergies] = useState<string[]>([]);
+
+  const handleAllergyChange = (allergies: string[]) => {
+    setSelectedAllergies(allergies);
+  };
 
   const handleContinue = () => {
-    onNext({ allergyDetails });
+    onNext({ allergyDetails, selectedAllergies });
   };
 
   return (
@@ -21,7 +30,10 @@ export const PreferencesForm: React.FC<PreferencesFormProps> = ({ onNext, onBack
         Preferences
       </h2>
 
-      <DietaryRestrictions />
+      <DietaryRestrictions
+        selectedAllergies={selectedAllergies}
+        onChange={handleAllergyChange}
+      />
 
       <div className="mt-6 min-h-[170px] text-neutral-700 max-md:max-w-full">
         <div className="flex-1 w-full max-md:max-w-full">
@@ -43,14 +55,14 @@ export const PreferencesForm: React.FC<PreferencesFormProps> = ({ onNext, onBack
       </div>
 
       <div className="flex gap-6 items-start self-center mt-28 text-base font-semibold whitespace-nowrap max-md:mt-10">
-        <button 
+        <button
           type="button"
           onClick={onBack}
           className="overflow-hidden gap-2 self-stretch px-5 py-3 text-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)] w-[150px] hover:bg-amber-50 transition-colors"
         >
           Back
         </button>
-        <button 
+        <button
           type="button"
           onClick={handleContinue}
           className="overflow-hidden gap-2 self-stretch px-5 py-3 text-white bg-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)] w-[150px] hover:bg-amber-500 transition-colors"

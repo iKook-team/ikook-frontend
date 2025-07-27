@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
-import { useAuthStore } from "@/lib/store/auth-store";
 import { useRouter, useSearchParams } from "next/navigation";
+
+import { useAuthStore } from "@/lib/store/auth-store";
 import { MyBookingsPage } from "@/components/dashboard/host-dashboard";
-import { paymentsService } from '@/lib/api/payments';
-import { showToast } from '@/lib/utils/toast';
+import { paymentsService } from "@/lib/api/payments";
+import { showToast } from "@/lib/utils/toast";
 
 const HostDashboard: React.FC = () => {
   const { user, isAuthenticated, userType } = useAuthStore();
@@ -15,26 +16,32 @@ const HostDashboard: React.FC = () => {
   React.useEffect(() => {
     if (!isAuthenticated) {
       router.push("/login");
+
       return;
     }
-    
+
     if (userType !== "host") {
       router.push("/login");
+
       return;
     }
 
     // Payment verification logic
-    const reference = searchParams.get('reference') || localStorage.getItem('payment_reference');
+    const reference =
+      searchParams.get("reference") ||
+      localStorage.getItem("payment_reference");
+
     if (reference) {
-      paymentsService.verify(reference)
+      paymentsService
+        .verify(reference)
         .then(() => {
-          showToast.success('Payment successful!');
-          localStorage.removeItem('payment_reference');
+          showToast.success("Payment successful!");
+          localStorage.removeItem("payment_reference");
           // Remove reference from URL
-          router.replace('/dashboard/host');
+          router.replace("/dashboard/host");
         })
         .catch(() => {
-          showToast.error('Payment verification failed.');
+          showToast.error("Payment verification failed.");
         });
     }
   }, [isAuthenticated, userType, router, searchParams]);

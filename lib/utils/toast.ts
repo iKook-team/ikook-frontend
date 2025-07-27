@@ -42,10 +42,10 @@ export const showToast = {
 
 export const handleApiError = (
   error: any,
-  defaultMessage: string = "Something went wrong"
+  defaultMessage: string = "Something went wrong",
 ) => {
   let message = defaultMessage;
-  
+
   if (error?.response?.data?.message) {
     message = error.response.data.message;
   } else if (error?.message) {
@@ -55,7 +55,7 @@ export const handleApiError = (
   }
 
   showToast.error(message);
-  
+
   // Log error for debugging
   // Debug logging removed
 };

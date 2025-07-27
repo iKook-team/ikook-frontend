@@ -1,5 +1,5 @@
-import React from 'react';
-import { useRouter } from 'next/navigation';
+import React from "react";
+import { useRouter } from "next/navigation";
 
 interface StatusCardProps {
   title?: string;
@@ -15,10 +15,10 @@ export const StatusCard: React.FC<StatusCardProps> = (props) => {
     description = "Congratulations, your booking is underway, continue your conversation with the chef, agree on menu and price, receive your quote and pay for your booking.",
     buttonText = "View Message",
     onButtonClick,
-    bookingId
+    bookingId,
   } = props;
   const router = useRouter();
-  
+
   const handleButtonClick = () => {
     if (onButtonClick) {
       onButtonClick();
@@ -43,7 +43,14 @@ export const StatusCard: React.FC<StatusCardProps> = (props) => {
             <h2 className="text-black text-2xl font-medium leading-none">
               {title}
             </h2>
-            <p className="text-[#6F6E6D] text-center text-xs font-normal leading-[18px] mt-2 max-md:max-w-full overflow-hidden text-ellipsis px-8" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
+            <p
+              className="text-[#6F6E6D] text-center text-xs font-normal leading-[18px] mt-2 max-md:max-w-full overflow-hidden text-ellipsis px-8"
+              style={{
+                display: "-webkit-box",
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: "vertical",
+              }}
+            >
               {description}
             </p>
           </div>

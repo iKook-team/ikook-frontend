@@ -1,6 +1,7 @@
-import React from 'react';
-import { useAuthStore } from '@/lib/store/auth-store';
-import { getCurrencySymbol } from '@/lib/utils/currency';
+import React from "react";
+
+import { useAuthStore } from "@/lib/store/auth-store";
+import { getCurrencySymbol } from "@/lib/utils/currency";
 
 interface WalletBalanceProps {
   balance?: string | number;
@@ -10,15 +11,15 @@ export const WalletBalance: React.FC<WalletBalanceProps> = ({ balance }) => {
   const { user } = useAuthStore();
   const currencySymbol = getCurrencySymbol({
     currency: user?.currency,
-    country: user?.country
+    country: user?.country,
   });
 
   const handleAddMoney = () => {
-    console.log('Add money clicked');
+    console.log("Add money clicked");
   };
 
   const handleRedeemVoucher = () => {
-    console.log('Redeem voucher clicked');
+    console.log("Redeem voucher clicked");
   };
 
   return (
@@ -28,7 +29,8 @@ export const WalletBalance: React.FC<WalletBalanceProps> = ({ balance }) => {
           Wallet balance
         </div>
         <div className="text-[#323335] text-2xl font-semibold leading-none mt-1">
-          {currencySymbol}{balance ?? '0'}
+          {currencySymbol}
+          {balance ?? "0"}
         </div>
       </div>
       <div className="flex gap-4 text-[15px] text-white font-normal my-auto">
@@ -57,7 +59,9 @@ export const WalletBalance: React.FC<WalletBalanceProps> = ({ balance }) => {
               className="aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto"
               alt="Redeem voucher icon"
             />
-            <span className="text-white self-stretch my-auto">Redeem voucher</span>
+            <span className="text-white self-stretch my-auto">
+              Redeem voucher
+            </span>
           </div>
         </button>
       </div>
