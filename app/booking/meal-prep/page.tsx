@@ -33,6 +33,10 @@ const MealPrepBookingPage = () => {
     isCustomBooking ? "meal-details" : "cart",
   );
   const [bookingData, setBookingData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<Record<string, any>>({
+    allergyDetails: '',
+    dietaryRestrictions: [],
+  });
   const menu = useAuthStore((s) => s.bookingMenu);
   const [menuLoading, setMenuLoading] = useState(false);
   const [menuError, setMenuError] = useState<string | null>(null);
@@ -114,10 +118,11 @@ const MealPrepBookingPage = () => {
       case "preferences":
         return (
           <PreferencesForm
-            onNext={(data) => handleNext(data)}
+            onNext={handleNext}
             onBack={handleBack}
-            formData={{}}
-            onChange={() => {}}
+            formData={formData}
+            onChange={(newData) => setFormData(prev => ({ ...prev, ...newData }))}
+            menu={menu}
           />
         );
       case "messages":
