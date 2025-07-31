@@ -56,7 +56,9 @@ export const ServicesSection: React.FC = () => {
                       ? () => router.push("/services/meal-delivery")
                       : service.name === "Cooking class"
                         ? () => router.push("/services/cooking-class")
-                        : undefined
+                        : service.name === "Corporate dining"
+                          ? () => router.push("/services/corporate-dining")
+                          : undefined
               }
             />
           </div>

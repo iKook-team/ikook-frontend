@@ -1,214 +1,248 @@
 "use client";
 
 import React, { useState } from "react";
-
-// Removed unused imports
 import Image from "next/image";
+import { TagSelector } from "@/components/ui/tag-selector";
 
 const EventForm = () => {
-  // Define tag type for better type safety
-  type Tag = string;
   const [isAvailable, setIsAvailable] = useState(true);
-  const [startingPrice, setStartingPrice] = useState("000");
-  const [minGuests, setMinGuests] = useState("");
-  const [selectedCuisines, setSelectedCuisines] = useState([
+  const [formData, setFormData] = useState({
+    startingPrice: "000",
+    minGuests: "",
+    cuisines: ["African", "Modern English", "Italian"],
+    events: ["Wedding", "Naming", "BBQ"],
+  });
+  
+  const [uploadedImage, setUploadedImage] = useState<string | null>(
+    "https://api.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/c7deb1c504227a725c7687bebba405b0d8b5f8fc?placeholderIfAbsent=true"
+  );
+  
+  const allCuisines = [
     "African",
     "Modern English",
     "Italian",
-  ]);
-  const [selectedEvents, setSelectedEvents] = useState([
+    "Chinese",
+    "French",
+    "English",
+    "Spicy Mediterranean",
+    "Pizza",
+    "Pastries",
+  ];
+
+  const allEvents = [
     "Wedding",
     "Naming",
     "BBQ",
-  ]);
+    "Birthday",
+    "Corporate",
+    "Anniversary",
+    "Festival",
+  ];
+
+  const handleInputChange = (field: keyof typeof formData, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted");
+    console.log("Form submitted:", { ...formData, uploadedImage });
   };
 
-  const handleFileUpload = () => {
-    console.log("File upload clicked");
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setUploadedImage(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  
+  const handleRemoveImage = () => {
+    setUploadedImage(null);
   };
 
   return (
-    <div className="min-h-screen bg-[#FBFBFB] w-full">
-      <main className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="flex flex-col items-center w-full">
-          <div className="w-full max-w-xl">
-            <section className="flex flex-col items-stretch mt-[21px]">
-              <h1 className="text-black text-2xl font-semibold leading-none">
-                Large event
-              </h1>
+    <div className="min-h-screen bg-[#F9FAFB] py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-[655px] mx-auto px-4 py-8 max-md:px-5">
+        <h1 className="text-black text-2xl font-bold leading-8 mb-[53px] max-sm:text-xl max-sm:leading-7">
+          Large Event
+        </h1>
 
-              <form
-                onSubmit={handleSubmit}
-                className="border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] flex w-full flex-col items-center bg-white mt-[21px] pt-11 pb-px rounded-[15px] border-solid border-[#E7E7E7] max-md:max-w-full"
+        <section className="bg-white rounded-[15px] border border-solid border-[#E7E7E7] shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] overflow-hidden">
+          {/* Availability Toggle */}
+          <div className="flex items-center justify-between px-[17px] py-11 max-sm:flex-col max-sm:gap-4 max-sm:items-start">
+            <label
+              htmlFor="availability"
+              className="text-[#020101] text-[15px] font-normal"
+            >
+              Availability
+            </label>
+            <div className="flex items-center">
+              <button
+                type="button"
+                role="switch"
+                aria-checked={isAvailable}
+                onClick={() => setIsAvailable(!isAvailable)}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FCC01C] ${
+                  isAvailable ? "bg-[#FCC01C]" : "bg-gray-200"
+                }`}
               >
-                {/* Availability Toggle */}
-                <div className="flex items-center flex-wrap max-md:max-w-full">
-                  <label className="text-[#020101] text-[15px] font-normal self-stretch w-[298px] my-auto">
-                    Availability
-                  </label>
-                  <button
-                    type="button"
-                    role="switch"
-                    aria-checked={isAvailable}
-                    onClick={() => setIsAvailable(!isAvailable)}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FCC01C] ${isAvailable ? "bg-[#FCC01C]" : "bg-gray-200"}`}
-                  >
-                    <span
-                      className={`${isAvailable ? "translate-x-6" : "translate-x-1"} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
-                    />
-                  </button>
+                <span
+                  className={`${
+                    isAvailable ? "translate-x-6" : "translate-x-1"
+                  } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                />
+              </button>
+            </div>
+          </div>
+
+        {/* Form Content */}
+        <form onSubmit={handleSubmit} className="px-5 pb-5">
+          <div className="space-y-6">
+            {/* Starting Price */}
+            <div className="space-y-1.5">
+              <label
+                htmlFor="startingPrice"
+                className="block text-[#3F3E3D] text-[15px] font-normal"
+              >
+                Starting price (per person)
+              </label>
+              <div className="flex border border-solid border-[#CFCFCE] rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white">
+                <div className="flex items-center px-3.5 py-2.5 bg-white rounded-l-lg">
+                  <span className="text-[#3F3E3D] text-[15px] font-normal">
+                    £
+                  </span>
                 </div>
+                <input
+                  type="text"
+                  id="startingPrice"
+                  value={formData.startingPrice}
+                  onChange={(e) => handleInputChange("startingPrice", e.target.value)}
+                  className="w-full px-3.5 py-2.5 text-[#3F3E3D] text-[15px] font-normal bg-transparent border-0 focus:ring-0 focus:outline-none"
+                  placeholder="000"
+                />
+              </div>
+            </div>
 
-                <div className="self-stretch ml-[22px] mr-[23px] mt-[18px] max-md:max-w-full max-md:mr-2.5">
-                  {/* Starting Price Field */}
-                  <div className="max-w-full w-[609px]">
-                    <div className="w-full max-md:max-w-full">
-                      <div className="w-full max-md:max-w-full">
-                        <label className="text-[#3F3E3D] text-[15px] font-medium block">
-                          Starting price (per person)
-                        </label>
-                        <div className="items-stretch border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full font-normal whitespace-nowrap flex-wrap bg-white mt-1.5 rounded-lg border-solid border-[#CFCFCE] max-md:max-w-full">
-                          <div className="flex items-center text-[15px] text-[#3F3E3D] pl-3.5 pr-3 py-2.5 rounded-[8px_0px_0px_8px]">
-                            <span className="text-[#3F3E3D] self-stretch my-auto">
-                              £
-                            </span>
-                          </div>
-                          <input
-                            type="text"
-                            value={startingPrice}
-                            onChange={(e) => setStartingPrice(e.target.value)}
-                            className="items-center border flex min-w-60 gap-2 overflow-hidden text-base text-[#6F6E6D] h-full flex-1 shrink basis-[0%] bg-white px-3.5 py-2.5 rounded-[0px_8px_8px_0px] border-solid border-[#CFCFCE] max-md:max-w-full focus:outline-none focus:ring-2 focus:ring-[#FCC01C]"
-                            placeholder="000"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+            {/* Minimum Guests */}
+            <div className="space-y-1.5">
+              <label
+                htmlFor="minGuests"
+                className="block text-[#3F3E3D] text-[15px] font-normal"
+              >
+                Minimum number of guests
+              </label>
+              <input
+                type="number"
+                id="minGuests"
+                value={formData.minGuests}
+                onChange={(e) => handleInputChange("minGuests", e.target.value)}
+                className="w-full px-3.5 py-2.5 text-[#3F3E3D] text-[15px] font-normal border border-solid border-[#CFCFCE] rounded-lg focus:ring-1 focus:ring-[#FCC01C] focus:border-[#FCC01C] outline-none"
+                placeholder="0"
+              />
+            </div>
 
-                  {/* Minimum Guests Field */}
-                  <div className="max-w-full w-[609px] mt-6">
-                    <div className="w-full max-md:max-w-full">
-                      <div className="w-full max-md:max-w-full">
-                        <label className="text-[#3F3E3D] text-[15px] font-medium block">
-                          Minimum number of guests
-                        </label>
-                        <input
-                          type="text"
-                          value={minGuests}
-                          onChange={(e) => setMinGuests(e.target.value)}
-                          placeholder="Enter Number"
-                          className="items-center border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#6F6E6D] font-normal bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid border-[#9F9F9E] max-md:max-w-full focus:outline-none focus:ring-2 focus:ring-[#FCC01C]"
-                        />
-                      </div>
-                    </div>
-                  </div>
+            {/* Cuisines Field */}
+            <div className="space-y-1.5">
+              <TagSelector
+                label="Cuisines"
+                tags={allCuisines}
+                selectedTags={formData.cuisines}
+                onTagsChange={(cuisines) =>
+                  setFormData((prev) => ({ ...prev, cuisines }))
+                }
+                className="w-full"
+              />
+            </div>
 
-                  {/* Cuisines Field */}
-                  <div className="flex w-full max-w-[609px] flex-col items-stretch mt-6 pb-2.5 max-md:max-w-full">
-                    <div className="w-full">
-                      <label className="text-[#3F3E3D] text-[15px] font-medium block mb-2">
-                        Cuisines
-                      </label>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedCuisines.map((cuisine) => (
-                          <span
-                            key={cuisine}
-                            className="px-3 py-1 bg-gray-100 rounded-full text-sm"
-                          >
-                            {cuisine}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+            {/* Event Field */}
+            <div className="space-y-1.5">
+              <TagSelector
+                label="Event"
+                tags={allEvents}
+                selectedTags={formData.events}
+                onTagsChange={(events) =>
+                  setFormData((prev) => ({ ...prev, events }))
+                }
+                className="w-full"
+              />
+            </div>
 
-                  {/* Event Field */}
-                  <div className="flex w-full max-w-[534px] flex-col mt-6 pb-2.5">
-                    <div className="w-full mt-4">
-                      <label className="text-[#3F3E3D] text-[15px] font-medium block mb-2">
-                        Event
-                      </label>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedEvents.map((event) => (
-                          <span
-                            key={event}
-                            className="px-3 py-1 bg-gray-100 rounded-full text-sm"
-                          >
-                            {event}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* File Upload Area */}
-                <div
-                  role="button"
-                  tabIndex={0}
-                  onClick={handleFileUpload}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      handleFileUpload();
-                    }
-                  }}
-                  className="justify-center items-center border flex min-h-[122px] w-[425px] max-w-full flex-col text-[10px] text-[#323335] text-center mt-[49px] px-2.5 py-6 rounded-xl border-dashed border-[#CFCFCE] max-md:mt-10 cursor-pointer hover:border-[#FCC01C] transition-colors"
-                >
-                  <p className="text-[#323335] font-normal w-[272px]">
-                    (Recommended 1000px width, 1000px height.Maximum of 1MB file
-                    size)
+            {/* Image Upload Section */}
+            <div className="mt-12 mb-8">
+              {!uploadedImage ? (
+                <div className="flex flex-col items-center justify-center gap-[9px] border-dashed border border-[#CFCFCE] rounded-xl p-2.5 h-[122px]">
+                  <p className="text-[#323335] text-center text-[10px] font-normal max-w-[272px]">
+                    (Recommended 1000px width, 1000px height. Maximum of 1MB file size)
                   </p>
-                  <button
-                    type="button"
-                    className="justify-center items-center border flex gap-2.5 font-medium mt-[9px] p-2.5 rounded-md border-solid border-[#B7B7B6] hover:border-[#FCC01C] transition-colors"
-                  >
-                    <span className="text-[#323335] self-stretch my-auto">
-                      Select cover image
-                    </span>
-                  </button>
+                  <label htmlFor="imageUpload" className="cursor-pointer">
+                    <div className="flex justify-center items-center gap-2.5 border border-solid border-[#B7B7B6] p-2.5 rounded-md">
+                      <span className="text-[#323335] text-center text-[10px] font-normal">
+                        Select cover image
+                      </span>
+                    </div>
+                    <input
+                      id="imageUpload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                  </label>
                 </div>
-
-                {/* Preview Image */}
-                <div className="relative w-[613px] max-w-full mt-[51px] max-md:mt-10 p-4">
+              ) : (
+                <div className="relative">
                   <img
-                    src="https://api.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/c7deb1c504227a725c7687bebba405b0d8b5f8fc?placeholderIfAbsent=true"
-                    className="aspect-[2.39] object-contain w-full z-0 rounded-[15px]"
-                    alt="Event preview"
+                    src={uploadedImage}
+                    alt="Uploaded cover"
+                    className="w-full h-[257px] rounded-[15px] object-cover"
                   />
                   <button
                     type="button"
-                    className="absolute z-0 flex w-6 gap-2.5 h-6 bg-[#FFF5F5] p-1 rounded-[30px] right-3 top-[11px] hover:bg-red-100 transition-colors"
+                    onClick={handleRemoveImage}
+                    className="absolute top-[11px] right-3 bg-[#FFF5F5] p-1 rounded-[30px] hover:bg-red-100 transition-colors"
+                    aria-label="Remove image"
                   >
-                    <Image
-                      src="https://api.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/9ff3a8671eb60e8c4b232102699e1a0945d86519?placeholderIfAbsent=true"
-                      className="aspect-[1] object-contain w-4"
-                      alt="Remove"
-                      width={16}
-                      height={16}
-                    />
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M6 18L18 6M6 6L18 18"
+                        stroke="#EF4444"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                   </button>
                 </div>
+              )}
+            </div>
 
-                {/* Submit Button */}
-                <div className="justify-center items-center self-stretch flex w-full flex-col overflow-hidden text-base text-white font-semibold bg-white px-[66px] py-7 border-t-[#CFCFCE] border-t border-solid max-md:max-w-full max-md:px-5">
-                  <button
-                    type="submit"
-                    className="justify-center items-center border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-[422px] max-w-full gap-2 overflow-hidden bg-[#FCC01C] ml-[11px] px-7 py-3 rounded-lg border-solid border-[#FCC01C] max-md:px-5 hover:bg-[#e6ac19] transition-colors"
-                  >
-                    <span className="text-white self-stretch my-auto">
-                      Save changes
-                    </span>
-                  </button>
-                </div>
-              </form>
-            </section>
+            {/* Submit Button */}
+            <div className="border-t border-solid border-[#CFCFCE] pt-[33px] pb-[23px] -mx-5 px-5 mt-6">
+              <button
+                type="submit"
+                className="w-full flex justify-center items-center gap-2 bg-[#FCC01C] border border-solid border-[#FCC01C] px-7 py-3 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] hover:bg-[#E6AC19] transition-colors"
+              >
+                <span className="text-white text-base font-bold leading-6">
+                  Save changes
+                </span>
+              </button>
+            </div>
           </div>
-        </div>
-      </main>
+        </form>
+      </section>
+      </div>
     </div>
   );
 };
