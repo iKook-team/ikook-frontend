@@ -12,7 +12,7 @@ export const Footer: React.FC = () => {
         <FooterLinks />
       </div>
       <div className="text-[#323335] text-justify text-sm font-normal mt-[29px] max-w-7xl mx-auto">
-        <p>Copyright 2022 iKooK, All Right Reserved</p>
+        <p>Copyright 2025 iKooK, All Right Reserved</p>
       </div>
     </footer>
   );
