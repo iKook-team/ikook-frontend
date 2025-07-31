@@ -1,33 +1,35 @@
+import Image from "next/image";
+
 export default function ServicesSection() {
   const services = [
     {
       title: "LEARN FOOD",
       subtitle: "Learn from experienced chefs",
       image:
-        "https://api.builder.io/api/v1/image/assets/TEMP/e7f14de75a63dd0b5e270101f268a9521e2eb948?width=786",
+        "/large-event.png",
     },
     {
       title: "CHEF AT HOME",
       subtitle: "Professional chefs at your location",
       image:
-        "https://api.builder.io/api/v1/image/assets/TEMP/16100068db5221ab424d46e6c48b11a46cf375d9?width=786",
+        "/chef-at-home.png",
     },
     {
       title: "MEAL PREP",
       subtitle: "Healthy meals prepared for you",
       image:
-        "https://api.builder.io/api/v1/image/assets/TEMP/7d5e453487f3c7b92228dea3793ab97b33069061?width=788",
+        "/meal-prep.png",
     },
   ];
 
   return (
-    <section className="bg-white py-16 px-4 lg:px-24">
-      <div className="max-w-7xl mx-auto">
+    <section className="bg-white py-12 px-2 sm:px-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-12">
           <div className="relative">
-            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gray-200" />
-            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-200" />
+            <div className="absolute top-0 left-[15%] right-[15%] h-0.5 bg-gray-200" />
+            <div className="absolute bottom-0 left-[15%] right-[15%] h-0.5 bg-gray-200" />
             <h2 className="text-3xl lg:text-4xl font-medium text-[#323335] py-4 bg-white inline-block px-8">
               Our Services
             </h2>
@@ -35,23 +37,16 @@ export default function ServicesSection() {
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8 mb-12">
           {services.map((service, index) => (
-            <div key={index} className="relative group">
-              <div className="aspect-[3/4] rounded-lg overflow-hidden">
-                <img
-                  src={service.image}
-                  alt={service.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-              <div className="absolute inset-0 bg-black/40 rounded-lg flex items-end p-6">
-                <div className="text-white">
-                  <h3 className="text-xl font-bold mb-1">{service.title}</h3>
-                  <p className="text-sm opacity-90">{service.subtitle}</p>
-                </div>
-              </div>
-            </div>
+            <Image
+              key={index}
+              src={service.image}
+              alt={service.title}
+              width={400}
+              height={450}
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+            />
           ))}
         </div>
 

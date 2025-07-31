@@ -15,22 +15,24 @@ export default function TestimonialsSection() {
           </div>
 
           {/* Right Side - Testimonial Content */}
-          <div className="space-y-8">
+          <div className="space-y-4">
             {/* Header */}
-            <div className="relative">
-              <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#323335]/20" />
-              <div className="absolute bottom-8 left-0 right-0 h-0.5 bg-[#323335]/20" />
-              <h2 className="text-3xl lg:text-4xl font-medium text-[#323335] py-4 bg-[#FCC01C]">
-                What They Say
-              </h2>
+            <div className="text-center mb-6">
+              <div className="relative">
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#323335]/20" />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#323335]/20" />
+                <h2 className="text-3xl lg:text-4xl font-medium text-[#323335] py-4 inline-block px-8">
+                  What They Say
+                </h2>
+              </div>
             </div>
 
             {/* Quote */}
             <div className="relative">
-              <div className="text-8xl lg:text-9xl font-bold text-white leading-none mb-4">
-                &apos;
+              <div className="text-8xl lg:text-9xl font-bold text-white leading-none italic">
+                &quot;
               </div>
-              <blockquote className="text-2xl lg:text-3xl font-medium text-[#323335] leading-relaxed">
+              <blockquote className="text-2xl lg:text-3xl font-medium text-[#323335] leading-loose">
                 The food and service was excellent, I was very impressed, I&apos;d
                 totally recommend ikook. Excellent way to find the professional
                 chef you need for your occasions.

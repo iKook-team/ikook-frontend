@@ -116,17 +116,6 @@ export default function TopMenuSection() {
   return (
     <section className="bg-white py-16 px-4 lg:px-24">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="relative">
-            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gray-200" />
-            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-200" />
-            <h2 className="text-3xl lg:text-4xl font-medium text-[#323335] py-4 bg-white inline-block px-8">
-              Our Top Menu
-            </h2>
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           {/* Left Side - Large Featured Image */}
           <div className="lg:row-span-2">
@@ -140,10 +129,22 @@ export default function TopMenuSection() {
           </div>
 
           {/* Right Side - Menu Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {menuItems.map((item) => (
-              <MenuCard key={item.id} item={item} />
-            ))}
+          <div>
+            {/* Header */}
+            <div className="text-center mb-12">
+              <div className="relative">
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gray-200" />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-200" />
+                <h2 className="text-3xl lg:text-4xl font-medium text-[#323335] py-4 bg-white inline-block px-8">
+                  Our Top Menu
+                </h2>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {menuItems.map((item) => (
+                <MenuCard key={item.id} item={item} />
+              ))}
+            </div>
           </div>
         </div>
 
