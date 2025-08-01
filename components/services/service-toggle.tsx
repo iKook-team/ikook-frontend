@@ -3,7 +3,7 @@ import React, { useState } from "react";
 interface ServiceToggleProps {
   serviceName: string;
   isActive?: boolean;
-  onToggle?: (serviceName: string, isActive: boolean) => void;
+  onToggle?: (isActive: boolean) => void;
   onClick?: () => void;
 }
 
@@ -17,9 +17,8 @@ export const ServiceToggle: React.FC<ServiceToggleProps> = ({
 
   const handleToggle = () => {
     const newState = !active;
-
     setActive(newState);
-    onToggle?.(serviceName, newState);
+    onToggle?.(newState);
   };
 
   const mainProps = onClick ? { onClick, style: { cursor: "pointer" } } : {};
