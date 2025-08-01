@@ -1,21 +1,48 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useAuthStore } from "@/lib/store/auth-store";
+import { getCurrencySymbol } from "@/lib/utils/currency";
 import { TagSelector } from "@/components/ui/tag-selector";
+import { servicesService } from "@/lib/api/services";
+
+interface FormData {
+  startingPrice: string;
+  minGuests: string;
+  cuisines: string[];
+  events: string[];
+}
 
 const EventForm = () => {
   const [isAvailable, setIsAvailable] = useState(true);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     startingPrice: "000",
     minGuests: "",
-    cuisines: ["African", "Modern English", "Italian"],
-    events: ["Wedding", "Naming", "BBQ"],
+    cuisines: [],
+    events: [],
   });
   
-  const [uploadedImage, setUploadedImage] = useState<string | null>(
-    "https://api.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/c7deb1c504227a725c7687bebba405b0d8b5f8fc?placeholderIfAbsent=true"
-  );
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const { user } = useAuthStore();
+  
+  // Check if all required fields are filled
+  const isFormValid = React.useMemo(() => {
+    return (
+      formData.startingPrice.trim() !== "" &&
+      formData.minGuests.trim() !== "" &&
+      formData.cuisines.length > 0 &&
+      formData.events.length > 0 &&
+      imageFile !== null
+    );
+  }, [formData, imageFile]);
+  const currencySymbol = getCurrencySymbol({
+    currency: user?.currency,
+    country: user?.country,
+  });
   
   const allCuisines = [
     "African",
@@ -32,11 +59,7 @@ const EventForm = () => {
   const allEvents = [
     "Wedding",
     "Naming",
-    "BBQ",
-    "Birthday",
-    "Corporate",
-    "Anniversary",
-    "Festival",
+    "Gathering"
   ];
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
@@ -46,9 +69,33 @@ const EventForm = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", { ...formData, uploadedImage });
+    setIsSubmitting(true);
+
+    try {
+      const serviceData = {
+        availability: isAvailable,
+        chef_service: 'Large Event' as const,
+        starting_price_per_person: formData.startingPrice,
+        min_num_of_guests: Number(formData.minGuests) || 0,
+        cuisines: formData.cuisines,
+        events: formData.events,
+        ...(imageFile && { cover_image: imageFile })
+      };
+
+      await servicesService.createService(serviceData);
+      toast.success('Large Event service created successfully!');
+      router.push('/services');
+    } catch (error) {
+      console.error('Error creating service:', error);
+      toast.error('Failed to create service. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,11 +106,13 @@ const EventForm = () => {
         setUploadedImage(e.target?.result as string);
       };
       reader.readAsDataURL(file);
+      setImageFile(file);
     }
   };
   
   const handleRemoveImage = () => {
     setUploadedImage(null);
+    setImageFile(null);
   };
 
   return (
@@ -115,16 +164,17 @@ const EventForm = () => {
               <div className="flex border border-solid border-[#CFCFCE] rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white">
                 <div className="flex items-center px-3.5 py-2.5 bg-white rounded-l-lg">
                   <span className="text-[#3F3E3D] text-[15px] font-normal">
-                    £
+                    {currencySymbol}
                   </span>
                 </div>
                 <input
-                  type="text"
+                  type="number"
                   id="startingPrice"
+                  name="startingPrice"
                   value={formData.startingPrice}
                   onChange={(e) => handleInputChange("startingPrice", e.target.value)}
                   className="w-full px-3.5 py-2.5 text-[#3F3E3D] text-[15px] font-normal bg-transparent border-0 focus:ring-0 focus:outline-none"
-                  placeholder="000"
+                  placeholder="0.00"
                 />
               </div>
             </div>
@@ -232,11 +282,20 @@ const EventForm = () => {
             <div className="border-t border-solid border-[#CFCFCE] pt-[33px] pb-[23px] -mx-5 px-5 mt-6">
               <button
                 type="submit"
-                className="w-full flex justify-center items-center gap-2 bg-[#FCC01C] border border-solid border-[#FCC01C] px-7 py-3 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] hover:bg-[#E6AC19] transition-colors"
+                disabled={!isFormValid || isSubmitting}
+                className={`w-full flex justify-center items-center gap-2 border border-solid px-7 py-3 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] transition-colors ${
+                  isFormValid && !isSubmitting 
+                    ? 'bg-[#FCC01C] border-[#FCC01C] hover:bg-[#E6AC19] cursor-pointer' 
+                    : 'bg-gray-200 border-gray-300 cursor-not-allowed'
+                }`}
               >
-                <span className="text-white text-base font-bold leading-6">
-                  Save changes
-                </span>
+                {isSubmitting ? (
+                  <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <span className="text-white text-base font-bold leading-6">
+                    Save changes
+                  </span>
+                )}
               </button>
             </div>
           </div>

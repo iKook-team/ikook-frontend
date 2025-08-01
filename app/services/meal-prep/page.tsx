@@ -1,20 +1,52 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { Toggle } from "@/components/ui/toggle";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TagSelector } from "@/components/ui/tag-selector";
+import { servicesService } from "@/lib/api/services";
+import { useAuthStore } from "@/lib/store/auth-store";
+import { getCurrencySymbol } from "@/lib/utils/currency";
+
+interface FormData {
+  startingPrice: string;
+  minGuests: string;
+  cuisines: string[];
+  appearance: {
+    weekly: boolean;
+    monthly: boolean;
+  };
+  delivery: {
+    physical: boolean;
+    delivery: boolean;
+  };
+}
 
 const MealPrepForm: React.FC = () => {
+  const router = useRouter();
+  const { user } = useAuthStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const [formData, setFormData] = useState<FormData>({
+    startingPrice: "",
+    minGuests: "",
+    cuisines: [],
+    appearance: {
+      weekly: false,
+      monthly: false,
+    },
+    delivery: {
+      physical: false,
+      delivery: false,
+    },
+  });
+  
   const [availability, setAvailability] = useState(true);
-  const [startingPrice, setStartingPrice] = useState("000");
-  const [minGuests, setMinGuests] = useState("");
-  const [selectedCuisines, setSelectedCuisines] = useState([
-    "African",
-    "Modern English",
-    "Italian",
-  ]);
+  
   const allCuisines = [
     "African",
     "Modern English",
@@ -26,19 +58,15 @@ const MealPrepForm: React.FC = () => {
     "Pizza",
     "Pastries",
   ];
-  const [appearance, setAppearance] = useState({
-    weekly: false,
-    monthly: true,
-  });
-  const [delivery, setDelivery] = useState({ physical: false, gourmet: true });
-  const [uploadedImage, setUploadedImage] = useState<string | null>(
-    "https://api.builder.io/api/v1/image/assets/TEMP/aabf432e495c3e13e0904f13fdcb6a489c241245?width=1226",
-  );
+  
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (file) {
+      setImageFile(file);
       const reader = new FileReader();
 
       reader.onload = (e) => {
@@ -50,19 +78,71 @@ const MealPrepForm: React.FC = () => {
 
   const handleRemoveImage = () => {
     setUploadedImage(null);
+    setImageFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+  
+  // Check if all required fields are filled
+  const isFormValid = React.useMemo(() => {
+    return (
+      formData.startingPrice.trim() !== "" &&
+      formData.minGuests.trim() !== "" &&
+      formData.cuisines.length > 0 &&
+      (formData.appearance.weekly || formData.appearance.monthly) &&
+      (formData.delivery.physical || formData.delivery.delivery) &&
+      imageFile !== null
+    );
+  }, [formData, imageFile]);
+
+  const handleInputChange = <K extends keyof FormData>(
+    field: K, 
+    value: FormData[K]
+  ) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", {
-      availability,
-      startingPrice,
-      minGuests,
-      selectedCuisines,
-      appearance,
-      delivery,
-      uploadedImage,
-    });
+    setIsSubmitting(true);
+    
+    try {
+      const mealPrepAppearance = formData.appearance.weekly 
+        ? 'Weekly' 
+        : formData.appearance.monthly 
+          ? 'Monthly' 
+          : '';
+          
+      const deliveryOption = formData.delivery.physical 
+        ? 'Physical' 
+        : formData.delivery.delivery 
+          ? 'Delivery' 
+          : '';
+      
+      const serviceData = {
+        availability: true, // Assuming default availability is true
+        chef_service: 'Meal Prep' as const,
+        starting_price_per_person: formData.startingPrice || '0.00',
+        min_num_of_guests: Number(formData.minGuests) || 0,
+        cuisines: formData.cuisines,
+        meal_prep_appearance: mealPrepAppearance,
+        delivery_option: deliveryOption,
+        ...(imageFile && { cover_image: imageFile })
+      };
+      
+      await servicesService.createService(serviceData);
+      toast.success('Meal Prep service created successfully!');
+      router.push('/services');
+    } catch (error) {
+      console.error('Error creating service:', error);
+      toast.error('Failed to create service. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -80,7 +160,11 @@ const MealPrepForm: React.FC = () => {
           >
             Availability
           </label>
-          <Toggle checked={availability} onChange={setAvailability} />
+          <Toggle 
+            checked={availability}
+            onChange={setAvailability}
+            className={`${availability ? 'bg-[#FCC01C] border-[#FCC01C]' : 'bg-gray-200'}`}
+          />
         </div>
 
         {/* Form Content */}
@@ -97,17 +181,21 @@ const MealPrepForm: React.FC = () => {
               <div className="flex border border-solid border-[#CFCFCE] rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white">
                 <div className="flex items-center px-3.5 py-2.5 bg-white rounded-l-lg">
                   <span className="text-[#3F3E3D] text-[15px] font-normal">
-                    £
+                    {getCurrencySymbol({ currency: user?.currency, country: user?.country })}
                   </span>
                 </div>
-                <input
-                  id="startingPrice"
-                  type="text"
-                  value={startingPrice}
-                  onChange={(e) => setStartingPrice(e.target.value)}
-                  className="flex-1 px-3.5 py-2.5 border-l border-solid border-[#CFCFCE] rounded-r-lg text-[#6F6E6D] text-base font-normal leading-6 focus:outline-none focus:ring-2 focus:ring-[#FCC01C]"
-                  placeholder="000"
-                />
+                <div className="flex-1 flex">
+                  <input
+                    id="startingPrice"
+                    type="number"
+                    value={formData.startingPrice}
+                    onChange={(e) => handleInputChange("startingPrice", e.target.value)}
+                    className="w-full px-3.5 py-2.5 text-[#3F3E3D] text-[15px] font-normal bg-transparent border-0 focus:ring-0 focus:outline-none"
+                    placeholder="0.00"
+                    step="0.01"
+                    min="0"
+                  />
+                </div>
               </div>
             </div>
 
@@ -122,8 +210,8 @@ const MealPrepForm: React.FC = () => {
               <input
                 id="minGuests"
                 type="text"
-                value={minGuests}
-                onChange={(e) => setMinGuests(e.target.value)}
+                value={formData.minGuests}
+                onChange={(e) => handleInputChange("minGuests", e.target.value)}
                 className="w-full px-3.5 py-2.5 border border-solid border-[#9F9F9E] rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white text-[#6F6E6D] text-base font-normal leading-6 focus:outline-none focus:ring-2 focus:ring-[#FCC01C]"
                 placeholder="Enter Number"
               />
@@ -134,8 +222,8 @@ const MealPrepForm: React.FC = () => {
               <TagSelector
                 label="Cuisines"
                 tags={allCuisines}
-                selectedTags={selectedCuisines}
-                onTagsChange={setSelectedCuisines}
+                selectedTags={formData.cuisines}
+                onTagsChange={(items) => handleInputChange("cuisines", items)}
                 className="w-full"
               />
             </div>
@@ -149,12 +237,12 @@ const MealPrepForm: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <Checkbox
                     id="weekly"
-                    checked={appearance.weekly}
+                    checked={formData.appearance.weekly}
                     onChange={(e) =>
-                      setAppearance((prev) => ({
-                        ...prev,
+                      handleInputChange("appearance", {
                         weekly: e.target.checked,
-                      }))
+                        monthly: !e.target.checked,
+                      })
                     }
                   />
                   <label
@@ -167,12 +255,12 @@ const MealPrepForm: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <Checkbox
                     id="monthly"
-                    checked={appearance.monthly}
+                    checked={formData.appearance.monthly}
                     onChange={(e) =>
-                      setAppearance((prev) => ({
-                        ...prev,
+                      handleInputChange("appearance", {
                         monthly: e.target.checked,
-                      }))
+                        weekly: !e.target.checked,
+                      })
                     }
                   />
                   <label
@@ -194,12 +282,12 @@ const MealPrepForm: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <Checkbox
                     id="physical"
-                    checked={delivery.physical}
+                    checked={formData.delivery.physical}
                     onChange={(e) =>
-                      setDelivery((prev) => ({
-                        ...prev,
+                      handleInputChange("delivery", {
                         physical: e.target.checked,
-                      }))
+                        delivery: !e.target.checked,
+                      })
                     }
                   />
                   <label
@@ -211,20 +299,20 @@ const MealPrepForm: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-3">
                   <Checkbox
-                    id="gourmet"
-                    checked={delivery.gourmet}
+                    id="delivery"
+                    checked={formData.delivery.delivery}
                     onChange={(e) =>
-                      setDelivery((prev) => ({
-                        ...prev,
-                        gourmet: e.target.checked,
-                      }))
+                      handleInputChange("delivery", {
+                        delivery: e.target.checked,
+                        physical: !e.target.checked,
+                      })
                     }
                   />
                   <label
-                    htmlFor="gourmet"
+                    htmlFor="delivery"
                     className="text-[#3F3E3D] text-[15px] font-normal"
                   >
-                    Gourmet
+                    Delivery
                   </label>
                 </div>
               </div>
@@ -287,10 +375,15 @@ const MealPrepForm: React.FC = () => {
           <div className="border-t border-solid border-[#CFCFCE] pt-[33px] pb-[23px] -mx-5 px-5">
             <button
               type="submit"
-              className="w-full flex justify-center items-center gap-2 bg-[#FCC01C] border border-solid border-[#FCC01C] px-7 py-3 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] hover:bg-[#E6AC19] transition-colors"
+              disabled={isSubmitting || !isFormValid}
+              className={`w-full flex justify-center items-center gap-2 border border-solid px-7 py-3 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] transition-colors ${
+                isFormValid && !isSubmitting 
+                  ? 'bg-[#FCC01C] border-[#FCC01C] hover:bg-[#E6AC19] cursor-pointer' 
+                  : 'bg-gray-200 border-gray-300 cursor-not-allowed'
+              }`}
             >
               <span className="text-white text-base font-bold leading-6">
-                Save changes
+                {isSubmitting ? 'Creating...' : 'Save changes'}
               </span>
             </button>
           </div>

@@ -10,6 +10,11 @@ import { servicesService, Service } from "@/lib/api/services";
 const SERVICE_MAPPING = {
   "Chef at Home": "Chef at home",
   "Fine Dining": "Fine dining",
+  "Large Event": "Large event",
+  "Meal Prep": "Meal prep",
+  "Meal Delivery": "Meal delivery",
+  "Cooking Class": "Cooking class",
+  "Corporate Dining": "Corporate dining",
   // Add other services as needed
 } as const;
 
