@@ -1,21 +1,51 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useAuthStore } from "@/lib/store/auth-store";
+import { getCurrencySymbol } from "@/lib/utils/currency";
 import { TagSelector } from "@/components/ui/tag-selector";
+import { servicesService } from "@/lib/api/services";
+
+interface FormData {
+  startingPrice: string;
+  minGuests: string;
+  cuisines: string[];
+  events: string[];
+}
 
 const CorporateDiningForm = () => {
   const [isAvailable, setIsAvailable] = useState(true);
-  const [formData, setFormData] = useState({
-    startingPrice: "000",
+  const [formData, setFormData] = useState<FormData>({
+    startingPrice: "",
     minGuests: "",
-    cuisines: ["African", "Modern English", "Italian"],
-    events: ["Corporate", "Business Lunch", "Conference"],
+    cuisines: [],
+    events: [],
   });
   
-  const [uploadedImage, setUploadedImage] = useState<string | null>(
-    "https://api.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/c7deb1c504227a725c7687bebba405b0d8b5f8fc?placeholderIfAbsent=true"
-  );
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const { user } = useAuthStore();
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Check if all required fields are filled
+  const isFormValid = React.useMemo(() => {
+    return (
+      formData.startingPrice.trim() !== "" &&
+      formData.minGuests.trim() !== "" &&
+      formData.cuisines.length > 0 &&
+      formData.events.length > 0 &&
+      imageFile !== null
+    );
+  }, [formData, imageFile]);
+  
+  const currencySymbol = getCurrencySymbol({
+    currency: user?.currency,
+    country: user?.country,
+  });
   
   const allCuisines = [
     "African",
@@ -30,43 +60,63 @@ const CorporateDiningForm = () => {
   ];
 
   const allEvents = [
-    "Corporate",
-    "Business Lunch",
-    "Conference",
-    "Team Building",
-    "Networking",
-    "Product Launch",
-    "Award Ceremony",
+    "Wedding",
+    "Naming",
+    "Gathering"
   ];
 
-  const handleInputChange = (field: keyof typeof formData, value: string) => {
+  const handleInputChange = (field: keyof FormData, value: string | string[]) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", { ...formData, uploadedImage });
+    if (!isFormValid) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+    
+    setIsSubmitting(true);
+
+    try {
+      const serviceData = {
+        availability: isAvailable,
+        chef_service: 'Corporate Dining' as const,
+        starting_price_per_person: formData.startingPrice,
+        min_num_of_guests: Number(formData.minGuests) || 0,
+        cuisines: formData.cuisines,
+        events: formData.events,
+        ...(imageFile && { cover_image: imageFile })
+      };
+
+      await servicesService.createService(serviceData);
+      toast.success('Corporate Dining service created successfully!');
+      router.push('/services');
+    } catch (error) {
+      console.error('Error creating service:', error);
+      toast.error('Failed to create service. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (file.size > 1024 * 1024) {
-        alert('File size should not exceed 1MB');
-        return;
-      }
       const reader = new FileReader();
       reader.onload = (e) => {
         setUploadedImage(e.target?.result as string);
       };
       reader.readAsDataURL(file);
+      setImageFile(file);
     }
   };
   
-  const handleRemoveImage = () => {
+  const handleRemoveImage = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setUploadedImage(null);
   };
 
@@ -118,14 +168,19 @@ const CorporateDiningForm = () => {
                 <div className="flex border border-solid border-[#CFCFCE] rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white">
                   <div className="flex items-center px-3.5 py-2.5 bg-white rounded-l-lg">
                     <span className="text-[#3F3E3D] text-[15px] font-normal">
-                      £
+                      {currencySymbol}
                     </span>
                   </div>
                   <input
                     type="text"
+                    inputMode="numeric"
                     id="startingPrice"
                     value={formData.startingPrice}
-                    onChange={(e) => handleInputChange("startingPrice", e.target.value)}
+                    onChange={(e) => {
+                      // Allow only numbers
+                      const value = e.target.value.replace(/\D/g, '');
+                      handleInputChange('startingPrice', value);
+                    }}
                     className="w-full px-3.5 py-2.5 text-[#3F3E3D] text-[15px] font-normal bg-transparent border-0 focus:ring-0 focus:outline-none"
                     placeholder="000"
                   />
@@ -145,7 +200,7 @@ const CorporateDiningForm = () => {
                   id="minGuests"
                   value={formData.minGuests}
                   onChange={(e) => handleInputChange("minGuests", e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-[#3F3E3D] text-[15px] font-normal border border-solid border-[#CFCFCE] rounded-lg focus:ring-1 focus:ring-[#FCC01C] focus:border-[#FCC01C] outline-none"
+                  className="w-full h-12 pl-4 pr-4 py-3 bg-white rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FCC01C] focus:border-transparent"
                   placeholder="0"
                 />
               </div>
@@ -156,7 +211,7 @@ const CorporateDiningForm = () => {
                   label="Cuisines"
                   tags={allCuisines}
                   selectedTags={formData.cuisines}
-                  onTagsChange={(cuisines) =>
+                  onTagsChange={(cuisines: string[]) =>
                     setFormData((prev) => ({ ...prev, cuisines }))
                   }
                   className="w-full"
@@ -169,7 +224,7 @@ const CorporateDiningForm = () => {
                   label="Event Type"
                   tags={allEvents}
                   selectedTags={formData.events}
-                  onTagsChange={(events) =>
+                  onTagsChange={(events: string[]) =>
                     setFormData((prev) => ({ ...prev, events }))
                   }
                   className="w-full"
@@ -185,7 +240,7 @@ const CorporateDiningForm = () => {
                     </p>
                     <label htmlFor="imageUpload" className="cursor-pointer">
                       <div className="flex justify-center items-center gap-2.5 border border-solid border-[#B7B7B6] p-2.5 rounded-md">
-                        <span className="text-[#323335] text-center text-[10px] font-normal">
+                        <span className="text-[#323335] text-center text-sm font-normal">
                           Select cover image
                         </span>
                       </div>
@@ -235,11 +290,10 @@ const CorporateDiningForm = () => {
               <div className="border-t border-solid border-[#CFCFCE] pt-[33px] pb-[23px] -mx-5 px-5 mt-6">
                 <button
                   type="submit"
-                  className="w-full flex justify-center items-center gap-2 bg-[#FCC01C] border border-solid border-[#FCC01C] px-7 py-3 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] hover:bg-[#E6AC19] transition-colors"
+                  disabled={isSubmitting || !isFormValid}
+                  className={`w-full h-12 px-6 py-3 ${isSubmitting || !isFormValid ? 'bg-gray-300' : 'bg-[#FCC01C] hover:bg-yellow-500'} rounded-lg justify-center items-center gap-2.5 inline-flex text-black text-sm font-medium leading-tight transition-colors`}
                 >
-                  <span className="text-white text-base font-bold leading-6">
-                    Save changes
-                  </span>
+                  {isSubmitting ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
             </div>

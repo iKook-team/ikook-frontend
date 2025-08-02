@@ -40,6 +40,11 @@ export interface CreateLargeEventService extends CreateServiceBase {
   events: string[];
 }
 
+export interface CreateCorporateDiningService extends CreateServiceBase {
+  chef_service: 'Corporate Dining';
+  events: string[];
+}
+
 export interface ServicesResponse {
   count: number;
   next: string | null;

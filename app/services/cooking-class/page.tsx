@@ -80,59 +80,23 @@ const CookingClassPage: React.FC = () => {
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('handleImageChange called');
     const file = e.target.files?.[0];
-    console.log('Selected file:', file);
-    
-    if (!file) {
-      console.log('No file selected');
-      return;
-    }
-
-    // Check if file is an image
-    if (!file.type.startsWith('image/')) {
-      console.log('Not an image file:', file.type);
-      toast.error('Please select an image file');
-      return;
-    }
-
-    // Check file size (1MB max)
-    if (file.size > 1024 * 1024) {
-      console.log('File too large:', file.size);
-      toast.error('File size should not exceed 1MB');
-      return;
-    }
-
-    try {
-      // Create a URL for the file
-      const imageUrl = URL.createObjectURL(file);
-      console.log('Created image URL:', imageUrl);
-      
-      // Update state
-      setUploadedImage(imageUrl);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setUploadedImage(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
       setImageFile(file);
-      
-      // Log state after update
-      console.log('State updated with new image');
-    } catch (error) {
-      console.error('Error creating object URL:', error);
-      toast.error('Error processing the image');
     }
   };
 
-  const handleRemoveImage = () => {
-    console.log('Removing image');
-    // Revoke the object URL to free up memory
-    if (uploadedImageRef.current) {
-      URL.revokeObjectURL(uploadedImageRef.current);
-      uploadedImageRef.current = null;
-    }
+  const handleRemoveImage = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setUploadedImage(null);
     setImageFile(null);
-    // Reset the file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
-      console.log('File input reset');
     }
   };
 
@@ -299,24 +263,26 @@ const CookingClassPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Image Upload */}
-            <div className="mt-8 mb-6">
+            {/* Image Upload Section */}
+            <div className="mt-12 mb-8">
               {!uploadedImage ? (
-                <div className="flex flex-col items-center justify-center gap-2 border-dashed border-2 border-gray-300 rounded-xl p-6">
-                  <p className="text-gray-500 text-sm mb-3 text-center">
+                <div className="flex flex-col items-center justify-center gap-[9px] border-dashed border border-[#CFCFCE] rounded-xl p-2.5 h-[122px]">
+                  <p className="text-[#323335] text-center text-[10px] font-normal max-w-[272px]">
                     (Recommended 1000px width, 1000px height. Maximum of 1MB file size)
                   </p>
                   <label htmlFor="imageUpload" className="cursor-pointer">
-                    <div className="flex items-center justify-center gap-2 border border-gray-300 rounded-md px-4 py-2 bg-white hover:bg-gray-50">
-                      <span className="text-gray-700 text-sm">Select cover image</span>
+                    <div className="flex justify-center items-center gap-2.5 border border-solid border-[#B7B7B6] p-2.5 rounded-md">
+                      <span className="text-[#323335] text-center text-sm font-normal">
+                        Select cover image
+                      </span>
                     </div>
                     <input
                       id="imageUpload"
                       type="file"
-                      ref={fileInputRef}
-                      onChange={handleImageChange}
                       accept="image/*"
+                      onChange={handleImageChange}
                       className="hidden"
+                      ref={fileInputRef}
                     />
                   </label>
                 </div>
@@ -325,12 +291,12 @@ const CookingClassPage: React.FC = () => {
                   <img
                     src={uploadedImage}
                     alt="Uploaded cover"
-                    className="w-full h-64 rounded-lg object-cover"
+                    className="w-full h-[257px] rounded-[15px] object-cover"
                   />
                   <button
                     type="button"
                     onClick={handleRemoveImage}
-                    className="absolute top-3 right-3 bg-white/80 p-1.5 rounded-full hover:bg-white transition-colors"
+                    className="absolute top-[11px] right-3 bg-[#FFF5F5] p-1 rounded-[30px] hover:bg-red-100 transition-colors"
                     aria-label="Remove image"
                   >
                     <svg
