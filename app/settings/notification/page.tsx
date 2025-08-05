@@ -74,7 +74,6 @@ const NotificationSettings: React.FC = () => {
               <label
                 htmlFor="email-notification"
                 className="text-[#020101] text-[15px] font-normal cursor-pointer"
-                onClick={() => setEmailNotification(!emailNotification)}
               >
                 Email notification
               </label>
@@ -88,7 +87,6 @@ const NotificationSettings: React.FC = () => {
               <label
                 htmlFor="sms-notification"
                 className="text-[#020101] text-[15px] font-normal cursor-pointer"
-                onClick={() => setSmsNotification(!smsNotification)}
               >
                 SMS notification
               </label>
