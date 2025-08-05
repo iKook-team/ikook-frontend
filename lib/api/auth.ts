@@ -1,5 +1,12 @@
 import apiClient from "@/src/lib/axios";
 import { getRefreshToken } from "@/src/lib/auth";
+import { useAuthStore } from "@/lib/store/auth-store";
+
+// Create a standalone function to get the token
+const getToken = (): string | null => {
+  if (typeof window === 'undefined') return null;
+  return useAuthStore.getState().user?.access_token || null;
+};
 
 type VerifyAction = "send_token" | "verify_token";
 
@@ -26,6 +33,9 @@ interface LoginPayload {
 }
 
 export const authService = {
+  // Get the current access token
+  getToken,
+  
   // Send or verify OTP
   verifyEmail: async (data: VerifyEmailPayload) => {
     const response = await apiClient.post(`/users/auth/verify/`, data);
