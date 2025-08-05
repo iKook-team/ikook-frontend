@@ -15,9 +15,14 @@ interface User {
   phone_number: string;
   access_token: string;
   refresh_token: string;
+  avatar?: string;
+  bio?: string;
+  date_of_birth?: string;
   document_verified?: boolean;
   currency?: string;
   country?: string;
+  email_notify?: boolean;
+  sms_notify?: boolean;
 }
 
 interface HostFormData {
@@ -44,6 +49,9 @@ interface ChefFormData {
   criminalRecord?: string;
   instagramAccount?: string;
   website?: string;
+  briefProfile?: string;
+  eventTypes?: string[];
+  cuisineTypes?: string[];
 }
 
 interface AuthState {

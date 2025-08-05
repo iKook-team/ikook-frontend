@@ -52,13 +52,13 @@ const Index: React.FC = () => {
     activeTab === "redeemed" ? redeemedTransactions : debitsTransactions;
 
   return (
-    <div className="w-full min-h-screen relative bg-[#FBFBFB] flex justify-center max-md:w-full max-md:max-w-screen-lg max-md:h-auto max-md:min-h-screen">
-      <main className="flex w-[885px] max-w-full flex-col items-stretch mt-[35px] px-4">
-        <h1 className="text-black text-2xl font-semibold leading-none">
+    <div className="w-full min-h-screen relative bg-[#FBFBFB] flex justify-center px-2 sm:px-4">
+      <main className="w-full max-w-4xl flex flex-col items-stretch py-4 sm:py-8 px-2 sm:px-4">
+        <h1 className="text-black text-xl sm:text-2xl font-semibold leading-none mb-4 sm:mb-6">
           Wallet
         </h1>
         {loading ? (
-          <div className="mt-8">Loading...</div>
+          <div className="py-12 text-center text-gray-500">Loading wallet data...</div>
         ) : error ? (
           <div className="mt-8 text-red-500">{error}</div>
         ) : (
@@ -73,7 +73,7 @@ const Index: React.FC = () => {
                 <TransactionList transactions={currentTransactions} />
               </>
             ) : (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-gray-500 px-4">
                 No transactions found in your wallet yet.
               </div>
             )}

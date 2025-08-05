@@ -1,4 +1,7 @@
+"use client";
+
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 const menuItems = [
   {
@@ -113,6 +116,11 @@ function MenuCard({ item }: { item: (typeof menuItems)[0] }) {
 }
 
 export default function TopMenuSection() {
+  const router = useRouter();
+
+  const handleSeeMoreClick = () => {
+    router.push('/explore');
+  };
   return (
     <section className="bg-white py-16 px-4 lg:px-24">
       <div className="max-w-7xl mx-auto">
@@ -150,7 +158,10 @@ export default function TopMenuSection() {
 
         {/* See More Button */}
         <div className="text-center mt-12">
-          <Button className="bg-[#FCC01C] hover:bg-[#FCC01C]/90 text-[#323335] font-semibold px-8 py-3 rounded-md">
+          <Button 
+            onClick={handleSeeMoreClick}
+            className="bg-[#FCC01C] hover:bg-[#FCC01C]/90 text-[#323335] font-semibold px-8 py-3 rounded-md transition-colors"
+          >
             See More
           </Button>
         </div>

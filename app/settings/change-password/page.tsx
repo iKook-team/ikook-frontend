@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import { authService } from "@/lib/api/auth";
+import { showToast, handleApiError } from "@/lib/utils/toast";
 
 interface PasswordFormData {
   currentPassword: string;
@@ -72,23 +74,54 @@ const ChangePasswordForm: React.FC = () => {
     }
 
     setIsSubmitting(true);
+    setErrors({});
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Password changed successfully");
-
-      // Reset form
-      setFormData({
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
+      const response = await authService.changePassword({
+        old_password: formData.currentPassword,
+        new_password: formData.newPassword,
       });
 
-      alert("Password changed successfully!");
-    } catch (error) {
-      console.error("Error changing password:", error);
-      alert("Error changing password. Please try again.");
+      if (response) {
+        showToast.success("Password changed successfully!");
+        setFormData({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
+      }
+    } catch (error: any) {
+      // Use handleApiError for consistent error handling
+      if (error?.response?.data) {
+        // Special handling for validation errors in the change password form
+        const errorData = error.response.data;
+        if (errorData.old_password) {
+          setErrors((prev) => ({
+            ...prev,
+            currentPassword: Array.isArray(errorData.old_password) ? errorData.old_password[0] : errorData.old_password,
+          }));
+        } else if (errorData.new_password) {
+          setErrors((prev) => ({
+            ...prev,
+            newPassword: Array.isArray(errorData.new_password) ? errorData.new_password[0] : errorData.new_password,
+          }));
+        } else {
+          // For other error formats, use the standard handleApiError
+          handleApiError(error, 'Error changing password. Please try again.');
+          // Set a generic error for the form
+          setErrors((prev) => ({
+            ...prev,
+            currentPassword: 'Failed to change password. Please check your current password and try again.',
+          }));
+        }
+      } else {
+        // For network errors or other unhandled errors
+        handleApiError(error, 'Error changing password. Please try again.');
+        setErrors((prev) => ({
+          ...prev,
+          currentPassword: 'An unexpected error occurred. Please try again.',
+        }));
+      }
     } finally {
       setIsSubmitting(false);
     }

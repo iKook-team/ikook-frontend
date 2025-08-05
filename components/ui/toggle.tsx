@@ -4,12 +4,16 @@ interface ToggleProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
   className?: string;
+  disabled?: boolean;
+  'aria-label'?: string;
 }
 
 export const Toggle: React.FC<ToggleProps> = ({
   checked,
   onChange,
   className = "",
+  disabled = false,
+  'aria-label': ariaLabel,
 }) => {
   return (
     <button
@@ -17,7 +21,13 @@ export const Toggle: React.FC<ToggleProps> = ({
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className={`w-[37px] h-5 relative bg-[#FCC01C] rounded-[33.333px] border-[0.667px] border-solid border-[#F9DF98] transition-all duration-200 ${className}`}
+      className={`w-[37px] h-5 relative rounded-[33.333px] border-[0.667px] border-solid transition-all duration-200 ${
+        checked 
+          ? 'bg-[#FCC01C] border-[#F9DF98]' 
+          : 'bg-gray-200 border-gray-300'
+      } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} ${className}`}
+      disabled={disabled}
+      aria-label={ariaLabel}
     >
       <div
         className={`absolute top-0.5 w-[18px] h-[18px] bg-white rounded-full transition-transform duration-200 ${

@@ -128,9 +128,49 @@ export const authService = {
   // Sign up a new user
   signup: async (data: any) => {
     const response = await apiClient.post(`/users/auth/signup/`, data);
-
     return response.data;
   },
+
+  // Update user profile
+  updateProfile: (userId: number, formData: FormData, isChef: boolean) => {
+    // Use the same endpoint for both chefs and hosts
+    return apiClient.patch(`/users/profiles/${userId}/`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
+
+  // Change user password
+  changePassword: async (data: ChangePasswordPayload) => {
+    return apiClient.post('/users/auth/change-password/', data);
+  },
 };
+
+// Change password interface
+interface ChangePasswordPayload {
+  old_password: string;
+  new_password: string;
+}
+
+// Profile update interfaces
+export interface BaseProfileUpdatePayload {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  date_of_birth: string; // Format: "YYYY-MM-DD"
+  bio: string; // Maps to briefProfile in the form
+  email_notify: boolean;
+  sms_notify: boolean;
+}
+
+export interface ChefProfileUpdatePayload extends BaseProfileUpdatePayload {
+  city: string;
+  address: string;
+  postal_code: string;
+  cuisines: string[]; // Maps to cuisineTypes in the form
+  events_available_for: string[]; // Maps to eventTypes in the form
+}
 
 export default authService;

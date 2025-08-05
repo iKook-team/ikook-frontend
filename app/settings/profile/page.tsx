@@ -1,7 +1,13 @@
 "use client";
 
-import ChefProfileForm from "@/components/settings/chef-profile-form";
+import ProfileForm from "@/components/settings/profile-form";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 export default function ProfilePage() {
-  return <ChefProfileForm />;
+  const userType = useAuthStore((state) => state.userType);
+  
+  // Convert the user type from the store to match our form's expected format
+  const formUserType = userType === 'chef' ? 'chef' : 'host';
+
+  return <ProfileForm userType={formUserType} />;
 }

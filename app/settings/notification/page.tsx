@@ -1,20 +1,61 @@
 "use client";
 
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
 import { Toggle } from "@/components/ui/toggle";
+import { useAuthStore } from "@/lib/store/auth-store";
+import { authService } from "@/lib/api/auth";
+import { showToast, handleApiError } from "@/lib/utils/toast";
 
 const NotificationSettings: React.FC = () => {
-  const [emailNotification, setEmailNotification] = useState(true);
-  const [smsNotification, setSmsNotification] = useState(true);
+  const { user, setUser } = useAuthStore();
+  const [emailNotification, setEmailNotification] = useState<boolean>(true);
+  const [smsNotification, setSmsNotification] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleSaveChanges = (e: React.FormEvent) => {
+  // Load current notification preferences when component mounts
+  useEffect(() => {
+    if (user) {
+      setEmailNotification(user.email_notify !== undefined ? user.email_notify : true);
+      setSmsNotification(user.sms_notify !== undefined ? user.sms_notify : true);
+    }
+  }, [user]);
+
+  const handleSaveChanges = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Saving notification settings:", {
-      emailNotification,
-      smsNotification,
-    });
-    // Here you would typically send the data to your backend
+    
+    if (!user) {
+      showToast.error('You must be logged in to update notification settings');
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append('email_notify', String(emailNotification));
+      formData.append('sms_notify', String(smsNotification));
+      
+      // Update only the notification preferences
+      const updatedUser = await authService.updateProfile(
+        user.id,
+        formData,
+        user.user_type === 'Chef'
+      );
+      
+      // Update the user in the store
+      setUser({
+        ...user,
+        email_notify: emailNotification,
+        sms_notify: smsNotification
+      });
+      
+      showToast.success('Notification preferences updated successfully');
+    } catch (error) {
+      console.error('Error updating notification preferences:', error);
+      handleApiError(error, 'Failed to update notification preferences');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -32,24 +73,29 @@ const NotificationSettings: React.FC = () => {
             <div className="flex items-center justify-between mb-6">
               <label
                 htmlFor="email-notification"
-                className="text-[#020101] text-[15px] font-normal"
+                className="text-[#020101] text-[15px] font-normal cursor-pointer"
+                onClick={() => setEmailNotification(!emailNotification)}
               >
                 Email notification
               </label>
               <Toggle
                 checked={emailNotification}
-                onChange={setEmailNotification}
+                onChange={() => setEmailNotification(!emailNotification)}
               />
             </div>
 
             <div className="flex items-center justify-between mb-6">
               <label
                 htmlFor="sms-notification"
-                className="text-[#020101] text-[15px] font-normal"
+                className="text-[#020101] text-[15px] font-normal cursor-pointer"
+                onClick={() => setSmsNotification(!smsNotification)}
               >
                 SMS notification
               </label>
-              <Toggle checked={smsNotification} onChange={setSmsNotification} />
+              <Toggle 
+                checked={smsNotification} 
+                onChange={() => setSmsNotification(!smsNotification)} 
+              />
             </div>
           </div>
 
