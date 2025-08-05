@@ -237,17 +237,20 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = 'chef' }) => {
         userType === 'chef'
       );
       
+      // Extract the user data from the API response
+      const userData = updatedUser.data;
+      
       // Update the user in the store
       setUser({
         ...user,
-        ...updatedUser,
+        ...userData, // Spread the updated user data from the API
         first_name: formData.firstName,
         last_name: formData.lastName,
         email: formData.email,
         phone_number: formData.phoneNumber,
         bio: formData.briefProfile,
         date_of_birth: formData.dateOfBirth,
-        ...(updatedUser.avatar && { avatar: updatedUser.avatar })
+        ...(userData.avatar && { avatar: userData.avatar })
       });
       
       // If this is a chef, also update the chef form data
