@@ -10,26 +10,31 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({
   onTabChange,
 }) => {
   return (
-    <div className="flex w-[392px] max-w-full items-stretch gap-5 text-xs text-white font-medium whitespace-nowrap leading-none justify-between bg-[#B7B7B6] mt-6 p-1 rounded-[4.547px]">
+    <div className="w-full mb-8 relative">
+      <div className="w-full h-[38px] bg-[#CFCFCE] rounded-[4.547px] absolute left-0 top-0" />
       <button
+        type="button"
         onClick={() => onTabChange("menus")}
-        className={`rounded shadow-[0.568px_0px_5.683px_0px_rgba(0,0,0,0.10)] flex flex-col justify-center px-[39px] py-[9px] max-md:px-5 transition-colors ${
+        className={`w-1/2 h-[30px] absolute left-[5px] top-1 rounded-sm transition-all z-10 ${
           activeTab === "menus"
-            ? "bg-[#FCC01C] text-white"
-            : "bg-transparent text-white hover:bg-[#9a9a99]"
+            ? "bg-[#FCC01C] text-white shadow-[0.568px_0px_5.683px_0px_rgba(0,0,0,0.10)]"
+            : "bg-transparent text-[#020101]"
         }`}
+        aria-pressed={activeTab === "menus"}
       >
-        <span>Menus</span>
+        <span className="text-xs font-normal leading-[11px]">Menus</span>
       </button>
       <button
+        type="button"
         onClick={() => onTabChange("chefs")}
-        className={`my-auto transition-colors ${
+        className={`w-1/2 h-[30px] absolute right-[5px] top-1 rounded-sm transition-all z-10 ${
           activeTab === "chefs"
-            ? "text-[#FCC01C]"
-            : "text-white hover:text-[#FCC01C]"
+            ? "bg-[#FCC01C] text-white shadow-[0.568px_0px_5.683px_0px_rgba(0,0,0,0.10)]"
+            : "bg-transparent text-[#020101]"
         }`}
+        aria-pressed={activeTab === "chefs"}
       >
-        Chefs
+        <span className="text-xs font-normal leading-[11px]">Chefs</span>
       </button>
     </div>
   );

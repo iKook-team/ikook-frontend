@@ -9,6 +9,9 @@ const nextConfig = {
       "cdn.builder.io",
       "images.unsplash.com",
       "www.svgrepo.com",
+      "randomuser.me",
+      "www.gravatar.com",
+      "gravatar.com",
     ],
   },
 };
