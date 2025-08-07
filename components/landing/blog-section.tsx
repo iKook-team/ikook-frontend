@@ -80,10 +80,12 @@ export default function BlogSection() {
           </div>
         </div>
 
-        {/* Blog Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          {blogPosts.map((post) => (
-            <BlogCard key={post.id} post={post} />
+        {/* Blog Grid - 3 columns */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {blogPosts.slice(0, 3).map((post) => (
+            <div key={post.id} className="w-full">
+              <BlogCard post={post} />
+            </div>
           ))}
         </div>
 

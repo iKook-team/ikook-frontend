@@ -5,27 +5,47 @@ import { useRouter } from "next/navigation";
 
 const menuItems = [
   {
-    id: 1,
+    id: 5,
     image:
-      "https://api.builder.io/api/v1/image/assets/TEMP/27ad047978ca84f7f94ce55dbfe4d97129735997?width=690",
-    title: "Grilled Barbeque Dishes",
-    chef: "Chef Titilayo John",
+      "https://api.builder.io/api/v1/image/assets/TEMP/059768176633180c26b1655ccae459080e41d727?width=690",
+    title: "Italian Pasta Feast",
+    chef: "Chef Marco Rossi",
     location: "Toronto",
-    reviews: 132,
-    rating: 5,
+    reviews: 178,
+    rating: 4,
   },
   {
-    id: 2,
+    id: 6,
     image:
-      "https://api.builder.io/api/v1/image/assets/TEMP/eb61e52fea9144e1a9657de9b092a41da8f3fafc?width=690",
-    title: "Grilled Barbeque Dishes",
-    chef: "Chef Titilayo John",
-    location: "Calgary",
-    reviews: 132,
+      "https://api.builder.io/api/v1/image/assets/TEMP/d2f86ca79f9c2782acf5b4a80072eb85c67bb63c?width=690",
+    title: "Vegetarian Delight",
+    chef: "Chef Priya Patel",
+    location: "Vancouver",
+    reviews: 145,
     rating: 5,
   },
   {
-    id: 3,
+    id: 7,
+    image:
+      "https://api.builder.io/api/v1/image/assets/TEMP/059768176633180c26b1655ccae459080e41d727?width=690",
+    title: "Steak & Potatoes",
+    chef: "Chef James Wilson",
+    location: "Calgary",
+    reviews: 201,
+    rating: 5,
+  },
+  {
+    id: 8,
+    image:
+      "https://api.builder.io/api/v1/image/assets/TEMP/d2f86ca79f9c2782acf5b4a80072eb85c67bb63c?width=690",
+    title: "Seafood Paella",
+    chef: "Chef Carlos Mendez",
+    location: "Montreal",
+    reviews: 167,
+    rating: 4,
+  },
+  {
+    id: 1,
     image:
       "https://api.builder.io/api/v1/image/assets/TEMP/059768176633180c26b1655ccae459080e41d727?width=690",
     title: "Grilled Barbeque Dishes",
@@ -35,13 +55,33 @@ const menuItems = [
     rating: 5,
   },
   {
+    id: 2,
+    image:
+      "https://api.builder.io/api/v1/image/assets/TEMP/d2f86ca79f9c2782acf5b4a80072eb85c67bb63c?width=690",
+    title: "Spicy Thai Curry",
+    chef: "Chef Michael Chen",
+    location: "Vancouver",
+    reviews: 98,
+    rating: 4,
+  },
+  {
+    id: 3,
+    image:
+      "https://api.builder.io/api/v1/image/assets/TEMP/059768176633180c26b1655ccae459080e41d727?width=690",
+    title: "Mediterranean Platter",
+    chef: "Chef Sophia Martinez",
+    location: "Montreal",
+    reviews: 156,
+    rating: 5,
+  },
+  {
     id: 4,
     image:
       "https://api.builder.io/api/v1/image/assets/TEMP/d2f86ca79f9c2782acf5b4a80072eb85c67bb63c?width=690",
-    title: "Grilled Barbeque Dishes",
-    chef: "Chef Titilayo John",
+    title: "Sushi Delight",
+    chef: "Chef Kenji Yamamoto",
     location: "Calgary",
-    reviews: 132,
+    reviews: 210,
     rating: 5,
   },
 ];
@@ -124,36 +164,24 @@ export default function TopMenuSection() {
   return (
     <section className="bg-white py-16 px-4 lg:px-24">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          {/* Left Side - Large Featured Image */}
-          <div className="lg:row-span-2">
-            <div className="aspect-[3/4] rounded-lg overflow-hidden">
-              <img
-                src="https://api.builder.io/api/v1/image/assets/TEMP/47920d326aa6e08fd3d59d8a7cc5502e56d1e8d4?width=1004"
-                alt="Featured dish - Fusion Style Baked Chicken"
-                className="w-full h-full object-cover"
-              />
-            </div>
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="relative">
+            <div className="absolute top-0 left-[20%] right-[20%] h-0.5 bg-gray-200" />
+            <div className="absolute bottom-0 left-[20%] right-[20%] h-0.5 bg-gray-200" />
+            <h2 className="text-3xl lg:text-4xl font-medium text-[#323335] py-4 bg-white inline-block px-8">
+              Our Top Menu
+            </h2>
           </div>
-
-          {/* Right Side - Menu Grid */}
-          <div>
-            {/* Header */}
-            <div className="text-center mb-12">
-              <div className="relative">
-                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gray-200" />
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-200" />
-                <h2 className="text-3xl lg:text-4xl font-medium text-[#323335] py-4 bg-white inline-block px-8">
-                  Our Top Menu
-                </h2>
-              </div>
+        </div>
+        
+        {/* Menu Items with Flex Layout */}
+        <div className="flex flex-wrap justify-center gap-6">
+          {menuItems.map((item) => (
+            <div key={item.id} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]">
+              <MenuCard item={item} />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {menuItems.map((item) => (
-                <MenuCard key={item.id} item={item} />
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
 
         {/* See More Button */}

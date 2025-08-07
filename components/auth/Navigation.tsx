@@ -43,7 +43,7 @@ export const Navigation: React.FC = () => {
             {/* Navigation */}
             <nav className="hidden lg:flex items-center space-x-8">
               <Link href="#" className="text-ikook-secondary hover:text-ikook-primary transition-colors font-medium">
-                Explore Set Menu
+                Explore Services
               </Link>
               <Link href="#" className="text-ikook-secondary hover:text-ikook-primary transition-colors font-medium">
                 How it Works

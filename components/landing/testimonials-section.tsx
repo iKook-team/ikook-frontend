@@ -3,11 +3,11 @@ export default function TestimonialsSection() {
     <section className="bg-[#FCC01C] py-16 px-4 lg:px-24">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left Side - Image */}
-          <div>
-            <div className="aspect-[4/5] rounded-lg overflow-hidden">
+          {/* Left Side - Avatar */}
+          <div className="flex justify-center">
+            <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white shadow-lg">
               <img
-                src="https://api.builder.io/api/v1/image/assets/TEMP/dae2e4ece8777447073e6e9d07f336a05db5602c?width=1004"
+                src="https://api.builder.io/api/v1/image/assets/TEMP/dae2e4ece8777447073e6e9d07f336a05db5602c?width=500"
                 alt="Customer testimonial"
                 className="w-full h-full object-cover"
               />
