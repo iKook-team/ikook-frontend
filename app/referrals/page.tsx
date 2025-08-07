@@ -1,7 +1,6 @@
 import React from "react";
 
 import ReferralStats from "@/components/referrals/referral-stats";
-import ReferralProgress from "@/components/referrals/referral-progress";
 import ReferralList from "@/components/referrals/referral-list";
 
 const Index = () => {
@@ -14,7 +13,6 @@ const Index = () => {
           </h1>
 
           <ReferralStats />
-          <ReferralProgress />
           <ReferralList />
         </div>
       </main>

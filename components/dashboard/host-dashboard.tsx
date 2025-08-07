@@ -1,7 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { FiCopy } from "react-icons/fi";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 import { BookingCard } from "./booking-card";
 
@@ -17,12 +19,41 @@ const STATUS_OPTIONS = [
 ];
 
 export const MyBookingsPage: React.FC = () => {
+  const router = useRouter();
   const [selectedStatus, setSelectedStatus] = useState<string>("Upcoming");
+  const [showCopiedTooltip, setShowCopiedTooltip] = useState(false);
+  const copyTimeoutRef = useRef<NodeJS.Timeout>();
+  
   const { bookings, loading, error, totalCount, refetch } = useBookings({
     status: selectedStatus,
   });
   const { user } = useAuthStore();
   const referralCode = user?.username || "-";
+  
+  const handleCheckReferral = () => {
+    router.push('/referrals');
+  };
+  
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+    };
+  }, []);
+  
+  const handleCopyClick = () => {
+    navigator.clipboard.writeText(referralCode);
+    setShowCopiedTooltip(true);
+    
+    if (copyTimeoutRef.current) {
+      clearTimeout(copyTimeoutRef.current);
+    }
+    
+    copyTimeoutRef.current = setTimeout(() => {
+      setShowCopiedTooltip(false);
+    }, 2000);
+  };
 
   return (
     <div className="flex overflow-hidden flex-col bg-zinc-50">
@@ -55,10 +86,23 @@ export const MyBookingsPage: React.FC = () => {
                 <div className="self-stretch my-auto text-black">
                   {referralCode}
                 </div>
-                <FiCopy className="w-4 h-4 text-gray-500 cursor-pointer" />
+                <div className="relative">
+                  <FiCopy 
+                    className="w-4 h-4 text-gray-500 cursor-pointer hover:text-amber-400 transition-colors" 
+                    onClick={handleCopyClick}
+                  />
+                  {showCopiedTooltip && (
+                    <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+                      Copied!
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-            <button className="overflow-hidden gap-2 self-stretch px-4 py-2.5 my-auto text-sm font-semibold leading-none text-white bg-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)]">
+            <button 
+              onClick={handleCheckReferral}
+              className="overflow-hidden gap-2 self-stretch px-4 py-2.5 my-auto text-sm font-semibold leading-none text-white bg-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)] hover:bg-amber-500 transition-colors"
+            >
               Check referral
             </button>
           </div>
