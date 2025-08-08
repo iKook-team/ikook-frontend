@@ -5,6 +5,8 @@ interface PaymentCardProps {
   cardNumber: string;
   iconSrc: string;
   onEdit: () => void;
+  onDelete: () => Promise<void>;
+  isDeleting?: boolean;
 }
 
 export const PaymentCard: React.FC<PaymentCardProps> = ({
@@ -12,9 +14,11 @@ export const PaymentCard: React.FC<PaymentCardProps> = ({
   cardNumber,
   iconSrc,
   onEdit,
+  onDelete,
+  isDeleting = false,
 }) => {
   return (
-    <article className="flex items-center flex-wrap mt-8 max-md:max-w-full first:mt-0">
+    <article className="flex items-center justify-between flex-wrap mt-8 max-md:max-w-full first:mt-0">
       <div className="self-stretch flex min-w-60 items-center gap-3.5 w-[263px] my-auto">
         <div className="justify-center items-center self-stretch flex gap-[9px] w-[43px] h-[43px] bg-[#FFFCF5] my-auto pl-[7px] pr-1.5 rounded-[85.493px]">
           <div className="justify-center items-center self-stretch flex w-[30px] gap-[9px] h-[30px] bg-[#FDEEC5] my-auto px-[7px] rounded-[854.93px]">
@@ -34,17 +38,39 @@ export const PaymentCard: React.FC<PaymentCardProps> = ({
           </p>
         </div>
       </div>
-      <button
-        onClick={onEdit}
-        className="items-center self-stretch flex gap-2.5 w-6 h-6 bg-[#FFFCF5] my-auto p-1 rounded-[30px]"
-        aria-label={`Edit ${cardType} card`}
-      >
-        <img
-          src="https://api.builder.io/api/v1/image/assets/TEMP/28b3201b949fd16ad219bd9f78a320497ec6e0a6?placeholderIfAbsent=true"
-          alt="Edit"
-          className="aspect-[1] object-contain w-4 self-stretch my-auto"
-        />
-      </button>
+      <div className="flex items-center gap-2">
+        <button
+          onClick={onEdit}
+          className="items-center self-stretch flex gap-2.5 w-6 h-6 bg-[#FFFCF5] my-auto p-1 rounded-[30px] hover:bg-gray-100 transition-colors"
+          aria-label={`Edit ${cardType} card`}
+          disabled={isDeleting}
+        >
+          <img
+            src="https://api.builder.io/api/v1/image/assets/TEMP/28b3201b949fd16ad219bd9f78a320497ec6e0a6?placeholderIfAbsent=true"
+            alt="Edit"
+            className="aspect-[1] object-contain w-4 self-stretch my-auto"
+          />
+        </button>
+        <button
+          onClick={async (e) => {
+            e.stopPropagation();
+            if (window.confirm('Are you sure you want to delete this card?')) {
+              await onDelete();
+            }
+          }}
+          className="items-center self-stretch flex gap-2.5 w-6 h-6 bg-[#FFF5F5] my-auto p-1 rounded-[30px] hover:bg-red-50 transition-colors"
+          aria-label={`Delete ${cardType} card`}
+          disabled={isDeleting}
+        >
+          {isDeleting ? (
+            <div className="w-4 h-4 border-2 border-red-300 border-t-red-600 rounded-full animate-spin"></div>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          )}
+        </button>
+      </div>
     </article>
   );
 };
