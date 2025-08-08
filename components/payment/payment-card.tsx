@@ -39,7 +39,7 @@ export const PaymentCard: React.FC<PaymentCardProps> = ({
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <button
+        {/* <button
           onClick={onEdit}
           className="items-center self-stretch flex gap-2.5 w-6 h-6 bg-[#FFFCF5] my-auto p-1 rounded-[30px] hover:bg-gray-100 transition-colors"
           aria-label={`Edit ${cardType} card`}
@@ -50,13 +50,10 @@ export const PaymentCard: React.FC<PaymentCardProps> = ({
             alt="Edit"
             className="aspect-[1] object-contain w-4 self-stretch my-auto"
           />
-        </button>
+        </button> */}
         <button
           onClick={async (e) => {
-            e.stopPropagation();
-            if (window.confirm('Are you sure you want to delete this card?')) {
               await onDelete();
-            }
           }}
           className="items-center self-stretch flex gap-2.5 w-6 h-6 bg-[#FFF5F5] my-auto p-1 rounded-[30px] hover:bg-red-50 transition-colors"
           aria-label={`Delete ${cardType} card`}

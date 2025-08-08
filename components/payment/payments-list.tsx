@@ -51,7 +51,6 @@ export const PaymentsList: React.FC = () => {
       const response = await paymentCardsService.getCards();
       setCards(response.data.results || []);
     } catch (error) {
-      console.error('Error deleting card:', error);
       showToast.error('Failed to delete payment card. Please try again.');
     } finally {
       setDeletingCardId(null);
@@ -75,7 +74,6 @@ export const PaymentsList: React.FC = () => {
         const response = await paymentCardsService.getCards();
         setCards(response.data.results || []);
       } catch (error) {
-        console.error('Payment verification failed:', error);
         showToast.error('Failed to verify payment. Please try again.');
       } finally {
         sessionStorage.removeItem('pendingPaymentReference');
@@ -86,10 +84,8 @@ export const PaymentsList: React.FC = () => {
     const loadCards = async () => {
       try {
         const response = await paymentCardsService.getCards();
-        console.log('Loaded cards data:', response);
         setCards(response.data.results || []);
       } catch (err) {
-        console.error('Error loading cards:', err);
         showToast.error('Failed to load payment cards.');
       } finally {
         setLoading(false);
@@ -106,7 +102,7 @@ export const PaymentsList: React.FC = () => {
   }, []);
 
   const handleEditCard = (cardId: number) => {
-    console.log("Editing card:", cardId);
+    showToast.error('Editing card is not implemented yet.');
   };
 
   const handleAddNewCard = async () => {
@@ -115,7 +111,6 @@ export const PaymentsList: React.FC = () => {
     
     try {
       const country = getUserCountry();
-      console.log('Initializing card setup for country:', country);
       
       const response = await paymentCardsService.initializeCardSetup(country);
       
@@ -188,7 +183,6 @@ export const PaymentsList: React.FC = () => {
         }
       }
     } catch (err) {
-      console.error('Error adding payment card:', err);
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
       showToast.error(`Failed to add payment card: ${errorMessage}`);
     } finally {
