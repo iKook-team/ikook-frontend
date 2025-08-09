@@ -5,9 +5,11 @@ import { getCurrencySymbol } from "@/lib/utils/currency";
 
 interface WalletBalanceProps {
   balance?: string | number;
+  onRedeemClick?: () => void;
+  onAddMoneyClick?: () => void;
 }
 
-export const WalletBalance: React.FC<WalletBalanceProps> = ({ balance }) => {
+export const WalletBalance: React.FC<WalletBalanceProps> = ({ balance, onRedeemClick, onAddMoneyClick }) => {
   const { user } = useAuthStore();
   const currencySymbol = getCurrencySymbol({
     currency: user?.currency,
@@ -15,10 +17,11 @@ export const WalletBalance: React.FC<WalletBalanceProps> = ({ balance }) => {
   });
 
   const handleAddMoney = () => {
-    console.log("Add money clicked");
+    onAddMoneyClick?.();
   };
 
   const handleRedeemVoucher = () => {
+    if (onRedeemClick) return onRedeemClick();
     console.log("Redeem voucher clicked");
   };
 

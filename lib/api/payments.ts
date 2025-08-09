@@ -79,4 +79,17 @@ export const paymentsService = {
       throw error;
     }
   },
+
+  async redeemGiftCard(cardNumber: string) {
+    try {
+      const response = await axios.post(
+        "/payments/wallets/transactions/redeem-gift-card/",
+        { card_number: cardNumber },
+      );
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

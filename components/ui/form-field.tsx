@@ -10,6 +10,7 @@ interface FormFieldProps {
   value?: string;
   options?: { value: string; label: string }[] | string[];
   onChange?: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  maxLength?: number;
 }
 
 export const FormField = forwardRef<

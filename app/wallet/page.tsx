@@ -5,7 +5,10 @@ import React, { useState, useEffect } from "react";
 import { WalletBalance } from "@/components/wallet/wallet-balance";
 import { TransactionTabs } from "@/components/wallet/transaction-tabs";
 import { TransactionList } from "@/components/wallet/transaction-list";
+import { RedeemVoucherModal } from "@/components/wallet/redeem-voucher-modal";
+import { AddMoneyModal } from "@/components/wallet/add-money-modal";
 import { paymentsService } from "@/lib/api/payments";
+import { showToast } from "@/lib/utils/toast";
 
 interface Transaction {
   id: string | number;
@@ -20,6 +23,8 @@ const Index: React.FC = () => {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isRedeemOpen, setIsRedeemOpen] = useState(false);
+  const [isAddMoneyOpen, setIsAddMoneyOpen] = useState(false);
 
   useEffect(() => {
     const fetchWalletData = async () => {
@@ -29,8 +34,8 @@ const Index: React.FC = () => {
         const walletDetails = await paymentsService.getWalletDetails();
         const txData = await paymentsService.getWalletTransactions();
 
-        setWallet(walletDetails);
-        setTransactions(txData.results || []);
+        setWallet(walletDetails.data);
+        setTransactions(txData.data?.results || []);
       } catch (err: any) {
         setError("Failed to load wallet data");
       } finally {
@@ -40,6 +45,39 @@ const Index: React.FC = () => {
 
     fetchWalletData();
   }, []);
+
+  const refreshWallet = async () => {
+    try {
+      const walletDetails = await paymentsService.getWalletDetails();
+      const txData = await paymentsService.getWalletTransactions();
+      setWallet(walletDetails.data);
+      setTransactions(txData.data?.results || []);
+    } catch (err) {
+      // Non-blocking refresh error
+      console.error(err);
+    }
+  };
+
+  const handleRedeem = async (voucherCode: string) => {
+    try {
+      await paymentsService.redeemGiftCard(voucherCode);
+      showToast.success("Voucher redeemed successfully");
+      await refreshWallet();
+    } catch (err: any) {
+      const data = err?.response?.data;
+      const backendMsg = data?.message || data?.detail || err?.message || "Failed to redeem voucher";
+      const field = data?.field_name ? ` (${data.field_name})` : "";
+      showToast.error(`${backendMsg}${field}`);
+      throw err; // keep modal open per component logic
+    }
+  };
+
+  const handleAddMoney = async (amount: string) => {
+    // TODO: Implement add money API integration
+    console.log("Adding money:", amount);
+    showToast.success(`Successfully added $${amount} to your wallet`);
+    await refreshWallet();
+  };
 
   // Filter transactions by type for tabs
   const redeemedTransactions = transactions.filter(
@@ -63,7 +101,11 @@ const Index: React.FC = () => {
           <div className="mt-8 text-red-500">{error}</div>
         ) : (
           <>
-            <WalletBalance balance={wallet?.balance} />
+            <WalletBalance 
+              balance={wallet?.balance} 
+              onRedeemClick={() => setIsRedeemOpen(true)}
+              onAddMoneyClick={() => setIsAddMoneyOpen(true)}
+            />
             {transactions.length > 0 ? (
               <>
                 <TransactionTabs
@@ -77,6 +119,16 @@ const Index: React.FC = () => {
                 No transactions found in your wallet yet.
               </div>
             )}
+            <RedeemVoucherModal
+              open={isRedeemOpen}
+              onClose={() => setIsRedeemOpen(false)}
+              onRedeem={handleRedeem}
+            />
+            <AddMoneyModal
+              open={isAddMoneyOpen}
+              onClose={() => setIsAddMoneyOpen(false)}
+              onAddMoney={handleAddMoney}
+            />
           </>
         )}
       </main>
