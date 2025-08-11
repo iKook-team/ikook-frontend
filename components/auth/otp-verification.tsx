@@ -12,6 +12,9 @@ interface OTPVerificationProps {
   userType?: "host" | "chef";
   email?: string;
   _otp?: string; // Prefix with underscore since it's not used
+  headerText?: string; // Optional override for top header text (keeps signup defaults)
+  subtitleText?: string; // Optional override for subtext above inputs
+  onResend?: (email: string) => Promise<void>; // Optional override for resend behavior
 }
 
 export const OTPVerification: React.FC<OTPVerificationProps> = ({
@@ -19,6 +22,9 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
   onSubmit,
   userType,
   email,
+  headerText,
+  subtitleText,
+  onResend,
 }) => {
   const [otpValues, setOtpValues] = useState<string[]>([
     "",
@@ -73,7 +79,11 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
       }
       const { showToast } = await import("@/lib/utils/toast");
 
-      await (await import("@/lib/api/auth")).authService.sendOtp(email);
+      if (onResend) {
+        await onResend(email);
+      } else {
+        await (await import("@/lib/api/auth")).authService.sendOtp(email);
+      }
       showToast.success("Verification code resent to your email.");
       setOtpValues(["", "", "", "", "", ""]);
       inputRefs.current[0]?.focus();
@@ -102,8 +112,10 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
 
   return (
     <div className="mx-auto my-0 flex w-[603px] h-[786px] flex-col items-start justify-center gap-1.5 p-5 max-md:w-full max-md:max-w-[603px] max-md:p-[15px] max-sm:w-full max-sm:p-2.5">
-      <header className="mb-1.5 h-[30px] w-[203px] font-medium leading-[30px] text-black text-xl max-sm:text-sm">
-        Join iKook as a {userType === "host" ? "Host" : "Chef"}
+      <header className="mb-1.5 h-[30px] w-full font-medium leading-[30px] text-black text-xl max-sm:text-base">
+        {headerText ?? (
+          <>Join iKook as a {userType === "host" ? "Host" : "Chef"}</>
+        )}
       </header>
 
       <main className="relative h-[750px] w-[605px] rounded-[15px] border border-solid border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] max-md:w-full max-md:max-w-[605px] max-sm:h-auto max-sm:min-h-[650px] max-sm:w-full max-sm:pb-5">
@@ -120,7 +132,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
           onSubmit={handleSubmit}
         >
           <p className="mb-4 text-sm text-gray-600">
-            Enter the 6-digit code sent to your phone number.
+            {subtitleText ?? "Enter the 6-digit code sent to your phone number."}
           </p>
 
           <div className="mb-6 flex justify-center gap-2">

@@ -141,6 +141,20 @@ export const authService = {
     return response.data;
   },
 
+  // Forgot password - send OTP
+  forgotPassword: async (email: string) => {
+    const response = await apiClient.post(`/users/auth/forgot-password/`, {
+      email,
+    });
+    return response.data;
+  },
+
+  // Reset password
+  resetPassword: async (payload: { email: string; password: string }) => {
+    const response = await apiClient.post(`/users/auth/reset-password/`, payload);
+    return response.data;
+  },
+
   // Update user profile
   updateProfile: (userId: number, formData: FormData, isChef: boolean) => {
     // Use the same endpoint for both chefs and hosts
