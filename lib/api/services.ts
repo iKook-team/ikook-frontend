@@ -57,14 +57,14 @@ export interface ServicesResponse {
 export const servicesService = {
   // Fetch all services for the current chef
   fetchServices: async (): Promise<ServicesResponse> => {
-    const response = await apiClient.get<ServicesResponse>('/services/');
-    return response.data;
+    const response = await apiClient.get<{ data: ServicesResponse }>('/services/');
+    return response.data.data; // Extract the nested data property
   },
 
   // Update service availability
   updateServiceAvailability: async (id: number, availability: boolean): Promise<Service> => {
-    const response = await apiClient.patch<Service>(`/services/${id}/`, { availability });
-    return response.data;
+    const response = await apiClient.patch<{ data: Service }>(`/services/${id}/`, { availability });
+    return response.data.data; // Extract the nested data property
   },
 
   // Create a new service
@@ -84,13 +84,13 @@ export const servicesService = {
       }
     });
 
-    const response = await apiClient.post<Service>('/services/', formData, {
+    const response = await apiClient.post<{ data: Service }>('/services/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
     
-    return response.data;
+    return response.data.data; // Extract the nested data property
   },
 };
 

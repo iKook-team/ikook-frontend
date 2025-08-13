@@ -109,7 +109,7 @@ export const WithdrawHistory: React.FC<WithdrawHistoryProps> = ({
       </div>
 
       <button
-        className="flex justify-center items-center px-28 py-3 h-12 bg-amber-400 rounded-lg border-amber-400 border-solid shadow-sm mt-4"
+        className="flex justify-center items-center w-full sm:w-auto px-6 py-3 h-12 bg-amber-400 hover:bg-amber-500 rounded-lg border-amber-400 border-solid shadow-sm mt-4 transition-colors whitespace-nowrap"
         onClick={onWithdraw}
       >
         <span className="text-base font-bold leading-6 text-white">

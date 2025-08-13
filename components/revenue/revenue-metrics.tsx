@@ -9,12 +9,12 @@ interface MetricCardProps {
 }
 
 const MetricCard = ({ title, amount }: MetricCardProps) => (
-  <div className="flex gap-24 items-center px-5 py-2 w-72 rounded-md border border-solid border-stone-300 max-md:min-w-[250px] max-md:w-[calc(33%_-_8px)] max-sm:w-full">
-    <div className="flex flex-col items-start min-w-0">
-      <p className="text-base text-zinc-800 whitespace-nowrap overflow-hidden text-ellipsis w-full">
+  <div className="flex gap-4 sm:gap-6 items-center px-4 py-3 sm:px-5 sm:py-4 w-full sm:w-auto rounded-md border border-solid border-stone-300 bg-white shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="flex-1 min-w-0">
+      <p className="text-sm sm:text-base text-zinc-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">
         {title}
       </p>
-      <p className="text-2xl font-bold text-zinc-800">{amount}</p>
+      <p className="text-xl sm:text-2xl font-bold text-zinc-800 mt-1">{amount}</p>
     </div>
     <div className="flex gap-2.5 items-start p-2 bg-stone-50 rounded-[40px]">
       <div
@@ -52,20 +52,23 @@ export const RevenueMetrics: React.FC<RevenueMetricsProps> = ({ earnings }) => {
   };
 
   return (
-    <section className="w-full max-w-4xl mx-auto px-5 py-6">
-      <h1 className="text-2xl font-bold text-black mb-6">Revenue</h1>
+    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Revenue</h1>
+        <p className="text-sm sm:text-base text-gray-500 mt-1">Track your earnings and withdrawals</p>
+      </div>
 
-      <div className="flex gap-4 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <MetricCard
           title="Available Balance"
           amount={formatAmount(earnings?.balance)}
         />
         <MetricCard
-          title="Withdraw"
+          title="Withdrawals"
           amount={formatAmount(earnings?.total_withdrawals)}
         />
         <MetricCard
-          title="Total"
+          title="Total Earnings"
           amount={formatAmount(earnings?.total_earnings)}
         />
       </div>

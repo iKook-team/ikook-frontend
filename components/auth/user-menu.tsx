@@ -164,7 +164,10 @@ export const UserMenu: React.FC = () => {
                 >
                   Review
                 </button>
-                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+                <button 
+                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={() => router.push("/references")}
+                >
                   References
                 </button>
               </>
