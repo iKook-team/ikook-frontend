@@ -171,7 +171,7 @@ export const AddReferenceModal: React.FC<AddReferenceModalProps> = ({
               </div>
               <div className="ml-3">
                 <p className="text-sm text-yellow-700">
-                  We'll send an email to your reference to confirm their details. Please ensure the email address is correct.
+                  We&apos;ll send an email to your reference to confirm their details. Please ensure the email address is correct.
                 </p>
               </div>
             </div>
