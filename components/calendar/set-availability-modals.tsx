@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import { createTimeSlot } from "@/lib/api/calendar";
 
 interface SetAvailabilityModalProps {
@@ -57,10 +57,12 @@ const SetAvailabilityModal: React.FC<SetAvailabilityModalProps> = ({
   return (
     <div 
       className="fixed inset-0 bg-stone-950 bg-opacity-40 flex items-center justify-center z-50 p-4"
+      role="button"
       onClick={onClose}
     >
       <div 
         className="bg-white rounded-lg w-full max-w-md relative"
+        role="button"
         onClick={(e) => e.stopPropagation()}
       >
         <header className="relative h-16 px-6 pt-5 w-full">
