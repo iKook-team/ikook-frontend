@@ -1,47 +1,87 @@
 import React from "react";
+import { format } from "date-fns";
 
-export default function DateHeaders() {
-  const dates = [
-    { day: "21", month: "Nov", dayName: "MON", left: 161, width: 29 },
-    { day: "22", month: "Nov", dayName: "TUE", left: 276, width: 35 },
-    { day: "23", month: "Nov", dayName: "WED", left: 388, width: 36 },
-    { day: "24", month: "Nov", dayName: "THU", left: 511, width: 37 },
-    { day: "25", month: "Nov", dayName: "FRI", left: 618, width: 37 },
-    { day: "26", month: "Nov", dayName: "SAT", left: 733, width: 37 },
-    { day: "27", month: "Nov", dayName: "SUN", left: 854, width: 35 },
-    { day: "28", month: "Nov", dayName: "SUN", left: 973, width: 37 },
-    { day: "29", month: "Nov", dayName: "SUN", left: 1092, width: 37 },
-    { day: "30", month: "Nov", dayName: "SUN", left: 1211, width: 38 },
-  ];
+interface DateHeadersProps {
+  dates: Date[];
+  onDateClick?: (date: Date) => void;
+  selectedDate?: Date | null;
+}
+
+export default function DateHeaders({ dates, onDateClick, selectedDate }: DateHeadersProps) {
+  const isToday = (date: Date): boolean => {
+    const today = new Date();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
+  };
+
+  const isSelected = (date: Date): boolean => {
+    if (!selectedDate) return false;
+    return (
+      date.getDate() === selectedDate.getDate() &&
+      date.getMonth() === selectedDate.getMonth() &&
+      date.getFullYear() === selectedDate.getFullYear()
+    );
+  };
+
+  const getDayClasses = (date: Date): string => {
+    const baseClasses = [
+      "flex-1",
+      "flex",
+      "flex-col",
+      "items-center",
+      "pt-2",
+      "pb-1",
+      "border-b-2",
+      "border-transparent",
+      "transition-colors",
+      "duration-200",
+      "cursor-pointer"
+    ];
+
+    if (isToday(date)) {
+      baseClasses.push("text-yellow-600");
+    } else if (isSelected(date)) {
+      baseClasses.push("border-yellow-500 text-yellow-600");
+    } else {
+      baseClasses.push("text-zinc-800 text-opacity-70 hover:text-opacity-100");
+    }
+
+    return baseClasses.join(" ");
+  };
+
+  const handleDateClick = (date: Date) => {
+    if (onDateClick) {
+      onDateClick(date);
+    }
+  };
 
   return (
-    <>
-      {dates.map((date, index) => (
-        <div
-          key={index}
-          className="absolute top-5 h-[68px]"
-          style={{ left: `${date.left}px`, width: `${date.width}px` }}
-        >
-          <div
-            className="absolute top-0 w-6 text-xs h-[18px] text-zinc-800 text-opacity-70"
-            style={{ left: date.width > 35 ? "7px" : "6px" }}
+    <div className="w-full">
+      <div className="flex">
+        {dates.map((date, index) => (
+          <div 
+            key={index} 
+            className={`flex-1 text-center ${getDayClasses(date)}`}
+            onClick={() => handleDateClick(date)}
           >
-            {date.month}
+            <div className="text-xs font-medium mb-1">
+              {format(date, 'EEE')}
+            </div>
+            <div className="text-xl font-semibold">
+              {format(date, 'd')}
+            </div>
+            <div className="text-xs mt-1">
+              {format(date, 'MMM')}
+            </div>
+            {isToday(date) && (
+              <div className="w-1.5 h-1.5 bg-yellow-600 rounded-full mt-1 mx-auto" />
+            )}
           </div>
-          <div
-            className="absolute text-xs h-[18px] text-zinc-800 text-opacity-70 top-[50px]"
-            style={{ left: date.width > 35 ? "7px" : "3px" }}
-          >
-            {date.dayName}
-          </div>
-          <div
-            className="absolute top-3 text-3xl h-[45px] text-zinc-800"
-            style={{ left: "0px", width: `${date.width}px` }}
-          >
-            {date.day}
-          </div>
-        </div>
-      ))}
-    </>
+        ))}
+      </div>
+    </div>
   );
 }

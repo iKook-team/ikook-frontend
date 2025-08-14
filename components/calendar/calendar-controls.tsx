@@ -1,49 +1,76 @@
 "use client";
 import React from "react";
+import { format, parse } from "date-fns";
 
-export default function CalendarControls() {
+interface CalendarControlsProps {
+  currentDate: Date;
+  onDateChange: (date: Date) => void;
+  onNavigate: (direction: 'prev' | 'next') => void;
+}
+
+export default function CalendarControls({ 
+  currentDate, 
+  onDateChange, 
+  onNavigate 
+}: CalendarControlsProps) {
+  const monthYear = format(currentDate, 'MMMM, yyyy');
+  
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const date = e.target.value ? new Date(e.target.value) : new Date();
+    onDateChange(date);
+  };
+
   return (
-    <>
-      {/* Date Input Field */}
-      <div className="flex absolute flex-col items-start h-[43px] left-[1061px] top-[151px] w-[204px] max-md:relative max-md:top-auto max-md:left-auto max-md:m-5 max-sm:mx-auto max-sm:my-2.5 max-sm:w-[90%]">
-        <div className="flex relative flex-col gap-1.5 items-start self-stretch">
-          <div className="flex relative flex-col gap-1.5 items-start self-stretch">
-            <div className="flex relative gap-2 items-center self-stretch px-3.5 py-2.5 bg-white rounded-lg border border-solid shadow-sm border-neutral-400">
-              <div className="flex relative gap-2 items-center flex-[1_0_0]">
-                <div className="relative text-base flex-[1_0_0] text-neutral-700">
-                  October, 2023
-                </div>
-              </div>
-              <div
-                dangerouslySetInnerHTML={{
-                  __html:
-                    '<svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg" class="calendar-icon" style="width: 16px; height: 16px"> <path d="M2 7.16667H14M6 3.83333H4.13333C3.3866 3.83333 3.01323 3.83333 2.72801 3.97866C2.47713 4.10649 2.27316 4.31046 2.14532 4.56135C2 4.84656 2 5.21993 2 5.96667V12.3667C2 13.1134 2 13.4868 2.14532 13.772C2.27316 14.0229 2.47713 14.2268 2.72801 14.3547C3.01323 14.5 3.3866 14.5 4.13333 14.5H11.8667C12.6134 14.5 12.9868 14.5 13.272 14.3547C13.5229 14.2268 13.7268 14.0229 13.8547 13.772C14 13.4868 14 13.1134 14 12.3667V5.96667C14 5.21993 14 4.84656 13.8547 4.56135C13.7268 4.31046 13.5229 4.10649 13.272 3.97866C12.9868 3.83333 12.6134 3.83333 11.8667 3.83333H10M6 3.83333H10M6 3.83333V3.5C6 2.94772 5.55228 2.5 5 2.5C4.44772 2.5 4 2.94772 4 3.5V3.83333M10 3.83333V3.5C10 2.94772 10.4477 2.5 11 2.5C11.5523 2.5 12 2.94772 12 3.5V3.83333" stroke="#3F3E3D" stroke-linecap="round"></path> </svg>',
-                }}
-              />
-            </div>
-          </div>
+    <div className="flex flex-col sm:flex-row gap-4 w-full justify-between items-center">
+      <div className="flex items-center gap-4">
+        <button 
+          onClick={() => onNavigate('prev')}
+          className="p-2 hover:bg-amber-50 rounded-full transition-colors"
+          aria-label="Previous week"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12.5 15L7.5 10L12.5 5" stroke="#3F3E3D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+        
+        <div className="text-lg font-medium text-gray-900 min-w-[180px] text-center">
+          {monthYear}
         </div>
+        
+        <button 
+          onClick={() => onNavigate('next')}
+          className="p-2 hover:bg-amber-50 rounded-full transition-colors"
+          aria-label="Next week"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.5 15L12.5 10L7.5 5" stroke="#3F3E3D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
       </div>
 
-      {/* Settings Button */}
-      <button className="inline-flex absolute gap-2.5 items-start p-2.5 bg-amber-400 rounded-3xl h-[38px] left-[1352px] top-[150px] w-[38px] max-md:relative max-md:top-auto max-md:left-auto max-md:m-2.5 max-sm:p-2 max-sm:h-[35px] max-sm:w-[35px]">
-        <div
-          dangerouslySetInnerHTML={{
-            __html:
-              '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="settings-icon" style="width: 18px; height: 18px"> <path d="M3 6H12M12 6C12 7.24264 13.0074 8.25 14.25 8.25C15.4926 8.25 16.5 7.24264 16.5 6C16.5 4.75736 15.4926 3.75 14.25 3.75C13.0074 3.75 12 4.75736 12 6ZM6.75 12H15M6.75 12C6.75 13.2426 5.74264 14.25 4.5 14.25C3.25736 14.25 2.25 13.2426 2.25 12C2.25 10.7574 3.25736 9.75 4.5 9.75C5.74264 9.75 6.75 10.7574 6.75 12Z" stroke="white" stroke-width="2" stroke-linecap="round"></path> </svg>',
-          }}
-        />
-      </button>
+      <div className="flex items-center gap-2">
+        <div className="relative">
+          <input
+            type="date"
+            value={format(currentDate, 'yyyy-MM-dd')}
+            onChange={handleDateChange}
+            className="appearance-none bg-white border border-gray-300 rounded-lg py-2 pl-3 pr-8 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent"
+          />
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 4H14M6 1V3M10 1V3M3.2 6.2H12.8C13.9201 6.2 14.4802 6.2 14.908 6.45643C15.2843 6.68318 15.5686 6.98843 15.7854 7.38876C16 7.7837 16 8.36588 16 9.53024V11.2C16 12.8802 16 13.7202 15.673 14.362C15.3854 14.9265 14.9265 15.3854 14.362 15.673C13.7202 16 12.8802 16 11.2 16H4.8C3.11984 16 2.27976 16 1.63803 15.673C1.07354 15.3854 0.614601 14.9265 0.32698 14.362C0 13.7202 0 12.8802 0 11.2V9.53024C0 8.36588 0 7.7837 0.214606 7.38876C0.431446 6.98843 0.715686 6.68318 1.09202 6.45643C1.51984 6.2 2.0799 6.2 3.2 6.2Z" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+        </div>
 
-      {/* Download Button */}
-      <button className="inline-flex absolute gap-2.5 items-start p-2.5 bg-amber-400 rounded-3xl h-[38px] left-[1303px] top-[150px] w-[38px] max-md:relative max-md:top-auto max-md:left-auto max-md:m-2.5 max-sm:p-2 max-sm:h-[35px] max-sm:w-[35px]">
-        <div
-          dangerouslySetInnerHTML={{
-            __html:
-              '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="download-icon" style="width: 18px; height: 18px"> <path d="M10 2.25C10 1.69772 9.55228 1.25 9 1.25C8.44772 1.25 8 1.69772 8 2.25L10 2.25ZM8 10.5C8 11.0523 8.44772 11.5 9 11.5C9.55229 11.5 10 11.0523 10 10.5H8ZM12.7071 9.70711C13.0976 9.31658 13.0976 8.68342 12.7071 8.29289C12.3166 7.90237 11.6834 7.90237 11.2929 8.29289L12.7071 9.70711ZM9.53033 11.4697L8.82322 10.7626L9.53033 11.4697ZM8.46967 11.4697L9.17678 10.7626H9.17678L8.46967 11.4697ZM6.70711 8.29289C6.31658 7.90237 5.68342 7.90237 5.29289 8.29289C4.90237 8.68342 4.90237 9.31658 5.29289 9.70711L6.70711 8.29289ZM3.25 12C3.25 11.4477 2.80228 11 2.25 11C1.69772 11 1.25 11.4477 1.25 12H3.25ZM16.75 12C16.75 11.4477 16.3023 11 15.75 11C15.1977 11 14.75 11.4477 14.75 12H16.75ZM14.5215 15.5048L14.0675 14.6138H14.0675L14.5215 15.5048ZM15.5048 14.5215L16.3958 14.9755L15.5048 14.5215ZM2.49524 14.5215L1.60423 14.9755L2.49524 14.5215ZM3.47852 15.5048L3.02453 16.3958H3.02453L3.47852 15.5048ZM8 2.25L8 10.5H10L10 2.25L8 2.25ZM11.2929 8.29289L8.82322 10.7626L10.2374 12.1768L12.7071 9.70711L11.2929 8.29289ZM9.17678 10.7626L6.70711 8.29289L5.29289 9.70711L7.76256 12.1768L9.17678 10.7626ZM8.82322 10.7626C8.92085 10.6649 9.07915 10.6649 9.17678 10.7626L7.76256 12.1768C8.44598 12.8602 9.55402 12.8602 10.2374 12.1768L8.82322 10.7626ZM1.25 12V12.15H3.25V12H1.25ZM5.85 16.75H12.15V14.75H5.85V16.75ZM16.75 12.15V12H14.75V12.15H16.75ZM12.15 16.75C12.7636 16.75 13.2839 16.7508 13.7092 16.716C14.1463 16.6803 14.5704 16.6022 14.9755 16.3958L14.0675 14.6138C13.9913 14.6526 13.8597 14.6971 13.5464 14.7227C13.2213 14.7492 12.7966 14.75 12.15 14.75V16.75ZM14.75 12.15C14.75 12.7966 14.7492 13.2213 14.7227 13.5464C14.6971 13.8597 14.6526 13.9913 14.6138 14.0675L16.3958 14.9755C16.6022 14.5704 16.6803 14.1463 16.716 13.7092C16.7508 13.2839 16.75 12.7636 16.75 12.15H14.75ZM14.9755 16.3958C15.587 16.0842 16.0842 15.587 16.3958 14.9755L14.6138 14.0675C14.4939 14.3027 14.3027 14.4939 14.0675 14.6138L14.9755 16.3958ZM1.25 12.15C1.25 12.7636 1.24922 13.2839 1.28398 13.7092C1.31968 14.1463 1.39781 14.5704 1.60423 14.9755L3.38624 14.0675C3.34742 13.9913 3.30294 13.8597 3.27733 13.5464C3.25078 13.2213 3.25 12.7966 3.25 12.15H1.25ZM5.85 14.75C5.20344 14.75 4.77866 14.7492 4.45364 14.7227C4.14029 14.6971 4.00869 14.6526 3.93251 14.6138L3.02453 16.3958C3.42965 16.6022 3.85374 16.6803 4.29077 16.716C4.71613 16.7508 5.23644 16.75 5.85 16.75V14.75ZM1.60423 14.9755C1.91582 15.587 2.41301 16.0842 3.02453 16.3958L3.93251 14.6138C3.69731 14.4939 3.50608 14.3027 3.38624 14.0675L1.60423 14.9755Z" fill="white"></path> </svg>',
-          }}
-        />
-      </button>
-    </>
+        <button 
+          className="p-2 bg-amber-400 hover:bg-amber-500 rounded-full transition-colors"
+          onClick={() => onDateChange(new Date())}
+          aria-label="Today"
+        >
+          Today
+        </button>
+      </div>
+    </div>
   );
 }

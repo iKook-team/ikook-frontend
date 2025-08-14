@@ -1,41 +1,76 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { format, parseISO } from "date-fns";
+import { createTimeSlot } from "@/lib/api/calendar";
 
 interface SetAvailabilityModalProps {
   onClose: () => void;
+  selectedDate: Date | null;
 }
 
 const SetAvailabilityModal: React.FC<SetAvailabilityModalProps> = ({
   onClose,
+  selectedDate,
 }) => {
-  const [selectedOption, setSelectedOption] = useState<"single" | "period">(
-    "period",
-  );
-  const [fromDate, setFromDate] = useState("28/08/2023");
-  const [toDate, setToDate] = useState("28/08/2023");
+  const [selectedOption, setSelectedOption] = useState<"single" | "period">("single");
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
 
-  const handleSubmit = () => {
-    // Handle form submission
-    onClose();
+  // Update dates when selectedDate changes
+  React.useEffect(() => {
+    if (selectedDate) {
+      const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+      setFromDate(formattedDate);
+      setToDate(formattedDate);
+    }
+  }, [selectedDate]);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async () => {
+    if (!fromDate) return;
+
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const timeSlotData = {
+        start_date: fromDate,
+        end_date: selectedOption === 'single' ? fromDate : toDate,
+        start_time: '08:00:00.000Z', // 8 AM in UTC
+        end_time: '21:00:00.000Z',   // 9 PM in UTC
+      };
+
+      await createTimeSlot(timeSlotData);
+      onClose(); // Close modal on success
+      // You might want to add a success notification here
+    } catch (err) {
+      console.error('Failed to create time slot:', err);
+      setError('Failed to create time slot. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="absolute top-0 left-0 bg-stone-950 bg-opacity-40 h-[1095px] w-[1440px] max-md:w-full">
-      <dialog
-        open
-        className="absolute h-[377px] left-[546px] top-[393px] w-[454px] max-md:top-2/4 max-md:-translate-y-2/4 max-md:left-[5%] max-md:max-w-[400px] max-md:w-[90%] max-sm:p-4 max-sm:left-[2.5%] max-sm:w-[95%] bg-white rounded-lg"
-        aria-labelledby="modal-title"
+    <div 
+      className="fixed inset-0 bg-stone-950 bg-opacity-40 flex items-center justify-center z-50 p-4"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-white rounded-lg w-full max-w-md relative"
+        onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <header className="absolute left-0 h-[41px] top-[19px] w-[454px]">
+        <header className="relative h-16 px-6 pt-5 w-full">
           <button
             onClick={onClose}
-            className="absolute right-[25px] top-0"
+            className="absolute right-4 top-4"
             aria-label="Close modal"
           >
             <svg
-              width="21"
+              width="20"
               height="20"
               viewBox="0 0 21 20"
               fill="none"
@@ -48,179 +83,96 @@ const SetAvailabilityModal: React.FC<SetAvailabilityModalProps> = ({
             </svg>
           </button>
 
-          <svg
-            width="454"
-            height="2"
-            viewBox="0 0 454 2"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="absolute left-0 top-[41px]"
-          >
-            <path
-              d="M-0.00195312 1L454.002 1"
-              stroke="black"
-              strokeOpacity="0.1"
-            />
-          </svg>
-
-          <h2
-            id="modal-title"
-            className="absolute top-0.5 h-5 text-sm leading-5 left-[25px] text-zinc-800 w-[111px]"
-          >
-            Set availability
-          </h2>
+          <div className="pt-2">
+            <h2 className="text-lg font-medium text-zinc-800">Set Availability</h2>
+            {selectedDate && (
+              <p className="text-sm text-gray-500">
+                {format(selectedDate, 'EEEE, MMMM d, yyyy')}
+              </p>
+            )}
+          </div>
         </header>
 
-        {/* Radio Button Options */}
-        <fieldset className="inline-flex absolute gap-4 items-start h-[23px] left-[25px] top-[81px] w-[265px]">
-          <legend className="sr-only">Select availability type</legend>
+        <div className="p-6 pt-2">
+          <fieldset className="mb-6">
+            <legend className="sr-only">Select availability type</legend>
+            <div className="flex gap-6">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="availability-type"
+                  checked={selectedOption === "single"}
+                  onChange={() => setSelectedOption("single")}
+                  className="h-4 w-4 text-yellow-500"
+                />
+                <span className="text-base">Single date</span>
+              </label>
 
-          <div className="flex gap-3 items-start">
-            <label className="flex gap-3 items-center cursor-pointer">
-              <input
-                type="radio"
-                name="availability-type"
-                value="single"
-                checked={selectedOption === "single"}
-                onChange={() => setSelectedOption("single")}
-                className="sr-only"
-              />
-              <div className="flex justify-center items-center">
-                <div className="w-5 h-5 bg-white rounded-xl border border-solid border-stone-300" />
-              </div>
-              <span className="text-base text-black">Single date</span>
-            </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="availability-type"
+                  checked={selectedOption === "period"}
+                  onChange={() => setSelectedOption("period")}
+                  className="h-4 w-4 text-yellow-500"
+                />
+                <span className="text-base">Period of time</span>
+              </label>
+            </div>
+          </fieldset>
 
-            <label className="flex gap-3 items-center cursor-pointer">
-              <input
-                type="radio"
-                name="availability-type"
-                value="period"
-                checked={selectedOption === "period"}
-                onChange={() => setSelectedOption("period")}
-                className="sr-only"
-              />
-              <div className="flex justify-center items-center">
-                <svg
-                  width="20"
-                  height="21"
-                  viewBox="0 0 20 21"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect
-                    x="0.5"
-                    y="1"
-                    width="19"
-                    height="19"
-                    rx="9.5"
-                    fill="#F9F5FF"
-                  />
-                  <rect
-                    x="0.5"
-                    y="1"
-                    width="19"
-                    height="19"
-                    rx="9.5"
-                    stroke="#FCC01C"
-                  />
-                  <circle cx="10" cy="10.5" r="4" fill="#FCC01C" />
-                </svg>
-              </div>
-              <span className="text-base text-black">Period of time</span>
-            </label>
-          </div>
-        </fieldset>
-
-        {/* Form Fields */}
-        <form className="inline-flex absolute flex-col gap-4 items-start h-[162px] left-[25px] top-[131px] w-[403px] max-sm:w-full">
-          <div className="flex flex-col items-start w-[403px] max-sm:w-full">
-            <div className="flex flex-col gap-1.5 items-start self-stretch">
-              <div className="flex flex-col gap-1.5 items-start self-stretch">
-                <label
-                  htmlFor="from-date"
-                  className="text-base text-neutral-700"
-                >
-                  From
-                </label>
-                <div className="flex gap-2 items-center self-stretch px-3.5 py-2.5 bg-white rounded-lg border border-solid shadow-sm border-neutral-400">
-                  <div className="flex gap-2 items-center flex-[1_0_0]">
-                    <input
-                      id="from-date"
-                      type="text"
-                      value={fromDate}
-                      onChange={(e) => setFromDate(e.target.value)}
-                      className="text-base leading-6 flex-[1_0_0] text-neutral-500 bg-transparent border-none outline-none"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    aria-label="Open calendar for from date"
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M2 6.66667H14M6 3.33333H4.13333C3.3866 3.33333 3.01323 3.33333 2.72801 3.47866C2.47713 3.60649 2.27316 3.81046 2.14532 4.06135C2 4.34656 2 4.71993 2 5.46667V11.8667C2 12.6134 2 12.9868 2.14532 13.272C2.27316 13.5229 2.47713 13.7268 2.72801 13.8547C3.01323 14 3.3866 14 4.13333 14H11.8667C12.6134 14 12.9868 14 13.272 13.8547C13.5229 13.7268 13.7268 13.5229 13.8547 13.272C14 12.9868 14 12.6134 14 11.8667V5.46667C14 4.71993 14 4.34656 13.8547 4.06135C13.7268 3.81046 13.5229 3.60649 13.272 3.47866C12.9868 3.33333 12.6134 3.33333 11.8667 3.33333H10M6 3.33333H10M6 3.33333V3C6 2.44772 5.55228 2 5 2C4.44772 2 4 2.44772 4 3V3.33333M10 3.33333V3C10 2.44772 10.4477 2 11 2C11.5523 2 12 2.44772 12 3V3.33333"
-                        stroke="#3F3E3D"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </button>
-                </div>
+          <form className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                From
+              </label>
+              <div className="relative">
+                <input
+                  type="date"
+                  value={fromDate}
+                  onChange={(e) => setFromDate(e.target.value)}
+                  className="w-full rounded-md border border-gray-300 p-2"
+                />
               </div>
             </div>
-          </div>
 
-          <div className="flex flex-col items-start w-[403px] max-sm:w-full">
-            <div className="flex flex-col gap-1.5 items-start self-stretch">
-              <div className="flex flex-col gap-1.5 items-start self-stretch">
-                <label htmlFor="to-date" className="text-base text-neutral-700">
+            {selectedOption === "period" && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   To
                 </label>
-                <div className="flex gap-2 items-center self-stretch px-3.5 py-2.5 bg-white rounded-lg border border-solid shadow-sm border-neutral-400">
-                  <div className="flex gap-2 items-center flex-[1_0_0]">
-                    <input
-                      id="to-date"
-                      type="text"
-                      value={toDate}
-                      onChange={(e) => setToDate(e.target.value)}
-                      className="text-base leading-6 flex-[1_0_0] text-neutral-500 bg-transparent border-none outline-none"
-                    />
-                  </div>
-                  <button type="button" aria-label="Open calendar for to date">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M2 6.66667H14M6 3.33333H4.13333C3.3866 3.33333 3.01323 3.33333 2.72801 3.47866C2.47713 3.60649 2.27316 3.81046 2.14532 4.06135C2 4.34656 2 4.71993 2 5.46667V11.8667C2 12.6134 2 12.9868 2.14532 13.272C2.27316 13.5229 2.47713 13.7268 2.72801 13.8547C3.01323 14 3.3866 14 4.13333 14H11.8667C12.6134 14 12.9868 14 13.272 13.8547C13.5229 13.7268 13.7268 13.5229 13.8547 13.272C14 12.9868 14 12.6134 14 11.8667V5.46667C14 4.71993 14 4.34656 13.8547 4.06135C13.7268 3.81046 13.5229 3.60649 13.272 3.47866C12.9868 3.33333 12.6134 3.33333 11.8667 3.33333H10M6 3.33333H10M6 3.33333V3C6 2.44772 5.55228 2 5 2C4.44772 2 4 2.44772 4 3V3.33333M10 3.33333V3C10 2.44772 10.4477 2 11 2C11.5523 2 12 2.44772 12 3V3.33333"
-                        stroke="#3F3E3D"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </button>
+                <div className="relative">
+                  <input
+                    type="date"
+                    value={toDate}
+                    onChange={(e) => setToDate(e.target.value)}
+                    className="w-full rounded-md border border-gray-300 p-2"
+                    min={fromDate}
+                  />
                 </div>
               </div>
-            </div>
-          </div>
-        </form>
+            )}
 
-        {/* Submit Button */}
-        <button
-          onClick={handleSubmit}
-          className="flex absolute gap-2 justify-center items-center px-28 py-3 h-12 bg-amber-400 rounded-lg border border-amber-400 border-solid shadow-sm left-[21px] top-[310px] w-[408px] max-sm:px-5 max-sm:py-3 max-sm:w-full"
-        >
-          <span className="text-base font-bold leading-6 text-white">Set</span>
-        </button>
-      </dialog>
+            <div className="pt-4">
+              {error && (
+                <div className="mb-4 p-2 text-red-600 text-sm bg-red-50 rounded-md">
+                  {error}
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                className={`w-full bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded-md transition-colors ${
+                  isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+                }`}
+              >
+                {isSubmitting ? 'Saving...' : 'Set Availability'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };

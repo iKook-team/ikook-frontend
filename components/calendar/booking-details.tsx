@@ -1,16 +1,39 @@
 "use client";
 import * as React from "react";
 
+import { format } from "date-fns";
+import { parseISO } from "date-fns/parseISO";
+
 interface BookingDetailsProps {
   onClose: () => void;
+  event?: {
+    title: string;
+    start: string | Date;
+    end: string | Date;
+    hasBooking: boolean;
+    booking?: {
+      id: string;
+      service: string;
+      host_user: string;
+    };
+  } | null;
 }
 
-function BookingDetails({ onClose }: BookingDetailsProps) {
-  const [isAvailable, setIsAvailable] = React.useState(true);
+function BookingDetails({ onClose, event }: BookingDetailsProps) {
+  if (!event) return null;
+  
+  const startDate = typeof event.start === 'string' ? parseISO(event.start) : event.start;
+  const endDate = typeof event.end === 'string' ? parseISO(event.end) : event.end;
+  
+  const dateString = format(startDate, 'd MMMM yyyy').toUpperCase();
+  const timeString = `${format(startDate, 'EEEE, h a')} - ${format(endDate, 'h a')}`.toUpperCase();
+  
+  const hasBooking = event.hasBooking && event.booking;
 
   return (
-    <aside className="absolute h-[308px] left-[167px] top-[393px] w-[306px] max-md:left-6 max-md:top-[200px] max-md:w-[280px] max-sm:left-4 max-sm:max-w-[300px] max-sm:top-[120px] max-sm:w-[calc(100%_-_32px)]">
-      <div className="absolute top-0 left-0 bg-white rounded-xl shadow-2xl h-[308px] w-[306px]" />
+    <div className="relative h-[308px] w-[306px]">
+      {/* Background container */}
+      <div className="absolute inset-0 bg-white rounded-xl shadow-2xl overflow-hidden" />
 
       {/* Header */}
       <header className="absolute left-0 h-[41px] top-[18px] w-[306px]">
@@ -34,46 +57,26 @@ function BookingDetails({ onClose }: BookingDetailsProps) {
           />
         </button>
 
-        <div className="absolute top-0 h-5 text-sm leading-5 left-[23px] text-zinc-800 w-[133px]">
-          23 NOVEMBER 2022
+        <div className="absolute top-0 h-5 text-sm leading-5 left-[23px] text-zinc-800 w-full pr-4">
+          {dateString}
         </div>
-        <div className="absolute h-5 text-xs leading-5 left-[23px] text-zinc-800 top-[17px] w-[109px]">
-          WEDNESDAY, 7 - 10AM
+        <div className="absolute h-5 text-xs leading-5 left-[23px] text-zinc-800 top-[17px] w-full pr-4">
+          {timeString}
         </div>
       </header>
 
-      {/* Availability section */}
-      <section className="absolute left-0 h-[30px] top-[75px] w-[306px]">
+      {/* Availability section - Removed as it's not part of the API */}
+      <div className="absolute left-0 h-[30px] top-[75px] w-[306px]">
         <div
           dangerouslySetInnerHTML={{
             __html:
               '<svg width="306" height="2" viewBox="0 0 306 2" fill="none" xmlns="http://www.w3.org/2000/svg" class="section-divider" style="width: 306px; height: 0px; stroke-width: 1px; stroke: rgba(0, 0, 0, 0.10); position: absolute; left: 0px; top: 30px"> <path d="M0 1L306 1" stroke="black" stroke-opacity="0.1"></path> </svg>',
           }}
         />
-
-        <label
-          htmlFor="availability"
-          className="absolute top-0 text-xs h-[18px] left-[23px] text-zinc-800 w-[67px]"
-        >
-          Availability
-        </label>
-
-        <div className="absolute top-0 h-[18px] left-[249px] w-[38px]">
-          <button
-            onClick={() => setIsAvailable(!isAvailable)}
-            className={`absolute top-0 left-0 rounded-3xl border-yellow-500 border-solid border-[0.6px] h-[18px] w-[38px] ${
-              isAvailable ? "bg-amber-400" : "bg-gray-300"
-            }`}
-            aria-label={`Toggle availability ${isAvailable ? "off" : "on"}`}
-          >
-            <div
-              className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-sm transition-transform ${
-                isAvailable ? "translate-x-5" : "translate-x-0.5"
-              }`}
-            />
-          </button>
+        <div className="absolute top-0 text-xs h-[18px] left-[23px] text-zinc-800 w-full">
+          {hasBooking ? 'Booked' : 'Available'}
         </div>
-      </section>
+      </div>
 
       {/* Booking section */}
       <section className="absolute left-0 h-[45px] top-[111px] w-[306px]">
@@ -92,26 +95,25 @@ function BookingDetails({ onClose }: BookingDetailsProps) {
         </p>
       </section>
 
-      {/* Menus section */}
+      {/* Booking Details */}
       <section className="absolute h-[120px] left-[23px] top-[163px] w-[264px]">
-        <h3 className="absolute top-0 left-0 w-10 text-xs h-[18px] text-zinc-800">
-          Menus
-        </h3>
-
-        {[0, 1, 2].map((index) => (
-          <div
-            key={index}
-            className="absolute left-0 h-[30px] w-[264px]"
-            style={{ top: `${20 + index * 35}px` }}
-          >
-            <div className="absolute top-0 left-0 rounded border-solid bg-amber-400 bg-opacity-10 border-[0.5px] border-zinc-800 h-[30px] w-[264px]" />
-            <span className="absolute top-2 left-2 h-3.5 text-xs text-amber-400 w-[120px]">
-              Grilled Barbeque Dishes
-            </span>
+        {hasBooking ? (
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium text-zinc-800">Booking Details</h3>
+            <div className="text-xs text-zinc-600 space-y-1">
+              <p><span className="font-medium">Service:</span> {event.booking?.service}</p>
+              <p><span className="font-medium">Host:</span> {event.booking?.host_user}</p>
+              <p><span className="font-medium">Status:</span> Confirmed</p>
+            </div>
           </div>
-        ))}
+        ) : (
+          <div className="text-sm text-zinc-600">
+            <p>No booking details available.</p>
+            <p className="text-xs text-zinc-400 mt-1">Your availability is visible to potential guests.</p>
+          </div>
+        )}
       </section>
-    </aside>
+    </div>
   );
 }
 
