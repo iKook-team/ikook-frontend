@@ -10,7 +10,6 @@ export default function HeroSection() {
 
   return (
     <section className="relative bg-white py-16 px-4 lg:px-24 overflow-hidden">
-
       <div className="relative max-w-7xl mx-auto">
         {/* Main Heading */}
         <div className="text-center mb-8">
@@ -49,7 +48,7 @@ export default function HeroSection() {
               <Input
                 type="date"
                 placeholder="When is your Event"
-                min={new Date().toISOString().split('T')[0]}
+                min={new Date().toISOString().split("T")[0]}
                 className="border-none p-0 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none focus:outline-none"
               />
             </div>

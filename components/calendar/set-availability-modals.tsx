@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { format } from "date-fns";
+
 import { createTimeSlot } from "@/lib/api/calendar";
 
 interface SetAvailabilityModalProps {
@@ -13,14 +14,17 @@ const SetAvailabilityModal: React.FC<SetAvailabilityModalProps> = ({
   onClose,
   selectedDate,
 }) => {
-  const [selectedOption, setSelectedOption] = useState<"single" | "period">("single");
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
+  const [selectedOption, setSelectedOption] = useState<"single" | "period">(
+    "single",
+  );
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
   // Update dates when selectedDate changes
   React.useEffect(() => {
     if (selectedDate) {
-      const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+      const formattedDate = format(selectedDate, "yyyy-MM-dd");
+
       setFromDate(formattedDate);
       setToDate(formattedDate);
     }
@@ -38,29 +42,29 @@ const SetAvailabilityModal: React.FC<SetAvailabilityModalProps> = ({
     try {
       const timeSlotData = {
         start_date: fromDate,
-        end_date: selectedOption === 'single' ? fromDate : toDate,
-        start_time: '08:00:00.000Z', // 8 AM in UTC
-        end_time: '21:00:00.000Z',   // 9 PM in UTC
+        end_date: selectedOption === "single" ? fromDate : toDate,
+        start_time: "08:00:00.000Z", // 8 AM in UTC
+        end_time: "21:00:00.000Z", // 9 PM in UTC
       };
 
       await createTimeSlot(timeSlotData);
       onClose(); // Close modal on success
       // You might want to add a success notification here
     } catch (err) {
-      console.error('Failed to create time slot:', err);
-      setError('Failed to create time slot. Please try again.');
+      console.error("Failed to create time slot:", err);
+      setError("Failed to create time slot. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-stone-950 bg-opacity-40 flex items-center justify-center z-50 p-4"
       role="button"
       onClick={onClose}
     >
-      <div 
+      <div
         className="bg-white rounded-lg w-full max-w-md relative"
         role="button"
         onClick={(e) => e.stopPropagation()}
@@ -86,10 +90,12 @@ const SetAvailabilityModal: React.FC<SetAvailabilityModalProps> = ({
           </button>
 
           <div className="pt-2">
-            <h2 className="text-lg font-medium text-zinc-800">Set Availability</h2>
+            <h2 className="text-lg font-medium text-zinc-800">
+              Set Availability
+            </h2>
             {selectedDate && (
               <p className="text-sm text-gray-500">
-                {format(selectedDate, 'EEEE, MMMM d, yyyy')}
+                {format(selectedDate, "EEEE, MMMM d, yyyy")}
               </p>
             )}
           </div>
@@ -166,10 +172,10 @@ const SetAvailabilityModal: React.FC<SetAvailabilityModalProps> = ({
                 onClick={handleSubmit}
                 disabled={isSubmitting}
                 className={`w-full bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded-md transition-colors ${
-                  isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+                  isSubmitting ? "opacity-70 cursor-not-allowed" : ""
                 }`}
               >
-                {isSubmitting ? 'Saving...' : 'Set Availability'}
+                {isSubmitting ? "Saving..." : "Set Availability"}
               </button>
             </div>
           </form>

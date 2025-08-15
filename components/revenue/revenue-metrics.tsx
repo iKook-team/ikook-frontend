@@ -14,7 +14,9 @@ const MetricCard = ({ title, amount }: MetricCardProps) => (
       <p className="text-sm sm:text-base text-zinc-600 font-medium whitespace-nowrap overflow-hidden text-ellipsis">
         {title}
       </p>
-      <p className="text-xl sm:text-2xl font-bold text-zinc-800 mt-1">{amount}</p>
+      <p className="text-xl sm:text-2xl font-bold text-zinc-800 mt-1">
+        {amount}
+      </p>
     </div>
     <div className="flex gap-2.5 items-start p-2 bg-stone-50 rounded-[40px]">
       <div
@@ -54,8 +56,12 @@ export const RevenueMetrics: React.FC<RevenueMetricsProps> = ({ earnings }) => {
   return (
     <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6">
       <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Revenue</h1>
-        <p className="text-sm sm:text-base text-gray-500 mt-1">Track your earnings and withdrawals</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+          Revenue
+        </h1>
+        <p className="text-sm sm:text-base text-gray-500 mt-1">
+          Track your earnings and withdrawals
+        </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">

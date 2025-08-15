@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import Image from "next/image";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+
 import { useAuthStore } from "@/lib/store/auth-store";
 import { getCurrencySymbol } from "@/lib/utils/currency";
 import { TagSelector } from "@/components/ui/tag-selector";
@@ -24,11 +24,11 @@ const EventForm = () => {
     cuisines: [],
     events: [],
   });
-  
+
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const { user } = useAuthStore();
-  
+
   // Check if all required fields are filled
   const isFormValid = React.useMemo(() => {
     return (
@@ -43,7 +43,7 @@ const EventForm = () => {
     currency: user?.currency,
     country: user?.country,
   });
-  
+
   const allCuisines = [
     "African",
     "Modern English",
@@ -56,11 +56,7 @@ const EventForm = () => {
     "Pastries",
   ];
 
-  const allEvents = [
-    "Wedding",
-    "Naming",
-    "Gathering"
-  ];
+  const allEvents = ["Wedding", "Naming", "Gathering"];
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
     setFormData((prev) => ({
@@ -79,20 +75,20 @@ const EventForm = () => {
     try {
       const serviceData = {
         availability: isAvailable,
-        chef_service: 'Large Event' as const,
+        chef_service: "Large Event" as const,
         starting_price_per_person: formData.startingPrice,
         min_num_of_guests: Number(formData.minGuests) || 0,
         cuisines: formData.cuisines,
         events: formData.events,
-        ...(imageFile && { cover_image: imageFile })
+        ...(imageFile && { cover_image: imageFile }),
       };
 
       await servicesService.createService(serviceData);
-      toast.success('Large Event service created successfully!');
-      router.push('/services');
+      toast.success("Large Event service created successfully!");
+      router.push("/services");
     } catch (error) {
-      console.error('Error creating service:', error);
-      toast.error('Failed to create service. Please try again.');
+      console.error("Error creating service:", error);
+      toast.error("Failed to create service. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -100,8 +96,10 @@ const EventForm = () => {
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+
     if (file) {
       const reader = new FileReader();
+
       reader.onload = (e) => {
         setUploadedImage(e.target?.result as string);
       };
@@ -109,7 +107,7 @@ const EventForm = () => {
       setImageFile(file);
     }
   };
-  
+
   const handleRemoveImage = () => {
     setUploadedImage(null);
     setImageFile(null);
@@ -150,157 +148,162 @@ const EventForm = () => {
             </div>
           </div>
 
-        {/* Form Content */}
-        <form onSubmit={handleSubmit} className="px-5 pb-5">
-          <div className="space-y-6">
-            {/* Starting Price */}
-            <div className="space-y-1.5">
-              <label
-                htmlFor="startingPrice"
-                className="block text-[#3F3E3D] text-[15px] font-normal"
-              >
-                Starting price (per person)
-              </label>
-              <div className="flex border border-solid border-[#CFCFCE] rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white">
-                <div className="flex items-center px-3.5 py-2.5 bg-white rounded-l-lg">
-                  <span className="text-[#3F3E3D] text-[15px] font-normal">
-                    {currencySymbol}
-                  </span>
+          {/* Form Content */}
+          <form onSubmit={handleSubmit} className="px-5 pb-5">
+            <div className="space-y-6">
+              {/* Starting Price */}
+              <div className="space-y-1.5">
+                <label
+                  htmlFor="startingPrice"
+                  className="block text-[#3F3E3D] text-[15px] font-normal"
+                >
+                  Starting price (per person)
+                </label>
+                <div className="flex border border-solid border-[#CFCFCE] rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white">
+                  <div className="flex items-center px-3.5 py-2.5 bg-white rounded-l-lg">
+                    <span className="text-[#3F3E3D] text-[15px] font-normal">
+                      {currencySymbol}
+                    </span>
+                  </div>
+                  <input
+                    type="number"
+                    id="startingPrice"
+                    name="startingPrice"
+                    value={formData.startingPrice}
+                    onChange={(e) =>
+                      handleInputChange("startingPrice", e.target.value)
+                    }
+                    className="w-full px-3.5 py-2.5 text-[#3F3E3D] text-[15px] font-normal bg-transparent border-0 focus:ring-0 focus:outline-none"
+                    placeholder="0.00"
+                  />
                 </div>
+              </div>
+
+              {/* Minimum Guests */}
+              <div className="space-y-1.5">
+                <label
+                  htmlFor="minGuests"
+                  className="block text-[#3F3E3D] text-[15px] font-normal"
+                >
+                  Minimum number of guests
+                </label>
                 <input
                   type="number"
-                  id="startingPrice"
-                  name="startingPrice"
-                  value={formData.startingPrice}
-                  onChange={(e) => handleInputChange("startingPrice", e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-[#3F3E3D] text-[15px] font-normal bg-transparent border-0 focus:ring-0 focus:outline-none"
-                  placeholder="0.00"
+                  id="minGuests"
+                  value={formData.minGuests}
+                  onChange={(e) =>
+                    handleInputChange("minGuests", e.target.value)
+                  }
+                  className="w-full px-3.5 py-2.5 text-[#3F3E3D] text-[15px] font-normal border border-solid border-[#CFCFCE] rounded-lg focus:ring-1 focus:ring-[#FCC01C] focus:border-[#FCC01C] outline-none"
+                  placeholder="0"
                 />
               </div>
-            </div>
 
-            {/* Minimum Guests */}
-            <div className="space-y-1.5">
-              <label
-                htmlFor="minGuests"
-                className="block text-[#3F3E3D] text-[15px] font-normal"
-              >
-                Minimum number of guests
-              </label>
-              <input
-                type="number"
-                id="minGuests"
-                value={formData.minGuests}
-                onChange={(e) => handleInputChange("minGuests", e.target.value)}
-                className="w-full px-3.5 py-2.5 text-[#3F3E3D] text-[15px] font-normal border border-solid border-[#CFCFCE] rounded-lg focus:ring-1 focus:ring-[#FCC01C] focus:border-[#FCC01C] outline-none"
-                placeholder="0"
-              />
-            </div>
+              {/* Cuisines Field */}
+              <div className="space-y-1.5">
+                <TagSelector
+                  label="Cuisines"
+                  tags={allCuisines}
+                  selectedTags={formData.cuisines}
+                  onTagsChange={(cuisines) =>
+                    setFormData((prev) => ({ ...prev, cuisines }))
+                  }
+                  className="w-full"
+                />
+              </div>
 
-            {/* Cuisines Field */}
-            <div className="space-y-1.5">
-              <TagSelector
-                label="Cuisines"
-                tags={allCuisines}
-                selectedTags={formData.cuisines}
-                onTagsChange={(cuisines) =>
-                  setFormData((prev) => ({ ...prev, cuisines }))
-                }
-                className="w-full"
-              />
-            </div>
+              {/* Event Field */}
+              <div className="space-y-1.5">
+                <TagSelector
+                  label="Event"
+                  tags={allEvents}
+                  selectedTags={formData.events}
+                  onTagsChange={(events) =>
+                    setFormData((prev) => ({ ...prev, events }))
+                  }
+                  className="w-full"
+                />
+              </div>
 
-            {/* Event Field */}
-            <div className="space-y-1.5">
-              <TagSelector
-                label="Event"
-                tags={allEvents}
-                selectedTags={formData.events}
-                onTagsChange={(events) =>
-                  setFormData((prev) => ({ ...prev, events }))
-                }
-                className="w-full"
-              />
-            </div>
-
-            {/* Image Upload Section */}
-            <div className="mt-12 mb-8">
-              {!uploadedImage ? (
-                <div className="flex flex-col items-center justify-center gap-[9px] border-dashed border border-[#CFCFCE] rounded-xl p-2.5 h-[122px]">
-                  <p className="text-[#323335] text-center text-[10px] font-normal max-w-[272px]">
-                    (Recommended 1000px width, 1000px height. Maximum of 1MB file size)
-                  </p>
-                  <label htmlFor="imageUpload" className="cursor-pointer">
-                    <div className="flex justify-center items-center gap-2.5 border border-solid border-[#B7B7B6] p-2.5 rounded-md">
-                      <span className="text-[#323335] text-center text-[10px] font-normal">
-                        Select cover image
-                      </span>
-                    </div>
-                    <input
-                      id="imageUpload"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                    />
-                  </label>
-                </div>
-              ) : (
-                <div className="relative">
-                  <img
-                    src={uploadedImage}
-                    alt="Uploaded cover"
-                    className="w-full h-[257px] rounded-[15px] object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleRemoveImage}
-                    className="absolute top-[11px] right-3 bg-[#FFF5F5] p-1 rounded-[30px] hover:bg-red-100 transition-colors"
-                    aria-label="Remove image"
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M6 18L18 6M6 6L18 18"
-                        stroke="#EF4444"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+              {/* Image Upload Section */}
+              <div className="mt-12 mb-8">
+                {!uploadedImage ? (
+                  <div className="flex flex-col items-center justify-center gap-[9px] border-dashed border border-[#CFCFCE] rounded-xl p-2.5 h-[122px]">
+                    <p className="text-[#323335] text-center text-[10px] font-normal max-w-[272px]">
+                      (Recommended 1000px width, 1000px height. Maximum of 1MB
+                      file size)
+                    </p>
+                    <label htmlFor="imageUpload" className="cursor-pointer">
+                      <div className="flex justify-center items-center gap-2.5 border border-solid border-[#B7B7B6] p-2.5 rounded-md">
+                        <span className="text-[#323335] text-center text-[10px] font-normal">
+                          Select cover image
+                        </span>
+                      </div>
+                      <input
+                        id="imageUpload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
                       />
-                    </svg>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Submit Button */}
-            <div className="border-t border-solid border-[#CFCFCE] pt-[33px] pb-[23px] -mx-5 px-5 mt-6">
-              <button
-                type="submit"
-                disabled={!isFormValid || isSubmitting}
-                className={`w-full flex justify-center items-center gap-2 border border-solid px-7 py-3 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] transition-colors ${
-                  isFormValid && !isSubmitting 
-                    ? 'bg-[#FCC01C] border-[#FCC01C] hover:bg-[#E6AC19] cursor-pointer' 
-                    : 'bg-gray-200 border-gray-300 cursor-not-allowed'
-                }`}
-              >
-                {isSubmitting ? (
-                  <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    </label>
+                  </div>
                 ) : (
-                  <span className="text-white text-base font-bold leading-6">
-                    Save changes
-                  </span>
+                  <div className="relative">
+                    <img
+                      src={uploadedImage}
+                      alt="Uploaded cover"
+                      className="w-full h-[257px] rounded-[15px] object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      className="absolute top-[11px] right-3 bg-[#FFF5F5] p-1 rounded-[30px] hover:bg-red-100 transition-colors"
+                      aria-label="Remove image"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M6 18L18 6M6 6L18 18"
+                          stroke="#EF4444"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 )}
-              </button>
+              </div>
+
+              {/* Submit Button */}
+              <div className="border-t border-solid border-[#CFCFCE] pt-[33px] pb-[23px] -mx-5 px-5 mt-6">
+                <button
+                  type="submit"
+                  disabled={!isFormValid || isSubmitting}
+                  className={`w-full flex justify-center items-center gap-2 border border-solid px-7 py-3 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] transition-colors ${
+                    isFormValid && !isSubmitting
+                      ? "bg-[#FCC01C] border-[#FCC01C] hover:bg-[#E6AC19] cursor-pointer"
+                      : "bg-gray-200 border-gray-300 cursor-not-allowed"
+                  }`}
+                >
+                  {isSubmitting ? (
+                    <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <span className="text-white text-base font-bold leading-6">
+                      Save changes
+                    </span>
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
-        </form>
-      </section>
+          </form>
+        </section>
       </div>
     </div>
   );

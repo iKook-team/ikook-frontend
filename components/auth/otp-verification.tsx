@@ -132,7 +132,8 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
           onSubmit={handleSubmit}
         >
           <p className="mb-4 text-sm text-gray-600">
-            {subtitleText ?? "Enter the 6-digit code sent to your phone number."}
+            {subtitleText ??
+              "Enter the 6-digit code sent to your phone number."}
           </p>
 
           <div className="mb-6 flex justify-center gap-2">

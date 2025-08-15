@@ -7,9 +7,14 @@ interface DateHeadersProps {
   selectedDate?: Date | null;
 }
 
-export default function DateHeaders({ dates, onDateClick, selectedDate }: DateHeadersProps) {
+export default function DateHeaders({
+  dates,
+  onDateClick,
+  selectedDate,
+}: DateHeadersProps) {
   const isToday = (date: Date): boolean => {
     const today = new Date();
+
     return (
       date.getDate() === today.getDate() &&
       date.getMonth() === today.getMonth() &&
@@ -19,6 +24,7 @@ export default function DateHeaders({ dates, onDateClick, selectedDate }: DateHe
 
   const isSelected = (date: Date): boolean => {
     if (!selectedDate) return false;
+
     return (
       date.getDate() === selectedDate.getDate() &&
       date.getMonth() === selectedDate.getMonth() &&
@@ -38,7 +44,7 @@ export default function DateHeaders({ dates, onDateClick, selectedDate }: DateHe
       "border-transparent",
       "transition-colors",
       "duration-200",
-      "cursor-pointer"
+      "cursor-pointer",
     ];
 
     if (isToday(date)) {
@@ -62,20 +68,25 @@ export default function DateHeaders({ dates, onDateClick, selectedDate }: DateHe
     <div className="w-full">
       <div className="flex">
         {dates.map((date, index) => (
-          <div 
-            key={index} 
-            className={`flex-1 text-center ${getDayClasses(date)}`}
+          <div
+            key={index}
+            role="button"
+            tabIndex={0}
+            aria-label={`Select date ${format(date, 'EEEE, MMMM d, yyyy')}`}
+            className={`flex-1 text-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-yellow-400 ${getDayClasses(date)}`}
             onClick={() => handleDateClick(date)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleDateClick(date);
+              }
+            }}
           >
             <div className="text-xs font-medium mb-1">
-              {format(date, 'EEE')}
+              {format(date, "EEE")}
             </div>
-            <div className="text-xl font-semibold">
-              {format(date, 'd')}
-            </div>
-            <div className="text-xs mt-1">
-              {format(date, 'MMM')}
-            </div>
+            <div className="text-xl font-semibold">{format(date, "d")}</div>
+            <div className="text-xs mt-1">{format(date, "MMM")}</div>
             {isToday(date) && (
               <div className="w-1.5 h-1.5 bg-yellow-600 rounded-full mt-1 mx-auto" />
             )}

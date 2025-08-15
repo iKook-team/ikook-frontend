@@ -5,20 +5,17 @@ export default function ServicesSection() {
     {
       title: "LEARN FOOD",
       subtitle: "Learn from experienced chefs",
-      image:
-        "/large-event.png",
+      image: "/large-event.png",
     },
     {
       title: "CHEF AT HOME",
       subtitle: "Professional chefs at your location",
-      image:
-        "/chef-at-home.png",
+      image: "/chef-at-home.png",
     },
     {
       title: "MEAL PREP",
       subtitle: "Healthy meals prepared for you",
-      image:
-        "/meal-prep.png",
+      image: "/meal-prep.png",
     },
   ];
 
@@ -45,7 +42,7 @@ export default function ServicesSection() {
               alt={service.title}
               width={400}
               height={450}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
             />
           ))}
         </div>

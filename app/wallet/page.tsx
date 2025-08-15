@@ -50,6 +50,7 @@ const Index: React.FC = () => {
     try {
       const walletDetails = await paymentsService.getWalletDetails();
       const txData = await paymentsService.getWalletTransactions();
+
       setWallet(walletDetails.data);
       setTransactions(txData.data?.results || []);
     } catch (err) {
@@ -65,8 +66,13 @@ const Index: React.FC = () => {
       await refreshWallet();
     } catch (err: any) {
       const data = err?.response?.data;
-      const backendMsg = data?.message || data?.detail || err?.message || "Failed to redeem voucher";
+      const backendMsg =
+        data?.message ||
+        data?.detail ||
+        err?.message ||
+        "Failed to redeem voucher";
       const field = data?.field_name ? ` (${data.field_name})` : "";
+
       showToast.error(`${backendMsg}${field}`);
       throw err; // keep modal open per component logic
     }
@@ -96,13 +102,15 @@ const Index: React.FC = () => {
           Wallet
         </h1>
         {loading ? (
-          <div className="py-12 text-center text-gray-500">Loading wallet data...</div>
+          <div className="py-12 text-center text-gray-500">
+            Loading wallet data...
+          </div>
         ) : error ? (
           <div className="mt-8 text-red-500">{error}</div>
         ) : (
           <>
-            <WalletBalance 
-              balance={wallet?.balance} 
+            <WalletBalance
+              balance={wallet?.balance}
               onRedeemClick={() => setIsRedeemOpen(true)}
               onAddMoneyClick={() => setIsAddMoneyOpen(true)}
             />

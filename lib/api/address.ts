@@ -1,5 +1,6 @@
-import { authService } from './auth';
-import apiClient from '@/src/lib/axios';
+import { authService } from "./auth";
+
+import apiClient from "@/src/lib/axios";
 
 export interface CreateAddressData {
   place_name: string;
@@ -34,15 +35,19 @@ export interface AddressListResponse {
 export const addressService = {
   async getAddresses(): Promise<AddressListResponse> {
     const token = authService.getToken();
+
     if (!token) {
-      throw new Error('No authentication token available');
+      throw new Error("No authentication token available");
     }
 
-    const response = await apiClient.get<{ data: AddressListResponse }>('/users/profiles/addresses/', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
+    const response = await apiClient.get<{ data: AddressListResponse }>(
+      "/users/profiles/addresses/",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     // Return the nested data property from the response
     return response.data.data;
@@ -50,54 +55,71 @@ export const addressService = {
 
   async addAddress(data: CreateAddressData): Promise<Address> {
     const token = authService.getToken();
+
     if (!token) {
-      throw new Error('No authentication token available');
+      throw new Error("No authentication token available");
     }
 
-    const response = await apiClient.post<{ data: Address }>('/users/profiles/addresses/', {
-      place_name: data.place_name,
-      address_line_one: data.address_line_one,
-      address_line_two: data.address_line_two,
-      city: data.city,
-      postal_code: data.postal_code,
-      country: data.country
-    }, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await apiClient.post<{ data: Address }>(
+      "/users/profiles/addresses/",
+      {
+        place_name: data.place_name,
+        address_line_one: data.address_line_one,
+        address_line_two: data.address_line_two,
+        city: data.city,
+        postal_code: data.postal_code,
+        country: data.country,
       },
-    });
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
 
     return response.data.data;
   },
 
   async getAddress(id: number): Promise<Address> {
     const token = authService.getToken();
+
     if (!token) {
-      throw new Error('No authentication token available');
+      throw new Error("No authentication token available");
     }
 
-    const response = await apiClient.get<{ data: Address }>(`/users/profiles/addresses/${id}/`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
+    const response = await apiClient.get<{ data: Address }>(
+      `/users/profiles/addresses/${id}/`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     return response.data.data;
   },
 
-  async updateAddress(id: number, data: Partial<CreateAddressData>): Promise<Address> {
+  async updateAddress(
+    id: number,
+    data: Partial<CreateAddressData>,
+  ): Promise<Address> {
     const token = authService.getToken();
+
     if (!token) {
-      throw new Error('No authentication token available');
+      throw new Error("No authentication token available");
     }
 
-    const response = await apiClient.patch<{ data: Address }>(`/users/profiles/addresses/${id}/`, data, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await apiClient.patch<{ data: Address }>(
+      `/users/profiles/addresses/${id}/`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
 
     return response.data.data;
   },

@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+
 import { useAuthStore } from "@/lib/store/auth-store";
 import { TagSelector } from "@/components/ui/tag-selector";
 import { authService } from "@/lib/api/auth";
 import { handleApiError } from "@/lib/utils/toast";
 import { showToast } from "@/lib/utils/toast";
 
-type UserType = 'chef' | 'host';
+type UserType = "chef" | "host";
 
 interface ProfileFormProps {
   userType?: UserType;
@@ -28,7 +29,7 @@ interface FormDataState {
   avatar: string;
 }
 
-const ProfileForm: React.FC<ProfileFormProps> = ({ userType = 'chef' }) => {
+const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
   const setChefFormData = useAuthStore((state) => state.setChefFormData);
@@ -47,31 +48,41 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = 'chef' }) => {
     briefProfile: "",
     avatar: "",
   });
-  
+
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     if (!file) return;
-    
+
     // Check file type
-    if (!file.type.startsWith('image/')) {
-      handleApiError(new Error('Please select a valid image file'), 'Invalid file type');
+    if (!file.type.startsWith("image/")) {
+      handleApiError(
+        new Error("Please select a valid image file"),
+        "Invalid file type",
+      );
+
       return;
     }
-    
+
     // Check file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      handleApiError(new Error('Image size should be less than 5MB'), 'File too large');
+      handleApiError(
+        new Error("Image size should be less than 5MB"),
+        "File too large",
+      );
+
       return;
     }
-    
+
     // Create a preview URL
     const reader = new FileReader();
+
     reader.onloadend = () => {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        avatar: reader.result as string
+        avatar: reader.result as string,
       }));
       setAvatarFile(file);
     };
@@ -80,25 +91,29 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = 'chef' }) => {
 
   // Format date from YYYY-MM-DD to a format suitable for input type="date"
   const formatDateForInput = (dateString: string): string => {
-    if (!dateString) return '';
+    if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toISOString().split('T')[0];
+
+    return date.toISOString().split("T")[0];
   };
 
-  const handleInputChange = (field: keyof FormDataState, value: string | string[]) => {
-    setFormData(prev => ({
+  const handleInputChange = (
+    field: keyof FormDataState,
+    value: string | string[],
+  ) => {
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
   const initialLoadRef = React.useRef(true);
   const prevChefFormDataRef = React.useRef(chefFormData);
   const prevUserRef = React.useRef(user);
-  
+
   // Log user data when it changes
   useEffect(() => {
-    console.log('User data from store:', user);
+    console.log("User data from store:", user);
   }, [user]);
 
   // Load user data when component mounts or user changes
@@ -106,60 +121,79 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = 'chef' }) => {
     // Only update if user data has changed or it's the initial load
     const userChanged = user !== prevUserRef.current;
     const chefFormDataChanged = chefFormData !== prevChefFormDataRef.current;
-    
-    if (user && (initialLoadRef.current || userChanged || chefFormDataChanged)) {
+
+    if (
+      user &&
+      (initialLoadRef.current || userChanged || chefFormDataChanged)
+    ) {
       // Only initialize fields that haven't been modified by the user
-      setFormData(prevFormData => {
+      setFormData((prevFormData) => {
         // Only update fields that are empty or being loaded for the first time
-        const shouldUpdateField = (field: keyof FormDataState) => 
-          initialLoadRef.current || 
-          !prevFormData[field] || 
-          (field === 'dateOfBirth' && !prevFormData.dateOfBirth) ||
-          (field === 'briefProfile' && !prevFormData.briefProfile);
-        
+        const shouldUpdateField = (field: keyof FormDataState) =>
+          initialLoadRef.current ||
+          !prevFormData[field] ||
+          (field === "dateOfBirth" && !prevFormData.dateOfBirth) ||
+          (field === "briefProfile" && !prevFormData.briefProfile);
+
         // Create updated form data
         const updatedData: Partial<FormDataState> = {};
-        
+
         // Only update fields that haven't been modified by the user
-        if (shouldUpdateField('firstName')) updatedData.firstName = user.first_name || "";
-        if (shouldUpdateField('lastName')) updatedData.lastName = user.last_name || "";
-        if (shouldUpdateField('email')) updatedData.email = user.email || "";
-        if (shouldUpdateField('phoneNumber')) updatedData.phoneNumber = user.phone_number || "";
-        if (shouldUpdateField('avatar')) updatedData.avatar = user.avatar || "";
-        
+        if (shouldUpdateField("firstName"))
+          updatedData.firstName = user.first_name || "";
+        if (shouldUpdateField("lastName"))
+          updatedData.lastName = user.last_name || "";
+        if (shouldUpdateField("email")) updatedData.email = user.email || "";
+        if (shouldUpdateField("phoneNumber"))
+          updatedData.phoneNumber = user.phone_number || "";
+        if (shouldUpdateField("avatar")) updatedData.avatar = user.avatar || "";
+
         // Handle bio and date_of_birth from user profile if available
-        if (shouldUpdateField('briefProfile')) {
+        if (shouldUpdateField("briefProfile")) {
           updatedData.briefProfile = user.bio || "";
         }
-        
-        if (shouldUpdateField('dateOfBirth') && user.date_of_birth) {
+
+        if (shouldUpdateField("dateOfBirth") && user.date_of_birth) {
           updatedData.dateOfBirth = formatDateForInput(user.date_of_birth);
         }
-        
+
         // Only update if there are actual changes to prevent unnecessary re-renders
-        const hasChanges = Object.keys(updatedData).some(key => 
-          JSON.stringify(updatedData[key as keyof typeof updatedData]) !== 
-          JSON.stringify(prevFormData[key as keyof FormDataState])
+        const hasChanges = Object.keys(updatedData).some(
+          (key) =>
+            JSON.stringify(updatedData[key as keyof typeof updatedData]) !==
+            JSON.stringify(prevFormData[key as keyof FormDataState]),
         );
-        
+
         if (!hasChanges) return prevFormData;
-        
+
         return {
           ...prevFormData,
           ...updatedData,
           // Always update these fields if they exist in chefFormData
-          ...(userType === 'chef' && chefFormData ? {
-            ...(chefFormData.dateOfBirth && { dateOfBirth: formatDateForInput(chefFormData.dateOfBirth) }),
-            ...(chefFormData.city && { city: chefFormData.city }),
-            ...(chefFormData.address && { address: chefFormData.address }),
-            ...(chefFormData.postalCode && { postalCode: chefFormData.postalCode }),
-            ...(chefFormData.briefProfile && { briefProfile: chefFormData.briefProfile }),
-            ...(Array.isArray(chefFormData.eventTypes) && { eventTypes: [...chefFormData.eventTypes] }),
-            ...(Array.isArray(chefFormData.cuisineTypes) && { cuisineTypes: [...chefFormData.cuisineTypes] })
-          } : {})
+          ...(userType === "chef" && chefFormData
+            ? {
+                ...(chefFormData.dateOfBirth && {
+                  dateOfBirth: formatDateForInput(chefFormData.dateOfBirth),
+                }),
+                ...(chefFormData.city && { city: chefFormData.city }),
+                ...(chefFormData.address && { address: chefFormData.address }),
+                ...(chefFormData.postalCode && {
+                  postalCode: chefFormData.postalCode,
+                }),
+                ...(chefFormData.briefProfile && {
+                  briefProfile: chefFormData.briefProfile,
+                }),
+                ...(Array.isArray(chefFormData.eventTypes) && {
+                  eventTypes: [...chefFormData.eventTypes],
+                }),
+                ...(Array.isArray(chefFormData.cuisineTypes) && {
+                  cuisineTypes: [...chefFormData.cuisineTypes],
+                }),
+              }
+            : {}),
         };
       });
-      
+
       // Update refs after processing
       initialLoadRef.current = false;
       prevUserRef.current = user;
@@ -181,65 +215,68 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = 'chef' }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!user) {
-      showToast.error('User not found');
+      showToast.error("User not found");
+
       return;
     }
-    
+
     try {
       const formDataToSend = new FormData();
-      
+
       // Append user data to FormData with correct field names for the backend
-      formDataToSend.append('first_name', formData.firstName);
-      formDataToSend.append('last_name', formData.lastName);
-      formDataToSend.append('email', formData.email);
-      formDataToSend.append('phone_number', formData.phoneNumber);
-      
+      formDataToSend.append("first_name", formData.firstName);
+      formDataToSend.append("last_name", formData.lastName);
+      formDataToSend.append("email", formData.email);
+      formDataToSend.append("phone_number", formData.phoneNumber);
+
       if (formData.dateOfBirth) {
-        formDataToSend.append('date_of_birth', formData.dateOfBirth);
+        formDataToSend.append("date_of_birth", formData.dateOfBirth);
       }
-      
+
       if (formData.briefProfile) {
-        formDataToSend.append('bio', formData.briefProfile);
+        formDataToSend.append("bio", formData.briefProfile);
       }
-      
+
       // Append avatar file if it exists
       if (avatarFile) {
-        formDataToSend.append('avatar', avatarFile);
+        formDataToSend.append("avatar", avatarFile);
       }
-      
+
       // Add chef-specific fields if user is a chef
-      if (userType === 'chef') {
-        if (formData.city) formDataToSend.append('city', formData.city);
-        if (formData.address) formDataToSend.append('address', formData.address);
-        if (formData.postalCode) formDataToSend.append('postal_code', formData.postalCode);
-        
+      if (userType === "chef") {
+        if (formData.city) formDataToSend.append("city", formData.city);
+        if (formData.address)
+          formDataToSend.append("address", formData.address);
+        if (formData.postalCode)
+          formDataToSend.append("postal_code", formData.postalCode);
+
         if (Array.isArray(formData.cuisineTypes)) {
-          formData.cuisineTypes.forEach(cuisine => {
-            formDataToSend.append('cuisines', cuisine);
+          formData.cuisineTypes.forEach((cuisine) => {
+            formDataToSend.append("cuisines", cuisine);
           });
         }
-        
+
         if (Array.isArray(formData.eventTypes)) {
-          formData.eventTypes.forEach(event => {
-            formDataToSend.append('events_available_for', event);
+          formData.eventTypes.forEach((event) => {
+            formDataToSend.append("events_available_for", event);
           });
         }
       }
-      
+
       // Notification preferences are handled on the notifications page
-      
+
       // Call the API to update the profile
       const updatedUser = await authService.updateProfile(
         user.id,
         formDataToSend,
-        userType === 'chef'
+        userType === "chef",
       );
-      
+
       // Extract the user data from the API response
       const userData = updatedUser.data;
-      
+
       // Update the user in the store
       setUser({
         ...user,
@@ -250,11 +287,11 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = 'chef' }) => {
         phone_number: formData.phoneNumber,
         bio: formData.briefProfile,
         date_of_birth: formData.dateOfBirth,
-        ...(userData.avatar && { avatar: userData.avatar })
+        ...(userData.avatar && { avatar: userData.avatar }),
       });
-      
+
       // If this is a chef, also update the chef form data
-      if (userType === 'chef') {
+      if (userType === "chef") {
         setChefFormData({
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -266,15 +303,15 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = 'chef' }) => {
           postalCode: formData.postalCode,
           briefProfile: formData.briefProfile,
           eventTypes: formData.eventTypes,
-          cuisineTypes: formData.cuisineTypes
+          cuisineTypes: formData.cuisineTypes,
         });
       }
-      
+
       // Show success message
-      showToast.success('Profile updated successfully!');
+      showToast.success("Profile updated successfully!");
     } catch (error) {
-      console.error('Error updating profile:', error);
-      handleApiError(error, 'Failed to update profile');
+      console.error("Error updating profile:", error);
+      handleApiError(error, "Failed to update profile");
     }
   };
 
@@ -290,12 +327,17 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = 'chef' }) => {
               <div className="border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] flex flex-col items-stretch bg-white mt-[21px] pt-[51px] rounded-[15px] border-solid border-[#E7E7E7] max-md:max-w-full">
                 <div className="relative self-center group">
                   <img
-                    src={formData.avatar || "https://api.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/d24d7622a56614065632b782fba246a7847b6d19?placeholderIfAbsent=true"}
+                    src={
+                      formData.avatar ||
+                      "https://api.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/d24d7622a56614065632b782fba246a7847b6d19?placeholderIfAbsent=true"
+                    }
                     alt="Profile avatar"
                     className="aspect-[1] object-cover w-20 h-20 rounded-full border-2 border-white shadow-md"
                   />
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black bg-opacity-50 rounded-full">
-                    <span className="text-white text-xs text-center">Change Photo</span>
+                    <span className="text-white text-xs text-center">
+                      Change Photo
+                    </span>
                   </div>
                   <input
                     type="file"
@@ -363,19 +405,55 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = 'chef' }) => {
                               handleInputChange("dateOfBirth", e.target.value)
                             }
                             className="self-stretch flex min-w-60 items-center gap-2 flex-1 shrink basis-[0%] my-auto max-md:max-w-full bg-transparent border-none outline-none text-[#6F6E6D] pr-8 [&::-webkit-calendar-picker-indicator]:hidden"
-                            max={new Date().toISOString().split('T')[0]} // Prevent future dates
+                            max={new Date().toISOString().split("T")[0]} // Prevent future dates
                             id="dateOfBirth"
                           />
-                          <button 
-                            type="button" 
+                          <button
+                            type="button"
                             className="absolute right-3 top-1/2 -translate-y-1/2 p-1"
-                            onClick={() => (document.getElementById('dateOfBirth') as HTMLInputElement)?.showPicker?.()}
+                            onClick={() =>
+                              (
+                                document.getElementById(
+                                  "dateOfBirth",
+                                ) as HTMLInputElement
+                              )?.showPicker?.()
+                            }
                           >
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M12 2.66675H3.99998C2.52722 2.66675 1.33331 3.86066 1.33331 5.33341V12.0001C1.33331 13.4728 2.52722 14.6667 3.99998 14.6667H12C13.4727 14.6667 14.6666 13.4728 14.6666 12.0001V5.33341C14.6666 3.86066 13.4727 2.66675 12 2.66675Z" stroke="#6F6E6D" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
-                              <path d="M5.33331 1.33337V4.00004" stroke="#6F6E6D" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
-                              <path d="M10.6667 1.33337V4.00004" stroke="#6F6E6D" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
-                              <path d="M1.33331 6.66675H14.6666" stroke="#6F6E6D" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M12 2.66675H3.99998C2.52722 2.66675 1.33331 3.86066 1.33331 5.33341V12.0001C1.33331 13.4728 2.52722 14.6667 3.99998 14.6667H12C13.4727 14.6667 14.6666 13.4728 14.6666 12.0001V5.33341C14.6666 3.86066 13.4727 2.66675 12 2.66675Z"
+                                stroke="#6F6E6D"
+                                strokeWidth="1.33333"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                              <path
+                                d="M5.33331 1.33337V4.00004"
+                                stroke="#6F6E6D"
+                                strokeWidth="1.33333"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                              <path
+                                d="M10.6667 1.33337V4.00004"
+                                stroke="#6F6E6D"
+                                strokeWidth="1.33333"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                              <path
+                                d="M1.33331 6.66675H14.6666"
+                                stroke="#6F6E6D"
+                                strokeWidth="1.33333"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
                             </svg>
                           </button>
                         </div>
@@ -423,7 +501,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = 'chef' }) => {
                     </div>
                   </div>
 
-                  {userType === 'chef' && (
+                  {userType === "chef" && (
                     <>
                       <div className="w-full whitespace-nowrap mt-4 max-md:max-w-full">
                         <div className="w-full max-md:max-w-full">
@@ -481,7 +559,10 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = 'chef' }) => {
                                 type="text"
                                 value={formData.postalCode}
                                 onChange={(e) =>
-                                  handleInputChange("postalCode", e.target.value)
+                                  handleInputChange(
+                                    "postalCode",
+                                    e.target.value,
+                                  )
                                 }
                                 className="self-stretch flex min-w-60 w-full items-center gap-2 flex-1 shrink basis-[0%] my-auto max-md:max-w-full bg-transparent border-none outline-none text-[#6F6E6D]"
                               />
@@ -511,7 +592,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = 'chef' }) => {
                     </div>
                   </div>
 
-                  {userType === 'chef' && (
+                  {userType === "chef" && (
                     <>
                       <TagSelector
                         className="w-full mt-5"

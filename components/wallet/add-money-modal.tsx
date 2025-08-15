@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+
 import { FormField } from "@/components/ui/form-field";
 
 interface AddMoneyModalProps {
@@ -9,7 +10,11 @@ interface AddMoneyModalProps {
   onAddMoney?: (amount: string) => Promise<void> | void;
 }
 
-export const AddMoneyModal = ({ open, onClose, onAddMoney }: AddMoneyModalProps) => {
+export const AddMoneyModal = ({
+  open,
+  onClose,
+  onAddMoney,
+}: AddMoneyModalProps) => {
   const [amount, setAmount] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -35,7 +40,9 @@ export const AddMoneyModal = ({ open, onClose, onAddMoney }: AddMoneyModalProps)
       <div className="relative w-full max-w-md p-6 mx-4 bg-white rounded-lg shadow-xl">
         {/* Modal Header */}
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-gray-900">Add Money to Wallet</h3>
+          <h3 className="text-lg font-semibold text-gray-900">
+            Add Money to Wallet
+          </h3>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-500"

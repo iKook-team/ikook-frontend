@@ -29,7 +29,10 @@ const ForgotPasswordPage: React.FC = () => {
       showToast.success("Verification code sent to your email.");
       setStep(2);
     } catch (error) {
-      handleApiError(error, "Failed to send verification code. Please try again.");
+      handleApiError(
+        error,
+        "Failed to send verification code. Please try again.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -75,11 +78,15 @@ const ForgotPasswordPage: React.FC = () => {
             </header>
             <div className="w-full border rounded-[15px] border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] p-8">
               <p className="text-sm text-gray-600 mb-6">
-                Enter your email to receive a verification code to reset your password.
+                Enter your email to receive a verification code to reset your
+                password.
               </p>
               <form onSubmit={handleEmailSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="email" className="text-[#344054] text-sm leading-5">
+                  <label
+                    htmlFor="email"
+                    className="text-[#344054] text-sm leading-5"
+                  >
                     Email
                   </label>
                   <div className="flex items-center gap-2 w-full border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white px-3.5 py-2.5 rounded-lg border-solid border-[#CFCFCE] focus-within:border-[#FCC01C]">
@@ -131,7 +138,10 @@ const ForgotPasswordPage: React.FC = () => {
             <div className="w-full border rounded-[15px] border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] p-8">
               <form onSubmit={handlePasswordSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="new-password" className="text-[#344054] text-sm leading-5">
+                  <label
+                    htmlFor="new-password"
+                    className="text-[#344054] text-sm leading-5"
+                  >
                     New password
                   </label>
                   <div className="flex items-center gap-2 w-full border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white px-3.5 py-2.5 rounded-lg border-solid border-[#CFCFCE] focus-within:border-[#FCC01C]">
@@ -155,7 +165,10 @@ const ForgotPasswordPage: React.FC = () => {
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="confirm-password" className="text-[#344054] text-sm leading-5">
+                  <label
+                    htmlFor="confirm-password"
+                    className="text-[#344054] text-sm leading-5"
+                  >
                     Confirm new password
                   </label>
                   <div className="flex items-center gap-2 w-full border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white px-3.5 py-2.5 rounded-lg border-solid border-[#CFCFCE] focus-within:border-[#FCC01C]">
@@ -171,12 +184,18 @@ const ForgotPasswordPage: React.FC = () => {
                     />
                   </div>
                   {confirmPassword && confirmPassword !== newPassword && (
-                    <p className="text-sm text-red-500 mt-1">Passwords do not match</p>
+                    <p className="text-sm text-red-500 mt-1">
+                      Passwords do not match
+                    </p>
                   )}
                 </div>
                 <button
                   type="submit"
-                  disabled={isSubmitting || !newPassword || newPassword !== confirmPassword}
+                  disabled={
+                    isSubmitting ||
+                    !newPassword ||
+                    newPassword !== confirmPassword
+                  }
                   className="w-full text-white text-base font-bold leading-6 gap-2 border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-[#FCC01C] px-[113px] py-3 rounded-lg border-solid border-[#FCC01C] hover:bg-[#e6ac19] transition-colors disabled:opacity-50"
                 >
                   {isSubmitting ? "Saving..." : "Save new password"}
@@ -198,5 +217,3 @@ const ForgotPasswordPage: React.FC = () => {
 };
 
 export default ForgotPasswordPage;
-
-

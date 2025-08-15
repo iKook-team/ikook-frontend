@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+
 import { showToast } from "@/lib/utils/toast";
 import { FormField } from "@/components/ui/form-field";
 import { addressService } from "@/lib/api/address";
@@ -21,7 +22,7 @@ export const AddAddressModal = ({
 }: AddAddressModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const userCountry = useAuthStore((state) => state.user?.country || 'Nigeria');
+  const userCountry = useAuthStore((state) => state.user?.country || "Nigeria");
   const [formData, setFormData] = useState({
     placeName: "",
     addressLine1: "",
@@ -35,10 +36,11 @@ export const AddAddressModal = ({
   useEffect(() => {
     const loadAddress = async () => {
       if (!addressId) return;
-      
+
       setIsLoading(true);
       try {
         const address = await addressService.getAddress(addressId);
+
         setFormData({
           placeName: address.place_name,
           addressLine1: address.address_line_one,
@@ -48,8 +50,8 @@ export const AddAddressModal = ({
           country: address.country,
         });
       } catch (error) {
-        console.error('Error loading address:', error);
-        showToast.error('Failed to load address data');
+        console.error("Error loading address:", error);
+        showToast.error("Failed to load address data");
         onClose();
       } finally {
         setIsLoading(false);
@@ -80,15 +82,21 @@ export const AddAddressModal = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Basic form validation
-    if (!formData.placeName || !formData.addressLine1 || !formData.city || !formData.postalCode) {
+    if (
+      !formData.placeName ||
+      !formData.addressLine1 ||
+      !formData.city ||
+      !formData.postalCode
+    ) {
       showToast.error("Please fill in all required fields");
+
       return;
     }
-    
+
     setIsSubmitting(true);
-    
+
     try {
       const addressData = {
         place_name: formData.placeName,
@@ -96,7 +104,7 @@ export const AddAddressModal = ({
         address_line_two: formData.addressLine2,
         city: formData.city,
         postal_code: formData.postalCode,
-        country: formData.country
+        country: formData.country,
       };
 
       if (addressId) {
@@ -108,22 +116,28 @@ export const AddAddressModal = ({
         await addressService.addAddress(addressData);
         showToast.success("Address added successfully!");
       }
-      
+
       onClose();
       onSuccess?.();
     } catch (error: any) {
-      const errorMessage = error.response?.data?.detail || 
-        (addressId ? "Failed to update address." : "Failed to add address.") + " Please try again.";
+      const errorMessage =
+        error.response?.data?.detail ||
+        (addressId ? "Failed to update address." : "Failed to add address.") +
+          " Please try again.";
+
       showToast.error(errorMessage);
-      console.error(`Error ${addressId ? 'updating' : 'adding'} address:`, error);
+      console.error(
+        `Error ${addressId ? "updating" : "adding"} address:`,
+        error,
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
   if (!open && !isLoading) return null;
-  
-  const modalTitle = addressId ? 'Edit Address' : 'Add New Address';
+
+  const modalTitle = addressId ? "Edit Address" : "Add New Address";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -162,7 +176,7 @@ export const AddAddressModal = ({
             value={formData.placeName}
             onChange={(e) => handleInputChange("placeName", e.target.value)}
           />
-          
+
           <FormField
             required
             label="Address Line 1"
@@ -170,14 +184,14 @@ export const AddAddressModal = ({
             value={formData.addressLine1}
             onChange={(e) => handleInputChange("addressLine1", e.target.value)}
           />
-          
+
           <FormField
             label="Address Line 2 (Optional)"
             placeholder="Apt, suite, unit, etc."
             value={formData.addressLine2}
             onChange={(e) => handleInputChange("addressLine2", e.target.value)}
           />
-          
+
           <FormField
             required
             label="City"
@@ -185,7 +199,7 @@ export const AddAddressModal = ({
             value={formData.city}
             onChange={(e) => handleInputChange("city", e.target.value)}
           />
-          
+
           <FormField
             required
             label="Postal Code"
@@ -209,7 +223,7 @@ export const AddAddressModal = ({
               className="px-4 py-2 text-white bg-amber-500 rounded-md hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 disabled:opacity-50"
               disabled={isSubmitting || isLoading}
             >
-              {isSubmitting ? 'Saving...' : (addressId ? 'Update' : 'Save')}
+              {isSubmitting ? "Saving..." : addressId ? "Update" : "Save"}
             </button>
           </div>
         </form>

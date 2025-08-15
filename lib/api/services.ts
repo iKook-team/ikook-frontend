@@ -36,12 +36,12 @@ export interface CreateServiceBase {
 }
 
 export interface CreateLargeEventService extends CreateServiceBase {
-  chef_service: 'Large Event';
+  chef_service: "Large Event";
   events: string[];
 }
 
 export interface CreateCorporateDiningService extends CreateServiceBase {
-  chef_service: 'Corporate Dining';
+  chef_service: "Corporate Dining";
   events: string[];
 }
 
@@ -57,39 +57,55 @@ export interface ServicesResponse {
 export const servicesService = {
   // Fetch all services for the current chef
   fetchServices: async (): Promise<ServicesResponse> => {
-    const response = await apiClient.get<{ data: ServicesResponse }>('/services/');
+    const response = await apiClient.get<{ data: ServicesResponse }>(
+      "/services/",
+    );
+
     return response.data.data; // Extract the nested data property
   },
 
   // Update service availability
-  updateServiceAvailability: async (id: number, availability: boolean): Promise<Service> => {
-    const response = await apiClient.patch<{ data: Service }>(`/services/${id}/`, { availability });
+  updateServiceAvailability: async (
+    id: number,
+    availability: boolean,
+  ): Promise<Service> => {
+    const response = await apiClient.patch<{ data: Service }>(
+      `/services/${id}/`,
+      { availability },
+    );
+
     return response.data.data; // Extract the nested data property
   },
 
   // Create a new service
-  createService: async <T extends CreateServiceBase>(data: T): Promise<Service> => {
+  createService: async <T extends CreateServiceBase>(
+    data: T,
+  ): Promise<Service> => {
     const formData = new FormData();
-    
+
     // Append all fields to formData
     Object.entries(data).forEach(([key, value]) => {
-      if (key === 'cover_image' && value) {
+      if (key === "cover_image" && value) {
         // Handle file upload
         formData.append(key, value as File);
       } else if (Array.isArray(value)) {
         // Handle array fields (cuisines, events)
-        value.forEach(item => formData.append(key, item));
+        value.forEach((item) => formData.append(key, item));
       } else if (value !== null && value !== undefined) {
         formData.append(key, String(value));
       }
     });
 
-    const response = await apiClient.post<{ data: Service }>('/services/', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    const response = await apiClient.post<{ data: Service }>(
+      "/services/",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       },
-    });
-    
+    );
+
     return response.data.data; // Extract the nested data property
   },
 };

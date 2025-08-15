@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+
 import { Toggle } from "@/components/ui/toggle";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { authService } from "@/lib/api/auth";
@@ -15,44 +16,50 @@ const NotificationSettings: React.FC = () => {
   // Load current notification preferences when component mounts
   useEffect(() => {
     if (user) {
-      setEmailNotification(user.email_notify !== undefined ? user.email_notify : true);
-      setSmsNotification(user.sms_notify !== undefined ? user.sms_notify : true);
+      setEmailNotification(
+        user.email_notify !== undefined ? user.email_notify : true,
+      );
+      setSmsNotification(
+        user.sms_notify !== undefined ? user.sms_notify : true,
+      );
     }
   }, [user]);
 
   const handleSaveChanges = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!user) {
-      showToast.error('You must be logged in to update notification settings');
+      showToast.error("You must be logged in to update notification settings");
+
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
       const formData = new FormData();
-      formData.append('email_notify', String(emailNotification));
-      formData.append('sms_notify', String(smsNotification));
-      
+
+      formData.append("email_notify", String(emailNotification));
+      formData.append("sms_notify", String(smsNotification));
+
       // Update only the notification preferences
       const updatedUser = await authService.updateProfile(
         user.id,
         formData,
-        user.user_type === 'Chef'
+        user.user_type === "Chef",
       );
-      
+
       // Update the user in the store
       setUser({
         ...user,
         email_notify: emailNotification,
-        sms_notify: smsNotification
+        sms_notify: smsNotification,
       });
-      
-      showToast.success('Notification preferences updated successfully');
+
+      showToast.success("Notification preferences updated successfully");
     } catch (error) {
-      console.error('Error updating notification preferences:', error);
-      handleApiError(error, 'Failed to update notification preferences');
+      console.error("Error updating notification preferences:", error);
+      handleApiError(error, "Failed to update notification preferences");
     } finally {
       setIsLoading(false);
     }
@@ -90,9 +97,9 @@ const NotificationSettings: React.FC = () => {
               >
                 SMS notification
               </label>
-              <Toggle 
-                checked={smsNotification} 
-                onChange={() => setSmsNotification(!smsNotification)} 
+              <Toggle
+                checked={smsNotification}
+                onChange={() => setSmsNotification(!smsNotification)}
               />
             </div>
           </div>

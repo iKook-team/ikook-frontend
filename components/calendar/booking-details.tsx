@@ -1,6 +1,5 @@
 "use client";
 import * as React from "react";
-
 import { format } from "date-fns";
 import { parseISO } from "date-fns/parseISO";
 
@@ -21,13 +20,16 @@ interface BookingDetailsProps {
 
 function BookingDetails({ onClose, event }: BookingDetailsProps) {
   if (!event) return null;
-  
-  const startDate = typeof event.start === 'string' ? parseISO(event.start) : event.start;
-  const endDate = typeof event.end === 'string' ? parseISO(event.end) : event.end;
-  
-  const dateString = format(startDate, 'd MMMM yyyy').toUpperCase();
-  const timeString = `${format(startDate, 'EEEE, h a')} - ${format(endDate, 'h a')}`.toUpperCase();
-  
+
+  const startDate =
+    typeof event.start === "string" ? parseISO(event.start) : event.start;
+  const endDate =
+    typeof event.end === "string" ? parseISO(event.end) : event.end;
+
+  const dateString = format(startDate, "d MMMM yyyy").toUpperCase();
+  const timeString =
+    `${format(startDate, "EEEE, h a")} - ${format(endDate, "h a")}`.toUpperCase();
+
   const hasBooking = event.hasBooking && event.booking;
 
   return (
@@ -74,7 +76,7 @@ function BookingDetails({ onClose, event }: BookingDetailsProps) {
           }}
         />
         <div className="absolute top-0 text-xs h-[18px] left-[23px] text-zinc-800 w-full">
-          {hasBooking ? 'Booked' : 'Available'}
+          {hasBooking ? "Booked" : "Available"}
         </div>
       </div>
 
@@ -99,17 +101,29 @@ function BookingDetails({ onClose, event }: BookingDetailsProps) {
       <section className="absolute h-[120px] left-[23px] top-[163px] w-[264px]">
         {hasBooking ? (
           <div className="space-y-2">
-            <h3 className="text-sm font-medium text-zinc-800">Booking Details</h3>
+            <h3 className="text-sm font-medium text-zinc-800">
+              Booking Details
+            </h3>
             <div className="text-xs text-zinc-600 space-y-1">
-              <p><span className="font-medium">Service:</span> {event.booking?.service}</p>
-              <p><span className="font-medium">Host:</span> {event.booking?.host_user}</p>
-              <p><span className="font-medium">Status:</span> Confirmed</p>
+              <p>
+                <span className="font-medium">Service:</span>{" "}
+                {event.booking?.service}
+              </p>
+              <p>
+                <span className="font-medium">Host:</span>{" "}
+                {event.booking?.host_user}
+              </p>
+              <p>
+                <span className="font-medium">Status:</span> Confirmed
+              </p>
             </div>
           </div>
         ) : (
           <div className="text-sm text-zinc-600">
             <p>No booking details available.</p>
-            <p className="text-xs text-zinc-400 mt-1">Your availability is visible to potential guests.</p>
+            <p className="text-xs text-zinc-400 mt-1">
+              Your availability is visible to potential guests.
+            </p>
           </div>
         )}
       </section>

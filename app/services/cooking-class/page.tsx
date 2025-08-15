@@ -1,11 +1,11 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
 import { useAuthStore } from "@/lib/store/auth-store";
 import { servicesService } from "@/lib/api/services";
-import { toast } from "sonner";
 import { getCurrencySymbol } from "@/lib/utils/currency";
 import { TagSelector } from "@/components/ui/tag-selector";
 
@@ -25,10 +25,10 @@ const CookingClassPage: React.FC = () => {
   const [uploadedImage, setUploadedImage] = React.useState<string | null>(null);
   const [imageFile, setImageFile] = React.useState<File | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
-  
-  const currencySymbol = getCurrencySymbol({ 
-    currency: user?.currency, 
-    country: user?.country 
+
+  const currencySymbol = getCurrencySymbol({
+    currency: user?.currency,
+    country: user?.country,
   });
 
   const [formData, setFormData] = React.useState<FormData>({
@@ -41,19 +41,19 @@ const CookingClassPage: React.FC = () => {
 
   // Store the current uploadedImage in a ref to use in cleanup
   const uploadedImageRef = React.useRef<string | null>(null);
-  
+
   // Update the ref whenever uploadedImage changes
   React.useEffect(() => {
     uploadedImageRef.current = uploadedImage;
   }, [uploadedImage]);
 
   React.useEffect(() => {
-    console.log('Component mounted');
+    console.log("Component mounted");
     setIsMounted(true);
-    
+
     // Cleanup function to revoke object URLs when component unmounts
     return () => {
-      console.log('Component unmounting');
+      console.log("Component unmounting");
       if (uploadedImageRef.current) {
         URL.revokeObjectURL(uploadedImageRef.current);
       }
@@ -72,7 +72,10 @@ const CookingClassPage: React.FC = () => {
     "Pastries",
   ];
 
-  const handleInputChange = (field: keyof FormData, value: string | string[] | boolean) => {
+  const handleInputChange = (
+    field: keyof FormData,
+    value: string | string[] | boolean,
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -81,8 +84,10 @@ const CookingClassPage: React.FC = () => {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     if (file) {
       const reader = new FileReader();
+
       reader.onload = (e) => {
         setUploadedImage(e.target?.result as string);
       };
@@ -96,34 +101,33 @@ const CookingClassPage: React.FC = () => {
     setUploadedImage(null);
     setImageFile(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!isFormValid || !imageFile) return;
-    
+
     try {
       setIsSubmitting(true);
-      
+
       const response = await servicesService.createService({
         availability: formData.availability,
-        chef_service: 'Cooking Class',
+        chef_service: "Cooking Class",
         cover_image: imageFile,
         starting_price_per_person: formData.startingPrice,
         min_num_of_guests: Number(formData.minGuests),
         cuisines: formData.cuisines,
-        cooking_class_appearance: formData.cookingClassAppearance
+        cooking_class_appearance: formData.cookingClassAppearance,
       });
-      
-      toast.success('Cooking Class service created successfully!');
-      router.push('/services');
-      
+
+      toast.success("Cooking Class service created successfully!");
+      router.push("/services");
     } catch (error) {
-      console.error('Error creating service:', error);
-      toast.error('Failed to create service. Please try again.');
+      console.error("Error creating service:", error);
+      toast.error("Failed to create service. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -167,13 +171,17 @@ const CookingClassPage: React.FC = () => {
           </label>
           <button
             type="button"
-            onClick={() => handleInputChange('availability', !formData.availability)}
+            onClick={() =>
+              handleInputChange("availability", !formData.availability)
+            }
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#FCC01C] focus:ring-offset-2 ${
-              formData.availability ? 'bg-[#FCC01C]' : 'bg-gray-200'
+              formData.availability ? "bg-[#FCC01C]" : "bg-gray-200"
             }`}
             aria-label="Toggle availability"
           >
-            <span className={`${formData.availability ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`} />
+            <span
+              className={`${formData.availability ? "translate-x-6" : "translate-x-1"} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+            />
           </button>
         </div>
 
@@ -198,7 +206,9 @@ const CookingClassPage: React.FC = () => {
                   id="startingPrice"
                   type="number"
                   value={formData.startingPrice}
-                  onChange={(e) => handleInputChange("startingPrice", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("startingPrice", e.target.value)
+                  }
                   className="flex-1 px-3.5 py-2.5 border-l border-solid border-[#CFCFCE] rounded-r-lg text-[#6F6E6D] text-base font-normal leading-6 focus:outline-none focus:ring-2 focus:ring-[#FCC01C]"
                   placeholder="000"
                   required
@@ -231,7 +241,9 @@ const CookingClassPage: React.FC = () => {
                 label="Cuisines"
                 tags={allCuisines}
                 selectedTags={formData.cuisines}
-                onTagsChange={(cuisines) => handleInputChange("cuisines", cuisines)}
+                onTagsChange={(cuisines) =>
+                  handleInputChange("cuisines", cuisines)
+                }
                 className="w-full"
               />
             </div>
@@ -242,14 +254,16 @@ const CookingClassPage: React.FC = () => {
                 Class Type
               </label>
               <div className="space-y-3">
-                {['Physical', 'Virtual'].map((type) => (
+                {["Physical", "Virtual"].map((type) => (
                   <div key={type} className="flex items-center gap-3">
                     <input
                       type="radio"
                       id={`appearance-${type.toLowerCase()}`}
                       name="appearance"
                       checked={formData.cookingClassAppearance === type}
-                      onChange={() => handleInputChange('cookingClassAppearance', type)}
+                      onChange={() =>
+                        handleInputChange("cookingClassAppearance", type)
+                      }
                       className="h-4 w-4 border-gray-300 text-[#FCC01C] focus:ring-[#FCC01C]"
                     />
                     <label
@@ -268,7 +282,8 @@ const CookingClassPage: React.FC = () => {
               {!uploadedImage ? (
                 <div className="flex flex-col items-center justify-center gap-[9px] border-dashed border border-[#CFCFCE] rounded-xl p-2.5 h-[122px]">
                   <p className="text-[#323335] text-center text-[10px] font-normal max-w-[272px]">
-                    (Recommended 1000px width, 1000px height. Maximum of 1MB file size)
+                    (Recommended 1000px width, 1000px height. Maximum of 1MB
+                    file size)
                   </p>
                   <label htmlFor="imageUpload" className="cursor-pointer">
                     <div className="flex justify-center items-center gap-2.5 border border-solid border-[#B7B7B6] p-2.5 rounded-md">
@@ -326,11 +341,11 @@ const CookingClassPage: React.FC = () => {
                 disabled={!isFormValid || !imageFile || isSubmitting}
                 className={`w-full py-3 px-4 rounded-lg text-base font-medium leading-6 text-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#FCC01C] focus:ring-offset-2 ${
                   isFormValid && imageFile && !isSubmitting
-                    ? 'bg-[#FCC01C] hover:bg-[#E5AC00] text-[#3F3E3D]' 
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    ? "bg-[#FCC01C] hover:bg-[#E5AC00] text-[#3F3E3D]"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
                 }`}
               >
-                {isSubmitting ? 'Saving...' : 'Save Changes'}
+                {isSubmitting ? "Saving..." : "Save Changes"}
               </button>
             </div>
           </div>

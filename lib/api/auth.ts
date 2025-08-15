@@ -4,7 +4,8 @@ import { useAuthStore } from "@/lib/store/auth-store";
 
 // Create a standalone function to get the token
 const getToken = (): string | null => {
-  if (typeof window === 'undefined') return null;
+  if (typeof window === "undefined") return null;
+
   return useAuthStore.getState().user?.access_token || null;
 };
 
@@ -35,7 +36,7 @@ interface LoginPayload {
 export const authService = {
   // Get the current access token
   getToken,
-  
+
   // Send or verify OTP
   verifyEmail: async (data: VerifyEmailPayload) => {
     const response = await apiClient.post(`/users/auth/verify/`, data);
@@ -138,6 +139,7 @@ export const authService = {
   // Sign up a new user
   signup: async (data: any) => {
     const response = await apiClient.post(`/users/auth/signup/`, data);
+
     return response.data;
   },
 
@@ -146,12 +148,17 @@ export const authService = {
     const response = await apiClient.post(`/users/auth/forgot-password/`, {
       email,
     });
+
     return response.data;
   },
 
   // Reset password
   resetPassword: async (payload: { email: string; password: string }) => {
-    const response = await apiClient.post(`/users/auth/reset-password/`, payload);
+    const response = await apiClient.post(
+      `/users/auth/reset-password/`,
+      payload,
+    );
+
     return response.data;
   },
 
@@ -160,14 +167,14 @@ export const authService = {
     // Use the same endpoint for both chefs and hosts
     return apiClient.patch(`/users/profiles/${userId}/`, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
   },
 
   // Change user password
   changePassword: async (data: ChangePasswordPayload) => {
-    return apiClient.post('/users/auth/change-password/', data);
+    return apiClient.post("/users/auth/change-password/", data);
   },
 };
 

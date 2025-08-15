@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { BookingSections } from "./booking-sections";
 
 const features = [

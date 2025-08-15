@@ -34,14 +34,16 @@ export const MenuCard: React.FC<MenuCardProps> = ({
     currency: userCurrency,
     country: userCountry,
   });
-  
+
   // Format the price with the currency symbol
   const formattedPrice = (price: string): string => {
     // Remove any existing currency symbols and trim whitespace
-    const numericValue = price.replace(/[^0-9.]/g, '').trim();
+    const numericValue = price.replace(/[^0-9.]/g, "").trim();
+
     // Format with 2 decimal places and add currency symbol
-    return `${currencySymbol}${parseFloat(numericValue || '0').toFixed(2)}`;
+    return `${currencySymbol}${parseFloat(numericValue || "0").toFixed(2)}`;
   };
+
   return (
     <article className="shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] min-w-60 grow shrink w-[340px] max-md:max-w-full">
       <div className="border flex w-full flex-col items-stretch bg-white pt-px pb-[17px] rounded-[15px] border-solid border-[#E7E7E7] max-md:max-w-full">

@@ -5,7 +5,7 @@ import CalendarGrid from "@/components/calendar/calendar-grid";
 import CalendarControls from "@/components/calendar/calendar-controls";
 import BookingDetails from "@/components/calendar/booking-details";
 import SetAvailabilityModal from "@/components/calendar/set-availability-modals";
-import { getWeekDates, getMonthYearString, addDays, isSameDay } from "@/lib/date-utils";
+import { getWeekDates, isSameDay } from "@/lib/date-utils";
 
 interface BookingEvent {
   id: string;
@@ -27,7 +27,7 @@ export default function CalendarPage() {
   const [selectedEvent, setSelectedEvent] = useState<BookingEvent | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [events, setEvents] = useState<BookingEvent[]>([]);
-  
+
   // Get the current week's dates based on the current date
   const weekDates = useMemo(() => getWeekDates(currentDate), [currentDate]);
 
@@ -41,83 +41,104 @@ export default function CalendarPage() {
   }, []);
 
   // Handle week navigation
-  const navigateWeek = useCallback((direction: 'prev' | 'next' | 'today') => {
-    const newDate = new Date(currentDate);
-    
-    if (direction === 'today') {
-      const today = new Date();
-      setCurrentDate(today);
-      setSelectedDate(today);
-      return;
-    }
-    
-    const daysToAdd = direction === 'next' ? 7 : -7;
-    newDate.setDate(newDate.getDate() + daysToAdd);
-    setCurrentDate(newDate);
-  }, [currentDate]);
+  const navigateWeek = useCallback(
+    (direction: "prev" | "next" | "today") => {
+      const newDate = new Date(currentDate);
+
+      if (direction === "today") {
+        const today = new Date();
+
+        setCurrentDate(today);
+        setSelectedDate(today);
+
+        return;
+      }
+
+      const daysToAdd = direction === "next" ? 7 : -7;
+
+      newDate.setDate(newDate.getDate() + daysToAdd);
+      setCurrentDate(newDate);
+    },
+    [currentDate],
+  );
 
   // Handle date selection from the calendar
-  const handleDateSelect = useCallback((date: Date) => {
-    // Update selectedDate with the clicked date
-    setSelectedDate(date);
-    
-    // Update currentDate if needed for week navigation
-    if (!isSameDay(date, currentDate) && !weekDates.some(d => isSameDay(d, date))) {
-      setCurrentDate(date);
-    }
-    
-    // Clear any selected event
-    setSelectedEvent(null);
-    
-    // Only open modal if we're not clicking on an existing event
-    const hasEvent = events.some((event: BookingEvent) => isSameDay(event.start, date));
-    if (!hasEvent) {
-      handleOpenModal();
-    }
-  }, [currentDate, weekDates, handleOpenModal, events]);
+  const handleDateSelect = useCallback(
+    (date: Date) => {
+      // Update selectedDate with the clicked date
+      setSelectedDate(date);
+
+      // Update currentDate if needed for week navigation
+      if (
+        !isSameDay(date, currentDate) &&
+        !weekDates.some((d) => isSameDay(d, date))
+      ) {
+        setCurrentDate(date);
+      }
+
+      // Clear any selected event
+      setSelectedEvent(null);
+
+      // Only open modal if we're not clicking on an existing event
+      const hasEvent = events.some((event: BookingEvent) =>
+        isSameDay(event.start, date),
+      );
+
+      if (!hasEvent) {
+        handleOpenModal();
+      }
+    },
+    [currentDate, weekDates, handleOpenModal, events],
+  );
 
   // Track panel state
   const [panelVisible, setPanelVisible] = useState(false);
   const [panelCoords, setPanelCoords] = useState({ top: 0, left: 0 });
 
   // Handle event click
-  const handleEventClick = useCallback((event: BookingEvent, element: HTMLElement) => {
-    // Get the clicked cell's position relative to the viewport
-    const rect = element.getBoundingClientRect();
-    
-    // Calculate position for the panel
-    const viewportWidth = window.innerWidth;
-    const panelWidth = 306; // Width of the panel
-    const margin = 10; // Space between event and panel
-    
-    // Default position: to the right of the event
-    let left = rect.right + window.scrollX + margin;
-    let top = rect.top + window.scrollY;
-    
-    // If panel would go off the right edge of the viewport
-    if (left + panelWidth > viewportWidth) {
-      // Show to the left of the event
-      left = rect.left + window.scrollX - panelWidth - margin;
-    }
-    
-    // Ensure panel stays within viewport bounds
-    left = Math.max(10, Math.min(left, viewportWidth - panelWidth - 10));
-    top = Math.max(10, Math.min(top, document.documentElement.scrollHeight - 320));
-    
-    const newCoords = { top, left };
-    
-    // Update state in a single batch
-    requestAnimationFrame(() => {
-      setSelectedEvent(event);
-      setSelectedDate(event.start);
-      setPanelCoords(newCoords);
-      setPanelVisible(true);
-    });
-  }, []);
+  const handleEventClick = useCallback(
+    (event: BookingEvent, element: HTMLElement) => {
+      // Get the clicked cell's position relative to the viewport
+      const rect = element.getBoundingClientRect();
+
+      // Calculate position for the panel
+      const viewportWidth = window.innerWidth;
+      const panelWidth = 306; // Width of the panel
+      const margin = 10; // Space between event and panel
+
+      // Default position: to the right of the event
+      let left = rect.right + window.scrollX + margin;
+      let top = rect.top + window.scrollY;
+
+      // If panel would go off the right edge of the viewport
+      if (left + panelWidth > viewportWidth) {
+        // Show to the left of the event
+        left = rect.left + window.scrollX - panelWidth - margin;
+      }
+
+      // Ensure panel stays within viewport bounds
+      left = Math.max(10, Math.min(left, viewportWidth - panelWidth - 10));
+      top = Math.max(
+        10,
+        Math.min(top, document.documentElement.scrollHeight - 320),
+      );
+
+      const newCoords = { top, left };
+
+      // Update state in a single batch
+      requestAnimationFrame(() => {
+        setSelectedEvent(event);
+        setSelectedDate(event.start);
+        setPanelCoords(newCoords);
+        setPanelVisible(true);
+      });
+    },
+    [],
+  );
 
   // Handle panel close
   const handleClosePanel = useCallback(() => {
-    console.log('Closing panel');
+    console.log("Closing panel");
     setPanelVisible(false);
   }, []);
 
@@ -129,7 +150,7 @@ export default function CalendarPage() {
           <div className="flex flex-col justify-between gap-4 md:items-center md:flex-row">
             <h1 className="text-2xl font-bold text-gray-900">Calendar</h1>
             <div className="flex items-center space-x-4">
-              <CalendarControls 
+              <CalendarControls
                 currentDate={currentDate}
                 onDateChange={handleDateSelect}
                 onNavigate={navigateWeek}
@@ -145,7 +166,7 @@ export default function CalendarPage() {
         <main className="flex-1 overflow-auto">
           <div className="flex justify-center">
             <div className="w-full max-w-7xl">
-              <CalendarGrid 
+              <CalendarGrid
                 currentDate={currentDate}
                 weekDates={weekDates}
                 selectedDate={selectedDate}
@@ -158,30 +179,36 @@ export default function CalendarPage() {
           </div>
         </main>
       </div>
-        
 
       {/* Booking Details Panel */}
       {panelVisible && selectedEvent && (
-        <div 
-          className="fixed z-[100] transition-all duration-200 ease-in-out"
+        <dialog
+          open
+          className="fixed z-[100] transition-all duration-200 ease-in-out bg-white shadow-lg rounded-lg p-4 border-0"
           style={{
             top: `${panelCoords.top}px`,
             left: `${panelCoords.left}px`,
             opacity: panelVisible ? 1 : 0,
-            transform: panelVisible ? 'scale(1)' : 'scale(0.95)',
-            transformOrigin: 'top left',
-            pointerEvents: 'auto',
+            transform: panelVisible ? "scale(1)" : "scale(0.95)",
+            transformOrigin: "top left",
+            pointerEvents: "auto",
+            margin: 0,
           }}
-          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              e.preventDefault();
+              handleClosePanel();
+            }
+          }}
         >
           <BookingDetails onClose={handleClosePanel} event={selectedEvent} />
-        </div>
+        </dialog>
       )}
 
       {/* Modals */}
       {isModalOpen && (
-        <SetAvailabilityModal 
-          onClose={handleCloseModal} 
+        <SetAvailabilityModal
+          onClose={handleCloseModal}
           selectedDate={selectedDate}
         />
       )}

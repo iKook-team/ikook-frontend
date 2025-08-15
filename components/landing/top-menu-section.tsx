@@ -1,7 +1,8 @@
 "use client";
 
-import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+
+import { Button } from "../ui/button";
 
 const menuItems = [
   {
@@ -159,8 +160,9 @@ export default function TopMenuSection() {
   const router = useRouter();
 
   const handleSeeMoreClick = () => {
-    router.push('/explore');
+    router.push("/explore");
   };
+
   return (
     <section className="bg-white py-16 px-4 lg:px-24">
       <div className="max-w-7xl mx-auto">
@@ -174,11 +176,14 @@ export default function TopMenuSection() {
             </h2>
           </div>
         </div>
-        
+
         {/* Menu Items with Flex Layout */}
         <div className="flex flex-wrap justify-center gap-6">
           {menuItems.map((item) => (
-            <div key={item.id} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]">
+            <div
+              key={item.id}
+              className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
+            >
               <MenuCard item={item} />
             </div>
           ))}
@@ -186,7 +191,7 @@ export default function TopMenuSection() {
 
         {/* See More Button */}
         <div className="text-center mt-12">
-          <Button 
+          <Button
             onClick={handleSeeMoreClick}
             className="bg-[#FCC01C] hover:bg-[#FCC01C]/90 text-[#323335] font-semibold px-8 py-3 rounded-md transition-colors"
           >

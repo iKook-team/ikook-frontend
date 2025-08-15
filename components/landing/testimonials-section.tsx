@@ -33,9 +33,9 @@ export default function TestimonialsSection() {
                 &quot;
               </div>
               <blockquote className="text-2xl lg:text-3xl font-medium text-[#323335] leading-loose">
-                The food and service was excellent, I was very impressed, I&apos;d
-                totally recommend ikook. Excellent way to find the professional
-                chef you need for your occasions.
+                The food and service was excellent, I was very impressed,
+                I&apos;d totally recommend ikook. Excellent way to find the
+                professional chef you need for your occasions.
               </blockquote>
             </div>
 

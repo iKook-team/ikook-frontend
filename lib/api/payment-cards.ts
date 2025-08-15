@@ -43,21 +43,24 @@ interface CheckoutResponse {
 export const paymentCardsService = {
   async getCards(): Promise<PaymentCardsResponse> {
     try {
-      const response = await apiClient.get<PaymentCardsResponse>("/payments/cards/");
+      const response =
+        await apiClient.get<PaymentCardsResponse>("/payments/cards/");
+
       return response.data;
     } catch (error) {
-      console.error('Error fetching cards:', error);
+      console.error("Error fetching cards:", error);
+
       return {
         status: false,
-        message: 'Failed to load cards',
+        message: "Failed to load cards",
         data: {
           count: 0,
           next: null,
           previous: null,
           current: 1,
           total: 0,
-          results: []
-        }
+          results: [],
+        },
       };
     }
   },
@@ -66,33 +69,35 @@ export const paymentCardsService = {
     try {
       const payload = {
         country,
-        action: country === 'United Kingdom' ? 'setup' : 'checkout',
+        action: country === "United Kingdom" ? "setup" : "checkout",
         success_redirect_url: `${window.location.origin}/payment-cards`,
         metadata: {
-          source: 'web'
-        }
+          source: "web",
+        },
       };
 
-      const response = await apiClient.post<CheckoutResponse>("/payments/cards/", payload);
+      const response = await apiClient.post<CheckoutResponse>(
+        "/payments/cards/",
+        payload,
+      );
+
       return response.data;
     } catch (error) {
-      console.error('Error initializing card setup:', error);
+      console.error("Error initializing card setup:", error);
       throw error;
     }
   },
 
-  async verifyCard(
-    reference: string
-  ): Promise<void> {
+  async verifyCard(reference: string): Promise<void> {
     try {
       const payload = {
-        action: 'verify',
-        reference: reference
+        action: "verify",
+        reference: reference,
       };
-      
+
       await apiClient.post("/payments/cards/", payload);
     } catch (error) {
-      console.error('Error verifying card:', error);
+      console.error("Error verifying card:", error);
       throw error;
     }
   },
@@ -101,8 +106,8 @@ export const paymentCardsService = {
     try {
       await apiClient.delete(`/payments/cards/${cardId}/`);
     } catch (error) {
-      console.error('Error deleting card:', error);
+      console.error("Error deleting card:", error);
       throw error;
     }
-  }
+  },
 };

@@ -23,8 +23,8 @@ export function BookingSections() {
             <p className="text-[#323335]/70 text-lg leading-relaxed">
               iKooK provides the quickest and most affordable way to book a
               private chef. Chefs can create set menus that can be booked
-              quickly, or customised menus to suit the individual user&apos;s needs.
-              Our chat feature allows you and the chef to communicate so
+              quickly, or customised menus to suit the individual user&apos;s
+              needs. Our chat feature allows you and the chef to communicate so
               everything in the booking goes smoothly.
             </p>
             <p className="text-[#323335]/70 text-lg leading-relaxed">

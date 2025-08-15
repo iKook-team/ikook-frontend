@@ -1,5 +1,6 @@
-import { authService } from './auth';
-import apiClient from '@/src/lib/axios';
+import { authService } from "./auth";
+
+import apiClient from "@/src/lib/axios";
 
 export interface Reference {
   id: number;
@@ -25,43 +26,54 @@ export interface ReferenceListResponse {
 export const referenceService = {
   async getReferences(): Promise<ReferenceListResponse> {
     const token = authService.getToken();
+
     if (!token) {
-      throw new Error('No authentication token available');
+      throw new Error("No authentication token available");
     }
 
-    const response = await apiClient.get<{ data: ReferenceListResponse }>('/users/profiles/references/', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-
-    return response.data.data;
-  },
-
-  async createReference(data: Omit<Reference, 'id' | 'created_at' | 'updated_at'>): Promise<Reference> {
-    const token = authService.getToken();
-    if (!token) {
-      throw new Error('No authentication token available');
-    }
-
-    const response = await apiClient.post<{ data: Reference }>(
-      '/users/profiles/references/',
-      data,
+    const response = await apiClient.get<{ data: ReferenceListResponse }>(
+      "/users/profiles/references/",
       {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     return response.data.data;
   },
 
-  async updateReference(id: number, data: Partial<Omit<Reference, 'id' | 'created_at' | 'updated_at'>>): Promise<Reference> {
+  async createReference(
+    data: Omit<Reference, "id" | "created_at" | "updated_at">,
+  ): Promise<Reference> {
     const token = authService.getToken();
+
     if (!token) {
-      throw new Error('No authentication token available');
+      throw new Error("No authentication token available");
+    }
+
+    const response = await apiClient.post<{ data: Reference }>(
+      "/users/profiles/references/",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    return response.data.data;
+  },
+
+  async updateReference(
+    id: number,
+    data: Partial<Omit<Reference, "id" | "created_at" | "updated_at">>,
+  ): Promise<Reference> {
+    const token = authService.getToken();
+
+    if (!token) {
+      throw new Error("No authentication token available");
     }
 
     const response = await apiClient.patch<{ data: Reference }>(
@@ -69,10 +81,10 @@ export const referenceService = {
       data,
       {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     return response.data.data;
@@ -80,13 +92,14 @@ export const referenceService = {
 
   async deleteReference(id: number): Promise<void> {
     const token = authService.getToken();
+
     if (!token) {
-      throw new Error('No authentication token available');
+      throw new Error("No authentication token available");
     }
 
     await apiClient.delete(`/users/profiles/references/${id}/`, {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
   },

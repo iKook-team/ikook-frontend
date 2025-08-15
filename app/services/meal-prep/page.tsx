@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -30,7 +30,7 @@ const MealPrepForm: React.FC = () => {
   const { user } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   const [formData, setFormData] = useState<FormData>({
     startingPrice: "",
     minGuests: "",
@@ -44,9 +44,9 @@ const MealPrepForm: React.FC = () => {
       delivery: false,
     },
   });
-  
+
   const [availability, setAvailability] = useState(true);
-  
+
   const allCuisines = [
     "African",
     "Modern English",
@@ -58,7 +58,7 @@ const MealPrepForm: React.FC = () => {
     "Pizza",
     "Pastries",
   ];
-  
+
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
 
@@ -80,10 +80,10 @@ const MealPrepForm: React.FC = () => {
     setUploadedImage(null);
     setImageFile(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
-  
+
   // Check if all required fields are filled
   const isFormValid = React.useMemo(() => {
     return (
@@ -97,49 +97,49 @@ const MealPrepForm: React.FC = () => {
   }, [formData, imageFile]);
 
   const handleInputChange = <K extends keyof FormData>(
-    field: K, 
-    value: FormData[K]
+    field: K,
+    value: FormData[K],
   ) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
-      const mealPrepAppearance = formData.appearance.weekly 
-        ? 'Weekly' 
-        : formData.appearance.monthly 
-          ? 'Monthly' 
-          : '';
-          
-      const deliveryOption = formData.delivery.physical 
-        ? 'Physical' 
-        : formData.delivery.delivery 
-          ? 'Delivery' 
-          : '';
-      
+      const mealPrepAppearance = formData.appearance.weekly
+        ? "Weekly"
+        : formData.appearance.monthly
+          ? "Monthly"
+          : "";
+
+      const deliveryOption = formData.delivery.physical
+        ? "Physical"
+        : formData.delivery.delivery
+          ? "Delivery"
+          : "";
+
       const serviceData = {
         availability: true, // Assuming default availability is true
-        chef_service: 'Meal Prep' as const,
-        starting_price_per_person: formData.startingPrice || '0.00',
+        chef_service: "Meal Prep" as const,
+        starting_price_per_person: formData.startingPrice || "0.00",
         min_num_of_guests: Number(formData.minGuests) || 0,
         cuisines: formData.cuisines,
         meal_prep_appearance: mealPrepAppearance,
         delivery_option: deliveryOption,
-        ...(imageFile && { cover_image: imageFile })
+        ...(imageFile && { cover_image: imageFile }),
       };
-      
+
       await servicesService.createService(serviceData);
-      toast.success('Meal Prep service created successfully!');
-      router.push('/services');
+      toast.success("Meal Prep service created successfully!");
+      router.push("/services");
     } catch (error) {
-      console.error('Error creating service:', error);
-      toast.error('Failed to create service. Please try again.');
+      console.error("Error creating service:", error);
+      toast.error("Failed to create service. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -160,10 +160,10 @@ const MealPrepForm: React.FC = () => {
           >
             Availability
           </label>
-          <Toggle 
+          <Toggle
             checked={availability}
             onChange={setAvailability}
-            className={`${availability ? 'bg-[#FCC01C] border-[#FCC01C]' : 'bg-gray-200'}`}
+            className={`${availability ? "bg-[#FCC01C] border-[#FCC01C]" : "bg-gray-200"}`}
           />
         </div>
 
@@ -181,7 +181,10 @@ const MealPrepForm: React.FC = () => {
               <div className="flex border border-solid border-[#CFCFCE] rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white">
                 <div className="flex items-center px-3.5 py-2.5 bg-white rounded-l-lg">
                   <span className="text-[#3F3E3D] text-[15px] font-normal">
-                    {getCurrencySymbol({ currency: user?.currency, country: user?.country })}
+                    {getCurrencySymbol({
+                      currency: user?.currency,
+                      country: user?.country,
+                    })}
                   </span>
                 </div>
                 <div className="flex-1 flex">
@@ -189,7 +192,9 @@ const MealPrepForm: React.FC = () => {
                     id="startingPrice"
                     type="number"
                     value={formData.startingPrice}
-                    onChange={(e) => handleInputChange("startingPrice", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("startingPrice", e.target.value)
+                    }
                     className="w-full px-3.5 py-2.5 text-[#3F3E3D] text-[15px] font-normal bg-transparent border-0 focus:ring-0 focus:outline-none"
                     placeholder="0.00"
                     step="0.01"
@@ -377,13 +382,13 @@ const MealPrepForm: React.FC = () => {
               type="submit"
               disabled={isSubmitting || !isFormValid}
               className={`w-full flex justify-center items-center gap-2 border border-solid px-7 py-3 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] transition-colors ${
-                isFormValid && !isSubmitting 
-                  ? 'bg-[#FCC01C] border-[#FCC01C] hover:bg-[#E6AC19] cursor-pointer' 
-                  : 'bg-gray-200 border-gray-300 cursor-not-allowed'
+                isFormValid && !isSubmitting
+                  ? "bg-[#FCC01C] border-[#FCC01C] hover:bg-[#E6AC19] cursor-pointer"
+                  : "bg-gray-200 border-gray-300 cursor-not-allowed"
               }`}
             >
               <span className="text-white text-base font-bold leading-6">
-                {isSubmitting ? 'Creating...' : 'Save changes'}
+                {isSubmitting ? "Creating..." : "Save changes"}
               </span>
             </button>
           </div>

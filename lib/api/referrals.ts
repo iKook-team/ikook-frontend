@@ -41,12 +41,15 @@ export interface ReferralRewardResponse {
 
 export const referralsService = {
   async getReferralList(): Promise<ReferralListResponse> {
-    const { data } = await apiClient.get<ReferralListResponse>('/referrals/');
+    const { data } = await apiClient.get<ReferralListResponse>("/referrals/");
+
     return data;
   },
 
   async getReferralReward(): Promise<ReferralRewardResponse> {
-    const { data } = await apiClient.get<ReferralRewardResponse>('/referrals/reward/');
+    const { data } =
+      await apiClient.get<ReferralRewardResponse>("/referrals/reward/");
+
     return data;
   },
 };

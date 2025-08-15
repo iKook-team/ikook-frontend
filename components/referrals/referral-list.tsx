@@ -1,16 +1,18 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { referralsService } from "@/lib/api/referrals";
 import { toast } from "sonner";
 
+import { referralsService } from "@/lib/api/referrals";
+
 const formatDate = (dateString: string) => {
-  const options: Intl.DateTimeFormatOptions = { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   };
-  return new Date(dateString).toLocaleDateString('en-US', options);
+
+  return new Date(dateString).toLocaleDateString("en-US", options);
 };
 
 const ReferralList = () => {
@@ -22,6 +24,7 @@ const ReferralList = () => {
     const fetchReferrals = async () => {
       try {
         const response = await referralsService.getReferralList();
+
         setReferrals(response.data?.results || []);
       } catch (error) {
         console.error("Failed to fetch referrals:", error);
@@ -41,7 +44,10 @@ const ReferralList = () => {
         <h2 className="text-lg font-semibold mb-4">Referral History</h2>
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="animate-pulse h-16 bg-gray-100 rounded-lg"></div>
+            <div
+              key={i}
+              className="animate-pulse h-16 bg-gray-100 rounded-lg"
+            />
           ))}
         </div>
       </section>
@@ -54,7 +60,7 @@ const ReferralList = () => {
         <h2 className="text-lg font-semibold mb-4">Referral History</h2>
         <div className="text-center py-8 text-gray-500">
           <p>{error}</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
             className="mt-4 px-4 py-2 bg-amber-400 text-white rounded-lg hover:bg-amber-500 transition-colors"
           >

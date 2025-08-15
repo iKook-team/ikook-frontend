@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+
 import { AddressCard } from "./address-card";
 import { AddAddressModal } from "./add-address-modal";
+
 import { showToast } from "@/lib/utils/toast";
 import { addressService, type Address } from "@/lib/api/address";
 
@@ -10,7 +12,7 @@ const addressIcons = [
   "https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/9b22f48483ac365f750c47187b4b785d78de7f32?placeholderIfAbsent=true",
   "https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/67b6c85ad514c14727bf2169065009ef296a277f?placeholderIfAbsent=true",
   "https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/206a266796e055895a7e63be976cd99d5fb0e4e4?placeholderIfAbsent=true",
-  "https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/055d9588330482b5b4d790b45e25a75032cd7d81?placeholderIfAbsent=true"
+  "https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/055d9588330482b5b4d790b45e25a75032cd7d81?placeholderIfAbsent=true",
 ];
 
 export const AddressList: React.FC = () => {
@@ -19,19 +21,23 @@ export const AddressList: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingAddressId, setEditingAddressId] = useState<number | undefined>(undefined);
+  const [editingAddressId, setEditingAddressId] = useState<number | undefined>(
+    undefined,
+  );
 
   // Data fetching
   const fetchAddresses = async () => {
     try {
       setLoading(true);
       const data = await addressService.getAddresses();
+
       setAddresses(data.results || []);
       setError(null);
     } catch (err) {
-      const errorMessage = 'Failed to load addresses';
+      const errorMessage = "Failed to load addresses";
+
       setError(errorMessage);
-      console.error('Error fetching addresses:', err);
+      console.error("Error fetching addresses:", err);
       showToast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -76,7 +82,9 @@ export const AddressList: React.FC = () => {
         ) : error ? (
           <div className="text-red-500 text-center py-4">{error}</div>
         ) : !addresses || addresses.length === 0 ? (
-          <div className="text-center py-4 text-gray-500">No addresses found</div>
+          <div className="text-center py-4 text-gray-500">
+            No addresses found
+          </div>
         ) : (
           addresses.map((address, index) => (
             <div key={address.id} className={index > 0 ? "mt-8" : ""}>
@@ -96,7 +104,7 @@ export const AddressList: React.FC = () => {
       >
         <span className="text-white self-stretch my-auto">Add new address</span>
       </button>
-      
+
       <AddAddressModal
         open={isModalOpen}
         onClose={handleModalClose}

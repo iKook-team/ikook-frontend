@@ -1,11 +1,16 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
-import { showToast } from '@/lib/utils/toast';
-import { paymentCardsService } from '@/lib/api/payment-cards';
-import { Button } from '../ui/button';
-import { Loader2 } from 'lucide-react';
+import { useState, useEffect } from "react";
+import {
+  useStripe,
+  useElements,
+  PaymentElement,
+} from "@stripe/react-stripe-js";
+import { Loader2 } from "lucide-react";
+
+import { Button } from "../ui/button";
+
+import { showToast } from "@/lib/utils/toast";
 
 interface StripePaymentFormProps {
   clientSecret: string;
@@ -46,31 +51,34 @@ export const StripePaymentForm: React.FC<StripePaymentFormProps> = ({
       const { error: stripeError, setupIntent } = await stripe.confirmSetup({
         elements,
         confirmParams: {
-          return_url: window.location.origin + '/payment-cards',
+          return_url: window.location.origin + "/payment-cards",
         },
-        redirect: 'if_required',
+        redirect: "if_required",
       });
 
       if (stripeError) {
-        throw new Error(stripeError.message || 'Payment failed');
+        throw new Error(stripeError.message || "Payment failed");
       }
 
       if (!setupIntent.payment_method) {
-        throw new Error('No payment method available');
+        throw new Error("No payment method available");
       }
 
       // Get the payment method ID from the setup intent
       const paymentMethodId = setupIntent.payment_method;
+
       if (!paymentMethodId) {
-        throw new Error('No payment method available');
+        throw new Error("No payment method available");
       }
-      
+
       // For UK/Stripe flow, we don't need to verify with a reference
       // The setup is already complete at this point
-      showToast.success('Payment method added successfully');
+      showToast.success("Payment method added successfully");
       onSuccess();
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to add payment method';
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to add payment method";
+
       setError(errorMessage);
       showToast.error(errorMessage);
     } finally {
@@ -83,17 +91,15 @@ export const StripePaymentForm: React.FC<StripePaymentFormProps> = ({
       <div className="border rounded-lg p-4">
         <PaymentElement
           options={{
-            layout: 'tabs',
+            layout: "tabs",
             fields: {
-              billingDetails: 'auto',
+              billingDetails: "auto",
             },
           }}
         />
       </div>
 
-      {error && (
-        <div className="text-red-500 text-sm">{error}</div>
-      )}
+      {error && <div className="text-red-500 text-sm">{error}</div>}
 
       <div className="flex justify-end space-x-3 mt-6">
         <Button
@@ -111,7 +117,7 @@ export const StripePaymentForm: React.FC<StripePaymentFormProps> = ({
               Processing...
             </>
           ) : (
-            'Save Card'
+            "Save Card"
           )}
         </Button>
       </div>

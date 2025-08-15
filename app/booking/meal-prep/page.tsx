@@ -34,7 +34,7 @@ const MealPrepBookingPage = () => {
   );
   const [bookingData, setBookingData] = useState<Record<string, any>>({});
   const [formData, setFormData] = useState<Record<string, any>>({
-    allergyDetails: '',
+    allergyDetails: "",
     dietaryRestrictions: [],
   });
   const menu = useAuthStore((s) => s.bookingMenu);
@@ -121,7 +121,9 @@ const MealPrepBookingPage = () => {
             onNext={handleNext}
             onBack={handleBack}
             formData={formData}
-            onChange={(newData) => setFormData(prev => ({ ...prev, ...newData }))}
+            onChange={(newData) =>
+              setFormData((prev) => ({ ...prev, ...newData }))
+            }
             menu={menu}
           />
         );

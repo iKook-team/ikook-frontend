@@ -32,9 +32,7 @@ const StarRating = ({
           />
         </svg>
       </div>
-      <span className="text-white text-sm font-medium ml-1">
-        {rating}
-      </span>
+      <span className="text-white text-sm font-medium ml-1">{rating}</span>
     </div>
     <span className="text-white text-[10px] font-normal">
       ({reviewCount} Reviews)
@@ -96,7 +94,7 @@ interface VerificationBadgeProps {
 const VerificationBadge = ({
   isVerified = true,
   profileImageUrl,
-  className = ""
+  className = "",
 }: VerificationBadgeProps) => (
   <div className={`w-[60px] h-[60px] shrink-0 ${className}`}>
     <div className="flex w-[60px] h-[60px] justify-center items-center shrink-0 absolute left-0 top-0">
@@ -159,16 +157,16 @@ export const ChefCard: React.FC<ChefCardProps> = ({
       {/* Header with background image */}
       <div className="relative h-[220px] w-full flex-shrink-0">
         {/* Background image */}
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${mainImageUrl})` }}
         />
-        
+
         {/* Location badge */}
         <div className="absolute top-0 left-0 z-10">
           <LocationBadge location={location} />
         </div>
-        
+
         {/* Chef info overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
           <div className="flex items-end justify-between">
@@ -179,9 +177,9 @@ export const ChefCard: React.FC<ChefCardProps> = ({
               <StarRating rating={rating} reviewCount={reviewCount} />
             </div>
             <div className="relative -mb-8">
-              <VerificationBadge 
-                isVerified={isVerified} 
-                profileImageUrl={profileImageUrl} 
+              <VerificationBadge
+                isVerified={isVerified}
+                profileImageUrl={profileImageUrl}
                 className="relative"
               />
             </div>
@@ -194,8 +192,8 @@ export const ChefCard: React.FC<ChefCardProps> = ({
         <p className="text-[#6F6E6D] text-[10px] font-normal line-clamp-3">
           {description}
         </p>
-        
-        <div 
+
+        <div
           aria-label="Chef services"
           className="flex flex-wrap gap-2 mt-auto"
           role="list"

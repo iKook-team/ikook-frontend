@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { ServiceToggle } from "./service-toggle";
+
 import { servicesService, Service } from "@/lib/api/services";
 
 const SERVICE_MAPPING = {
@@ -39,20 +40,23 @@ export const ServicesSection: React.FC = () => {
       try {
         setIsLoading(true);
         const data = await servicesService.fetchServices();
-        
+
         // Create a mapping of service names to their data
         const servicesMap = { ...services };
-        
-        data.results.forEach(service => {
-          const serviceName = SERVICE_MAPPING[service.chef_service as ServiceName] || service.chef_service;
+
+        data.results.forEach((service) => {
+          const serviceName =
+            SERVICE_MAPPING[service.chef_service as ServiceName] ||
+            service.chef_service;
+
           servicesMap[serviceName] = service;
         });
-        
+
         setServices(servicesMap);
       } catch (err) {
-        console.error('Failed to fetch services:', err);
-        setError('Failed to load services. Please try again.');
-        toast.error('Failed to load services');
+        console.error("Failed to fetch services:", err);
+        setError("Failed to load services. Please try again.");
+        toast.error("Failed to load services");
       } finally {
         setIsLoading(false);
       }
@@ -61,38 +65,48 @@ export const ServicesSection: React.FC = () => {
     fetchServices();
   }, []);
 
-  const handleServiceToggle = async (serviceName: string, isActive: boolean) => {
+  const handleServiceToggle = async (
+    serviceName: string,
+    isActive: boolean,
+  ) => {
     try {
       const service = services[serviceName];
-      
+
       if (service) {
         // Update existing service
         const updatedService = await servicesService.updateServiceAvailability(
           service.id,
-          isActive
+          isActive,
         );
-        
-        setServices(prev => ({
+
+        setServices((prev) => ({
           ...prev,
-          [serviceName]: { ...service, availability: updatedService.availability }
+          [serviceName]: {
+            ...service,
+            availability: updatedService.availability,
+          },
         }));
-        
-        toast.success(`${serviceName} ${isActive ? 'activated' : 'deactivated'} successfully`);
+
+        toast.success(
+          `${serviceName} ${isActive ? "activated" : "deactivated"} successfully`,
+        );
       } else {
         // For services that don't exist yet, we'll handle creation later
         // For now, just navigate to the service page
-        router.push(`/services/${serviceName.toLowerCase().replace(/\s+/g, '-')}`);
+        router.push(
+          `/services/${serviceName.toLowerCase().replace(/\s+/g, "-")}`,
+        );
       }
     } catch (err) {
       console.error(`Failed to update ${serviceName}:`, err);
       toast.error(`Failed to update ${serviceName}`);
-      
+
       // Revert the UI state on error
-      setServices(prev => ({
+      setServices((prev) => ({
         ...prev,
-        [serviceName]: prev[serviceName] 
+        [serviceName]: prev[serviceName]
           ? { ...prev[serviceName]!, availability: !isActive }
-          : null
+          : null,
       }));
     }
   };
@@ -100,11 +114,13 @@ export const ServicesSection: React.FC = () => {
   if (isLoading) {
     return (
       <section className="self-center flex w-[538px] max-w-full flex-col items-stretch mt-[35px]">
-        <h2 className="text-black text-2xl font-semibold leading-none">Services</h2>
+        <h2 className="text-black text-2xl font-semibold leading-none">
+          Services
+        </h2>
         <div className="mt-[35px] space-y-8">
           {Object.keys(services).map((serviceName) => (
             <div key={serviceName} className="animate-pulse">
-              <div className="h-12 bg-gray-200 rounded-md"></div>
+              <div className="h-12 bg-gray-200 rounded-md" />
             </div>
           ))}
         </div>
@@ -115,7 +131,9 @@ export const ServicesSection: React.FC = () => {
   if (error) {
     return (
       <section className="self-center flex w-[538px] max-w-full flex-col items-stretch mt-[35px]">
-        <h2 className="text-black text-2xl font-semibold leading-none">Services</h2>
+        <h2 className="text-black text-2xl font-semibold leading-none">
+          Services
+        </h2>
         <div className="mt-4 p-4 bg-red-50 rounded-md">
           <p className="text-red-600">{error}</p>
           <button
@@ -131,21 +149,28 @@ export const ServicesSection: React.FC = () => {
 
   return (
     <section className="self-center flex w-[538px] max-w-full flex-col items-stretch mt-[35px]">
-      <h2 className="text-black text-2xl font-semibold leading-none">Services</h2>
+      <h2 className="text-black text-2xl font-semibold leading-none">
+        Services
+      </h2>
       <div className="mt-[35px] max-md:max-w-full space-y-8">
         {Object.entries(services).map(([serviceName, serviceData]) => {
           const isAvailable = serviceData?.availability ?? false;
-          
+
           return (
             <div key={serviceName}>
               <ServiceToggle
                 serviceName={serviceName}
                 isActive={isAvailable}
-                onToggle={(isActive: boolean) => handleServiceToggle(serviceName, isActive)}
+                onToggle={(isActive: boolean) =>
+                  handleServiceToggle(serviceName, isActive)
+                }
                 onClick={
                   !serviceData
                     ? () => {
-                        const routeName = serviceName.toLowerCase().replace(/\s+/g, '-');
+                        const routeName = serviceName
+                          .toLowerCase()
+                          .replace(/\s+/g, "-");
+
                         router.push(`/services/${routeName}`);
                       }
                     : undefined

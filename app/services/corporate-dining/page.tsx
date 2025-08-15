@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import Image from "next/image";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+
 import { useAuthStore } from "@/lib/store/auth-store";
 import { getCurrencySymbol } from "@/lib/utils/currency";
 import { TagSelector } from "@/components/ui/tag-selector";
@@ -24,13 +24,13 @@ const CorporateDiningForm = () => {
     cuisines: [],
     events: [],
   });
-  
+
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const { user } = useAuthStore();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // Check if all required fields are filled
   const isFormValid = React.useMemo(() => {
     return (
@@ -41,12 +41,12 @@ const CorporateDiningForm = () => {
       imageFile !== null
     );
   }, [formData, imageFile]);
-  
+
   const currencySymbol = getCurrencySymbol({
     currency: user?.currency,
     country: user?.country,
   });
-  
+
   const allCuisines = [
     "African",
     "Modern English",
@@ -59,13 +59,12 @@ const CorporateDiningForm = () => {
     "Pastries",
   ];
 
-  const allEvents = [
-    "Wedding",
-    "Naming",
-    "Gathering"
-  ];
+  const allEvents = ["Wedding", "Naming", "Gathering"];
 
-  const handleInputChange = (field: keyof FormData, value: string | string[]) => {
+  const handleInputChange = (
+    field: keyof FormData,
+    value: string | string[],
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -75,29 +74,30 @@ const CorporateDiningForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid) {
-      toast.error('Please fill in all required fields');
+      toast.error("Please fill in all required fields");
+
       return;
     }
-    
+
     setIsSubmitting(true);
 
     try {
       const serviceData = {
         availability: isAvailable,
-        chef_service: 'Corporate Dining' as const,
+        chef_service: "Corporate Dining" as const,
         starting_price_per_person: formData.startingPrice,
         min_num_of_guests: Number(formData.minGuests) || 0,
         cuisines: formData.cuisines,
         events: formData.events,
-        ...(imageFile && { cover_image: imageFile })
+        ...(imageFile && { cover_image: imageFile }),
       };
 
       await servicesService.createService(serviceData);
-      toast.success('Corporate Dining service created successfully!');
-      router.push('/services');
+      toast.success("Corporate Dining service created successfully!");
+      router.push("/services");
     } catch (error) {
-      console.error('Error creating service:', error);
-      toast.error('Failed to create service. Please try again.');
+      console.error("Error creating service:", error);
+      toast.error("Failed to create service. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -105,8 +105,10 @@ const CorporateDiningForm = () => {
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+
     if (file) {
       const reader = new FileReader();
+
       reader.onload = (e) => {
         setUploadedImage(e.target?.result as string);
       };
@@ -114,7 +116,7 @@ const CorporateDiningForm = () => {
       setImageFile(file);
     }
   };
-  
+
   const handleRemoveImage = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setUploadedImage(null);
@@ -178,8 +180,9 @@ const CorporateDiningForm = () => {
                     value={formData.startingPrice}
                     onChange={(e) => {
                       // Allow only numbers
-                      const value = e.target.value.replace(/\D/g, '');
-                      handleInputChange('startingPrice', value);
+                      const value = e.target.value.replace(/\D/g, "");
+
+                      handleInputChange("startingPrice", value);
                     }}
                     className="w-full px-3.5 py-2.5 text-[#3F3E3D] text-[15px] font-normal bg-transparent border-0 focus:ring-0 focus:outline-none"
                     placeholder="000"
@@ -199,7 +202,9 @@ const CorporateDiningForm = () => {
                   type="number"
                   id="minGuests"
                   value={formData.minGuests}
-                  onChange={(e) => handleInputChange("minGuests", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("minGuests", e.target.value)
+                  }
                   className="w-full h-12 pl-4 pr-4 py-3 bg-white rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FCC01C] focus:border-transparent"
                   placeholder="0"
                 />
@@ -236,7 +241,8 @@ const CorporateDiningForm = () => {
                 {!uploadedImage ? (
                   <div className="flex flex-col items-center justify-center gap-[9px] border-dashed border border-[#CFCFCE] rounded-xl p-2.5 h-[122px]">
                     <p className="text-[#323335] text-center text-[10px] font-normal max-w-[272px]">
-                      (Recommended 1000px width, 1000px height. Maximum of 1MB file size)
+                      (Recommended 1000px width, 1000px height. Maximum of 1MB
+                      file size)
                     </p>
                     <label htmlFor="imageUpload" className="cursor-pointer">
                       <div className="flex justify-center items-center gap-2.5 border border-solid border-[#B7B7B6] p-2.5 rounded-md">
@@ -291,9 +297,9 @@ const CorporateDiningForm = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting || !isFormValid}
-                  className={`w-full h-12 px-6 py-3 ${isSubmitting || !isFormValid ? 'bg-gray-300' : 'bg-[#FCC01C] hover:bg-yellow-500'} rounded-lg justify-center items-center gap-2.5 inline-flex text-black text-sm font-medium leading-tight transition-colors`}
+                  className={`w-full h-12 px-6 py-3 ${isSubmitting || !isFormValid ? "bg-gray-300" : "bg-[#FCC01C] hover:bg-yellow-500"} rounded-lg justify-center items-center gap-2.5 inline-flex text-black text-sm font-medium leading-tight transition-colors`}
                 >
-                  {isSubmitting ? 'Saving...' : 'Save Changes'}
+                  {isSubmitting ? "Saving..." : "Save Changes"}
                 </button>
               </div>
             </div>

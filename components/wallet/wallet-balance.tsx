@@ -9,7 +9,11 @@ interface WalletBalanceProps {
   onAddMoneyClick?: () => void;
 }
 
-export const WalletBalance: React.FC<WalletBalanceProps> = ({ balance, onRedeemClick, onAddMoneyClick }) => {
+export const WalletBalance: React.FC<WalletBalanceProps> = ({
+  balance,
+  onRedeemClick,
+  onAddMoneyClick,
+}) => {
   const { user } = useAuthStore();
   const currencySymbol = getCurrencySymbol({
     currency: user?.currency,

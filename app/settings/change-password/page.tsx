@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+
 import { authService } from "@/lib/api/auth";
 import { showToast, handleApiError } from "@/lib/utils/toast";
 
@@ -95,31 +96,37 @@ const ChangePasswordForm: React.FC = () => {
       if (error?.response?.data) {
         // Special handling for validation errors in the change password form
         const errorData = error.response.data;
+
         if (errorData.old_password) {
           setErrors((prev) => ({
             ...prev,
-            currentPassword: Array.isArray(errorData.old_password) ? errorData.old_password[0] : errorData.old_password,
+            currentPassword: Array.isArray(errorData.old_password)
+              ? errorData.old_password[0]
+              : errorData.old_password,
           }));
         } else if (errorData.new_password) {
           setErrors((prev) => ({
             ...prev,
-            newPassword: Array.isArray(errorData.new_password) ? errorData.new_password[0] : errorData.new_password,
+            newPassword: Array.isArray(errorData.new_password)
+              ? errorData.new_password[0]
+              : errorData.new_password,
           }));
         } else {
           // For other error formats, use the standard handleApiError
-          handleApiError(error, 'Error changing password. Please try again.');
+          handleApiError(error, "Error changing password. Please try again.");
           // Set a generic error for the form
           setErrors((prev) => ({
             ...prev,
-            currentPassword: 'Failed to change password. Please check your current password and try again.',
+            currentPassword:
+              "Failed to change password. Please check your current password and try again.",
           }));
         }
       } else {
         // For network errors or other unhandled errors
-        handleApiError(error, 'Error changing password. Please try again.');
+        handleApiError(error, "Error changing password. Please try again.");
         setErrors((prev) => ({
           ...prev,
-          currentPassword: 'An unexpected error occurred. Please try again.',
+          currentPassword: "An unexpected error occurred. Please try again.",
         }));
       }
     } finally {

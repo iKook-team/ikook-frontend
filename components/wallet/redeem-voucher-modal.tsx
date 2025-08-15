@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+
 import { FormField } from "@/components/ui/form-field";
 
 interface RedeemVoucherModalProps {
@@ -10,7 +11,11 @@ interface RedeemVoucherModalProps {
   onRedeem?: (voucherCode: string) => Promise<void> | void;
 }
 
-export const RedeemVoucherModal = ({ open, onClose, onRedeem }: RedeemVoucherModalProps) => {
+export const RedeemVoucherModal = ({
+  open,
+  onClose,
+  onRedeem,
+}: RedeemVoucherModalProps) => {
   const [voucherCode, setVoucherCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -40,7 +45,9 @@ export const RedeemVoucherModal = ({ open, onClose, onRedeem }: RedeemVoucherMod
       <div className="relative w-full max-w-md p-6 mx-4 bg-white rounded-lg shadow-xl">
         {/* Modal Header */}
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-gray-900">Redeem Voucher</h3>
+          <h3 className="text-lg font-semibold text-gray-900">
+            Redeem Voucher
+          </h3>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-500"

@@ -17,6 +17,7 @@ export const ServiceToggle: React.FC<ServiceToggleProps> = ({
 
   const handleToggle = () => {
     const newState = !active;
+
     setActive(newState);
     onToggle?.(newState);
   };

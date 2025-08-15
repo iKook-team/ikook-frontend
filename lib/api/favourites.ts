@@ -1,7 +1,7 @@
 import apiClient from "@/src/lib/axios";
 
 // Types
-export type FavouriteType = 'chef' | 'menu';
+export type FavouriteType = "chef" | "menu";
 
 export interface Chef {
   id: number;
@@ -132,19 +132,23 @@ export const favouritesService = {
   getFavourites: async (
     type: FavouriteType,
     page: number = 1,
-    pageSize: number = 10
+    pageSize: number = 10,
   ): Promise<FavouritesResponse> => {
     try {
-      const response = await apiClient.get<ApiResponse<FavouritesResponse>>('/favourites/', {
-        params: {
-          type,
-          page,
-          page_size: pageSize,
+      const response = await apiClient.get<ApiResponse<FavouritesResponse>>(
+        "/favourites/",
+        {
+          params: {
+            type,
+            page,
+            page_size: pageSize,
+          },
         },
-      });
+      );
+
       return response.data.data;
     } catch (error) {
-      console.error('Error fetching favorites:', error);
+      console.error("Error fetching favorites:", error);
       throw error;
     }
   },
@@ -156,9 +160,9 @@ export const favouritesService = {
    */
   addToFavourites: async (type: FavouriteType, id: number): Promise<void> => {
     try {
-await apiClient.post('/favourites/', { type, id });
+      await apiClient.post("/favourites/", { type, id });
     } catch (error) {
-      console.error('Error adding to favorites:', error);
+      console.error("Error adding to favorites:", error);
       throw error;
     }
   },
@@ -171,7 +175,7 @@ await apiClient.post('/favourites/', { type, id });
     try {
       await apiClient.delete(`/favourites/${id}/`);
     } catch (error) {
-      console.error('Error removing from favorites:', error);
+      console.error("Error removing from favorites:", error);
       throw error;
     }
   },
@@ -181,15 +185,19 @@ await apiClient.post('/favourites/', { type, id });
    * @param type Type of item to check ('chef' or 'menu')
    * @param id ID of the item to check
    */
-  isItemFavourited: async (type: FavouriteType, id: number): Promise<boolean> => {
+  isItemFavourited: async (
+    type: FavouriteType,
+    id: number,
+  ): Promise<boolean> => {
     try {
-      const response = await apiClient.get<ApiResponse<{ is_favourited: boolean }>>(
-        `/favourites/check/`,
-        { params: { type, id } }
-      );
+      const response = await apiClient.get<
+        ApiResponse<{ is_favourited: boolean }>
+      >(`/favourites/check/`, { params: { type, id } });
+
       return response.data.data.is_favourited;
     } catch (error) {
-      console.error('Error checking favorite status:', error);
+      console.error("Error checking favorite status:", error);
+
       return false;
     }
   },

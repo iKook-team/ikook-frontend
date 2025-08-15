@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+
 import { SocialIcons } from "./SocialIcons";
 import { PaymentBadges } from "./PaymentBadges";
 
@@ -45,36 +46,49 @@ export const FooterLinks: React.FC<FooterLinksProps> = ({ className = "" }) => {
   ];
 
   return (
-    <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto ${className}`}>
+    <div
+      className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto ${className}`}
+    >
       {footerSections.map((section, index) => (
         <div key={index} className="font-medium text-justify">
           {section.isLogo ? (
             <div className="flex flex-col items-start">
-              <Image 
-                src="/footer-logo.png" 
-                alt="logo" 
-                width={79} 
-                height={100} 
-                className="mb-6" 
+              <Image
+                src="/footer-logo.png"
+                alt="logo"
+                width={79}
+                height={100}
+                className="mb-6"
               />
               <SocialIcons />
             </div>
           ) : section.isContact ? (
             <div>
-              <h3 className="text-black text-xl font-semibold mb-6">Contact Us</h3>
+              <h3 className="text-black text-xl font-semibold mb-6">
+                Contact Us
+              </h3>
               <address className="not-italic text-[#3F3E3D] space-y-4">
                 <div>
-                  <a href="tel:02038078500" className="hover:text-black transition-colors block">
+                  <a
+                    href="tel:02038078500"
+                    className="hover:text-black transition-colors block"
+                  >
                     0203 807 8500
                   </a>
                 </div>
                 <div>
-                  <a href="mailto:team@ikook.co.uk" className="hover:text-black transition-colors block">
+                  <a
+                    href="mailto:team@ikook.co.uk"
+                    className="hover:text-black transition-colors block"
+                  >
                     team@ikook.co.uk
                   </a>
                 </div>
                 <div>
-                  <a href="/support" className="hover:text-black transition-colors block">
+                  <a
+                    href="/support"
+                    className="hover:text-black transition-colors block"
+                  >
                     Support
                   </a>
                 </div>
@@ -85,21 +99,25 @@ export const FooterLinks: React.FC<FooterLinksProps> = ({ className = "" }) => {
             </div>
           ) : (
             <>
-              <h3 className="text-black text-xl font-semibold mb-6">{section.title}</h3>
+              <h3 className="text-black text-xl font-semibold mb-6">
+                {section.title}
+              </h3>
               <ul className="text-base text-[#3F3E3D] space-y-4">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
                     <a
-                      href={section.title === 'iKooK Chef in' 
-                        ? `/locations/${link.toLowerCase().replace(/\s+/g, "-")}`
-                        : `/${link.toLowerCase().replace(/\s+/g, "-")}`}
+                      href={
+                        section.title === "iKooK Chef in"
+                          ? `/locations/${link.toLowerCase().replace(/\s+/g, "-")}`
+                          : `/${link.toLowerCase().replace(/\s+/g, "-")}`
+                      }
                       className="hover:text-black transition-colors"
                     >
                       {link}
                     </a>
                   </li>
                 ))}
-                {section.title === 'iKooK Chef in' && (
+                {section.title === "iKooK Chef in" && (
                   <li className="pt-2">
                     <button className="items-center border border-black flex gap-1 text-sm font-normal px-2 py-1 rounded-[40px] hover:bg-gray-50 transition-colors">
                       <span className="text-[#3F3E3D] self-stretch my-auto">

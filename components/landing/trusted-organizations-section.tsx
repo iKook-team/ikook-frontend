@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export function TrustedOrganizationsSection() {
   return (
@@ -13,15 +13,15 @@ export function TrustedOrganizationsSection() {
             </h2>
           </div>
         </div>
-        
+
         <div className="mb-8">
-          <img 
+          <img
             src="https://api.builder.io/api/v1/image/assets/TEMP/de695800d6cc284f210f5caeec5f42030caf90bf?width=1666"
             alt="Partner organizations logos"
             className="mx-auto max-w-4xl w-full h-auto"
           />
         </div>
-        
+
         <p className="text-xl text-ikook-secondary max-w-4xl mx-auto">
           and individuals for Private dining, Corporate, Small and Large events
         </p>
