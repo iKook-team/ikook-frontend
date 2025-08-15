@@ -2,6 +2,7 @@ import React, { forwardRef, ChangeEvent } from "react";
 
 interface FormFieldProps {
   label: string;
+  name: string;
   placeholder: string;
   required?: boolean;
   type?: string;
@@ -20,6 +21,7 @@ export const FormField = forwardRef<
   (
     {
       label,
+      name,
       placeholder,
       required = false,
       type = "text",
@@ -45,45 +47,54 @@ export const FormField = forwardRef<
       placeholder,
       required,
       value,
+      name: name || '',
       onChange,
       ...props,
     };
+    
+    // Remove name from props to avoid duplicates
+    delete (commonProps as any).name;
 
+    // Create a safe name that's always a string
+    const safeName = name || '';
+    
     return (
-      <div className={`flex flex-col items-start gap-1.5 ${className}`}>
-        <label className="text-[#344054] text-sm font-medium leading-5 max-sm:text-[13px]">
+      <div className={`flex flex-col gap-1.5 ${className}`}>
+        <label className="text-sm font-medium text-gray-900">
           {label}
-          {required && "*"}
+          {required && <span className="text-red-500">*</span>}
         </label>
-        {type === "select" && options ? (
+        
+        {type === 'select' ? (
           <select
-            {...commonProps}
             ref={ref as React.RefObject<HTMLSelectElement>}
+            {...commonProps}
+            name={safeName}
           >
-            <option value="" disabled>
-              {placeholder}
-            </option>
-            {options.map((option, index) => {
-              const optionValue =
-                typeof option === "string" ? option : option.value;
-              const optionLabel =
-                typeof option === "string" ? option : option.label;
-
+            {options?.map((option, index) => {
+              const value = typeof option === 'string' ? option : option.value;
+              const label = typeof option === 'string' ? option : option.label;
               return (
-                <option key={index} value={optionValue}>
-                  {optionLabel}
+                <option key={index} value={value}>
+                  {label}
                 </option>
               );
             })}
           </select>
         ) : (
           <input
-            {...commonProps}
             type={type}
             ref={ref as React.RefObject<HTMLInputElement>}
+            {...commonProps}
+            name={safeName}
           />
         )}
-        {error && <span className="text-red-500 text-sm">{error}</span>}
+        
+        {error && (
+          <p className="text-sm text-red-500">
+            {error}
+          </p>
+        )}
       </div>
     );
   },

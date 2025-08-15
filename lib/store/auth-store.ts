@@ -23,6 +23,7 @@ interface User {
   country?: string;
   email_notify?: boolean;
   sms_notify?: boolean;
+  bank_details?: number;
 }
 
 interface HostFormData {

@@ -82,13 +82,52 @@ export const paymentsService = {
 
   async redeemGiftCard(cardNumber: string) {
     try {
-      const response = await axios.post(
-        "/payments/wallets/transactions/redeem-gift-card/",
-        { card_number: cardNumber },
-      );
-
+      const response = await axios.post("/payments/redeem-gift-card/", {
+        card_number: cardNumber,
+      });
       return response.data;
     } catch (error) {
+      console.error("Error redeeming gift card:", error);
+      throw error;
+    }
+  },
+
+  async getBanks() {
+    try {
+      const response = await axios.get("/payments/banks/");
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching banks:", error);
+      throw error;
+    }
+  },
+
+  async getBankDetails(bankId: number) {
+    try {
+      const response = await axios.get(`/earnings/bank-details/${bankId}/`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching bank details:", error);
+      throw error;
+    }
+  },
+
+  async updateBankDetails(bankId: number, data: any) {
+    try {
+      const response = await axios.patch(`/earnings/bank-details/${bankId}/`, data);
+      return response.data;
+    } catch (error) {
+      console.error("Error updating bank details:", error);
+      throw error;
+    }
+  },
+
+  async createBankDetails(data: any) {
+    try {
+      const response = await axios.post("/earnings/bank-details/", data);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating bank details:", error);
       throw error;
     }
   },
