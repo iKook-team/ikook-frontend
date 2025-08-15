@@ -99,15 +99,16 @@ const BankAccountForm: React.FC = () => {
     fetchData();
   }, [user]);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const handleInputChange = (field: keyof typeof formData) => 
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { value } = e.target;
+      setFormData((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    };
+    
+  const getInputValue = (field: keyof typeof formData) => formData[field];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -181,9 +182,8 @@ const BankAccountForm: React.FC = () => {
                     <div className="w-full max-md:max-w-full">
                       <FormField
                         label="Billing Address"
-                        name="billing_address"
-                        value={formData.billing_address}
-                        onChange={handleInputChange}
+                        value={getInputValue('billing_address')}
+                        onChange={handleInputChange('billing_address')}
                         placeholder="Enter address"
                         required
                       />
@@ -192,9 +192,8 @@ const BankAccountForm: React.FC = () => {
                     <div className="w-full mt-6 max-md:max-w-full">
                       <FormField
                         label="City"
-                        name="city"
-                        value={formData.city}
-                        onChange={handleInputChange}
+                        value={getInputValue('city')}
+                        onChange={handleInputChange('city')}
                         placeholder="Enter city"
                         required
                       />
@@ -203,9 +202,8 @@ const BankAccountForm: React.FC = () => {
                     <div className="w-full mt-6 max-md:max-w-full">
                       <FormField
                         label="Postal Code"
-                        name="postal_code"
-                        value={formData.postal_code}
-                        onChange={handleInputChange}
+                        value={getInputValue('postal_code')}
+                        onChange={handleInputChange('postal_code')}
                         placeholder="Enter postal code"
                         required
                       />
@@ -217,9 +215,8 @@ const BankAccountForm: React.FC = () => {
                           Bank <span className="text-red-500">*</span>
                         </label>
                         <select
-                          name="bank_name"
-                          value={formData.bank_name}
-                          onChange={handleInputChange}
+                          value={getInputValue('bank_name')}
+                          onChange={(e) => setFormData(prev => ({ ...prev, bank_name: e.target.value }))}
                           disabled={isLoading || isSubmitting}
                           className="w-full border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white px-3.5 py-2.5 rounded-lg border-solid border-[#CFCFCE] text-base font-normal leading-6 focus:outline-none focus:ring-2 focus:ring-[#FCC01C] focus:border-[#FCC01C] disabled:opacity-50"
                           required
@@ -240,9 +237,8 @@ const BankAccountForm: React.FC = () => {
                     <div className="w-full mt-6 max-md:max-w-full">
                       <FormField
                         label="Account Name"
-                        name="account_name"
-                        value={formData.account_name}
-                        onChange={handleInputChange}
+                        value={getInputValue('account_name')}
+                        onChange={handleInputChange('account_name')}
                         placeholder="Enter account name"
                         required
                       />
@@ -251,9 +247,8 @@ const BankAccountForm: React.FC = () => {
                     <div className="w-full mt-6 max-md:max-w-full">
                       <FormField
                         label="Account Number"
-                        name="account_number"
-                        value={formData.account_number}
-                        onChange={handleInputChange}
+                        value={getInputValue('account_number')}
+                        onChange={handleInputChange('account_number')}
                         placeholder="Enter account number"
                         required
                       />
@@ -262,9 +257,8 @@ const BankAccountForm: React.FC = () => {
                     <div className="w-full mt-6 max-md:max-w-full">
                       <FormField
                         label="Sort Code"
-                        name="sort_code"
-                        value={formData.sort_code}
-                        onChange={handleInputChange}
+                        value={getInputValue('sort_code')}
+                        onChange={handleInputChange('sort_code')}
                         placeholder="Enter sort code OR SWIFT/BIC code"
                         required
                       />

@@ -2,7 +2,7 @@ import React, { forwardRef, ChangeEvent } from "react";
 
 interface FormFieldProps {
   label: string;
-  name: string;
+  name?: string; // Made optional
   placeholder: string;
   required?: boolean;
   type?: string;
