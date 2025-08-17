@@ -1,4 +1,4 @@
-import axios from "@/src/lib/axios";
+import apiClient from "@/src/lib/axios";
 import { handleApiError } from "@/lib/utils/toast";
 
 export interface User {
@@ -81,7 +81,7 @@ export interface SendMessageData {
 export const chatService = {
   async createChat(userId: number): Promise<Chat> {
     try {
-      const response = await axios.post<ApiResponse<Chat>>("/chats/create/", {
+      const response = await apiClient.post<ApiResponse<Chat>>("/chats/create/", {
         user_id: userId,
       });
 
@@ -99,7 +99,7 @@ export const chatService = {
   async getOrCreateChat(userId: number): Promise<Chat> {
     try {
       console.log("Fetching existing chats for user:", userId);
-      const response = await axios.get<ApiResponse<ChatsResponse>>("/chats/");
+      const response = await apiClient.get<ApiResponse<ChatsResponse>>("/chats/");
 
       // Extract the chats from the nested response structure
       const chats = response.data?.data?.results || [];
@@ -119,7 +119,6 @@ export const chatService = {
 
       if (existingChat) {
         console.log("Found existing chat:", existingChat);
-
         return existingChat;
       }
 
@@ -132,7 +131,7 @@ export const chatService = {
   },
   async getChats(): Promise<ChatsResponse> {
     try {
-      const response = await axios.get("/chats/");
+      const response = await apiClient.get("/chats/");
 
       // Always ensure we have a response object
       if (!response) {
@@ -170,7 +169,7 @@ export const chatService = {
 
   async getMessages(chatId: number): Promise<MessagesResponse> {
     try {
-      const response = await axios.get<{
+      const response = await apiClient.get<{
         status: boolean;
         message: string;
         data: {
@@ -217,7 +216,7 @@ export const chatService = {
 
   async sendMessage(data: SendMessageData): Promise<Message> {
     try {
-      const response = await axios.post<ApiResponse<Message>>(
+      const response = await apiClient.post<ApiResponse<Message>>(
         "/chats/messages/",
         data,
       );

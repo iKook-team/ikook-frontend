@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-
+import { useAuthStore } from "@/lib/store/auth-store";
 import { showToast } from "@/lib/utils/toast";
 import { FormField } from "@/components/ui/form-field";
 import { referenceService, Reference } from "@/lib/api/references";
@@ -21,6 +21,7 @@ export const AddReferenceModal: React.FC<AddReferenceModalProps> = ({
   onSuccess,
   referenceId,
 }) => {
+  const user = useAuthStore((state) => state.user);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<ReferenceFormData>({
@@ -29,7 +30,7 @@ export const AddReferenceModal: React.FC<AddReferenceModalProps> = ({
     address: "",
     phone_number: "",
     email: "",
-    country: "Nigeria", // Default to Nigeria as per the API response
+    country: user?.country || "", // Use country from user store
   });
 
   // Load reference data when in edit mode
@@ -116,12 +117,19 @@ export const AddReferenceModal: React.FC<AddReferenceModalProps> = ({
 
     setIsSubmitting(true);
 
+    // Get the latest user data to ensure we have the correct country
+    const currentUser = useAuthStore.getState().user;
+    const referenceData = {
+      ...formData,
+      country: currentUser?.country || formData.country
+    };
+
     try {
       if (referenceId) {
-        await referenceService.updateReference(referenceId, formData);
+        await referenceService.updateReference(referenceId, referenceData);
         showToast.success("Reference updated successfully!");
       } else {
-        await referenceService.createReference(formData);
+        await referenceService.createReference(referenceData);
         showToast.success("Reference added successfully!");
       }
 
@@ -135,10 +143,6 @@ export const AddReferenceModal: React.FC<AddReferenceModalProps> = ({
           : "Failed to add reference.") + " Please try again.";
 
       showToast.error(errorMessage);
-      console.error(
-        `Error ${referenceId ? "updating" : "adding"} reference:`,
-        error,
-      );
     } finally {
       setIsSubmitting(false);
     }
@@ -197,7 +201,7 @@ export const AddReferenceModal: React.FC<AddReferenceModalProps> = ({
               <div className="ml-3">
                 <p className="text-sm text-yellow-700">
                   We&apos;ll send an email to your reference to confirm their
-                  details. Please ensure the email address is correct.
+                  details.
                 </p>
               </div>
             </div>
@@ -225,14 +229,6 @@ export const AddReferenceModal: React.FC<AddReferenceModalProps> = ({
               placeholder="Enter full address"
               value={formData.address}
               onChange={(e) => handleInputChange("address", e.target.value)}
-            />
-
-            <FormField
-              required
-              label="Country"
-              placeholder="Enter country"
-              value={formData.country}
-              onChange={(e) => handleInputChange("country", e.target.value)}
             />
 
             <FormField

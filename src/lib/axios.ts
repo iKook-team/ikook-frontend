@@ -4,6 +4,7 @@ import axios, {
   AxiosError,
   InternalAxiosRequestConfig,
 } from "axios";
+import axiosRetry, { exponentialDelay } from "axios-retry";
 
 import { getToken, clearToken } from "./auth";
 
@@ -14,6 +15,23 @@ const apiClient: AxiosInstance = axios.create({
     "Content-Type": "application/json",
   },
   timeout: 10000, // 10 seconds
+});
+
+// Configure retry mechanism
+axiosRetry(apiClient, {
+  retries: 3, // number of retries
+  retryDelay: exponentialDelay, // exponential back-off between retries
+  retryCondition: (error) => {
+    // Retry on network errors and 5xx server errors
+    return !!(
+      axiosRetry.isNetworkOrIdempotentRequestError(error) ||
+      (error.response && error.response.status >= 500)
+    );
+  },
+  shouldResetTimeout: true, // reset the timeout between retries
+  onRetry: (retryCount, error, requestConfig) => {
+    console.log(`Retry attempt ${retryCount} for ${requestConfig.url}`);
+  },
 });
 
 // Request interceptor to add auth token

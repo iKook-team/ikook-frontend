@@ -1,4 +1,4 @@
-import axios from "@/src/lib/axios";
+import apiClient from "@/src/lib/axios";
 
 export const paymentsService = {
   async pay(quoteId: number) {
@@ -10,7 +10,7 @@ export const paymentsService = {
 
       console.log("Initiating payment with callback URL:", callbackUrl);
 
-      const response = await axios.post("/payments/", {
+      const response = await apiClient.post("/payments/", {
         quote: quoteId,
         use_checkout: true,
         use_wallet: false,
@@ -44,7 +44,7 @@ export const paymentsService = {
   async verify(reference: string) {
     try {
       console.log("Sending verification request for reference:", reference);
-      const response = await axios.post("/payments/", {
+      const response = await apiClient.post("/payments/", {
         action: "verify",
         reference: reference,
       });
@@ -60,8 +60,7 @@ export const paymentsService = {
 
   async getWalletDetails() {
     try {
-      const response = await axios.get("/payments/wallets/details/");
-
+      const response = await apiClient.get("/payments/wallets/details/");
       return response.data;
     } catch (error) {
       console.error("Error getting wallet details:", error);
@@ -71,8 +70,7 @@ export const paymentsService = {
 
   async getWalletTransactions() {
     try {
-      const response = await axios.get("/payments/wallets/transactions/");
-
+      const response = await apiClient.get("/payments/wallets/transactions/");
       return response.data;
     } catch (error) {
       console.error("Error getting wallet transactions:", error);
@@ -82,7 +80,7 @@ export const paymentsService = {
 
   async redeemGiftCard(cardNumber: string) {
     try {
-      const response = await axios.post("/payments/redeem-gift-card/", {
+      const response = await apiClient.post("/payments/redeem-gift-card/", {
         card_number: cardNumber,
       });
       return response.data;
@@ -94,17 +92,16 @@ export const paymentsService = {
 
   async getBanks() {
     try {
-      const response = await axios.get("/payments/banks/");
+      const response = await apiClient.get("/payments/banks/");
       return response.data;
     } catch (error) {
-      console.error("Error fetching banks:", error);
       throw error;
     }
   },
 
   async getBankDetails(bankId: number) {
     try {
-      const response = await axios.get(`/earnings/bank-details/${bankId}/`);
+      const response = await apiClient.get(`/earnings/bank-details/${bankId}/`);
       return response.data;
     } catch (error) {
       console.error("Error fetching bank details:", error);
@@ -114,7 +111,7 @@ export const paymentsService = {
 
   async updateBankDetails(bankId: number, data: any) {
     try {
-      const response = await axios.patch(`/earnings/bank-details/${bankId}/`, data);
+      const response = await apiClient.patch(`/earnings/bank-details/${bankId}/`, data);
       return response.data;
     } catch (error) {
       console.error("Error updating bank details:", error);
@@ -124,7 +121,7 @@ export const paymentsService = {
 
   async createBankDetails(data: any) {
     try {
-      const response = await axios.post("/earnings/bank-details/", data);
+      const response = await apiClient.post("/earnings/bank-details/", data);
       return response.data;
     } catch (error) {
       console.error("Error creating bank details:", error);

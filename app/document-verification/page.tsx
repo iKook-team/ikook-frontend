@@ -1,22 +1,25 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { useAuthStore } from "@/lib/store/auth-store";
-import { showToast } from "@/lib/utils/toast";
 
 interface DocumentState {
-  identityDocument: boolean;
   foodHygieneCertification: boolean;
+}
+
+interface DocumentUploadModalProps {
+  open: boolean;
+  onClose: () => void;
+  onUploadSuccess?: () => void;
 }
 
 const DocumentUploadModal = ({
   open,
   onClose,
-}: {
-  open: boolean;
-  onClose: () => void;
-}) => {
+  onUploadSuccess,
+}: DocumentUploadModalProps) => {
   const user = useAuthStore((s) => s.user);
+  const setUser = useAuthStore((s) => s.setUser);
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -43,8 +46,7 @@ const DocumentUploadModal = ({
     setError("");
     try {
       const formData = new FormData();
-
-      formData.append("identity_document", file);
+      formData.append("culinary_certificate", file);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"}/users/profiles/${user.id}/`,
         {
@@ -57,13 +59,31 @@ const DocumentUploadModal = ({
       );
 
       if (res.ok) {
-        showToast.success("Document uploaded successfully!");
+        const response = await res.json();
+        
+        // Access the nested data from the response
+        const userData = response.data || {};
+        
+        // Update the user data in the store with the response
+        if (user) {
+          const updatedUser = {
+            ...user,
+            culinary_certificate: userData.culinary_certificate || null,
+            document_verified: userData.document_verified || false
+          };
+          // Update the user in the store
+          setUser(updatedUser)
+        }
+        // Close the modal before triggering parent update
         onClose();
+        // Trigger parent component update
+        onUploadSuccess?.();
       } else {
-        setError("Failed to upload document");
+        const errorData = await res.json().catch(() => ({}));
+        setError(errorData.detail || "Failed to upload document");
       }
     } catch (err) {
-      setError("Failed to upload document");
+      setError("Failed to upload document. Please try again.");
     } finally {
       setUploading(false);
     }
@@ -191,18 +211,26 @@ const DocumentUploadModal = ({
 };
 
 const DocumentVerification = () => {
-  const [documents, setDocuments] = useState<DocumentState>({
-    identityDocument: false,
-    foodHygieneCertification: false,
-  });
   const [showModal, setShowModal] = useState(false);
-
-  const handleDocumentChange = (documentType: keyof DocumentState) => {
-    setDocuments((prev) => ({
-      ...prev,
-      [documentType]: !prev[documentType],
-    }));
+  const user = useAuthStore((state) => state.user);
+  // Add a state to force re-render when user data changes
+  // Use a ref to track if we need to force an update
+  const updateTriggerRef = useRef(0);
+  
+  // Debug effect to log user state changes
+  useEffect(() => {
+    console.log('User state changed:', user);
+    console.log('hasCertificate:', Boolean(user?.culinary_certificate), 
+                'isVerified:', Boolean(user?.document_verified));
+  }, [user]);
+  
+  const handleUploadSuccess = () => {
+    // Force a re-render to ensure the latest user data is used
+    updateTriggerRef.current += 1;
   };
+  
+  const hasCertificate = Boolean(user?.culinary_certificate);
+  const isVerified = Boolean(user?.document_verified);
 
   const handleContinue = () => {
     setShowModal(true);
@@ -219,111 +247,82 @@ const DocumentVerification = () => {
             You are required to provide a{" "}
           </span>
           <span className="text-[#0C0B0A] font-bold">
-            Valid ID, Certified Level 2 food hygiene certification.
+            Certified Level 2 food hygiene certification.
           </span>
         </p>
       </div>
 
       <form className="w-full max-w-[653px] space-y-6">
-        {/* Identity Document */}
-        <div className="border w-full px-2 py-1 rounded-md border-solid border-[#CFCFCE] max-sm:p-2">
-          <div className="flex items-center justify-between w-full mb-2 max-sm:flex-col max-sm:items-start max-sm:gap-2">
-            <label
-              htmlFor="identity-document"
-              className="text-[#3F3E3D] text-[15px] font-normal cursor-pointer"
-            >
-              Identity Document
-            </label>
-            <div className="flex justify-center items-center">
-              <input
-                type="checkbox"
-                id="identity-document"
-                checked={documents.identityDocument}
-                onChange={() => handleDocumentChange("identityDocument")}
-                className="w-4 h-4 border bg-white rounded-lg border-solid border-[#D0D5DD] cursor-pointer"
-              />
-            </div>
-          </div>
-          <p className="text-[rgba(50,51,53,0.5)] text-xs font-normal">
-            Upload a government ID. Accepted is Drivers License, International
-            Passport
-          </p>
-        </div>
-
         {/* Food Hygiene Certification */}
-        <div className="border w-full px-2 py-1 rounded-md border-solid border-[#CFCFCE] max-sm:p-2">
-          <div className="flex items-center justify-between w-full mb-2 max-sm:flex-col max-sm:items-start max-sm:gap-2">
-            <label
-              htmlFor="food-hygiene-cert"
-              className="text-[#3F3E3D] text-[15px] font-normal cursor-pointer"
-            >
-              Certified Level 2 food hygiene certification
-            </label>
-            <div className="flex justify-center items-center">
-              <input
-                type="checkbox"
-                id="food-hygiene-cert"
-                checked={documents.foodHygieneCertification}
-                onChange={() =>
-                  handleDocumentChange("foodHygieneCertification")
-                }
-                className="w-4 h-4 border bg-white rounded-lg border-solid border-[#D0D5DD] cursor-pointer"
-              />
-            </div>
-          </div>
+        <div className="border w-full px-4 py-3 rounded-md border-solid border-[#CFCFCE] max-sm:p-3">
+          <h3 className="text-[#3F3E3D] text-[15px] font-medium mb-1">
+            Certified Level 2 food hygiene certification
+          </h3>
           <p className="text-[rgba(50,51,53,0.5)] text-xs font-normal">
             Upload your Culinary school certificate here
           </p>
         </div>
 
         {/* Alert Message */}
-        <div className="flex w-full items-center gap-3 bg-[#FFFCF5] p-2 rounded-md max-sm:p-3">
-          <div className="w-5 h-5 relative flex-shrink-0">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="absolute left-0 top-0"
-            >
-              <circle cx="10" cy="10" r="10" fill="#FDEEC5" />
-            </svg>
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="absolute left-1 top-1"
-            >
-              <path
-                d="M6 4V7M6 8.5V8.505M11.5 6C11.5 9.03757 9.03757 11.5 6 11.5C2.96243 11.5 0.5 9.03757 0.5 6C0.5 2.96243 2.96243 0.5 6 0.5C9.03757 0.5 11.5 2.96243 11.5 6Z"
-                stroke="#A07A13"
-                strokeLinecap="round"
-              />
-            </svg>
+        {hasCertificate && (
+          <div className={`flex w-full items-center gap-3 p-3 rounded-md ${
+            isVerified ? 'bg-green-50' : 'bg-yellow-50'
+          }`}>
+            <div className="flex-shrink-0">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="relative"
+              >
+                <circle cx="10" cy="10" r="10" fill={isVerified ? '#D1FAE5' : '#FDEEC5'} />
+                {isVerified ? (
+                  <path
+                    d="M6 10L9 13L14 7"
+                    stroke="#10B981"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="absolute left-1 top-1"
+                  />
+                ) : (
+                  <path
+                    d="M6 4V7M6 8.5V8.505M11.5 6C11.5 9.03757 9.03757 11.5 6 11.5C2.96243 11.5 0.5 9.03757 0.5 6C0.5 2.96243 2.96243 0.5 6 0.5C9.03757 0.5 11.5 2.96243 11.5 6Z"
+                    stroke="#A07A13"
+                    strokeLinecap="round"
+                    className="absolute left-1 top-1"
+                  />
+                )}
+              </svg>
+            </div>
+            <p className={`text-sm ${isVerified ? 'text-green-700' : 'text-yellow-700'}`}>
+              {isVerified
+                ? "Your document has been verified"
+                : "Your documents are under review, you'll receive an email on the outcome"
+              }
+            </p>
           </div>
-          <p className="text-[#3F3E3D] text-sm font-normal leading-5">
-            Your documents are under review, you&apos;ll receive an email on the
-            outcome
-          </p>
-        </div>
+        )}
 
-        {/* Continue Button */}
-        <button
-          type="button"
-          onClick={handleContinue}
-          className="flex w-[275px] justify-center items-center gap-2 border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] h-12 cursor-pointer bg-[#FCC01C] px-7 py-3 rounded-lg border-solid border-[#FCC01C] self-start max-sm:w-[90%]"
-        >
-          <span className="text-white text-base font-bold leading-6">
-            Continue
-          </span>
-        </button>
+        {/* Continue Button - Only show when no certificate exists */}
+        {!hasCertificate && (
+          <button
+            type="button"
+            onClick={handleContinue}
+            className="flex w-[275px] justify-center items-center gap-2 border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] h-12 cursor-pointer bg-[#FCC01C] px-7 py-3 rounded-lg border-solid border-[#FCC01C] self-start max-sm:w-[90%]"
+          >
+            <span className="text-white text-base font-bold leading-6">
+              Upload
+            </span>
+          </button>
+        )}
       </form>
       <DocumentUploadModal
         open={showModal}
         onClose={() => setShowModal(false)}
+        onUploadSuccess={handleUploadSuccess}
       />
     </main>
   );

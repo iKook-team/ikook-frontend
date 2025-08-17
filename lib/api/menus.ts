@@ -1,26 +1,22 @@
-import axios from "@/src/lib/axios";
+import apiClient from "@/src/lib/axios";
 
 export const menuService = {
   async getMenuById(id: string | number) {
-    const response = await axios.get(`/menus/${id}/`);
-
+    const response = await apiClient.get(`/menus/${id}/`);
     return response.data;
   },
   async createMenu(data: any) {
-    const response = await axios.post(`/menus/`, data);
-
+    const response = await apiClient.post(`/menus/`, data);
     return response.data;
   },
   async createMenuItem(data: any) {
-    const response = await axios.post(`/menus/items/`, data);
-
+    const response = await apiClient.post(`/menus/items/`, data);
     return response.data;
   },
   async uploadMenuImage(formData: FormData) {
-    const response = await axios.post(`/menus/images/`, formData, {
+    const response = await apiClient.post(`/menus/images/`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-
     return response.data;
   },
 };

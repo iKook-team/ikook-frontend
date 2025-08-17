@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 
-import axios from "@/src/lib/axios";
+import apiClient from "@/src/lib/axios";
 
 // Types
 export interface Booking {
@@ -41,8 +41,7 @@ export const createTimeSlot = async (
   data: CreateTimeSlotData,
 ): Promise<TimeSlot> => {
   try {
-    const response = await axios.post<TimeSlot>("/calendar/time-slots/", data);
-
+    const response = await apiClient.post<TimeSlot>("/calendar/time-slots/", data);
     return response.data;
   } catch (error) {
     console.error("Error creating time slot:", error);
@@ -55,7 +54,7 @@ export const fetchTimeSlots = async (
   endDate: Date,
 ): Promise<TimeSlot[]> => {
   try {
-    const response = await axios.get<TimeSlotsResponse>(
+    const response = await apiClient.get<TimeSlotsResponse>(
       "/calendar/time-slots/",
       {
         params: {

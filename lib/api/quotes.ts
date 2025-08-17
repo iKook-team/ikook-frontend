@@ -1,4 +1,4 @@
-import axios from "@/src/lib/axios";
+import apiClient from "@/src/lib/axios";
 
 export interface Quote {
   id: number;
@@ -25,14 +25,14 @@ export interface CreateQuoteInput {
 
 export const quotesService = {
   async getQuoteById(id: string | number) {
-    const response = await axios.get(`/quotes/${id}/`);
+    const response = await apiClient.get(`/quotes/${id}/`);
 
     return response.data;
   },
   async getQuoteByBookingId(bookingId: string | number) {
     try {
       console.log(`Fetching quote for booking ID: ${bookingId}`);
-      const response = await axios.get(`/quotes/?booking=${bookingId}`);
+      const response = await apiClient.get(`/quotes/?booking=${bookingId}`);
 
       console.log("Quotes API response:", response.data);
 
@@ -58,7 +58,7 @@ export const quotesService = {
   },
 
   async createQuote(data: CreateQuoteInput) {
-    const response = await axios.post("/quotes/", data);
+    const response = await apiClient.post("/quotes/", data);
 
     return response.data;
   },
