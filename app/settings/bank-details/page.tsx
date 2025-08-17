@@ -89,7 +89,6 @@ const BankAccountForm: React.FC = () => {
           }
         }
       } catch (error) {
-        console.error("Error in fetchData:", error);
         showToast.error("Failed to load data. Please try again later.");
       } finally {
         setIsLoading(false);

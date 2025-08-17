@@ -213,6 +213,41 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
   ]);
   const [events, setEvents] = useState(["Naming", "Wedding", "Gathering"]);
 
+  // City/State options based on country
+  const getCitiesByCountry = (country: string) => {
+    const citiesByCountry: Record<string, string[]> = {
+      // Nigeria - States
+      'Nigeria': [
+        'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue', 'Borno', 
+        'Cross River', 'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu', 'FCT', 'Gombe', 'Imo', 
+        'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Kogi', 'Kwara', 'Lagos', 'Nasarawa', 
+        'Niger', 'Ogun', 'Ondo', 'Oyo', 'Plateau', 'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara'
+      ],
+      // South Africa - Provinces
+      'South Africa': [
+        'Eastern Cape', 'Free State', 'Gauteng', 'Kwazulu Natal', 'Limpopo', 
+        'Mpumalanga', 'North West', 'Northen Cape', 'Western Cape'
+      ],
+      // United Kingdom - Regions
+      'United Kingdom': [
+        'England', 'Scotland', 'Wales', 'Northern Ireland'
+      ]
+    };
+
+    return citiesByCountry[country] || [];
+  };
+
+  const [cities, setCities] = useState<string[]>([]);
+  const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
+
+  // Update cities when user's country changes
+  useEffect(() => {
+    if (user?.country) {
+      const countryCities = getCitiesByCountry(user.country);
+      setCities(countryCities);
+    }
+  }, [user?.country]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -509,20 +544,46 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
                             <label className="text-[#3F3E3D] text-sm font-medium leading-none">
                               City/State
                             </label>
-                            <div className="items-center border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#0F0E0C] font-normal flex-wrap bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid border-[#CFCFCE] max-md:max-w-full">
-                              <input
-                                type="text"
-                                value={formData.city}
-                                onChange={(e) =>
-                                  handleInputChange("city", e.target.value)
-                                }
-                                className="self-stretch flex min-w-60 items-center gap-2 flex-1 shrink basis-[0%] my-auto max-md:max-w-full bg-transparent border-none outline-none text-[#0F0E0C]"
-                              />
-                              <img
-                                src="https://api.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6fbc6bc48ccc3247e1e891a2d67fecfd2cde1c7c?placeholderIfAbsent=true"
-                                alt="Dropdown arrow"
-                                className="aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto"
-                              />
+                            <div className="relative w-full">
+                              <div 
+                                className="items-center border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#0F0E0C] font-normal bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid border-[#CFCFCE] cursor-pointer"
+                                onClick={() => setIsCityDropdownOpen(!isCityDropdownOpen)}
+                              >
+                                <input
+                                  type="text"
+                                  value={formData.city}
+                                  readOnly
+                                  className="self-stretch flex min-w-60 items-center gap-2 flex-1 shrink basis-[0%] my-auto bg-transparent border-none outline-none text-[#0F0E0C] cursor-pointer"
+                                  placeholder="Select city/state"
+                                />
+                                <img
+                                  src="https://api.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6fbc6bc48ccc3247e1e891a2d67fecfd2cde1c7c?placeholderIfAbsent=true"
+                                  alt="Dropdown arrow"
+                                  className={`aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto transition-transform ${isCityDropdownOpen ? 'rotate-180' : ''}`}
+                                />
+                              </div>
+                              {isCityDropdownOpen && (
+                                <div className="absolute z-10 w-full mt-1 bg-white border border-solid border-[#CFCFCE] rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                                  {cities.length > 0 ? (
+                                    cities.map((city) => (
+                                      <div
+                                        key={city}
+                                        className={`px-4 py-2 hover:bg-gray-100 cursor-pointer ${formData.city === city ? 'bg-amber-100' : ''}`}
+                                        onClick={() => {
+                                          handleInputChange("city", city);
+                                          setIsCityDropdownOpen(false);
+                                        }}
+                                      >
+                                        {city}
+                                      </div>
+                                    ))
+                                  ) : (
+                                    <div className="px-4 py-2 text-gray-500">
+                                      No cities available for {user?.country || 'selected country'}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -599,7 +660,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
                         label="Event type"
                         selectedTags={formData.eventTypes}
                         tags={events}
-                        onTagsChange={setEvents}
+                        onTagsChange={(newTags) => handleInputChange("eventTypes", newTags)}
                       />
 
                       <TagSelector
@@ -607,7 +668,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
                         label="Cuisines type"
                         selectedTags={formData.cuisineTypes}
                         tags={cuisines}
-                        onTagsChange={setCuisines}
+                        onTagsChange={(newTags) => handleInputChange("cuisineTypes", newTags)}
                       />
                     </>
                   )}
