@@ -541,13 +541,26 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
                       <div className="w-full whitespace-nowrap mt-4 max-md:max-w-full">
                         <div className="w-full max-md:max-w-full">
                           <div className="w-full max-md:max-w-full">
-                            <label className="text-[#3F3E3D] text-sm font-medium leading-none">
+                            <label id="city-label" className="text-[#3F3E3D] text-sm font-medium leading-none">
                               City/State
                             </label>
                             <div className="relative w-full">
-                              <div 
-                                className="items-center border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#0F0E0C] font-normal bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid border-[#CFCFCE] cursor-pointer"
+                              <button 
+                                type="button"
+                                aria-haspopup="listbox"
+                                aria-expanded={isCityDropdownOpen}
+                                aria-labelledby="city-label"
+                                className="items-center border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#0F0E0C] font-normal bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid border-[#CFCFCE] cursor-pointer text-left"
                                 onClick={() => setIsCityDropdownOpen(!isCityDropdownOpen)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    setIsCityDropdownOpen(!isCityDropdownOpen);
+                                  } else if (e.key === 'Escape' && isCityDropdownOpen) {
+                                    e.preventDefault();
+                                    setIsCityDropdownOpen(false);
+                                  }
+                                }}
                               >
                                 <input
                                   type="text"
@@ -561,17 +574,34 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
                                   alt="Dropdown arrow"
                                   className={`aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto transition-transform ${isCityDropdownOpen ? 'rotate-180' : ''}`}
                                 />
-                              </div>
+                              </button>
                               {isCityDropdownOpen && (
-                                <div className="absolute z-10 w-full mt-1 bg-white border border-solid border-[#CFCFCE] rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                                <div 
+                                  role="listbox"
+                                  aria-labelledby="city-label"
+                                  className="absolute z-10 w-full mt-1 bg-white border border-solid border-[#CFCFCE] rounded-lg shadow-lg max-h-60 overflow-y-auto"
+                                >
                                   {cities.length > 0 ? (
-                                    cities.map((city) => (
+                                    cities.map((city, index) => (
                                       <div
                                         key={city}
+                                        role="option"
+                                        aria-selected={formData.city === city}
+                                        tabIndex={0}
                                         className={`px-4 py-2 hover:bg-gray-100 cursor-pointer ${formData.city === city ? 'bg-amber-100' : ''}`}
                                         onClick={() => {
                                           handleInputChange("city", city);
                                           setIsCityDropdownOpen(false);
+                                        }}
+                                        onKeyDown={(e) => {
+                                          if (e.key === 'Enter' || e.key === ' ') {
+                                            e.preventDefault();
+                                            handleInputChange("city", city);
+                                            setIsCityDropdownOpen(false);
+                                          } else if (e.key === 'Escape') {
+                                            e.preventDefault();
+                                            setIsCityDropdownOpen(false);
+                                          }
                                         }}
                                       >
                                         {city}
