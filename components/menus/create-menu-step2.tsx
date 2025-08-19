@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { FormField } from "../ui/form-field";
 import { PriceInput } from "../ui/price-input";
@@ -10,6 +10,7 @@ import FormNavigationFooter from "./form-navigation-footer";
 
 import { MenuFormData } from "@/types/menu-form";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { getCurrencySymbol } from "@/lib/utils/currency";
 
 interface CreateMenuStep2Props {
   onContinue: () => void;
@@ -26,20 +27,40 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
   formData,
   updateFormData,
 }) => {
-  const chefFormData = useAuthStore((s) => s.chefFormData);
+  const { user, chefFormData } = useAuthStore();
   const country = chefFormData?.country;
-
-  function getCurrencySymbol(country?: string) {
-    if (!country) return "£";
-    if (country === "Nigeria") return "₦";
-    if (country === "South Africa") return "R";
-    if (country === "United Kingdom") return "£";
-
-    return "£";
-  }
-  const currency = getCurrencySymbol(country);
-  const courses = formData.courses || courseLabels;
-  const [currentCourseIdx, setCurrentCourseIdx] = useState(0);
+  
+  // Get courses from formData or use default course labels
+  const courses = React.useMemo(() => 
+    Array.isArray(formData.courses) && formData.courses.length > 0 
+      ? formData.courses 
+      : courseLabels,
+    [formData.courses]
+  );
+  
+  // Initialize currentCourseIdx from formData, ensuring it's within bounds
+  const [currentCourseIdx, setCurrentCourseIdx] = useState<number>(() => {
+    const savedIdx = typeof formData.currentCourseIdx === 'number' 
+      ? formData.currentCourseIdx 
+      : 0;
+    return Math.min(Math.max(0, savedIdx), courses.length - 1);
+  });
+  
+  // Get current course name, default to first course if not found
+  const currentCourse = courses[Math.min(currentCourseIdx, courses.length - 1)] || courses[0] || 'Starter';
+  
+  // Update form data when currentCourseIdx changes
+  useEffect(() => {
+    // Only update if the index is valid and has actually changed
+    if (currentCourseIdx >= 0 && 
+        currentCourseIdx < courses.length && 
+        formData.currentCourseIdx !== currentCourseIdx) {
+      updateFormData({
+        ...formData,
+        currentCourseIdx,
+      });
+    }
+  }, [currentCourseIdx, formData, updateFormData, courses.length]);
   const [courseItems, setCourseItems] = useState<
     Record<string, { name: string; description: string }[]>
   >(formData.courseItems || {});
@@ -50,49 +71,52 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
   const [menuSelection, setMenuSelection] = useState<Record<string, string>>(
     () => {
       const initial: Record<string, string> = {};
-
-      (formData.courses || courseLabels).forEach((course: string) => {
-        initial[course] = "1";
+      const courses = formData.courses || courseLabels;
+      
+      courses.forEach((course: string) => {
+        // Use saved value or default to "1"
+        initial[course] = formData.coursesSelectionLimit?.[course]?.toString() || "1";
       });
 
       return initial;
     },
   );
+  
   const [additionalStarterCharge, setAdditionalStarterCharge] = useState<
     Record<string, string>
   >(() => {
     const initial: Record<string, string> = {};
-
-    (formData.courses || courseLabels).forEach((course: string) => {
-      initial[course] = "";
+    const courses = formData.courses || courseLabels;
+    
+    courses.forEach((course: string) => {
+      // Use saved value or default to "0"
+      initial[course] = formData.coursesExtraChargePerPerson?.[course]?.toString() || "0";
     });
 
     return initial;
   });
 
+  // Only initialize state from form data on mount
   React.useEffect(() => {
-    setCourseItems(formData.courseItems || {});
-    setMenuSelection(() => {
-      const initial: Record<string, string> = {};
+    if (Object.keys(formData.courseItems || {}).length > 0) {
+      setCourseItems(formData.courseItems || {});
+    }
+    
+    if (formData.coursesSelectionLimit) {
+      setMenuSelection(prev => ({
+        ...prev,
+        ...formData.coursesSelectionLimit
+      }));
+    }
+    
+    if (formData.coursesExtraChargePerPerson) {
+      setAdditionalStarterCharge(prev => ({
+        ...prev,
+        ...formData.coursesExtraChargePerPerson
+      }));
+    }
+  }, []); // Empty dependency array to run only on mount
 
-      (formData.courses || courseLabels).forEach((course: string) => {
-        initial[course] = "1";
-      });
-
-      return initial;
-    });
-    setAdditionalStarterCharge(() => {
-      const initial: Record<string, string> = {};
-
-      (formData.courses || courseLabels).forEach((course: string) => {
-        initial[course] = "";
-      });
-
-      return initial;
-    });
-  }, [formData]);
-
-  const currentCourse = courses[currentCourseIdx];
 
   const handleInputChange =
     (field: "name" | "description") =>
@@ -100,11 +124,25 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
       setItemInput((prev) => ({ ...prev, [field]: e.target.value }));
     };
 
-  const handleMenuSelectionChange =
-    (course: string) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      setMenuSelection((prev) => ({ ...prev, [course]: e.target.value }));
-    };
+  const handleMenuSelectionChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+    const { value } = e.target;
+    const itemCount = courseItems[currentCourse]?.length || 0;
+    let newValue = parseInt(value, 10);
+    
+    // Ensure the value is within valid range
+    if (isNaN(newValue)) {
+      newValue = 1;
+    } else if (newValue < 1) {
+      newValue = 1;
+    } else if (newValue > itemCount) {
+      newValue = itemCount;
+    }
+    
+    setMenuSelection((prev) => ({
+      ...prev,
+      [currentCourse]: newValue.toString(),
+    }));
+  };
 
   const handleAdditionalStarterChargeChange =
     (course: string) => (value: string) => {
@@ -137,99 +175,113 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
     setCourseItems(updated);
   };
 
-  const handleNextCourse = () => {
-    if (currentCourseIdx < courses.length - 1) {
-      setCurrentCourseIdx(currentCourseIdx + 1);
+  const saveCurrentCourseData = () => {
+    // Make sure we have the latest course items and menu selection
+    const allCourseItems = { ...courseItems };
+    
+    // If there's an item in the input, save it to the current course
+    if (itemInput.name.trim()) {
+      const currentItems = allCourseItems[currentCourse] || [];
+      allCourseItems[currentCourse] = [...currentItems, { ...itemInput }];
+      setCourseItems(allCourseItems);
       setItemInput({ name: "", description: "" });
-    } else {
-      // Last course, continue to next step
-      const courseKeys = Object.keys(courseItems).filter(
-        (key: string) => courseItems[key] && courseItems[key].length > 0,
-      );
-      const coursesArr = courseKeys;
-      const coursesSelectionLimit: Record<string, number> = {};
-      const coursesExtraChargePerPerson: Record<string, string> = {};
-
-      courseKeys.forEach((course: string) => {
-        const itemCount = courseItems[course]?.length || 0;
-        let limit = menuSelection[course]
-          ? parseInt(menuSelection[course], 10)
-          : 1;
-
-        if (itemCount < 1) return; // skip if no items
-        limit = Math.max(1, Math.min(limit, itemCount));
-        coursesSelectionLimit[course] = limit;
-        if (additionalStarterCharge[course]) {
-          coursesExtraChargePerPerson[course] = additionalStarterCharge[course];
-        }
-      });
-      // Flatten courseItems into menuItems array
-      const menuItems = courseKeys.flatMap((course: string) =>
-        (courseItems[course] || []).map((item) => ({
+    }
+    
+    // Get all courses with items
+    const courseKeys = Object.keys(allCourseItems).filter(
+      (key: string) => allCourseItems[key]?.length > 0
+    );
+    
+    // Prepare menu items array for form data
+    const menuItems = Object.entries(allCourseItems).flatMap(
+      ([course, items]) =>
+        (items || []).map((item) => ({
+          ...item,
           course,
-          name: item.name,
-          description: item.description,
         })),
-      );
+    );
+    
+    // Get the current course index
+    const currentIdx = courses.findIndex(course => course === currentCourse);
+    
+    // Ensure menu selection limits are valid
+    const validatedMenuSelection = { ...menuSelection };
+    Object.keys(validatedMenuSelection).forEach(course => {
+      const itemCount = allCourseItems[course]?.length || 0;
+      const currentLimit = parseInt(validatedMenuSelection[course] || '1', 10);
+      
+      // Ensure limit is at least 1 and at most the number of items (if there are items)
+      if (itemCount > 0) {
+        validatedMenuSelection[course] = Math.min(
+          Math.max(1, currentLimit),
+          itemCount
+        ).toString();
+      } else {
+        validatedMenuSelection[course] = '0';
+      }
+    });
+    
+    // Prepare the data to be saved
+    const updatedData = {
+      courseItems: allCourseItems,
+      menuItems,
+      courses: courseLabels,
+      coursesSelectionLimit: {
+        ...(formData.coursesSelectionLimit || {}), // Preserve existing values
+        ...validatedMenuSelection, // Apply validated selection limits
+      },
+      coursesExtraChargePerPerson: {
+        ...(formData.coursesExtraChargePerPerson || {}), // Preserve existing values
+        ...additionalStarterCharge, // Apply current additional charges
+      },
+      currentCourseIdx: currentIdx >= 0 ? currentIdx : 0,
+    };
 
+    // Update the form data in the parent component
+    updateFormData(updatedData);
+    return updatedData;
+  };
+
+  const handleNextCourse = () => {
+    // Save current data before proceeding
+    const updatedData = saveCurrentCourseData();
+    
+    // Get the next course index
+    const nextCourseIdx = currentCourseIdx + 1;
+    
+    if (nextCourseIdx < courses.length) {
+      // Move to next course
+      setCurrentCourseIdx(nextCourseIdx);
+      setItemInput({ name: "", description: "" });
+      
+      // Update form data with the next course
       updateFormData({
-        ...formData,
-        courseItems,
-        menuSelection,
-        additionalStarterCharge,
-        courses: coursesArr,
-        coursesSelectionLimit,
-        coursesExtraChargePerPerson,
-        menuItems,
+        ...updatedData,
+        currentCourseIdx: nextCourseIdx,
       });
+    } else {
+      // All courses completed, proceed to next step
       onContinue();
     }
   };
 
   const handleBack = () => {
+    // Save current data before going back
+    const updatedData = saveCurrentCourseData();
+    
     if (currentCourseIdx > 0) {
-      setCurrentCourseIdx(currentCourseIdx - 1);
+      // Move to previous course
+      const prevCourseIdx = currentCourseIdx - 1;
+      setCurrentCourseIdx(prevCourseIdx);
       setItemInput({ name: "", description: "" });
-    } else {
-      const courseKeys = Object.keys(courseItems).filter(
-        (key: string) => courseItems[key] && courseItems[key].length > 0,
-      );
-      const coursesArr = courseKeys;
-      const coursesSelectionLimit: Record<string, number> = {};
-      const coursesExtraChargePerPerson: Record<string, string> = {};
-
-      courseKeys.forEach((course: string) => {
-        const itemCount = courseItems[course]?.length || 0;
-        let limit = menuSelection[course]
-          ? parseInt(menuSelection[course], 10)
-          : 1;
-
-        if (itemCount < 1) return; // skip if no items
-        limit = Math.max(1, Math.min(limit, itemCount));
-        coursesSelectionLimit[course] = limit;
-        if (additionalStarterCharge[course]) {
-          coursesExtraChargePerPerson[course] = additionalStarterCharge[course];
-        }
-      });
-      // Flatten courseItems into menuItems array
-      const menuItems = courseKeys.flatMap((course: string) =>
-        (courseItems[course] || []).map((item) => ({
-          course,
-          name: item.name,
-          description: item.description,
-        })),
-      );
-
+      
+      // Update form data with the previous course
       updateFormData({
-        ...formData,
-        courseItems,
-        menuSelection,
-        additionalStarterCharge,
-        courses: coursesArr,
-        coursesSelectionLimit,
-        coursesExtraChargePerPerson,
-        menuItems,
+        ...updatedData,
+        currentCourseIdx: prevCourseIdx,
       });
+    } else {
+      // No more previous courses, go back to previous step
       onBack();
     }
   };
@@ -260,14 +312,14 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
             <div className="flex flex-col w-full">
               <FormField
                 label="Menu item name"
-                placeholder={`What's the ${currentCourse.toLowerCase()} name?`}
+                placeholder={`What's the ${currentCourse?.toLowerCase?.() || 'menu item'} name?`}
                 value={itemInput.name}
                 onChange={handleInputChange("name")}
               />
               <FormField
                 label="Menu item description"
                 className="mt-5"
-                placeholder={`Describe the ${currentCourse.toLowerCase()}?`}
+                placeholder={`Describe the ${currentCourse?.toLowerCase?.() || 'menu item'}?`}
                 value={itemInput.description}
                 onChange={handleInputChange("description")}
               />
@@ -277,7 +329,7 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
               >
                 <div className="flex overflow-hidden gap-2 justify-center items-center px-3.5 py-2 bg-white rounded-lg border border-solid shadow-sm border-stone-300">
                   <span className="self-stretch my-auto text-slate-700">
-                    Add new {currentCourse.toLowerCase()}
+                    Add new {currentCourse?.toLowerCase?.() || 'menu item'}
                   </span>
                 </div>
               </button>
@@ -285,7 +337,7 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
               {(courseItems[currentCourse]?.length ?? 0) > 0 && (
                 <div className="mt-5">
                   <h4 className="text-sm font-semibold mb-2">
-                    Added {currentCourse}s
+                    Added {currentCourse ? `${currentCourse}s` : 'menu items'}
                   </h4>
                   <ul className="space-y-2">
                     {courseItems[currentCourse].map((item, idx) => (
@@ -325,24 +377,45 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
           </div>
         </section>
 
-        {/* Per-course menu selection limit and additional charge */}
-        <div className="flex flex-col gap-6 mt-6">
-          <FormField
-            label="Menu selection limit"
-            type="number"
-            value={menuSelection[currentCourse] || "1"}
-            onChange={handleMenuSelectionChange(currentCourse)}
-            placeholder="Enter maximum menu selection (1-10)"
-          />
-          <PriceInput
-            label="Additional starter charge (per person)"
-            placeholder="e.g. 5.00"
-            value={additionalStarterCharge[currentCourse] || ""}
-            onChange={handleAdditionalStarterChargeChange(currentCourse)}
-            currency={currency}
-          />
+    {/* Per-course menu selection limit and additional charge - Only show if more than one menu item exists */}
+    {(courseItems[currentCourse]?.length > 1) && (
+      <div className="flex flex-col gap-6 mt-6">
+        <div className="flex flex-col gap-6 w-full">
+          <div className="w-full">
+            <label className="block text-sm font-medium text-gray-900 mb-1.5">
+              Menu selection limit
+            </label>
+            <select
+              className="w-full p-2.5 border border-gray-300 rounded-lg bg-transparent focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-base h-[42px]"
+              value={menuSelection[currentCourse] || "1"}
+              onChange={handleMenuSelectionChange}
+            >
+              {Array.from(
+                { length: courseItems[currentCourse]?.length || 0 },
+                (_, i) => (i + 1).toString()
+              ).map((num) => (
+                <option key={num} value={num}>
+                  {num}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <div className="w-full">
+            <PriceInput
+              label="Additional charge per extra selection (per person)"
+              placeholder="e.g. 5.00"
+              value={additionalStarterCharge[currentCourse] || ""}
+              onChange={handleAdditionalStarterChargeChange(currentCourse)}
+              currency={getCurrencySymbol({
+                currency: user?.currency,
+                country: chefFormData?.country
+              })}
+            />
+          </div>
         </div>
-
+      </div>
+    )}
         <img
           src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/4e5e0e8d7af4287197a7d5d0575a23c15b68d216?placeholderIfAbsent=true"
           alt=""

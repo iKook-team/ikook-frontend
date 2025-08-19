@@ -104,11 +104,13 @@ export const CreateMenuStep3: React.FC<MenuImagesStepProps> = ({
           className="object-contain mt-28 w-full aspect-[500] stroke-[1px] stroke-neutral-200 max-md:mt-10 max-md:max-w-full"
         />
 
-        <FormNavigationFooter
-          onBack={handleBack}
-          onContinue={handleContinue}
-          disabled={!canContinue}
-        />
+        <div className="flex justify-end w-full mt-8">
+          <FormNavigationFooter
+            onBack={handleBack}
+            onContinue={handleContinue}
+            disabled={!canContinue}
+          />
+        </div>
       </div>
     </div>
   );

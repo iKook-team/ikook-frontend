@@ -61,6 +61,28 @@ const CreateMenuPage: React.FC = () => {
     setIsSubmitting(true);
     setSubmitError(null);
     try {
+      // Filter out courses that have no items
+      const coursesWithItems = (formData.courses || []).filter((course: string) => {
+        const courseItems = formData.courseItems?.[course] || [];
+        return courseItems.length > 0;
+      });
+
+      // Filter courses_selection_limit to only include courses that have items
+      const filteredSelectionLimit = Object.entries(formData.coursesSelectionLimit || {})
+        .filter(([course]) => coursesWithItems.includes(course))
+        .reduce((acc, [key, value]) => ({
+          ...acc,
+          [key]: value
+        }), {});
+
+      // Filter courses_extra_charge_per_person to only include non-zero values
+      const filteredExtraCharges = Object.entries(formData.coursesExtraChargePerPerson || {})
+        .filter(([_, value]) => value && value !== '0' && value !== '0.00')
+        .reduce((acc, [key, value]) => ({
+          ...acc,
+          [key]: value
+        }), {});
+
       // 1. Create menu
       const menuPayload = {
         name: formData.menuName,
@@ -72,9 +94,9 @@ const CreateMenuPage: React.FC = () => {
         event_types: formData.eventTypes,
         cuisine_types: formData.cuisineTypes,
         menu_type: formData.menuType,
-        courses: formData.courses, // e.g. ["Starter", "Main", ...]
-        courses_selection_limit: formData.coursesSelectionLimit, // { Starter: 1, ... }
-        courses_extra_charge_per_person: formData.coursesExtraChargePerPerson, // { Starter: "500", ... }
+        courses: coursesWithItems,
+        courses_selection_limit: filteredSelectionLimit,
+        courses_extra_charge_per_person: filteredExtraCharges,
         status: "Draft",
       };
       const menuRes = await menuService.createMenu(menuPayload);
@@ -146,6 +168,7 @@ const CreateMenuPage: React.FC = () => {
       case 1:
         return <CreateMenuStep1 {...stepProps} />;
       case 2:
+        // Step 2 handles its own course navigation internally
         return <CreateMenuStep2 {...stepProps} />;
       case 3:
         return <CreateMenuStep3 {...stepProps} />;

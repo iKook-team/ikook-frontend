@@ -12,6 +12,7 @@ import { ProgressStepper } from "./progress-indicator";
 
 import { MenuFormData } from "@/types/menu-form";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { getCurrencySymbol } from "@/lib/utils/currency";
 
 interface CreateMenuStep1Props {
   onContinue: () => void;
@@ -26,18 +27,9 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
   formData,
   updateFormData,
 }) => {
-  const chefFormData = useAuthStore((s) => s.chefFormData);
+  const { user, chefFormData } = useAuthStore();
   const country = chefFormData?.country;
-
-  function getCurrencySymbol(country?: string) {
-    if (!country) return "£";
-    if (country === "Nigeria") return "₦";
-    if (country === "South Africa") return "R";
-    if (country === "United Kingdom") return "£";
-
-    return "£";
-  }
-  const currency = getCurrencySymbol(country);
+  // const currency = getCurrencySymbol(country);
   const [localFormData, setLocalFormData] = useState<Partial<MenuFormData>>({
     menuName: formData.menuName || "",
     price: formData.price || "",
@@ -155,7 +147,10 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
               placeholder="Price per person"
               value={localFormData.price}
               onChange={handleValueChange("price")}
-              currency={currency}
+              currency={getCurrencySymbol({
+                currency: user?.currency,
+                country: chefFormData?.country
+              })}
             />
 
             <FormField
