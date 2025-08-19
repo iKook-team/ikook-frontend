@@ -39,12 +39,17 @@ export const ServicesSection: React.FC = () => {
     const fetchServices = async () => {
       try {
         setIsLoading(true);
-        const data = await servicesService.fetchServices();
+        setError(null);
+        const response = await servicesService.fetchServices();
+
+        if (!response || !response.results) {
+          throw new Error('Invalid response format');
+        }
 
         // Create a mapping of service names to their data
         const servicesMap = { ...services };
 
-        data.results.forEach((service) => {
+        response.results.forEach((service) => {
           const serviceName =
             SERVICE_MAPPING[service.chef_service as ServiceName] ||
             service.chef_service;
