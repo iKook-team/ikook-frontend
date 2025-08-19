@@ -50,10 +50,12 @@ export const ServicesSection: React.FC = () => {
         const servicesMap = { ...services };
 
         response.results.forEach((service) => {
-          const serviceName =
-            SERVICE_MAPPING[service.chef_service as ServiceName] ||
-            service.chef_service;
-
+          if (!service?.chef_service) {
+            console.warn('Skipping service with missing chef_service:', service);
+            return;
+          }
+          
+          const serviceName = SERVICE_MAPPING[service.chef_service as ServiceName] || service.chef_service;
           servicesMap[serviceName] = service;
         });
 
