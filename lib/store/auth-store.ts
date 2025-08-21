@@ -25,6 +25,11 @@ interface User {
   email_notify?: boolean;
   sms_notify?: boolean;
   bank_details?: number;
+  // Serviceable distance fields (chef specific)
+  serviceable_location?: string;
+  serviceable_radius?: number;
+  extra_km?: number;
+  extra_km_charge?: string;
 }
 
 interface HostFormData {
@@ -54,6 +59,11 @@ interface ChefFormData {
   briefProfile?: string;
   eventTypes?: string[];
   cuisineTypes?: string[];
+  // Serviceable distance fields
+  serviceable_location?: string;
+  serviceable_radius?: number;
+  extra_km?: number;
+  extra_km_charge?: string;
 }
 
 interface AuthState {
