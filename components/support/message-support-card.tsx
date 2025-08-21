@@ -1,27 +1,13 @@
 'use client';
 import React from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export const MessageSupportCard: React.FC = () => {
-  const router = useRouter();
-
-  const handleMessageSupport = () => {
-    router.push('/support/messages');
-  };
-
   return (
-    <article 
-      className="items-center border shadow-[0_4px_10px_0_rgba(0,0,0,0.05)] flex gap-3 bg-white px-2.5 py-2 rounded-md border-solid border-[#E7E7E7] cursor-pointer hover:shadow-lg transition-shadow"
-      onClick={handleMessageSupport}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          handleMessageSupport();
-        }
-      }}
+    <Link
+      href="/support/messages"
+      className="items-center border shadow-[0_4px_10px_0_rgba(0,0,0,0.05)] flex gap-3 bg-white px-2.5 py-2 rounded-md border-solid border-[#E7E7E7] hover:shadow-lg transition-shadow"
       aria-label="Start a conversation with support"
     >
       {/* Left rectangular logo avatar */}
@@ -43,6 +29,6 @@ export const MessageSupportCard: React.FC = () => {
           Hi there, How can I help you today?
         </p>
       </div>
-    </article>
+    </Link>
   );
 };

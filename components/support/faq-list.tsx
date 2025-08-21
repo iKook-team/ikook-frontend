@@ -22,7 +22,7 @@ export const FAQList: React.FC<FAQListProps> = ({ faqs, searchTerm }) => {
   if (filteredFAQs.length === 0 && searchTerm) {
     return (
       <div className="text-center py-8 text-[#3F3E3D]">
-        <p>No FAQs found matching "{searchTerm}"</p>
+        <p>No FAQs found matching &quot;{searchTerm}&quot;</p>
         <p className="text-xs mt-1">Try adjusting your search terms</p>
       </div>
     );
