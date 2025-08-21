@@ -6,7 +6,7 @@ import { ChatHeader } from '@/components/support/chat-header';
 import { MessageBubble } from '@/components/support/message-bubble';
 import { MessageInput } from '@/components/support/chat-message-input';
 
-export function MessagesInterface() {
+function MessagesInterface() {
   const handleSendMessage = (message: string) => {
     console.log('Sending message:', message);
   };
