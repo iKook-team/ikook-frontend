@@ -19,19 +19,24 @@ export function MessageBubble({
 }: MessageBubbleProps) {
   if (isOutgoing) {
     return (
-      <div className="flex relative flex-col gap-2.5 items-end p-2.5 mb-4 ml-20 bg-amber-100 rounded-md w-[555px] max-md:ml-auto max-md:w-full max-md:max-w-[555px] max-sm:p-2 max-sm:ml-10 max-sm:rounded-lg">
-        <p className="relative text-xs leading-5 text-right text-neutral-700 w-[527px] max-md:w-full max-md:max-w-[527px] max-sm:text-xs max-sm:leading-5">
-          {message}
-        </p>
-        <time className="relative text-xs text-neutral-500 max-sm:text-xs">
-          {timestamp}
-        </time>
+      <div className="flex justify-end mb-3">
+        <div className="bg-amber-100 rounded-xl px-3 py-2 max-w-[80%] whitespace-pre-wrap break-words text-neutral-700 text-sm">
+          {hasImage && imageUrl && (
+            <img
+              src={imageUrl}
+              alt={imageAlt}
+              className="rounded mb-2 max-w-full h-auto"
+            />
+          )}
+          {!!message && <p className="leading-5">{message}</p>}
+          <time className="block text-xs text-neutral-500 mt-1 text-right">{timestamp}</time>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex gap-1 items-start mb-4 max-sm:mb-3">
+    <div className="flex items-start gap-2 mb-3">
       <div className="flex-shrink-0">
         <div
           dangerouslySetInnerHTML={{
@@ -40,22 +45,16 @@ export function MessageBubble({
           }}
         />
       </div>
-      <div className="flex relative flex-col gap-1 items-start p-2.5 rounded-none bg-stone-50 w-[565px] max-md:w-full max-md:max-w-[565px] max-sm:p-2 max-sm:rounded-none">
+      <div className="bg-stone-50 rounded-xl px-3 py-2 max-w-[80%] whitespace-pre-wrap break-words text-neutral-700 text-sm">
         {hasImage && imageUrl && (
           <img
             src={imageUrl}
             alt={imageAlt}
-            className="relative rounded h-[84px] w-[544px] max-md:w-full max-md:h-auto max-md:max-w-[544px] max-sm:h-auto max-sm:min-h-[60px]"
+            className="rounded mb-2 max-w-full h-auto"
           />
         )}
-        {!hasImage && (
-          <p className="relative text-xs leading-5 text-neutral-700 w-[535px] max-md:w-full max-md:max-w-[535px] max-sm:text-xs max-sm:leading-5">
-            {message}
-          </p>
-        )}
-        <time className="relative text-xs text-neutral-500 max-sm:text-xs">
-          {timestamp}
-        </time>
+        {!!message && <p className="leading-5">{message}</p>}
+        <time className="block text-xs text-neutral-500 mt-1">{timestamp}</time>
       </div>
     </div>
   );
