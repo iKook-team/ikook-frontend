@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { WalletBalance } from "@/components/wallet/wallet-balance";
 import { TransactionTabs } from "@/components/wallet/transaction-tabs";
@@ -46,6 +46,42 @@ const Index: React.FC = () => {
     fetchWalletData();
   }, []);
 
+  // Verify wallet funding after returning from checkout
+  const hasVerifiedRef = useRef(false);
+  useEffect(() => {
+    const maybeVerifyFunding = async () => {
+      if (hasVerifiedRef.current) return;
+      const ref = sessionStorage.getItem("pendingWalletFundingReference");
+      if (!ref) return;
+
+      // Only verify if Paystack appended reference/trxref or status=success in URL
+      const params = new URLSearchParams(window.location.search);
+      const hasRefInUrl = !!(params.get("reference") || params.get("trxref"));
+      const statusParam = (params.get("status") || "").toLowerCase();
+      const isSuccess = statusParam === "success" || statusParam === "completed";
+      if (!hasRefInUrl && !isSuccess) {
+        // User likely canceled; clear pending and skip verification
+        sessionStorage.removeItem("pendingWalletFundingReference");
+        return;
+      }
+
+      // Remove first to avoid duplicate verifications if effect runs twice
+      sessionStorage.removeItem("pendingWalletFundingReference");
+      try {
+        hasVerifiedRef.current = true;
+        await paymentsService.verifyWalletFunding(ref);
+        showToast.success("Wallet funded successfully");
+        await refreshWallet();
+      } catch (err: any) {
+        const msg =
+          err?.response?.data?.message || err?.message || "Failed to verify wallet funding";
+        showToast.error(msg);
+      }
+    };
+
+    maybeVerifyFunding();
+  }, []);
+
   const refreshWallet = async () => {
     try {
       const walletDetails = await paymentsService.getWalletDetails();
@@ -79,10 +115,30 @@ const Index: React.FC = () => {
   };
 
   const handleAddMoney = async (amount: string) => {
-    // TODO: Implement add money API integration
-    console.log("Adding money:", amount);
-    showToast.success(`Successfully added $${amount} to your wallet`);
-    await refreshWallet();
+    try {
+      const res = await paymentsService.fundWallet(amount);
+      const data = res?.data ?? res; // support either wrapped or raw
+
+      // If checkout is required, redirect
+      const checkoutUrl = data?.checkout_url ?? data?.data?.checkout_url;
+      const reference = data?.reference ?? data?.data?.reference;
+      if (checkoutUrl) {
+        if (reference) {
+          sessionStorage.setItem("pendingWalletFundingReference", reference);
+        }
+        window.location.assign(checkoutUrl);
+        return; // stop here, redirecting
+      }
+
+      // If immediate success (non-checkout flow), refresh UI
+      showToast.success("Wallet funding initiated successfully");
+      await refreshWallet();
+    } catch (err: any) {
+      const msg =
+        err?.response?.data?.message || err?.message || "Failed to fund wallet";
+      showToast.error(msg);
+      throw err; // keep modal open
+    }
   };
 
   // Filter transactions by type for tabs

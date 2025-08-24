@@ -3,12 +3,9 @@ import apiClient from "@/src/lib/axios";
 export const paymentsService = {
   async pay(quoteId: number) {
     try {
-      // Get the base URL for the current environment
-      const baseUrl =
-        typeof window !== "undefined" ? window.location.origin : "";
-      const callbackUrl = `${baseUrl}/dashboard/payment/callback`;
-
-      console.log("Initiating payment with callback URL:", callbackUrl);
+      // Build return URL to host dashboard after checkout
+      const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+      const returnUrl = `${baseUrl}/dashboard/host`;
 
       const response = await apiClient.post("/payments/", {
         quote: quoteId,
@@ -16,7 +13,7 @@ export const paymentsService = {
         use_wallet: false,
         use_bonus: false,
         action: "pay",
-        callback_url: callbackUrl,
+        return_url: returnUrl,
       });
 
       console.log("Payment API response:", response);
@@ -41,6 +38,39 @@ export const paymentsService = {
     }
   },
 
+  async verifyWalletFunding(reference: string) {
+    try {
+      const response = await apiClient.post(
+        "/payments/wallets/transactions/",
+        {
+          action: "verify",
+          reference,
+        },
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async fundWallet(amount: number | string) {
+    try {
+      const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+      const returnUrl = `${baseUrl}/wallet`;
+
+      const response = await apiClient.post("/payments/wallets/transactions/", {
+        amount,
+        use_checkout: true,
+        action: "fund",
+        return_url: returnUrl,
+      });
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   async verify(reference: string) {
     try {
       console.log("Sending verification request for reference:", reference);
@@ -53,7 +83,6 @@ export const paymentsService = {
 
       return response.data;
     } catch (error) {
-      console.error("Error verifying payment:", error);
       throw error;
     }
   },
@@ -63,7 +92,6 @@ export const paymentsService = {
       const response = await apiClient.get("/payments/wallets/details/");
       return response.data;
     } catch (error) {
-      console.error("Error getting wallet details:", error);
       throw error;
     }
   },
@@ -73,7 +101,6 @@ export const paymentsService = {
       const response = await apiClient.get("/payments/wallets/transactions/");
       return response.data;
     } catch (error) {
-      console.error("Error getting wallet transactions:", error);
       throw error;
     }
   },
@@ -85,7 +112,6 @@ export const paymentsService = {
       });
       return response.data;
     } catch (error) {
-      console.error("Error redeeming gift card:", error);
       throw error;
     }
   },
@@ -104,7 +130,6 @@ export const paymentsService = {
       const response = await apiClient.get(`/earnings/bank-details/${bankId}/`);
       return response.data;
     } catch (error) {
-      console.error("Error fetching bank details:", error);
       throw error;
     }
   },
@@ -114,7 +139,6 @@ export const paymentsService = {
       const response = await apiClient.patch(`/earnings/bank-details/${bankId}/`, data);
       return response.data;
     } catch (error) {
-      console.error("Error updating bank details:", error);
       throw error;
     }
   },
@@ -124,7 +148,6 @@ export const paymentsService = {
       const response = await apiClient.post("/earnings/bank-details/", data);
       return response.data;
     } catch (error) {
-      console.error("Error creating bank details:", error);
       throw error;
     }
   },

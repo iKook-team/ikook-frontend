@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { referralsService } from "@/lib/api/referrals";
+import { useAuthStore } from "@/lib/store/auth-store";
+import { getCurrencySymbol } from "@/lib/utils/currency";
 
 const formatDate = (dateString: string) => {
   const options: Intl.DateTimeFormatOptions = {
@@ -19,6 +21,8 @@ const ReferralList = () => {
   const [referrals, setReferrals] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const user = useAuthStore((s) => s.user);
+  const currencySymbol = getCurrencySymbol(user || undefined);
 
   useEffect(() => {
     const fetchReferrals = async () => {
@@ -100,7 +104,8 @@ const ReferralList = () => {
               </time>
             </div>
             <div className="text-lg font-normal text-[#323335] ml-4 whitespace-nowrap">
-              £{parseFloat(referral.reward_amount).toFixed(2)}
+              {currencySymbol}
+              {parseFloat(referral.reward_amount).toFixed(2)}
             </div>
           </article>
         ))}
@@ -110,3 +115,4 @@ const ReferralList = () => {
 };
 
 export default ReferralList;
+

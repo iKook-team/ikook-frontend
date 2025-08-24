@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
@@ -66,18 +66,31 @@ export const PaymentsList: React.FC = () => {
   };
 
   // Load cards and check for pending payment verification
+  const hasVerifiedRef = useRef(false);
   useEffect(() => {
     const verifyPendingPayment = async () => {
+      if (hasVerifiedRef.current) return; // guard against double invocation
       const pendingReference = sessionStorage.getItem(
         "pendingPaymentReference",
       );
-
       if (!pendingReference) return;
 
+      // Only verify if Paystack appended reference/trxref or status=success in URL
+      const params = new URLSearchParams(window.location.search);
+      const hasRefInUrl = !!(params.get("reference") || params.get("trxref"));
+      const statusParam = (params.get("status") || "").toLowerCase();
+      const isSuccess = statusParam === "success" || statusParam === "completed";
+      if (!hasRefInUrl && !isSuccess) {
+        // User likely canceled; clear pending and skip verification
+        sessionStorage.removeItem("pendingPaymentReference");
+        return;
+      }
+
+      // Remove the token first to avoid race if effect runs twice
+      sessionStorage.removeItem("pendingPaymentReference");
+
       try {
-        if (!pendingReference) {
-          throw new Error("No pending reference found");
-        }
+        hasVerifiedRef.current = true;
         setIsVerifying(true);
         await paymentCardsService.verifyCard(pendingReference);
         showToast.success("Payment card added successfully");
@@ -88,7 +101,6 @@ export const PaymentsList: React.FC = () => {
       } catch (error) {
         showToast.error("Failed to verify payment. Please try again.");
       } finally {
-        sessionStorage.removeItem("pendingPaymentReference");
         setIsVerifying(false);
       }
     };

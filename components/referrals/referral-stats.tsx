@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { referralsService } from "@/lib/api/referrals";
+import { useAuthStore } from "@/lib/store/auth-store";
+import { getCurrencySymbol } from "@/lib/utils/currency";
 
 const ReferralStats = () => {
   const [rewardData, setRewardData] = useState<{
@@ -12,6 +14,8 @@ const ReferralStats = () => {
     referralCode: string;
   } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const user = useAuthStore((s) => s.user);
+  const currencySymbol = getCurrencySymbol(user || undefined);
 
   useEffect(() => {
     const fetchRewardData = async () => {
@@ -55,7 +59,8 @@ const ReferralStats = () => {
             Rewarded amount
           </div>
           <div className="text-[#323335] text-2xl font-bold">
-            £{rewardData?.totalBonus || "0.00"}
+            {currencySymbol}
+            {rewardData?.totalBonus || "0.00"}
           </div>
         </div>
 
@@ -78,7 +83,7 @@ const ReferralStats = () => {
           </div>
 
           <div className="text-black text-xs font-normal text-center">
-            £0.00 used bonus
+            {currencySymbol}0.00 used bonus
           </div>
         </div>
       </div>
@@ -87,3 +92,4 @@ const ReferralStats = () => {
 };
 
 export default ReferralStats;
+

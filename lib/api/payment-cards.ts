@@ -70,7 +70,7 @@ export const paymentCardsService = {
       const payload = {
         country,
         action: country === "United Kingdom" ? "setup" : "checkout",
-        success_redirect_url: `${window.location.origin}/payment-cards`,
+        return_url: `${window.location.origin}/payment-cards`,
         metadata: {
           source: "web",
         },
@@ -83,7 +83,6 @@ export const paymentCardsService = {
 
       return response.data;
     } catch (error) {
-      console.error("Error initializing card setup:", error);
       throw error;
     }
   },
@@ -97,7 +96,6 @@ export const paymentCardsService = {
 
       await apiClient.post("/payments/cards/", payload);
     } catch (error) {
-      console.error("Error verifying card:", error);
       throw error;
     }
   },
@@ -106,7 +104,6 @@ export const paymentCardsService = {
     try {
       await apiClient.delete(`/payments/cards/${cardId}/`);
     } catch (error) {
-      console.error("Error deleting card:", error);
       throw error;
     }
   },
