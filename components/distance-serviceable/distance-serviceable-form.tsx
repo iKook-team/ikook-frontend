@@ -182,7 +182,7 @@ export const DistanceServiceableForm: React.FC = () => {
               className="justify-center items-center border shadow-[0_1px_2px_0_rgba(16,24,40,0.05)] flex w-[422px] max-w-full gap-2 overflow-hidden bg-[#FCC01C] ml-[11px] px-7 py-3 rounded-lg border-solid border-[#FCC01C] max-md:px-5 hover:bg-[#e6ac19] transition-colors focus:outline-none focus:ring-2 focus:ring-[#FCC01C] focus:ring-offset-2"
               aria-label="Continue with distance serviceable configuration"
             >
-              <span className="text-white self-stretch my-auto">Continue</span>
+              <span className="text-white self-stretch my-auto">Save</span>
             </button>
           </footer>
         </form>
