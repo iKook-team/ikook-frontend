@@ -64,14 +64,22 @@ const FineDiningBookingPage = () => {
       setBookingData((prev) => ({ ...prev, ...data }));
     }
 
-    const steps: BookingStep[] = [
-      "cart",
-      "event-details",
-      "event-details3",
-      "preferences",
-      "messages",
-      "checkout",
-    ];
+    const steps: BookingStep[] = isCustomBooking
+      ? [
+          "event-details",
+          "event-details3",
+          "preferences",
+          "messages",
+          "checkout",
+        ]
+      : [
+          "cart",
+          "event-details",
+          "event-details3",
+          "preferences",
+          "messages",
+          "checkout",
+        ];
 
     const currentIndex = steps.indexOf(currentStep);
 
@@ -82,14 +90,22 @@ const FineDiningBookingPage = () => {
   };
 
   const handleBack = () => {
-    const steps: BookingStep[] = [
-      "cart",
-      "event-details",
-      "event-details3",
-      "preferences",
-      "messages",
-      "checkout",
-    ];
+    const steps: BookingStep[] = isCustomBooking
+      ? [
+          "event-details",
+          "event-details3",
+          "preferences",
+          "messages",
+          "checkout",
+        ]
+      : [
+          "cart",
+          "event-details",
+          "event-details3",
+          "preferences",
+          "messages",
+          "checkout",
+        ];
 
     const currentIndex = steps.indexOf(currentStep);
 
@@ -121,6 +137,7 @@ const FineDiningBookingPage = () => {
             menu={menu}
             formData={eventDetailsForm}
             onChange={setEventDetailsForm}
+            isCustomBooking={isCustomBooking}
           />
         );
       case "event-details3":
@@ -131,6 +148,7 @@ const FineDiningBookingPage = () => {
             menu={menu}
             formData={eventDetailsForm3}
             onChange={setEventDetailsForm3}
+            isCustomBooking={isCustomBooking}
           />
         );
       case "preferences":
@@ -146,6 +164,7 @@ const FineDiningBookingPage = () => {
                 dietaryRestrictions: data.dietaryRestrictions ?? [],
               })
             }
+            isCustomBooking={isCustomBooking}
           />
         );
       case "messages":
@@ -153,17 +172,27 @@ const FineDiningBookingPage = () => {
           <MessagesForm
             onBack={handleBack}
             onNext={handleNext}
-            bookingData={bookingData}
+            bookingData={{ ...bookingData, service: "Chef at Home" }}
             selectedMenuItems={selectedMenuItems}
             menuId={menu?.id ?? undefined}
             menu={menu}
             dietaryRestrictions={preferencesForm.dietaryRestrictions}
+            isCustomBooking={isCustomBooking}
           />
         );
       case "checkout":
         return <Checkout bookingId={bookingId} />;
       default:
-        return (
+        return isCustomBooking ? (
+          <EventDetailsForm
+            onBack={handleBack}
+            onNext={handleNext}
+            menu={menu}
+            formData={eventDetailsForm}
+            onChange={setEventDetailsForm}
+            isCustomBooking={isCustomBooking}
+          />
+        ) : (
           <Cart
             onNext={handleNext}
             menu={menu}

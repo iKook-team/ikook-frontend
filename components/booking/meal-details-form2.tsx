@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { ProgressIndicator } from "./progress-indicator";
 import { ActionButtons } from "./action-buttons";
@@ -10,12 +10,15 @@ interface MealDetailsForm2Props {
   onBack: () => void;
   isCustomBooking?: boolean;
   menu?: any;
+  initialNumberOfWeeks?: number;
+  initialWeeklyVisits?: number;
+  initialExperience?: "One time" | "Multiple" | "";
 }
 
 export interface MealForm2Data {
   numberOfWeeks: number;
   weeklyVisits: number;
-  experience: "One-time" | "Multiple" | "";
+  experience: "One time" | "Multiple" | "";
 }
 
 const MealDetailsForm2: React.FC<MealDetailsForm2Props> = ({
@@ -23,12 +26,26 @@ const MealDetailsForm2: React.FC<MealDetailsForm2Props> = ({
   onBack,
   isCustomBooking = false,
   menu,
+  initialNumberOfWeeks = 1,
+  initialWeeklyVisits = 1,
+  initialExperience = "",
 }) => {
   const [formData, setFormData] = useState<MealForm2Data>({
-    numberOfWeeks: 1,
-    weeklyVisits: 1,
-    experience: "",
+    numberOfWeeks: initialNumberOfWeeks,
+    weeklyVisits: initialWeeklyVisits,
+    experience: initialExperience,
   });
+
+  // Sync local state when parent-provided initial values change
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, numberOfWeeks: initialNumberOfWeeks }));
+  }, [initialNumberOfWeeks]);
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, weeklyVisits: initialWeeklyVisits }));
+  }, [initialWeeklyVisits]);
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, experience: initialExperience }));
+  }, [initialExperience]);
 
   const progressSteps = [
     { label: "Meal Details", completed: true, inProgress: true },
@@ -155,7 +172,7 @@ const MealDetailsForm2: React.FC<MealDetailsForm2Props> = ({
                 Experience
               </label>
               <div className="space-y-3">
-                {["One-time", "Multiple"].map((option) => (
+                {["One time", "Multiple"].map((option) => (
                   <label key={option} className="flex items-center">
                     <input
                       type="radio"
@@ -165,7 +182,7 @@ const MealDetailsForm2: React.FC<MealDetailsForm2Props> = ({
                       onChange={() =>
                         handleInputChange(
                           "experience",
-                          option as "One-time" | "Multiple",
+                          option as "One time" | "Multiple",
                         )
                       }
                       className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300"

@@ -13,7 +13,7 @@ export const StatusCard: React.FC<StatusCardProps> = (props) => {
   const {
     title = "Details Sent",
     description = "Congratulations, your booking is underway, continue your conversation with the chef, agree on menu and price, receive your quote and pay for your booking.",
-    buttonText = "View Message",
+    buttonText = "View Booking",
     onButtonClick,
     bookingId,
   } = props;
@@ -23,8 +23,8 @@ export const StatusCard: React.FC<StatusCardProps> = (props) => {
     if (onButtonClick) {
       onButtonClick();
     } else if (props.bookingId) {
-      // Navigate to messages with the booking ID
-      router.push(`/messages?id=${bookingId}`);
+      // Navigate to booking details with the booking ID
+      router.push(`/dashboard/booking-details?id=${bookingId}`);
     }
   };
 

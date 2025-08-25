@@ -14,7 +14,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   continueText = "Continue",
 }) => {
   return (
-    <div className="inline-flex items-start gap-[22px] w-[276px] h-12">
+    <div className="flex justify-end items-center gap-[22px] w-full h-12">
       <button
         type="button"
         onClick={onBack}

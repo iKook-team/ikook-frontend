@@ -57,7 +57,7 @@ const MealDeliveryBookingPage = () => {
     venue: "",
   });
   const [budgetStep, setBudgetStep] = useState({
-    budget: 1500,
+    budget: 0,
     budgetType: null as "Flexible" | "Fixed" | null,
   });
   const [preferencesForm, setPreferencesForm] = useState({
@@ -84,16 +84,26 @@ const MealDeliveryBookingPage = () => {
       }
     }
 
-    const steps: BookingStep[] = [
-      "cart",
-      "event-details",
-      "event-details2",
-      "event-details3",
-      "budget",
-      "preferences",
-      "messages",
-      "checkout",
-    ];
+    const steps: BookingStep[] = isCustomBooking
+      ? [
+          "event-details",
+          "event-details2",
+          "event-details3",
+          "budget",
+          "preferences",
+          "messages",
+          "checkout",
+        ]
+      : [
+          "cart",
+          "event-details",
+          "event-details2",
+          "event-details3",
+          "budget",
+          "preferences",
+          "messages",
+          "checkout",
+        ];
 
     const currentIndex = steps.indexOf(currentStep);
 
@@ -104,16 +114,26 @@ const MealDeliveryBookingPage = () => {
   };
 
   const handleBack = () => {
-    const steps: BookingStep[] = [
-      "cart",
-      "event-details",
-      "event-details2",
-      "event-details3",
-      "budget",
-      "preferences",
-      "messages",
-      "checkout",
-    ];
+    const steps: BookingStep[] = isCustomBooking
+      ? [
+          "event-details",
+          "event-details2",
+          "event-details3",
+          "budget",
+          "preferences",
+          "messages",
+          "checkout",
+        ]
+      : [
+          "cart",
+          "event-details",
+          "event-details2",
+          "event-details3",
+          "budget",
+          "preferences",
+          "messages",
+          "checkout",
+        ];
 
     const currentIndex = steps.indexOf(currentStep);
 
@@ -145,6 +165,7 @@ const MealDeliveryBookingPage = () => {
             menu={menu}
             formData={eventDetailsForm}
             onChange={setEventDetailsForm}
+            isCustomBooking={isCustomBooking}
           />
         );
       case "event-details2":
@@ -155,6 +176,7 @@ const MealDeliveryBookingPage = () => {
             menu={menu}
             formData={eventDetailsForm2}
             onChange={setEventDetailsForm2}
+            isCustomBooking={isCustomBooking}
           />
         );
       case "event-details3":
@@ -165,6 +187,7 @@ const MealDeliveryBookingPage = () => {
             menu={menu}
             formData={eventDetailsForm3}
             onChange={setEventDetailsForm3}
+            isCustomBooking={isCustomBooking}
           />
         );
       case "budget":
@@ -185,6 +208,9 @@ const MealDeliveryBookingPage = () => {
               });
               handleNext(data);
             }}
+            isCustomBooking={isCustomBooking as any}
+            initialBudget={budgetStep.budget}
+            initialBudgetType={budgetStep.budgetType}
           />
         );
       case "preferences":
@@ -200,6 +226,7 @@ const MealDeliveryBookingPage = () => {
                 dietaryRestrictions: data.dietaryRestrictions ?? [],
               })
             }
+            isCustomBooking={isCustomBooking}
           />
         );
       case "messages":
@@ -207,7 +234,7 @@ const MealDeliveryBookingPage = () => {
           <MessagesForm
             onBack={handleBack}
             onNext={handleNext}
-            bookingData={bookingData}
+            bookingData={{ ...bookingData, service: "Meal Delivery" }}
             selectedMenuItems={selectedMenuItems}
             menuId={menu?.id ?? undefined}
             menu={menu}
@@ -215,12 +242,22 @@ const MealDeliveryBookingPage = () => {
             budget={budgetStep.budget}
             budgetType={budgetStep.budgetType}
             preferredCuisines={eventDetailsForm2.preferredCuisines}
+            isCustomBooking={isCustomBooking}
           />
         );
       case "checkout":
         return <Checkout bookingId={bookingId} />;
       default:
-        return (
+        return isCustomBooking ? (
+          <EventDetailsForm
+            onBack={handleBack}
+            onNext={handleNext}
+            menu={menu}
+            formData={eventDetailsForm}
+            onChange={setEventDetailsForm}
+            isCustomBooking={isCustomBooking}
+          />
+        ) : (
           <Cart
             onNext={handleNext}
             menu={menu}

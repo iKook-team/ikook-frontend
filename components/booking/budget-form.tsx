@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface BudgetFormProps {
   defaultBudget?: number;
@@ -6,16 +6,22 @@ interface BudgetFormProps {
   onBudgetTypeChange?: (
     type: "flexible" | "fixed" | "Flexible" | "Fixed",
   ) => void;
+  currencySymbol?: string;
+  defaultBudgetType?: "flexible" | "fixed" | "Flexible" | "Fixed" | null;
 }
 
 export const BudgetForm: React.FC<BudgetFormProps> = ({
   defaultBudget = 0,
   onBudgetChange,
   onBudgetTypeChange,
+  currencySymbol = "£",
+  defaultBudgetType = null,
 }) => {
   const [budget, setBudget] = useState(defaultBudget);
   const [budgetType, setBudgetType] = useState<"flexible" | "fixed" | null>(
-    null,
+    defaultBudgetType
+      ? (String(defaultBudgetType).toLowerCase() as "flexible" | "fixed")
+      : null,
   );
 
   const handleBudgetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,8 +38,24 @@ export const BudgetForm: React.FC<BudgetFormProps> = ({
   };
 
   const formatBudget = (value: number) => {
-    return value.toLocaleString();
+    return value ? value.toLocaleString() : "";
   };
+
+  // Keep local state in sync if parent updates defaultBudget
+  useEffect(() => {
+    setBudget(defaultBudget);
+  }, [defaultBudget]);
+
+  // Keep local budgetType in sync if parent updates defaultBudgetType
+  useEffect(() => {
+    if (defaultBudgetType) {
+      setBudgetType(
+        String(defaultBudgetType).toLowerCase() as "flexible" | "fixed",
+      );
+    } else {
+      setBudgetType(null);
+    }
+  }, [defaultBudgetType]);
 
   return (
     <form className="w-full max-w-2xl mx-auto p-6 space-y-6">
@@ -46,7 +68,7 @@ export const BudgetForm: React.FC<BudgetFormProps> = ({
         </label>
         <div className="relative rounded-md shadow-sm">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <span className="text-gray-500 sm:text-sm">£</span>
+            <span className="text-gray-500 sm:text-sm">{currencySymbol}</span>
           </div>
           <input
             id="budget"

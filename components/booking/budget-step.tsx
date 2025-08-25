@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { ProgressIndicator } from "./progress-indicator";
 import { BudgetSection } from "./budget-section";
@@ -6,6 +6,8 @@ import { BudgetForm } from "./budget-form";
 import { ActionButtons } from "./action-buttons";
 
 import { ChefCard } from "@/components/cart/chef-card";
+import { getCurrencySymbol } from "@/lib/utils/currency";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 interface BudgetStepProps {
   onBack: () => void;
@@ -15,6 +17,9 @@ interface BudgetStepProps {
   }) => void;
   menu: any;
   guestCount: number;
+  isCustomBooking?: boolean;
+  initialBudget?: number;
+  initialBudgetType?: "flexible" | "fixed" | "Flexible" | "Fixed" | null;
 }
 
 const BudgetStep: React.FC<BudgetStepProps> = ({
@@ -22,24 +27,37 @@ const BudgetStep: React.FC<BudgetStepProps> = ({
   onNext,
   menu,
   guestCount,
+  isCustomBooking = false,
+  initialBudget = 0,
+  initialBudgetType = null,
 }) => {
-  const [budget, setBudget] = useState(1500);
+  const [budget, setBudget] = useState(initialBudget ?? 0);
   const [budgetType, setBudgetType] = useState<"flexible" | "fixed" | null>(
-    null,
+    initialBudgetType
+      ? (String(initialBudgetType).toLowerCase() as "flexible" | "fixed")
+      : null,
   );
+
+  // Keep local state in sync with parent-provided initial values
+  useEffect(() => {
+    setBudget(initialBudget ?? 0);
+  }, [initialBudget]);
+
+  useEffect(() => {
+    if (initialBudgetType) {
+      setBudgetType(
+        String(initialBudgetType).toLowerCase() as "flexible" | "fixed",
+      );
+    } else {
+      setBudgetType(null);
+    }
+  }, [initialBudgetType]);
 
   const progressSteps = [
     { label: "Event Details", completed: true },
     { label: "Budget", completed: false, inProgress: true },
     { label: "Message", completed: false },
   ];
-
-  const budgetInfo = {
-    chefName: "Chef Titilayo",
-    minBudgetPerPerson: 20,
-    guestCount: 20,
-    totalPrice: 1700,
-  };
 
   const handleBudgetChange = (newBudget: number) => {
     setBudget(newBudget);
@@ -55,114 +73,114 @@ const BudgetStep: React.FC<BudgetStepProps> = ({
   };
 
   const isContinueDisabled = !budgetType;
+  const user = useAuthStore((s) => s.user);
+
+  const currencySymbol = getCurrencySymbol({
+    currency:
+      user?.currency || menu?.chef?.chef_details?.currency || menu?.chef?.currency,
+    country:
+      user?.country ||
+      menu?.chef?.chef_details?.country ||
+      menu?.chef?.country ||
+      "United Kingdom",
+  });
 
   return (
-    <main className="w-[655px] h-[852px] absolute left-[393px] top-[177px]">
-      <div className="w-[654px] h-[814px] border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] absolute bg-white rounded-[15px] border-solid border-[#E7E7E7] left-px top-[38px]" />
-
-      <header className="absolute left-0 top-0">
-        <h1 className="text-black text-xl font-medium leading-[30px] w-[126px] h-[30px]">
-          Chef Titilayo
-        </h1>
-      </header>
-
-      <div className="absolute left-5 top-[69px]">
-        <ProgressIndicator steps={progressSteps} />
-      </div>
-
-      <div className="absolute left-5 right-5 top-[132px] w-auto">
-        <ChefCard
-          chefName={
-            menu?.chef?.first_name && menu?.chef?.last_name
-              ? `${menu.chef.first_name} ${menu.chef.last_name}`
-              : "Chef"
-          }
-          dishName={menu?.name || "Menu"}
-          imageUrl={
-            menu?.images && menu.images.length > 0 && menu.images[0].image
-              ? menu.images[0].image
-              : "/menus/menu1.png"
-          }
-          location={menu?.chef?.city || "Unknown"}
-          locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
-          rating={
-            menu?.chef?.average_rating
-              ? menu.chef.average_rating.toFixed(1)
-              : "-"
-          }
-          ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
-          reviewCount={
-            menu?.chef?.num_reviews
-              ? `(${menu.chef.num_reviews} Reviews)`
-              : "(0 Reviews)"
-          }
-        />
-      </div>
-
-      <div className="absolute left-5 top-[291px]">
-        <svg
-          width="613"
-          height="1"
-          viewBox="0 0 613 1"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M-0.00390625 0.5L613.003 0.5" stroke="#E7E7E7" />
-        </svg>
-      </div>
-
-      <section className="absolute left-5 top-[307px]">
-        <h2 className="text-black text-2xl font-medium leading-8 w-[87px] h-8 mb-[47px]">
-          Budget
-        </h2>
-
-        <div className="mb-[23px]">
-          <BudgetSection
-            chefName={
-              menu?.chef?.first_name && menu?.chef?.last_name
-                ? `${menu.chef.first_name} ${menu.chef.last_name}`
-                : "Chef"
-            }
-            minBudgetPerPerson={menu?.price_per_person || 0}
-            guestCount={guestCount}
-            totalPrice={
-              menu?.price_per_person && guestCount
-                ? menu.price_per_person * guestCount
-                : 0
-            }
-            menu={menu}
-          />
+    <div className="flex justify-center items-start p-6">
+      <div className="w-full max-w-3xl bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        {/* Header Section */}
+        <div className="px-6 pt-6 pb-4 border-b border-gray-100">
+          {!isCustomBooking && (
+            <header className="mb-6">
+              <h1 className="text-2xl font-semibold text-gray-900 truncate">
+                {menu?.chef?.first_name && menu?.chef?.last_name
+                  ? `${menu.chef.first_name} ${menu.chef.last_name}`
+                  : "Chef"}
+              </h1>
+            </header>
+          )}
+          <div className="mb-6">
+            <ProgressIndicator steps={progressSteps} />
+          </div>
         </div>
 
-        <div className="mb-[34px]">
-          <BudgetForm
-            defaultBudget={budget}
-            onBudgetChange={handleBudgetChange}
-            onBudgetTypeChange={handleBudgetTypeChange}
-          />
-        </div>
-      </section>
+        {/* Chef Card Section */}
+        {!isCustomBooking && (
+          <div className="px-6 py-4 border-b border-gray-100">
+            <ChefCard
+              chefName={
+                menu?.chef?.first_name && menu?.chef?.last_name
+                  ? `${menu.chef.first_name} ${menu.chef.last_name}`
+                  : "Chef"
+              }
+              dishName={menu?.name || "Menu"}
+              imageUrl={
+                menu?.images && menu.images.length > 0 && menu.images[0].image
+                  ? menu.images[0].image
+                  : "/menus/menu1.png"
+              }
+              location={menu?.chef?.city || "Unknown"}
+              locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
+              rating={
+                menu?.chef?.average_rating
+                  ? menu.chef.average_rating.toFixed(1)
+                  : "-"
+              }
+              ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
+              reviewCount={
+                menu?.chef?.num_reviews
+                  ? `(${menu.chef.num_reviews} Reviews)`
+                  : "(0 Reviews)"
+              }
+            />
+          </div>
+        )}
 
-      <div className="absolute left-5 top-[720px]">
-        <svg
-          width="613"
-          height="2"
-          viewBox="0 0 613 2"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M0 1L613.007 1" stroke="#E7E7E7" />
-        </svg>
-      </div>
+        {/* Content Section */}
+        <section className="p-6 space-y-6">
+          <h2 className="text-2xl font-semibold text-gray-900">Budget</h2>
 
-      <div className="absolute left-[357px] top-[772px]">
-        <ActionButtons
-          onBack={onBack}
-          onContinue={() => onNext({ budget, budgetType })}
-          continueDisabled={isContinueDisabled}
-        />
+          {!isCustomBooking && (
+            <div>
+              <BudgetSection
+                chefName={
+                  menu?.chef?.first_name && menu?.chef?.last_name
+                    ? `${menu.chef.first_name} ${menu.chef.last_name}`
+                    : menu?.chef?.name || "Chef"
+                }
+                minBudgetPerPerson={
+                  menu?.chef?.chef_details?.min_budget_per_person || 0
+                }
+                guestCount={guestCount}
+                totalPrice={
+                  (menu?.chef?.chef_details?.min_budget_per_person || 0) *
+                  (guestCount || 0)
+                }
+                menu={menu}
+              />
+            </div>
+          )}
+
+          <div>
+            <BudgetForm
+              defaultBudget={budget}
+              onBudgetChange={handleBudgetChange}
+              onBudgetTypeChange={handleBudgetTypeChange}
+              currencySymbol={currencySymbol}
+              defaultBudgetType={budgetType}
+            />
+          </div>
+
+          <div className="pt-4 border-t border-gray-200">
+            <ActionButtons
+              onBack={onBack}
+              onContinue={() => onNext({ budget, budgetType })}
+              continueDisabled={isContinueDisabled}
+            />
+          </div>
+        </section>
       </div>
-    </main>
+    </div>
   );
 };
 

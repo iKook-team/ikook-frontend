@@ -63,7 +63,7 @@ const LargeEventBookingPage = () => {
     venue: "",
   });
   const [budgetStep, setBudgetStep] = useState({
-    budget: 1500,
+    budget: 0,
     budgetType: null as "Flexible" | "Fixed" | null,
   });
   const [preferencesForm, setPreferencesForm] = useState({
@@ -151,6 +151,7 @@ const LargeEventBookingPage = () => {
             menu={menu}
             formData={eventDetailsForm}
             onChange={setEventDetailsForm}
+            isCustomBooking={isCustomBooking}
           />
         );
       case "event-details2":
@@ -161,6 +162,7 @@ const LargeEventBookingPage = () => {
             menu={menu}
             formData={eventDetailsForm2}
             onChange={setEventDetailsForm2}
+            isCustomBooking={isCustomBooking}
           />
         );
       case "event-details3":
@@ -171,6 +173,7 @@ const LargeEventBookingPage = () => {
             menu={menu}
             formData={eventDetailsForm3}
             onChange={setEventDetailsForm3}
+            isCustomBooking={isCustomBooking}
           />
         );
       case "budget":
@@ -179,6 +182,9 @@ const LargeEventBookingPage = () => {
             onBack={handleBack}
             menu={menu}
             guestCount={eventDetailsForm.guests}
+            isCustomBooking={isCustomBooking}
+            initialBudget={budgetStep.budget}
+            initialBudgetType={budgetStep.budgetType}
             onNext={(data) => {
               setBudgetStep({
                 budget: data.budget,
@@ -206,6 +212,7 @@ const LargeEventBookingPage = () => {
                 dietaryRestrictions: data.dietaryRestrictions ?? [],
               })
             }
+            isCustomBooking={isCustomBooking}
           />
         );
       case "messages":

@@ -191,11 +191,20 @@ const EventDetailsForm: React.FC<EventDetailsFormProps> = ({
             )}
 
             <div className="pt-4 border-t border-gray-200">
-              <ActionButtons
-                onBack={onBack}
-                onContinue={handleContinue}
-                continueDisabled={formData.guests < minGuests}
-              />
+              {/** Enable Continue only when all fields are valid */}
+              {(() => {
+                const isLocationValid = (formData.location || "").trim().length > 0;
+                const isDateValid = (formData.eventDate || "").trim().length > 0;
+                const isGuestsValid = formData.guests >= minGuests;
+                const isFormValid = isLocationValid && isDateValid && isGuestsValid;
+                return (
+                  <ActionButtons
+                    onBack={onBack}
+                    onContinue={handleContinue}
+                    continueDisabled={!isFormValid}
+                  />
+                );
+              })()}
             </div>
           </form>
         </section>

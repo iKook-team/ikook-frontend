@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { ProgressIndicator } from "./progress-indicator";
 import { ActionButtons } from "./action-buttons";
@@ -11,10 +11,12 @@ interface MealDetailsForm3Props {
   onBack: () => void;
   isCustomBooking?: boolean;
   menu?: any;
+  initialMealType?: ("Breakfast" | "Lunch" | "Dinner")[];
+  initialPreferredCuisines?: string[];
 }
 
 export interface MealForm3Data {
-  mealType: "Breakfast" | "Lunch" | "Dinner" | "";
+  mealType: ("Breakfast" | "Lunch" | "Dinner")[];
   preferredCuisines: string[];
 }
 
@@ -34,11 +36,24 @@ const MealDetailsForm3: React.FC<MealDetailsForm3Props> = ({
   onBack,
   isCustomBooking = false,
   menu,
+  initialMealType = [],
+  initialPreferredCuisines = [],
 }) => {
   const [formData, setFormData] = useState<MealForm3Data>({
-    mealType: "",
-    preferredCuisines: [],
+    mealType: initialMealType,
+    preferredCuisines: initialPreferredCuisines,
   });
+
+  // Sync local state when parent-provided initial values change
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, mealType: initialMealType || [] }));
+  }, [initialMealType]);
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      preferredCuisines: initialPreferredCuisines || [],
+    }));
+  }, [initialPreferredCuisines]);
 
   const progressSteps = [
     { label: "Meal Details", completed: true, inProgress: true },
@@ -48,6 +63,16 @@ const MealDetailsForm3: React.FC<MealDetailsForm3Props> = ({
 
   const handleInputChange = (field: keyof MealForm3Data, value: any) => {
     setFormData({ ...formData, [field]: value });
+  };
+
+  const toggleMealType = (option: "Breakfast" | "Lunch" | "Dinner") => {
+    setFormData((prev) => {
+      const exists = prev.mealType.includes(option);
+      const next = exists
+        ? prev.mealType.filter((m) => m !== option)
+        : [...prev.mealType, option];
+      return { ...prev, mealType: next };
+    });
   };
 
   const handleContinue = () => {
@@ -117,32 +142,25 @@ const MealDetailsForm3: React.FC<MealDetailsForm3Props> = ({
                 Meal Type
               </label>
               <div className="space-y-3">
-                {["Breakfast", "Lunch", "Dinner"].map((option) => (
-                  <label key={option} className="flex items-center">
-                    <input
-                      type="radio"
-                      name="mealType"
-                      value={option}
-                      checked={formData.mealType === option}
-                      onChange={() =>
-                        handleInputChange(
-                          "mealType",
-                          option as "Breakfast" | "Lunch" | "Dinner",
-                        )
-                      }
-                      className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300"
-                      required
-                    />
-                    <span className="ml-2 text-gray-700">{option}</span>
-                  </label>
-                ))}
+                {(["Breakfast", "Lunch", "Dinner"] as const).map(
+                  (option) => (
+                    <label key={option} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name={`mealType-${option}`}
+                        value={option}
+                        checked={formData.mealType.includes(option)}
+                        onChange={() => toggleMealType(option)}
+                        className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300"
+                      />
+                      <span className="ml-2 text-gray-700">{option}</span>
+                    </label>
+                  ),
+                )}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                Preferred Cuisines
-              </label>
               <div className="mb-2">
                 <TagSelector
                   label="Preferred Cuisines"
@@ -164,7 +182,8 @@ const MealDetailsForm3: React.FC<MealDetailsForm3Props> = ({
                 onBack={onBack}
                 onContinue={handleContinue}
                 continueDisabled={
-                  !formData.mealType || formData.preferredCuisines.length === 0
+                  formData.mealType.length === 0 ||
+                  formData.preferredCuisines.length === 0
                 }
               />
             </div>

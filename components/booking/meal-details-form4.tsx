@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { ProgressIndicator } from "./progress-indicator";
 import { ActionButtons } from "./action-buttons";
@@ -10,6 +10,9 @@ interface MealDetailsForm4Props {
   onBack: () => void;
   isCustomBooking?: boolean;
   menu?: any;
+  initialStartDate?: string;
+  initialEndDate?: string;
+  initialDeliveryTime?: string;
 }
 
 export interface MealForm4Data {
@@ -23,12 +26,29 @@ const MealDetailsForm4: React.FC<MealDetailsForm4Props> = ({
   onBack,
   isCustomBooking = false,
   menu,
+  initialStartDate = "",
+  initialEndDate = "",
+  initialDeliveryTime = "",
 }) => {
   const [formData, setFormData] = useState<MealForm4Data>({
-    startDate: "",
-    endDate: "",
-    deliveryTime: "",
+    startDate: initialStartDate,
+    endDate: initialEndDate,
+    deliveryTime: initialDeliveryTime,
   });
+
+  // Sync local state when parent-provided initial values change
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, startDate: initialStartDate || "" }));
+  }, [initialStartDate]);
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, endDate: initialEndDate || "" }));
+  }, [initialEndDate]);
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      deliveryTime: initialDeliveryTime || "",
+    }));
+  }, [initialDeliveryTime]);
 
   const progressSteps = [
     { label: "Meal Details", completed: true, inProgress: true },
@@ -155,21 +175,16 @@ const MealDetailsForm4: React.FC<MealDetailsForm4Props> = ({
               >
                 Preferred Delivery Time
               </label>
-              <select
+              <input
+                type="time"
                 id="deliveryTime"
                 name="deliveryTime"
                 value={formData.deliveryTime}
-                onChange={(e) =>
-                  handleInputChange("deliveryTime", e.target.value)
-                }
+                onChange={(e) => handleInputChange("deliveryTime", e.target.value)}
                 className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-amber-500 focus:border-amber-500"
+                step={60}
                 required
-              >
-                <option value="">Select a time</option>
-                <option value="morning">Morning (8AM - 12PM)</option>
-                <option value="afternoon">Afternoon (12PM - 4PM)</option>
-                <option value="evening">Evening (4PM - 8PM)</option>
-              </select>
+              />
             </div>
 
             <div className="pt-4 border-t border-gray-200">

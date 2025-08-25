@@ -15,8 +15,8 @@ export const ServiceCard = ({
 }: ServiceCardProps) => {
   const titleClass =
     titleAlignment === "center"
-      ? "relative self-center text-base font-semibold"
-      : "relative self-start text-base font-semibold";
+      ? "relative self-center text-base font-semibold text-white"
+      : "relative self-start text-base font-semibold text-white";
 
   return (
     <div className="w-[188px] h-[159px] relative">

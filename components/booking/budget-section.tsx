@@ -1,6 +1,7 @@
 import React from "react";
 
 import { getCurrencySymbol } from "@/lib/utils/currency";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 interface BudgetSectionProps {
   chefName: string;
@@ -18,9 +19,12 @@ export const BudgetSection: React.FC<BudgetSectionProps> = ({
   menu,
 }) => {
   console.log("Menu data in BudgetSection:", menu?.chef);
+  const user = useAuthStore((s) => s.user);
   const currencySymbol = getCurrencySymbol({
-    currency: menu?.chef?.chef_details?.currency || menu?.chef?.currency,
+    currency:
+      user?.currency || menu?.chef?.chef_details?.currency || menu?.chef?.currency,
     country:
+      user?.country ||
       menu?.chef?.chef_details?.country ||
       menu?.chef?.country ||
       "United Kingdom",

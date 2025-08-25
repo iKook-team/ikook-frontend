@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { ProgressIndicator } from "./progress-indicator";
 import { ActionButtons } from "./action-buttons";
@@ -11,6 +11,8 @@ interface DeliveryFormProps {
   onBack: () => void;
   isCustomBooking?: boolean;
   menu?: any;
+  initialOption?: "Physical" | "Delivery" | "";
+  initialDays?: string[];
 }
 
 export interface DeliveryFormData {
@@ -33,11 +35,21 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
   onBack,
   isCustomBooking = false,
   menu,
+  initialOption = "",
+  initialDays = [],
 }) => {
   const [formData, setFormData] = useState<DeliveryFormData>({
-    option: "",
-    days: [],
+    option: initialOption,
+    days: initialDays,
   });
+
+  // Sync local state when parent-provided initial values change
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, option: initialOption || "" }));
+  }, [initialOption]);
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, days: initialDays || [] }));
+  }, [initialDays]);
 
   const progressSteps = [
     { label: "Meal Details", completed: true },
@@ -139,27 +151,22 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
               </div>
             </div>
 
-            {formData.option === "Delivery" && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Select Delivery Days
-                </label>
-                <div className="mb-2">
-                  <TagSelector
-                    label="Delivery Days"
-                    tags={availableDays}
-                    selectedTags={formData.days}
-                    onTagsChange={(selected) =>
-                      handleInputChange("days", selected)
-                    }
-                    className="mb-2"
-                  />
-                </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  Select at least one day for delivery
-                </p>
+            <div>
+              <div className="mb-2">
+                <TagSelector
+                  label="Delivery Days"
+                  tags={availableDays}
+                  selectedTags={formData.days}
+                  onTagsChange={(selected) =>
+                    handleInputChange("days", selected)
+                  }
+                  className="mb-2"
+                />
               </div>
-            )}
+              <p className="text-xs text-gray-500 mt-1">
+                Select at least one day for delivery
+              </p>
+            </div>
 
             <div className="pt-4 border-t border-gray-200">
               <ActionButtons

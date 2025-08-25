@@ -76,7 +76,7 @@ export const ServiceSelection: React.FC<ServiceSelectionProps> = ({
   };
 
   const handleContinue = () => {
-    if (selectedService) {
+    if (isCustomBooking) {
       onNext({
         service: selectedService,
         is_custom: isCustomBooking,

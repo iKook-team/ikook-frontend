@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { ProgressIndicator } from "./progress-indicator";
 import { ActionButtons } from "./action-buttons";
@@ -10,6 +10,9 @@ interface MealDetailsFormProps {
   onBack: () => void;
   isCustomBooking?: boolean;
   menu?: any;
+  initialDeliveryAddress?: string;
+  initialGuests?: number;
+  initialAppearance?: "Weekly" | "Monthly" | "";
 }
 
 export interface MealFormData {
@@ -23,12 +26,34 @@ const MealDetailsForm: React.FC<MealDetailsFormProps> = ({
   onBack,
   isCustomBooking = false,
   menu,
+  initialDeliveryAddress = "",
+  initialGuests = 1,
+  initialAppearance = "",
 }) => {
   const [formData, setFormData] = useState<MealFormData>({
-    deliveryAddress: "",
-    guests: 1,
-    appearance: "",
+    deliveryAddress: initialDeliveryAddress,
+    guests: initialGuests,
+    appearance: initialAppearance,
   });
+
+  // Keep form state in sync with parent-provided initial values
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      deliveryAddress: initialDeliveryAddress ?? "",
+    }));
+  }, [initialDeliveryAddress]);
+
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, guests: initialGuests ?? 1 }));
+  }, [initialGuests]);
+
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      appearance: (initialAppearance as any) ?? "",
+    }));
+  }, [initialAppearance]);
 
   const progressSteps = [
     { label: "Meal Details", completed: true, inProgress: true },
