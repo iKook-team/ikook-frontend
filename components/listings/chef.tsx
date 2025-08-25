@@ -2,6 +2,8 @@
 
 import React from "react";
 import Image from "next/image";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
+import favouritesService from "@/lib/api/favourites";
 
 // Sub-components
 const StarRating = ({
@@ -98,10 +100,10 @@ const VerificationBadge = ({
   profileImageUrl,
 }: VerificationBadgeProps) => (
   <div className="w-[60px] h-[60px] shrink-0 absolute left-[225px] top-[191px] max-md:left-[205px] max-md:top-[175px] max-sm:left-[180px] max-sm:top-40">
-    <div className="flex w-[60px] h-[60px] justify-center items-center shrink-0 absolute left-0 top-0">
+    <div className="flex w-[60px] h-[60px] justify-center items-center shrink-0 absolute left-0 top-0 rounded-full overflow-hidden">
       <Image
         alt="Chef profile"
-        className="shrink-0 absolute object-cover rounded-[300px] border-[2.25px] border-solid border-white left-0 top-0"
+        className="object-cover w-[60px] h-[60px] rounded-full border-[2.25px] border-solid border-white"
         height={60}
         src={profileImageUrl}
         width={60}
@@ -155,6 +157,7 @@ const VerificationBadge = ({
 
 // Main component interface
 interface ChefCardProps {
+  id: number;
   name: string;
   location: string;
   rating: number;
@@ -164,9 +167,11 @@ interface ChefCardProps {
   mainImageUrl: string;
   profileImageUrl: string;
   isVerified?: boolean;
+  is_favourite?: boolean;
 }
 
 export const ChefCard: React.FC<ChefCardProps> = ({
+  id,
   description,
   isVerified = true,
   location,
@@ -176,27 +181,59 @@ export const ChefCard: React.FC<ChefCardProps> = ({
   rating,
   reviewCount,
   services,
+  is_favourite = false,
 }) => {
+  const [liked, setLiked] = React.useState<boolean>(!!is_favourite);
+  const [favouriteId, setFavouriteId] = React.useState<number | null>(null);
   return (
-    <article className="w-[310px] h-[331px] shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] relative max-md:w-[280px] max-md:h-[300px] max-sm:w-[250px] max-sm:h-[280px]">
-      <div className="w-[310px] h-[331px] shrink-0 border absolute bg-white rounded-[15px] border-solid border-[#E7E7E7] left-0 top-0 max-md:w-[280px] max-md:h-[300px] max-sm:w-[250px] max-sm:h-[280px]" />
-
-      <div
-        className="absolute left-0 top-0 w-full h-[220px] rounded-t-[15px] bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage:
-            "url(https://images.unsplash.com/photo-1504674900247-0877039348bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80)",
-        }}
+    <article className="w-[310px] h-[331px] shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] relative max-md:w-[280px] max-md:h-[300px] max-sm:w-[250px] max-sm:h-[280px] bg-white rounded-[15px] border border-[#E7E7E7] overflow-hidden">
+      {/* Background image */}
+      <div 
+        className="absolute top-0 left-0 right-0 h-[220px] bg-cover bg-center bg-no-repeat rounded-t-[15px]"
+        style={{ backgroundImage: 'url(/menus/menu6.png)' }}
       />
+      {/* Like (heart) icon */}
+      <button
+        type="button"
+        aria-label={liked ? "Unlike" : "Like"}
+        aria-pressed={liked}
+        disabled={liked}
+        onClick={async (e) => {
+          e.stopPropagation();
+          if (liked) {
+            // Unliking is disabled for now
+            return;
+          }
+          // Perform like once
+          setLiked(true);
+          console.debug("[ChefCard] like -> addFavourite", { chefId: id });
+          try {
+            const newId = await favouritesService.addFavourite({ chefId: id as unknown as number });
+            setFavouriteId(newId ?? null);
+          } catch (err) {
+            console.debug("[ChefCard] addFavourite failed", err);
+            setLiked(false);
+          }
+        }}
+        className="absolute top-2 right-2 z-20 inline-flex items-center justify-center"
+      >
+        {liked ? (
+          <FaHeart className="text-red-500 text-xl drop-shadow" />
+        ) : (
+          <FaRegHeart className="text-white text-xl drop-shadow" />
+        )}
+      </button>
 
-      <header className="inline-flex flex-col items-start absolute w-[113px] h-[45px] left-[9px] top-[171px] max-md:left-2 max-md:top-[155px] max-sm:left-[7px] max-sm:top-[140px]">
+      <header className="inline-flex flex-col items-start absolute w-[113px] h-[45px] left-[9px] top-[171px] max-md:left-2 max-md:top-[155px] max-sm:left-[7px] max-sm:top-[140px] z-20">
         <h2 className="text-white text-base font-semibold leading-6 relative">
           {name}
         </h2>
         <StarRating rating={rating} reviewCount={reviewCount} />
       </header>
 
-      <LocationBadge location={location} />
+      <div className="z-20 relative">
+        <LocationBadge location={location} />
+      </div>
 
       <section className="inline-flex flex-col items-start gap-3 absolute w-[287px] h-14 left-[11px] top-[258px] max-md:w-[260px] max-md:left-2.5 max-md:top-[235px] max-sm:w-[235px] max-sm:left-2 max-sm:top-[215px]">
         <p className="w-[287px] h-8 text-[#6F6E6D] text-[10px] font-normal relative">

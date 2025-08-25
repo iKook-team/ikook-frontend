@@ -18,6 +18,7 @@ const mapMenuToItem = (menu: any) => ({
     menu.images && menu.images.length > 0
       ? menu.images[0].image
       : "/menus/menu1.png",
+  is_favourite: menu.is_favourite,
   location: menu.chef_details?.city || menu.chef?.city || "Unknown location",
   rating: menu.chef_details?.average_rating
     ? Math.round(menu.chef_details.average_rating * 10) / 10
@@ -40,10 +41,19 @@ const mapChefToItem = (chef: any) => ({
   rating: chef.average_rating || 0,
   reviewCount: chef.num_reviews || 0,
   description: chef.bio || "Professional chef",
-  services: chef.cuisine_types || [],
-  mainImageUrl: chef.cover_photo || "",
-  profileImageUrl: chef.avatar || "",
-  isVerified: chef.is_verified,
+  // Backend may return `cuisines` or `cuisine_types`
+  services: chef.cuisines || chef.cuisine_types || [],
+  is_favourite: chef.is_favourite,
+  // Provide safe fallbacks to avoid Next/Image errors on empty src
+  mainImageUrl:
+    chef.cover_photo ||
+    "https://images.unsplash.com/photo-1504674900247-0877039348bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+  profileImageUrl:
+    chef.avatar ||
+    "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop",
+  // Consider other verification flags if present
+  isVerified:
+    chef.is_verified ?? chef.document_verified ?? chef.identity_verified ?? false,
 });
 
 const mapServiceToItem = (service: any) => ({

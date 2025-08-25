@@ -172,7 +172,7 @@ export const listingService = {
   // Get chef profiles
   async getChefs(params: ChefListingParams = {}): Promise<ApiResponse<Chef>> {
     try {
-      const response = await apiClient.get<ApiResponse<Chef>>(
+      const response = await apiClient.get(
         "/users/profiles/",
         {
           params: {
@@ -183,7 +183,17 @@ export const listingService = {
         },
       );
 
-      return response.data;
+      // Response may be wrapped: { status, message, data: { count, results, ... } }
+      // or unwrapped: { count, results, ... }
+      const payload: any = response.data;
+      const data: ApiResponse<Chef> | undefined = payload?.data ?? payload;
+
+      if (!data || !Array.isArray(data.results)) {
+        // Return empty list to avoid UI crashes
+        return { count: 0, next: null, previous: null, results: [] };
+      }
+
+      return data;
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("Error fetching chefs:", error);

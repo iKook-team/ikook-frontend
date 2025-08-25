@@ -1,11 +1,13 @@
 "use client";
 
+import React from "react";
 import { useRouter } from "next/navigation";
-import { FaStar, FaRegHeart } from "react-icons/fa";
+import { FaStar, FaRegHeart, FaHeart } from "react-icons/fa";
 import { Card, CardBody, CardFooter } from "@heroui/react";
 import Image from "next/image";
 
 import { getCurrencySymbol } from "@/lib/utils/currency";
+import favouritesService from "@/lib/api/favourites";
 
 interface BadgeData {
   id: string;
@@ -56,6 +58,7 @@ interface MenuListingProps {
   cuisine_types?: string[];
   country?: string;
   currency?: string;
+  is_favourite?: boolean;
 }
 
 export const MenuListing: React.FC<MenuListingProps> = ({
@@ -87,8 +90,10 @@ export const MenuListing: React.FC<MenuListingProps> = ({
   cuisine_types = [],
   country,
   currency,
+  is_favourite = false,
 }) => {
   const router = useRouter();
+  const [liked, setLiked] = React.useState<boolean>(!!is_favourite);
 
   const handleCardClick = () => {
     router.push(`/booking/menus/details/${_id}`);
@@ -128,7 +133,35 @@ export const MenuListing: React.FC<MenuListingProps> = ({
             className="w-full h-full object-cover absolute inset-0 z-0"
             loading="lazy"
           />
-          <FaRegHeart className="absolute top-2 right-2 text-white text-xl z-10" />
+          <button
+            type="button"
+            aria-label={liked ? "Unlike" : "Like"}
+            aria-pressed={liked}
+            disabled={liked}
+            onClick={async (e) => {
+              e.stopPropagation();
+              if (liked) {
+                // Unliking is disabled for now
+                return;
+              }
+              // Perform like once
+              setLiked(true);
+              console.debug("[MenuListing] like -> addFavourite", { menuId: _id });
+              try {
+                await favouritesService.addFavourite({ menuId: _id });
+              } catch (err) {
+                console.debug("[MenuListing] addFavourite failed", err);
+                setLiked(false);
+              }
+            }}
+            className="absolute top-2 right-2 z-10 inline-flex items-center justify-center"
+          >
+            {liked ? (
+              <FaHeart className="text-red-500 text-xl drop-shadow" />
+            ) : (
+              <FaRegHeart className="text-white text-xl drop-shadow" />
+            )}
+          </button>
           <span className="absolute top-2 left-2 bg-white rounded-full px-4 py-1 text-xs z-10">
             {cuisine_types && cuisine_types.length > 0
               ? cuisine_types[0]

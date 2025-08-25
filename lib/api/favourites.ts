@@ -162,7 +162,35 @@ export const favouritesService = {
     try {
       await apiClient.post("/favourites/", { type, id });
     } catch (error) {
-      console.error("Error adding to favorites:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Create a favourite for either a chef or a menu.
+   * Exactly one of chefId or menuId must be provided.
+   * Payload shape: { chef: number } OR { menu: number }
+   */
+  addFavourite: async ({
+    chefId,
+    menuId,
+  }: {
+    chefId?: number;
+    menuId?: number;
+  }): Promise<number> => {
+    try {
+      const hasChef = typeof chefId === "number";
+      const hasMenu = typeof menuId === "number";
+      if (Number(hasChef) + Number(hasMenu) !== 1) {
+        throw new Error("Provide exactly one of chefId or menuId");
+      }
+
+      const payload: any = hasChef ? { chef: chefId } : { menu: menuId };
+      const response = await apiClient.post<
+        ApiResponse<{ id: number }>
+      >("/favourites/", payload);
+      return response.data.data.id;
+    } catch (error) {
       throw error;
     }
   },
@@ -175,7 +203,6 @@ export const favouritesService = {
     try {
       await apiClient.delete(`/favourites/${id}/`);
     } catch (error) {
-      console.error("Error removing from favorites:", error);
       throw error;
     }
   },
@@ -200,6 +227,58 @@ export const favouritesService = {
 
       return false;
     }
+  },
+
+  /**
+   * Find the favourite ID for a given target (chefId or menuId) by listing favourites.
+   * Returns the favourite id if found, otherwise null.
+   */
+  findFavouriteId: async ({
+    chefId,
+    menuId,
+  }: {
+    chefId?: number;
+    menuId?: number;
+  }): Promise<number | null> => {
+    console.debug("[favourites] findFavouriteId start", { chefId, menuId });
+    const hasChef = typeof chefId === "number";
+    const hasMenu = typeof menuId === "number";
+    if (Number(hasChef) + Number(hasMenu) !== 1) {
+      throw new Error("Provide exactly one of chefId or menuId");
+    }
+
+    const type: FavouriteType = hasChef ? "chef" : "menu";
+    // Try with a larger page size to reduce pagination misses
+    const pageSize = 100;
+    const list = await favouritesService.getFavourites(type, 1, pageSize);
+    const match = list.results.find((fav) => {
+      if (hasChef) return fav.chef && fav.chef.id === chefId;
+      return fav.menu && fav.menu.id === menuId;
+    });
+    const result = match ? match.id : null;
+    console.debug("[favourites] findFavouriteId result", { result });
+    return result;
+  },
+
+  /**
+   * Remove favourite by specifying the target (chefId or menuId).
+   */
+  removeFavouriteByTarget: async ({
+    chefId,
+    menuId,
+  }: {
+    chefId?: number;
+    menuId?: number;
+  }): Promise<void> => {
+    console.debug("[favourites] removeFavouriteByTarget start", { chefId, menuId });
+    const favId = await favouritesService.findFavouriteId({ chefId, menuId });
+    if (!favId) {
+      // Nothing to delete (already not favourited)
+      console.debug("[favourites] removeFavouriteByTarget: no favourite found");
+      return;
+    }
+    await favouritesService.removeFromFavourites(favId);
+    console.debug("[favourites] removeFavouriteByTarget: deleted", { favId });
   },
 };
 
