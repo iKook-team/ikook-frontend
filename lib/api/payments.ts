@@ -107,7 +107,7 @@ export const paymentsService = {
 
   async redeemGiftCard(cardNumber: string) {
     try {
-      const response = await apiClient.post("/payments/redeem-gift-card/", {
+      const response = await apiClient.post("/payments/wallets/transactions/redeem-gift-card/", {
         card_number: cardNumber,
       });
       return response.data;
