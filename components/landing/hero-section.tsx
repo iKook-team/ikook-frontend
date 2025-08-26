@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import TextWithHighlight from "@/components/common/TextWithHighlight";
 
 export default function HeroSection() {
   const router = useRouter();
@@ -13,10 +14,14 @@ export default function HeroSection() {
       <div className="relative max-w-7xl mx-auto">
         {/* Main Heading */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-[#323335] leading-tight mb-2">
-            Discover the new, easy way <br /> to book a{" "}
+          <TextWithHighlight
+            highlight="Discover"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold text-[#323335] leading-tight mb-2"
+          >
+            {" "}
+            the new, easy way <br /> to book a {" "}
             <span className="text-[#FCC01C]">private chef</span>
-          </h1>
+          </TextWithHighlight>
         </div>
 
         {/* Search Card */}

@@ -1,4 +1,5 @@
 import { Button } from "../ui/button";
+import SectionHeader from "@/components/common/SectionHeader";
 
 const blogPosts = [
   {
@@ -70,15 +71,7 @@ export default function BlogSection() {
     <section className="bg-white py-16 px-4 lg:px-24">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="relative">
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full max-w-2xl h-0.5 bg-gray-200" />
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-2xl h-0.5 bg-gray-200" />
-            <h2 className="text-3xl lg:text-4xl font-medium text-[#323335] py-6 bg-white inline-block px-8">
-              Our Blog
-            </h2>
-          </div>
-        </div>
+        <SectionHeader title="Our Blog" />
 
         {/* Blog Grid - 3 columns */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">

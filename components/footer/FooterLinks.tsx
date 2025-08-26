@@ -25,7 +25,7 @@ export const FooterLinks: React.FC<FooterLinksProps> = ({ className = "" }) => {
       links: [],
     },
     {
-      title: "ikooK",
+      title: "iKooK",
       links: [
         "About us",
         "How it works",
@@ -117,20 +117,6 @@ export const FooterLinks: React.FC<FooterLinksProps> = ({ className = "" }) => {
                     </a>
                   </li>
                 ))}
-                {section.title === "iKooK Chef in" && (
-                  <li className="pt-2">
-                    <button className="items-center border border-black flex gap-1 text-sm font-normal px-2 py-1 rounded-[40px] hover:bg-gray-50 transition-colors">
-                      <span className="text-[#3F3E3D] self-stretch my-auto">
-                        See other countries
-                      </span>
-                      <img
-                        src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/32b529c911a91cf896eb934fad6505f80b7289de?placeholderIfAbsent=true"
-                        alt="Arrow"
-                        className="aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto"
-                      />
-                    </button>
-                  </li>
-                )}
               </ul>
             </>
           )}

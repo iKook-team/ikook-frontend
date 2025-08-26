@@ -1,0 +1,76 @@
+"use client";
+
+import React from "react";
+import type { MarketCode } from "./market";
+
+const MARKET_COOKIE = "ikook_market";
+
+export type MarketContextValue = {
+  market: MarketCode;
+  setMarket: (m: MarketCode) => void;
+};
+
+const MarketContext = React.createContext<MarketContextValue | undefined>(
+  undefined
+);
+
+function readMarketFromCookie(): MarketCode {
+  if (typeof document === "undefined") return "GB";
+  const match = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(`${MARKET_COOKIE}=`));
+  const value = match?.split("=")[1];
+  if (value === "NG" || value === "GB" || value === "ZA") return value;
+  return "GB";
+}
+
+export function MarketProvider({ children }: { children: React.ReactNode }) {
+  const [market, setMarket] = React.useState<MarketCode>("GB");
+
+  React.useEffect(() => {
+    setMarket(readMarketFromCookie());
+  }, []);
+
+  // Client-side fallback: if middleware defaulted to GB locally, try to refine using ipapi
+  React.useEffect(() => {
+    let cancelled = false;
+    async function refineFromIp() {
+      try {
+        const controller = new AbortController();
+        const t = setTimeout(() => controller.abort(), 1500);
+        const res = await fetch("https://ipapi.co/json/", { signal: controller.signal });
+        clearTimeout(t);
+        if (!res.ok) return;
+        const data = (await res.json()) as { country_code?: string };
+        const code = (data.country_code || "").toUpperCase();
+        if (!code) return;
+        const next = (code === "NG" || code === "ZA" || code === "GB") ? (code as MarketCode) : "GB";
+        if (!cancelled && next !== market) {
+          setMarket(next);
+          document.cookie = `ikook_market=${next}; Path=/; Max-Age=${60 * 60 * 24 * 30}; SameSite=Lax`;
+        }
+      } catch {
+        // ignore
+      }
+    }
+    // Only attempt refinement if currently GB (default) to avoid flicker after explicit user choice
+    if (market === "GB") {
+      refineFromIp();
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, [market]);
+
+  const value = React.useMemo(() => ({ market, setMarket }), [market]);
+
+  return (
+    <MarketContext.Provider value={value}>{children}</MarketContext.Provider>
+  );
+}
+
+export function useMarket(): MarketContextValue {
+  const ctx = React.useContext(MarketContext);
+  if (!ctx) throw new Error("useMarket must be used within MarketProvider");
+  return ctx;
+}

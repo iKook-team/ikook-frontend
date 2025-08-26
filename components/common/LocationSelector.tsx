@@ -2,6 +2,8 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
+import { useMarket } from "@/lib/market-context";
+import type { MarketCode } from "@/lib/market";
 
 type Country = {
   code: string;
@@ -16,8 +18,11 @@ const COUNTRIES: Country[] = [
 ];
 
 export const LocationSelector: React.FC = () => {
+  const { market, setMarket } = useMarket();
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState<Country>(COUNTRIES[0]); // Default to Nigeria
+  const [selectedCountry, setSelectedCountry] = useState<Country>(
+    () => COUNTRIES.find((c) => c.code === market) || COUNTRIES[1] // default to GB in UI if not found
+  );
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -37,12 +42,23 @@ export const LocationSelector: React.FC = () => {
     };
   }, []);
 
+  // Sync UI when market changes elsewhere
+  useEffect(() => {
+    const next = COUNTRIES.find((c) => c.code === market);
+    if (next && next.code !== selectedCountry.code) {
+      setSelectedCountry(next);
+    }
+  }, [market]);
+
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   const selectCountry = (country: Country) => {
     setSelectedCountry(country);
     setIsOpen(false);
-    // Here you can add any additional logic when a country is selected
+    // Update provider
+    setMarket(country.code as MarketCode);
+    // Persist cookie for middleware/client reads
+    document.cookie = `ikook_market=${country.code}; Path=/; Max-Age=${60 * 60 * 24 * 30}; SameSite=Lax`;
   };
 
   return (

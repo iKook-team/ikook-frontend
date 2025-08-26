@@ -1,25 +1,22 @@
 import React from "react";
+import SectionHeader from "@/components/common/SectionHeader";
 
 export function TrustedOrganizationsSection() {
+  const companies = React.useMemo(
+    () => Array.from({ length: 6 }, (_, index) => `/organisations/company-${index + 1}.webp`),
+    []
+  );
   return (
     <section className="bg-white py-16 px-6 lg:px-16">
       <div className="max-w-7xl mx-auto text-center">
-        <div className="text-center mb-12">
-          <div className="relative">
-            <div className="absolute top-0 left-[15%] right-[15%] h-0.5 bg-gray-200" />
-            <div className="absolute bottom-0 left-[15%] right-[15%] h-0.5 bg-gray-200" />
-            <h2 className="text-3xl lg:text-4xl font-medium text-[#323335] py-4 bg-white inline-block px-8">
-              Trusted by huge Organizations
-            </h2>
-          </div>
-        </div>
+        <SectionHeader title="Trusted By" />
 
         <div className="mb-8">
-          <img
-            src="https://api.builder.io/api/v1/image/assets/TEMP/de695800d6cc284f210f5caeec5f42030caf90bf?width=1666"
-            alt="Partner organizations logos"
-            className="mx-auto max-w-4xl w-full h-auto"
-          />
+          <div className="mt-8 flex flex-row gap-8 lg:gap-0 lg:justify-between w-full">
+            {companies.map((company, index) => (
+              <img src={company} key={company} alt={index.toString()} className="h-8 md:h-12" />
+            ))}
+          </div>
         </div>
 
         <p className="text-xl text-ikook-secondary max-w-4xl mx-auto">

@@ -9,6 +9,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Toaster } from "react-hot-toast";
 
 import { useAuthStore } from "@/lib/store/auth-store";
+import { MarketProvider } from "@/lib/market-context";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -54,7 +55,9 @@ export function Providers({ children, themeProps }: ProvidersProps) {
   return (
     <HeroUIProvider navigate={router.push}>
       <NextThemesProvider {...themeProps}>
-        <AuthInitializer>{children}</AuthInitializer>
+        <MarketProvider>
+          <AuthInitializer>{children}</AuthInitializer>
+        </MarketProvider>
         <Toaster />
       </NextThemesProvider>
     </HeroUIProvider>

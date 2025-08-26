@@ -23,7 +23,7 @@ const Index = () => {
 
       {/* <WhyIkookSection /> */}
 
-      <TestimonialsSection />
+      {/* <TestimonialsSection /> */}
 
       <BlogSection />
 

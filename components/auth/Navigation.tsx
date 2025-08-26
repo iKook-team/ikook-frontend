@@ -12,7 +12,9 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/lib/store/auth-store";
 
 export const Navigation: React.FC = () => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, userType } = useAuthStore();
+  const showExplore = !isAuthenticated || userType === "host";
+  const showJoinAsChef = !isAuthenticated;
 
   return (
     <header className="w-full bg-white py-4 px-6 lg:px-12 shadow-[0px_4px_30px_0px_rgba(0,0,0,0.05)]">
@@ -99,12 +101,14 @@ export const Navigation: React.FC = () => {
           <div className="flex items-center space-x-8">
             {/* Navigation */}
             <nav className="hidden lg:flex items-center space-x-8">
-              <Link
-                href="#"
-                className="text-ikook-secondary hover:text-ikook-primary transition-colors font-medium"
-              >
-                Explore Services
-              </Link>
+              {showExplore && (
+                <Link
+                  href="#"
+                  className="text-ikook-secondary hover:text-ikook-primary transition-colors font-medium"
+                >
+                  Explore Services
+                </Link>
+              )}
               <Link
                 href="#"
                 className="text-ikook-secondary hover:text-ikook-primary transition-colors font-medium"
@@ -120,12 +124,14 @@ export const Navigation: React.FC = () => {
                 </Link>
                 <Gift className="w-5 h-5 text-[#FCC01C]" />
               </div>
-              <Link
-                href="#"
-                className="text-ikook-secondary hover:text-ikook-primary transition-colors font-medium"
-              >
-                Join as Chef
-              </Link>
+              {showJoinAsChef && (
+                <Link
+                  href="#"
+                  className="text-ikook-secondary hover:text-ikook-primary transition-colors font-medium"
+                >
+                  Join as Chef
+                </Link>
+              )}
             </nav>
 
             {/* Auth and Language */}
