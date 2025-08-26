@@ -33,8 +33,8 @@ export const MyMenusPage: React.FC = () => {
 
   const statusOptions = [
     { label: "Active menus", value: "Active" },
-    { label: "Draft", value: "Draft" },
     { label: "Pending", value: "Pending" },
+    { label: "Review", value: "Review" },
     { label: "Deleted", value: "Deleted" },
   ];
 
@@ -72,7 +72,25 @@ export const MyMenusPage: React.FC = () => {
           ) : menus.length === 0 ? (
             <div>No menus found.</div>
           ) : (
-            menus.map((menu) => <MenuItem key={menu.id} {...menu} />)
+            menus.map((menu) => (
+              <MenuItem
+                key={menu.id}
+                id={menu.id}
+                title={menu.name}
+                price={menu.price_per_person}
+                img={menu.images?.[0]?.image || "/menus/menu1.png"}
+                location={menu.chef?.city || menu.chef_details?.city || ""}
+                avatar={
+                  menu.chef?.avatar || menu.chef_details?.avatar ||
+                  "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+                }
+                chefName={`${menu.chef?.first_name ?? menu.chef_details?.first_name ?? ""} ${menu.chef?.last_name ?? menu.chef_details?.last_name ?? ""}`.trim()}
+                averageRating={menu.chef?.average_rating ?? menu.chef_details?.average_rating ?? 0}
+                numReviews={menu.chef?.num_reviews ?? menu.chef_details?.num_reviews ?? 0}
+                cuisineTypes={menu.chef?.cuisine_types || menu.chef_details?.cuisine_types || []}
+                menuType={menu.menu_type}
+              />
+            ))
           )}
         </div>
       </main>

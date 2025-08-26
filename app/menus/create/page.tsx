@@ -97,7 +97,7 @@ const CreateMenuPage: React.FC = () => {
         courses: coursesWithItems,
         courses_selection_limit: filteredSelectionLimit,
         courses_extra_charge_per_person: filteredExtraCharges,
-        status: "Draft",
+        status: "Pending",
       };
       const menuRes = await menuService.createMenu(menuPayload);
       const menuId = menuRes.data.id;
