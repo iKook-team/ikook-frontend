@@ -17,3 +17,9 @@
   font-style: normal;
   font-display: swap;
 }
+
+/* Hide native date picker indicator (WebKit/Chromium) for custom-styled inputs */
+input.date-no-native-icon::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}

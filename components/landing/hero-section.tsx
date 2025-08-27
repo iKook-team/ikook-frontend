@@ -199,13 +199,7 @@ export default function HeroSection() {
                 </svg>
               </button>
             </div>
-            {/* Hide native date picker indicator for WebKit/Chromium */}
-            <style jsx>{`
-              input.date-no-native-icon::-webkit-calendar-picker-indicator {
-                display: none;
-                -webkit-appearance: none;
-              }
-            `}</style>
+            {/* Date picker indicator hidden via global CSS in styles/globals.css */}
           </div>
 
           {/* Search Button */}
