@@ -2,6 +2,7 @@
 
 import { FaStar } from "react-icons/fa";
 import { Card, CardBody, CardFooter } from "@heroui/react";
+import { useRouter } from "next/navigation";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
 
@@ -20,7 +21,7 @@ interface MenuItemProps {
 }
 
 export const MenuItem = ({
-  id: _id,
+  id,
   title,
   price,
   img,
@@ -32,6 +33,7 @@ export const MenuItem = ({
   cuisineTypes = [],
   menuType,
 }: MenuItemProps) => {
+  const router = useRouter();
   const { market } = useMarket();
   const currencySymbol = getMarketConfig(market).currencySymbol;
   const avatarSrc =
@@ -79,12 +81,21 @@ export const MenuItem = ({
             </div>
           </div>
         </div>
-        <div className="flex flex-col">
-          <div className="flex gap-1 items-center justify-end">
+        <div className="flex flex-col items-end gap-2">
+          <div className="flex gap-1 items-center">
             <FaStar className="text-yellow-400" />
             <span className="text-gray-700">{averageRating ?? 0}</span>
           </div>
           <div className="text-xs text-gray-700">({numReviews ?? 0} Reviews)</div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/menus/edit/${id}`);
+            }}
+            className="text-xs bg-amber-400 hover:bg-amber-500 text-white px-3 py-1 rounded-full transition-colors"
+          >
+            Edit
+          </button>
         </div>
       </CardFooter>
     </Card>

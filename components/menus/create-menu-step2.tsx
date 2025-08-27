@@ -62,7 +62,7 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
     }
   }, [currentCourseIdx, formData, updateFormData, courses.length]);
   const [courseItems, setCourseItems] = useState<
-    Record<string, { name: string; description: string }[]>
+    Record<string, { name: string; description: string; id?: number }[]>
   >(formData.courseItems || {});
   const [itemInput, setItemInput] = useState<{
     name: string;
@@ -198,6 +198,8 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
         (items || []).map((item) => ({
           ...item,
           course,
+          // Preserve id if it exists (for edit mode)
+          ...(item.id ? { id: item.id } : {}),
         })),
     );
     

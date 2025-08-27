@@ -9,14 +9,34 @@ export const menuService = {
     const response = await apiClient.post(`/menus/`, data);
     return response.data;
   },
+  async updateMenu(id: string | number, data: any) {
+    const response = await apiClient.patch(`/menus/${id}/`, data);
+    return response.data;
+  },
+  async deleteMenu(id: string | number) {
+    const response = await apiClient.delete(`/menus/${id}/`);
+    return response.data;
+  },
   async createMenuItem(data: any) {
     const response = await apiClient.post(`/menus/items/`, data);
+    return response.data;
+  },
+  async updateMenuItem(id: string | number, data: any) {
+    const response = await apiClient.patch(`/menus/items/${id}/`, data);
+    return response.data;
+  },
+  async deleteMenuItem(id: string | number) {
+    const response = await apiClient.delete(`/menus/items/${id}/`);
     return response.data;
   },
   async uploadMenuImage(formData: FormData) {
     const response = await apiClient.post(`/menus/images/`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
+    return response.data;
+  },
+  async deleteMenuImage(id: string | number) {
+    const response = await apiClient.delete(`/menus/images/${id}/`);
     return response.data;
   },
 };

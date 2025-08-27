@@ -22,11 +22,14 @@ export const CreateMenuStep3: React.FC<MenuImagesStepProps> = ({
   const [uploadedImages, setUploadedImages] = React.useState<File[]>(
     formData.uploadedImages || [],
   );
+  const [existingImages, setExistingImages] = React.useState<any[]>(
+    formData.existingImages || [],
+  );
 
   // Sync local state with parent form data
   React.useEffect(() => {
-    updateFormData({ uploadedImages });
-  }, [uploadedImages, updateFormData]);
+    updateFormData({ uploadedImages, existingImages });
+  }, [uploadedImages, existingImages, updateFormData]);
 
   const handleBack = () => {
     onBack();
@@ -56,7 +59,11 @@ export const CreateMenuStep3: React.FC<MenuImagesStepProps> = ({
     setUploadedImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const canContinue = uploadedImages.length > 0;
+  const handleDeleteExistingImage = (index: number) => {
+    setExistingImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const canContinue = uploadedImages.length > 0 || existingImages.length > 0;
 
   return (
     <div className="flex flex-col w-full max-w-[655px] mx-auto">
@@ -80,15 +87,35 @@ export const CreateMenuStep3: React.FC<MenuImagesStepProps> = ({
           <div className="w-full flex justify-center">
             <ImageUploadArea onImageSelect={handleImageSelect} />
           </div>
+          
+          {/* Display existing images */}
+          {existingImages.length > 0 && (
+            <div className="mt-6 w-full flex flex-col items-center">
+              <h3 className="text-sm font-medium text-gray-700 mb-3 text-center">
+                Current images ({existingImages.length})
+              </h3>
+              <div className="grid grid-cols-1 gap-4 justify-items-center">
+                {existingImages.map((image, index) => (
+                  <UploadedImage
+                    key={`existing-${index}`}
+                    imageUrl={image.image || image.url}
+                    onDelete={() => handleDeleteExistingImage(index)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {/* Display newly uploaded images */}
           {uploadedImages.length > 0 && (
             <div className="mt-6 w-full flex flex-col items-center">
               <h3 className="text-sm font-medium text-gray-700 mb-3 text-center">
-                Uploaded images ({uploadedImages.length})
+                New images ({uploadedImages.length})
               </h3>
               <div className="grid grid-cols-1 gap-4 justify-items-center">
                 {uploadedImages.map((file, index) => (
                   <UploadedImage
-                    key={index}
+                    key={`new-${index}`}
                     imageUrl={URL.createObjectURL(file)}
                     onDelete={() => handleDeleteImage(index)}
                   />
