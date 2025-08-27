@@ -118,7 +118,7 @@ const ChefSignupPage: React.FC = () => {
           phone_number: chefFormData.phoneNumber,
           date_of_birth: chefFormData.dateOfBirth,
           service_type: chefFormData.serviceType,
-          chef_services: chefServices,
+          ...(chefServices.length ? { chef_services: chefServices } : {}),
           country: countryName,
           city: chefFormData.city,
           landmark: chefFormData.address || "", // TODO: Update later - using address as landmark for now

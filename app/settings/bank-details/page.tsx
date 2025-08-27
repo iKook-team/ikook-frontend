@@ -5,6 +5,7 @@ import { FormField } from "@/components/ui/form-field";
 import { paymentsService } from "@/lib/api/payments";
 import { showToast } from "@/lib/utils/toast";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { useMarket } from "@/lib/market-context";
 
 interface Bank {
   id: number;
@@ -35,8 +36,26 @@ interface BankDetails {
   postal_code: string;
 }
 
+// Static UK bank list to avoid 500s (backend not implemented for UK)
+const UK_BANKS: Bank[] = [
+  { id: 1, name: "Barclays", slug: "barclays", code: "BARCGB22", longcode: "", gateway: null, pay_with_bank: false, supports_transfer: true, active: true, country: "United Kingdom", currency: "GBP", type: "uk", is_deleted: false, created_at: "", updated_at: null },
+  { id: 2, name: "HSBC UK", slug: "hsbc-uk", code: "HBUKGB4B", longcode: "", gateway: null, pay_with_bank: false, supports_transfer: true, active: true, country: "United Kingdom", currency: "GBP", type: "uk", is_deleted: false, created_at: "", updated_at: null },
+  { id: 3, name: "Lloyds Bank", slug: "lloyds", code: "LOYDGB2L", longcode: "", gateway: null, pay_with_bank: false, supports_transfer: true, active: true, country: "United Kingdom", currency: "GBP", type: "uk", is_deleted: false, created_at: "", updated_at: null },
+  { id: 4, name: "NatWest", slug: "natwest", code: "NWBKGB2L", longcode: "", gateway: null, pay_with_bank: false, supports_transfer: true, active: true, country: "United Kingdom", currency: "GBP", type: "uk", is_deleted: false, created_at: "", updated_at: null },
+  { id: 5, name: "Santander UK", slug: "santander-uk", code: "ABBYGB2L", longcode: "", gateway: null, pay_with_bank: false, supports_transfer: true, active: true, country: "United Kingdom", currency: "GBP", type: "uk", is_deleted: false, created_at: "", updated_at: null },
+  { id: 6, name: "Nationwide Building Society", slug: "nationwide", code: "NWBKGB21", longcode: "", gateway: null, pay_with_bank: false, supports_transfer: true, active: true, country: "United Kingdom", currency: "GBP", type: "uk", is_deleted: false, created_at: "", updated_at: null },
+  { id: 7, name: "TSB Bank", slug: "tsb", code: "TSBSGB2A", longcode: "", gateway: null, pay_with_bank: false, supports_transfer: true, active: true, country: "United Kingdom", currency: "GBP", type: "uk", is_deleted: false, created_at: "", updated_at: null },
+  { id: 8, name: "Virgin Money", slug: "virgin-money", code: "CNRBGB2L", longcode: "", gateway: null, pay_with_bank: false, supports_transfer: true, active: true, country: "United Kingdom", currency: "GBP", type: "uk", is_deleted: false, created_at: "", updated_at: null },
+  { id: 9, name: "The Co-operative Bank", slug: "co-operative-bank", code: "CPBKGB22", longcode: "", gateway: null, pay_with_bank: false, supports_transfer: true, active: true, country: "United Kingdom", currency: "GBP", type: "uk", is_deleted: false, created_at: "", updated_at: null },
+  { id: 10, name: "Metro Bank", slug: "metro-bank", code: "MYMBGB2L", longcode: "", gateway: null, pay_with_bank: false, supports_transfer: true, active: true, country: "United Kingdom", currency: "GBP", type: "uk", is_deleted: false, created_at: "", updated_at: null },
+  { id: 11, name: "Monzo Bank", slug: "monzo", code: "MONZGB2L", longcode: "", gateway: null, pay_with_bank: false, supports_transfer: true, active: true, country: "United Kingdom", currency: "GBP", type: "uk", is_deleted: false, created_at: "", updated_at: null },
+  { id: 12, name: "Starling Bank", slug: "starling", code: "SRLGGB2L", longcode: "", gateway: null, pay_with_bank: false, supports_transfer: true, active: true, country: "United Kingdom", currency: "GBP", type: "uk", is_deleted: false, created_at: "", updated_at: null },
+  { id: 13, name: "Chase UK", slug: "chase-uk", code: "CHASGB2L", longcode: "", gateway: null, pay_with_bank: false, supports_transfer: true, active: true, country: "United Kingdom", currency: "GBP", type: "uk", is_deleted: false, created_at: "", updated_at: null },
+];
+
 const BankAccountForm: React.FC = () => {
   const { user } = useAuthStore();
+  const { market } = useMarket();
   const [banks, setBanks] = useState<Bank[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,13 +76,16 @@ const BankAccountForm: React.FC = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        
-        // Fetch banks
-        const banksResponse = await paymentsService.getBanks();
-        if (banksResponse && Array.isArray(banksResponse.data)) {
-          setBanks(banksResponse.data);
+        // Fetch banks (skip API for UK market and use static list)
+        if (market === "GB") {
+          setBanks(UK_BANKS);
         } else {
-          showToast.error("Invalid bank data received");
+          const banksResponse = await paymentsService.getBanks();
+          if (banksResponse && Array.isArray(banksResponse.data)) {
+            setBanks(banksResponse.data);
+          } else {
+            showToast.error("Invalid bank data received");
+          }
         }
 
         // Fetch user's bank details if they exist
@@ -96,7 +118,7 @@ const BankAccountForm: React.FC = () => {
     };
 
     fetchData();
-  }, [user]);
+  }, [user, market]);
 
   const handleInputChange = (field: keyof typeof formData) => 
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
