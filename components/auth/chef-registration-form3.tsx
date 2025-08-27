@@ -5,10 +5,11 @@ import React, { useState } from "react";
 import { FormField } from "@/components/ui/form-field";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { getLocationsForMarket } from "@/lib/locations";
+import { useMarket } from "@/lib/market-context";
 
 interface ChefRegistrationForm3Props {
   formData: {
-    country?: string;
     city?: string;
     postalCode?: string;
     address?: string;
@@ -18,79 +19,8 @@ interface ChefRegistrationForm3Props {
   onSubmit: (data: any) => void;
 }
 
-const countryOptions = [
-  { value: "United Kingdom", label: "United Kingdom" },
-  { value: "Nigeria", label: "Nigeria" },
-  { value: "South Africa", label: "South Africa" },
-];
-
-// City options based on selected country
-interface CityOption {
-  value: string;
-  label: string;
-}
-
-const getCityOptions = (country: string): CityOption[] => {
-  const cities: Record<string, CityOption[]> = {
-    Nigeria: [
-      { value: "Abia", label: "Abia" },
-      { value: "Adamawa", label: "Adamawa" },
-      { value: "Akwa Ibom", label: "Akwa Ibom" },
-      { value: "Anambra", label: "Anambra" },
-      { value: "Bauchi", label: "Bauchi" },
-      { value: "Bayelsa", label: "Bayelsa" },
-      { value: "Benue", label: "Benue" },
-      { value: "Borno", label: "Borno" },
-      { value: "Cross River", label: "Cross River" },
-      { value: "Delta", label: "Delta" },
-      { value: "Ebonyi", label: "Ebonyi" },
-      { value: "Edo", label: "Edo" },
-      { value: "Ekiti", label: "Ekiti" },
-      { value: "Enugu", label: "Enugu" },
-      { value: "FCT", label: "FCT" },
-      { value: "Gombe", label: "Gombe" },
-      { value: "Imo", label: "Imo" },
-      { value: "Jigawa", label: "Jigawa" },
-      { value: "Kaduna", label: "Kaduna" },
-      { value: "Kano", label: "Kano" },
-      { value: "Katsina", label: "Katsina" },
-      { value: "Kebbi", label: "Kebbi" },
-      { value: "Kogi", label: "Kogi" },
-      { value: "Kwara", label: "Kwara" },
-      { value: "Lagos", label: "Lagos" },
-      { value: "Nasarawa", label: "Nasarawa" },
-      { value: "Niger", label: "Niger" },
-      { value: "Ogun", label: "Ogun" },
-      { value: "Ondo", label: "Ondo" },
-      { value: "Oyo", label: "Oyo" },
-      { value: "Plateau", label: "Plateau" },
-      { value: "Rivers", label: "Rivers" },
-      { value: "Sokoto", label: "Sokoto" },
-      { value: "Taraba", label: "Taraba" },
-      { value: "Yobe", label: "Yobe" },
-      { value: "Zamfara", label: "Zamfara" },
-    ],
-    "South Africa": [
-      { value: "Eastern Cape", label: "Eastern Cape" },
-      { value: "Free State", label: "Free State" },
-      { value: "Gauteng", label: "Gauteng" },
-      { value: "Kwazulu Natal", label: "Kwazulu Natal" },
-      { value: "Limpopo", label: "Limpopo" },
-      { value: "Mpumalanga", label: "Mpumalanga" },
-      { value: "North West", label: "North West" },
-      { value: "Northen Cape", label: "Northen Cape" },
-      { value: "Western Cape", label: "Western Cape" },
-    ],
-    "United Kingdom": [
-      { value: "England", label: "England" },
-      { value: "Scotland", label: "Scotland" },
-      { value: "Wales", label: "Wales" },
-      { value: "Northern Ireland", label: "Northern Ireland" },
-    ],
-  };
-
-  return (country && cities[country]) || [];
-};
+// City options based on current market
+type CityOption = { value: string; label: string };
 
 const workAuthOptions = [
   { value: "yes", label: "Yes, I have the right to work" },
@@ -104,37 +34,19 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
   onSubmit,
 }) => {
   const { setChefFormData, chefFormData } = useAuthStore();
-  const [formData, setFormData] = useState(() => {
-    const country = initialFormData.country || "United Kingdom";
-    const cityOptions = getCityOptions(country);
-
-    return {
-      country,
-      city:
-        initialFormData.city ||
-        (cityOptions.length > 0 ? cityOptions[0].value : ""),
-      postalCode: initialFormData.postalCode || "",
-      address: initialFormData.address || "",
-      workAuthorization: initialFormData.workAuthorization || "",
-    };
-  });
+  const { market } = useMarket();
+  const marketCityOptions: CityOption[] = getLocationsForMarket(market).map((c) => ({ value: c, label: c }));
+  const [formData, setFormData] = useState(() => ({
+    city: initialFormData.city || "",
+    postalCode: initialFormData.postalCode || "",
+    address: initialFormData.address || "",
+    workAuthorization: initialFormData.workAuthorization || "yes",
+  }));
 
   const [errors, setErrors] = useState<Partial<typeof formData>>({});
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
-    setFormData((prev) => {
-      if (field === "country") {
-        const cityOptions = getCityOptions(value);
-
-        return {
-          ...prev,
-          country: value,
-          city: cityOptions.length > 0 ? cityOptions[0].value : "",
-        };
-      }
-
-      return { ...prev, [field]: value };
-    });
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
@@ -142,10 +54,6 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
 
   const validate = () => {
     const newErrors: Partial<typeof formData> = {};
-
-    if (!formData.country) {
-      newErrors.country = "Country is required.";
-    }
 
     if (!formData.city) {
       newErrors.city = "City is required.";
@@ -179,7 +87,6 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
     // Save form data to store
     const updatedChefData = {
       ...chefFormData,
-      country: formData.country,
       city: formData.city,
       postalCode: formData.postalCode,
       address: formData.address,
@@ -217,20 +124,9 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
             <FormField
               required
               className="w-full"
-              error={errors.country}
-              label="Country of Residence"
-              options={countryOptions}
-              placeholder="Select country"
-              type="select"
-              value={formData.country}
-              onChange={(e) => handleInputChange("country", e.target.value)}
-            />
-            <FormField
-              required
-              className="w-full"
               error={errors.city}
               label="City/State"
-              options={getCityOptions(formData.country)}
+              options={[{ value: "", label: "Select city" }, ...marketCityOptions]}
               placeholder="Select city"
               type="select"
               value={formData.city}

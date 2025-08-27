@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMarket } from "@/lib/market-context";
+import { getLocationsForMarket } from "@/lib/locations";
 
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -13,25 +14,7 @@ export default function HeroSection() {
   const { market } = useMarket(); // 'NG' | 'ZA' | 'GB'
 
   // Valid locations per market (mirror of backend City TextChoices)
-  const NG_LOCATIONS = [
-    "Abia","Adamawa","Akwa Ibom","Anambra","Bauchi","Bayelsa","Benue","Borno",
-    "Cross River","Delta","Ebonyi","Edo","Ekiti","Enugu","FCT","Gombe","Imo",
-    "Jigawa","Kaduna","Kano","Katsina","Kebbi","Kogi","Kwara","Lagos","Nasarawa",
-    "Niger","Ogun","Ondo","Oyo","Plateau","Rivers","Sokoto","Taraba","Yobe","Zamfara",
-  ];
-  const ZA_LOCATIONS = [
-    "Eastern Cape","Free State","Gauteng","Kwazulu Natal","Limpopo","Mpumalanga",
-    "North West","Northen Cape","Western Cape",
-  ];
-  const GB_LOCATIONS = [
-    "England","Scotland","Wales","Northern Ireland",
-  ];
-
-  const allLocations = useMemo(() => {
-    if (market === "NG") return NG_LOCATIONS;
-    if (market === "ZA") return ZA_LOCATIONS;
-    return GB_LOCATIONS; // default GB
-  }, [market]);
+  const allLocations = useMemo(() => getLocationsForMarket(market), [market]);
 
   const [location, setLocation] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);

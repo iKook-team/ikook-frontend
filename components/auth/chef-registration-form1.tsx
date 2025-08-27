@@ -32,6 +32,7 @@ export const ChefRegistrationForm1: React.FC<ChefRegistrationForm1Props> = ({
     firstName: initialFormData.firstName || "",
     lastName: initialFormData.lastName || "",
     dateOfBirth: initialFormData.dateOfBirth || "",
+    // Do not select by default; require explicit choice
     serviceType: initialFormData.serviceType || "",
   });
 
@@ -156,7 +157,7 @@ export const ChefRegistrationForm1: React.FC<ChefRegistrationForm1Props> = ({
               className="w-full"
               error={errors.serviceType}
               label="What type of service are you providing?"
-              options={serviceOptions}
+              options={[{ value: "", label: "Select service type" }, ...serviceOptions]}
               placeholder="Select service type"
               type="select"
               value={formData.serviceType}

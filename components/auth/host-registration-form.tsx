@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
@@ -10,6 +10,8 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { authService } from "@/lib/api/auth";
 import { showToast, handleApiError } from "@/lib/utils/toast";
+import { useMarket } from "@/lib/market-context";
+import { getLocationsForMarket } from "@/lib/locations";
 
 interface FormData {
   firstName: string;
@@ -18,6 +20,7 @@ interface FormData {
   phoneNumber: string;
   referralCode?: string;
   countryCode: string;
+  city: string;
 }
 
 interface HostRegistrationFormProps {
@@ -31,6 +34,13 @@ export const HostRegistrationForm: React.FC<HostRegistrationFormProps> = ({
   const { setUserType, setHostFormData } = useAuthStore();
   // Track selected country code for phone input
   const [countryCode, setCountryCode] = useState("NG");
+  const { market } = useMarket();
+  // Market-based city options (shared with hero section)
+  const allLocations = useMemo(() => getLocationsForMarket(market), [market]);
+  const cityOptions = useMemo(
+    () => allLocations.map((v) => ({ value: v, label: v })),
+    [allLocations]
+  );
 
   const {
     register,
@@ -44,6 +54,7 @@ export const HostRegistrationForm: React.FC<HostRegistrationFormProps> = ({
     mode: "onChange",
     defaultValues: {
       phoneNumber: "",
+      city: "",
     },
   });
 
@@ -80,6 +91,7 @@ export const HostRegistrationForm: React.FC<HostRegistrationFormProps> = ({
     formValues.firstName?.trim() &&
     formValues.lastName?.trim() &&
     formValues.email?.trim() &&
+    formValues.city?.trim() &&
     formValues.phoneNumber?.trim() &&
     Object.keys(errors).length === 0;
 
@@ -150,6 +162,22 @@ export const HostRegistrationForm: React.FC<HostRegistrationFormProps> = ({
                 },
               })}
               error={errors.email?.message}
+              className="w-full"
+            />
+
+            {/* City selector (market-based) using standard FormField UI */}
+            <FormField
+              label="City/State"
+              required
+              type="select"
+              options={[{ value: "", label: "Select city" }, ...cityOptions]}
+              value={formValues.city || ""}
+              placeholder="Select city"
+              onChange={(e) => {
+                setValue("city", e.target.value, { shouldValidate: true });
+                clearErrors("city");
+              }}
+              error={errors.city?.message}
               className="w-full"
             />
 

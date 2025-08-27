@@ -29,7 +29,7 @@ export const ChefRegistrationForm4: React.FC<ChefRegistrationForm4Props> = ({
 }) => {
   const { setChefFormData, chefFormData } = useAuthStore();
   const [formData, setFormData] = useState({
-    criminalRecord: initialFormData.criminalRecord || "",
+    criminalRecord: initialFormData.criminalRecord || "no",
     instagramAccount: initialFormData.instagramAccount || "",
     website: initialFormData.website || "",
   });

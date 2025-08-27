@@ -39,6 +39,7 @@ interface HostFormData {
   phoneNumber: string;
   referralCode?: string;
   countryCode?: string;
+  city: string;
 }
 
 interface ChefFormData {

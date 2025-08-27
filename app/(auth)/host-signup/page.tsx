@@ -10,6 +10,7 @@ import { useAuthStore } from "@/lib/store/auth-store";
 import { authService } from "@/lib/api/auth";
 import { saveTokens } from "@/src/lib/auth";
 import { showToast, handleApiError } from "@/lib/utils/toast";
+import { useMarket } from "@/lib/market-context";
 
 interface AllFormData {
   firstName?: string;
@@ -22,33 +23,18 @@ interface AllFormData {
   confirmPassword?: string;
 }
 
-// Helper to deduce country from phone number
-function getCountryFromPhone(phoneNumber?: string): string | undefined {
-  if (!phoneNumber) return undefined;
-  // Remove non-digit and non-plus
-  const cleaned = phoneNumber.replace(/[^+\d]/g, "");
-
-  if (cleaned.startsWith("+234")) return "Nigeria";
-  if (cleaned.startsWith("+44")) return "United Kingdom";
-  if (cleaned.startsWith("+27")) return "South Africa";
-
-  return undefined;
-}
-
-// Helper to deduce country from country code
-function getCountryFromCode(code?: string): string | undefined {
-  if (!code) return undefined;
-  if (code === "NG") return "Nigeria";
-  if (code === "UK") return "United Kingdom";
-  if (code === "ZA") return "South Africa";
-
-  return undefined;
+// Map active market to backend country name
+function getCountryFromMarket(market: "NG" | "GB" | "ZA"): string {
+  if (market === "NG") return "Nigeria";
+  if (market === "ZA") return "South Africa";
+  return "United Kingdom"; // GB
 }
 
 const HostSignupPage: React.FC = () => {
   console.log("HostSignupPage rendered");
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { market } = useMarket();
   // Set initial step based on URL param only once on mount
   const initialStep = React.useMemo(() => {
     const verified = searchParams.get("verified") === "true";
@@ -128,8 +114,8 @@ const HostSignupPage: React.FC = () => {
           }
         }
 
-        // Deduce country from country code
-        const country = getCountryFromCode(hostFormData.countryCode);
+        // Set country from market selection
+        const country = getCountryFromMarket(market);
 
         // Combine data from all forms
         const signupData: any = {
@@ -142,6 +128,7 @@ const HostSignupPage: React.FC = () => {
           phone_number: hostFormData.phoneNumber,
           location: location,
           country: country,
+          city: hostFormData.city,
         };
 
         if (hostFormData.referralCode) {

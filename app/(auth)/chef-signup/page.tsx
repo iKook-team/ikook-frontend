@@ -12,6 +12,7 @@ import { RegistrationForm } from "@/components/auth/registration-form";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { authService } from "@/lib/api/auth";
 import { saveTokens } from "@/src/lib/auth";
+import { useMarket } from "@/lib/market-context";
 import { showToast, handleApiError } from "@/lib/utils/toast";
 
 interface AllFormData {
@@ -37,6 +38,7 @@ interface AllFormData {
 const ChefSignupPage: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { market } = useMarket();
   // Set initial step based on URL param only once on mount
   const initialStep = React.useMemo(() => {
     const verified = searchParams.get("verified") === "true";
@@ -102,6 +104,9 @@ const ChefSignupPage: React.FC = () => {
             ? ["Fine Dining", "Chef at Home"]
             : [];
 
+        // Map market to country name
+        const countryName = market === "NG" ? "Nigeria" : market === "ZA" ? "South Africa" : "United Kingdom";
+
         // Combine data from all forms
         const signupData = {
           user_type: "Chef",
@@ -114,7 +119,7 @@ const ChefSignupPage: React.FC = () => {
           date_of_birth: chefFormData.dateOfBirth,
           service_type: chefFormData.serviceType,
           chef_services: chefServices,
-          country: chefFormData.country,
+          country: countryName,
           city: chefFormData.city,
           landmark: chefFormData.address || "", // TODO: Update later - using address as landmark for now
           address: chefFormData.address,
