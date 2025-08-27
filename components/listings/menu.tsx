@@ -6,7 +6,8 @@ import { FaStar, FaRegHeart, FaHeart } from "react-icons/fa";
 import { Card, CardBody, CardFooter } from "@heroui/react";
 import Image from "next/image";
 
-import { getCurrencySymbol } from "@/lib/utils/currency";
+import { useMarket } from "@/lib/market-context";
+import { getMarketConfig } from "@/lib/market-config";
 import favouritesService from "@/lib/api/favourites";
 
 interface BadgeData {
@@ -94,6 +95,7 @@ export const MenuListing: React.FC<MenuListingProps> = ({
 }) => {
   const router = useRouter();
   const [liked, setLiked] = React.useState<boolean>(!!is_favourite);
+  const { market } = useMarket();
 
   const handleCardClick = () => {
     router.push(`/booking/menus/details/${_id}`);
@@ -107,7 +109,11 @@ export const MenuListing: React.FC<MenuListingProps> = ({
     _onBadgeClick?.(badgeId);
   };
 
-  const currencySymbol = getCurrencySymbol({ currency, country });
+  const currencySymbol = React.useMemo(() => {
+    // Prefer explicit currency symbol from market context
+    const cfg = getMarketConfig(market);
+    return cfg.currencySymbol;
+  }, [market]);
 
   return (
     <div

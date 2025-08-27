@@ -51,6 +51,22 @@ const useListings = ({
     try {
       let response;
 
+      // Pull persisted filters from sessionStorage
+      let city: string | undefined;
+      let market: string | undefined;
+      try {
+        const raw = typeof window !== "undefined" ? sessionStorage.getItem("ikook_explore_pref") : null;
+        if (raw) {
+          const pref = JSON.parse(raw || "{}");
+          if (pref && typeof pref === "object") {
+            city = pref.city;
+            market = pref.market;
+          }
+        }
+      } catch {
+        // ignore parse/storage errors
+      }
+
       // Determine the type of listing based on the selected service
       if (selectedService === "chefs") {
         setListingType("chef");
@@ -58,6 +74,8 @@ const useListings = ({
           page,
           page_size: pageSize,
           search: searchQuery,
+          city,
+          market,
         });
       } else if (selectedService in serviceIdToTag) {
         setListingType("service");
@@ -66,6 +84,8 @@ const useListings = ({
           page_size: pageSize,
           search: searchQuery,
           chef_service: serviceIdToTag[selectedService],
+          city,
+          market,
         });
       } else if (selectedService in menuIdToTag) {
         setListingType("menu");
@@ -74,6 +94,8 @@ const useListings = ({
           page_size: pageSize,
           search: searchQuery,
           menu_type: menuIdToTag[selectedService as keyof typeof menuIdToTag],
+          city,
+          market,
         });
       } else {
         // Default to empty results if service type is not recognized

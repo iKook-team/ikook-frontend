@@ -4,6 +4,7 @@ import React from "react";
 import type { MarketCode } from "./market";
 
 const MARKET_COOKIE = "ikook_market";
+const MARKET_SRC_COOKIE = "ikook_market_src"; // 'auto' | 'user'
 
 export type MarketContextValue = {
   market: MarketCode;
@@ -31,7 +32,7 @@ export function MarketProvider({ children }: { children: React.ReactNode }) {
     setMarket(readMarketFromCookie());
   }, []);
 
-  // Client-side fallback: if middleware defaulted to GB locally, try to refine using ipapi
+  // Client-side fallback: try to refine using ipapi, but do not override explicit user choice
   React.useEffect(() => {
     let cancelled = false;
     async function refineFromIp() {
@@ -48,13 +49,19 @@ export function MarketProvider({ children }: { children: React.ReactNode }) {
         if (!cancelled && next !== market) {
           setMarket(next);
           document.cookie = `ikook_market=${next}; Path=/; Max-Age=${60 * 60 * 24 * 30}; SameSite=Lax`;
+          // mark as auto so future sessions know it wasn't an explicit user choice
+          document.cookie = `${MARKET_SRC_COOKIE}=auto; Path=/; Max-Age=${60 * 60 * 24 * 30}; SameSite=Lax`;
         }
       } catch {
         // ignore
       }
     }
-    // Only attempt refinement if currently GB (default) to avoid flicker after explicit user choice
-    if (market === "GB") {
+    // Only attempt refinement if currently GB (default) AND there isn't a user override cookie
+    const src = typeof document !== "undefined"
+      ? document.cookie.split("; ").find((r) => r.startsWith(`${MARKET_SRC_COOKIE}=`))?.split("=")[1]
+      : undefined;
+    const userOverrode = src === "user";
+    if (market === "GB" && !userOverrode) {
       refineFromIp();
     }
     return () => {

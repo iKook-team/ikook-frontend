@@ -98,6 +98,8 @@ interface BaseListingParams {
   page?: number;
   page_size?: number;
   search?: string;
+  market?: string;
+  city?: string;
   // Add other common filters as needed
 }
 

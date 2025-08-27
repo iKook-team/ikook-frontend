@@ -2,8 +2,8 @@
 
 import { FaStar } from "react-icons/fa";
 import { Card, CardBody, CardFooter } from "@heroui/react";
-import { getCurrencySymbol } from "@/lib/utils/currency";
-import { useAuthStore } from "@/lib/store/auth-store";
+import { useMarket } from "@/lib/market-context";
+import { getMarketConfig } from "@/lib/market-config";
 
 interface MenuItemProps {
   id: number;
@@ -32,8 +32,8 @@ export const MenuItem = ({
   cuisineTypes = [],
   menuType,
 }: MenuItemProps) => {
-  const { user } = useAuthStore();
-  const currencySymbol = getCurrencySymbol(user as any);
+  const { market } = useMarket();
+  const currencySymbol = getMarketConfig(market).currencySymbol;
   const avatarSrc =
     avatar ||
     "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";

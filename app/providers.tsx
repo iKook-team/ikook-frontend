@@ -10,6 +10,7 @@ import { Toaster } from "react-hot-toast";
 
 import { useAuthStore } from "@/lib/store/auth-store";
 import { MarketProvider } from "@/lib/market-context";
+import { useBookingResume } from "@/lib/booking-resume";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -49,6 +50,11 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function BookingResumeHandler({ children }: { children?: React.ReactNode }) {
+  useBookingResume();
+  return <>{children}</>;
+}
+
 export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
 
@@ -56,9 +62,22 @@ export function Providers({ children, themeProps }: ProvidersProps) {
     <HeroUIProvider navigate={router.push}>
       <NextThemesProvider {...themeProps}>
         <MarketProvider>
-          <AuthInitializer>{children}</AuthInitializer>
+          <AuthInitializer>
+            <BookingResumeHandler>
+              {children}
+            </BookingResumeHandler>
+          </AuthInitializer>
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: "#363636",
+                color: "#fff",
+              },
+            }}
+          />
         </MarketProvider>
-        <Toaster />
       </NextThemesProvider>
     </HeroUIProvider>
   );

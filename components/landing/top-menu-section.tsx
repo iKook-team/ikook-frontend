@@ -4,89 +4,9 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "../ui/button";
 import SectionHeader from "@/components/common/SectionHeader";
-
-const menuItems = [
-  {
-    id: 5,
-    image:
-      "https://api.builder.io/api/v1/image/assets/TEMP/059768176633180c26b1655ccae459080e41d727?width=690",
-    title: "Italian Pasta Feast",
-    chef: "Chef Marco Rossi",
-    location: "Toronto",
-    reviews: 178,
-    rating: 4,
-  },
-  {
-    id: 6,
-    image:
-      "https://api.builder.io/api/v1/image/assets/TEMP/d2f86ca79f9c2782acf5b4a80072eb85c67bb63c?width=690",
-    title: "Vegetarian Delight",
-    chef: "Chef Priya Patel",
-    location: "Vancouver",
-    reviews: 145,
-    rating: 5,
-  },
-  {
-    id: 7,
-    image:
-      "https://api.builder.io/api/v1/image/assets/TEMP/059768176633180c26b1655ccae459080e41d727?width=690",
-    title: "Steak & Potatoes",
-    chef: "Chef James Wilson",
-    location: "Calgary",
-    reviews: 201,
-    rating: 5,
-  },
-  {
-    id: 8,
-    image:
-      "https://api.builder.io/api/v1/image/assets/TEMP/d2f86ca79f9c2782acf5b4a80072eb85c67bb63c?width=690",
-    title: "Seafood Paella",
-    chef: "Chef Carlos Mendez",
-    location: "Montreal",
-    reviews: 167,
-    rating: 4,
-  },
-  {
-    id: 1,
-    image:
-      "https://api.builder.io/api/v1/image/assets/TEMP/059768176633180c26b1655ccae459080e41d727?width=690",
-    title: "Grilled Barbeque Dishes",
-    chef: "Chef Titilayo John",
-    location: "Toronto",
-    reviews: 132,
-    rating: 5,
-  },
-  {
-    id: 2,
-    image:
-      "https://api.builder.io/api/v1/image/assets/TEMP/d2f86ca79f9c2782acf5b4a80072eb85c67bb63c?width=690",
-    title: "Spicy Thai Curry",
-    chef: "Chef Michael Chen",
-    location: "Vancouver",
-    reviews: 98,
-    rating: 4,
-  },
-  {
-    id: 3,
-    image:
-      "https://api.builder.io/api/v1/image/assets/TEMP/059768176633180c26b1655ccae459080e41d727?width=690",
-    title: "Mediterranean Platter",
-    chef: "Chef Sophia Martinez",
-    location: "Montreal",
-    reviews: 156,
-    rating: 5,
-  },
-  {
-    id: 4,
-    image:
-      "https://api.builder.io/api/v1/image/assets/TEMP/d2f86ca79f9c2782acf5b4a80072eb85c67bb63c?width=690",
-    title: "Sushi Delight",
-    chef: "Chef Kenji Yamamoto",
-    location: "Calgary",
-    reviews: 210,
-    rating: 5,
-  },
-];
+import { useMenus, type Menu } from "@/hooks/useMenus";
+import { useMarket } from "@/lib/market-context";
+import { getMarketConfig } from "@/lib/market-config";
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -111,23 +31,44 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
-function MenuCard({ item }: { item: (typeof menuItems)[0] }) {
+function MenuCard({ menu }: { menu: Menu }) {
+  const { market } = useMarket();
+  const currencySymbol = getMarketConfig(market).currencySymbol;
+  const chefName = `${menu.chef.first_name} ${menu.chef.last_name}`;
+  const location = menu.chef.city || menu.chef.country || 'Unknown';
+  const rating = menu.chef.average_rating || 0;
+  const avatarUrl =
+    (menu as any)?.chef?.avatar ||
+    "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+  const imageUrl =
+    // Prefer new API shape: images[]
+    (menu as any)?.images?.[0]?.image ||
+    // Fallback to older shape: menu_images[]
+    (menu as any)?.menu_images?.[0]?.image ||
+    // Final fallback placeholder
+    "https://api.builder.io/api/v1/image/assets/TEMP/059768176633180c26b1655ccae459080e41d727?width=690";
+
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-sm">
       <div className="aspect-[4/3] overflow-hidden">
         <img
-          src={item.image}
-          alt={item.title}
+          src={imageUrl}
+          alt={menu.name}
           className="w-full h-full object-cover"
         />
       </div>
       <div className="p-4 space-y-2">
-        <h3 className="font-semibold text-lg text-[#323335]">{item.title}</h3>
+        <h3 className="font-semibold text-lg text-[#323335]">{menu.name}</h3>
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden border border-[#FCC01C]">
-            <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400" />
+          <div className="w-8 h-8 rounded-full overflow-hidden border border-[#FCC01C] bg-white">
+            <img
+              src={avatarUrl}
+              alt={`Chef ${chefName}`}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
           </div>
-          <span className="text-sm text-[#323335]">{item.chef}</span>
+          <span className="text-sm text-[#323335]">Chef {chefName}</span>
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-1">
@@ -143,12 +84,12 @@ function MenuCard({ item }: { item: (typeof menuItems)[0] }) {
                 fill="#FCC01C"
               />
             </svg>
-            <span className="text-xs text-[#323335]">{item.location}</span>
+            <span className="text-xs text-[#323335]">{location}</span>
           </div>
           <div className="flex items-center space-x-2">
-            <StarRating rating={item.rating} />
+            <StarRating rating={Math.round(rating)} />
             <span className="text-xs text-[#323335]">
-              ({item.reviews} Reviews)
+              {currencySymbol}{menu.price_per_person}pp
             </span>
           </div>
         </div>
@@ -159,10 +100,37 @@ function MenuCard({ item }: { item: (typeof menuItems)[0] }) {
 
 export default function TopMenuSection() {
   const router = useRouter();
+  const { menus, loading, error } = useMenus(8);
 
   const handleSeeMoreClick = () => {
     router.push("/explore");
   };
+
+  if (loading) {
+    return (
+      <section className="bg-white py-16 px-4 lg:px-24">
+        <div className="max-w-7xl mx-auto">
+          <SectionHeader title="Our Top Menu" />
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FCC01C]" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="bg-white py-16 px-4 lg:px-24">
+        <div className="max-w-7xl mx-auto">
+          <SectionHeader title="Our Top Menu" />
+          <div className="text-center py-12">
+            <p className="text-gray-500">Unable to load menus at this time.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="bg-white py-16 px-4 lg:px-24">
@@ -172,12 +140,12 @@ export default function TopMenuSection() {
 
         {/* Menu Items with Flex Layout */}
         <div className="flex flex-wrap justify-center gap-6">
-          {menuItems.map((item) => (
+          {menus.map((menu) => (
             <div
-              key={item.id}
+              key={menu.id}
               className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
             >
-              <MenuCard item={item} />
+              <MenuCard menu={menu} />
             </div>
           ))}
         </div>

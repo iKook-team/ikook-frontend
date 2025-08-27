@@ -12,9 +12,14 @@ export function TrustedOrganizationsSection() {
         <SectionHeader title="Trusted By" />
 
         <div className="mb-8">
-          <div className="mt-8 flex flex-row gap-8 lg:gap-0 lg:justify-between w-full">
+          <div className="mt-8 flex flex-row flex-wrap items-center justify-center gap-6 sm:gap-8 lg:gap-10 lg:justify-between w-full">
             {companies.map((company, index) => (
-              <img src={company} key={company} alt={index.toString()} className="h-8 md:h-12" />
+              <img
+                src={company}
+                key={company}
+                alt={index.toString()}
+                className="h-8 md:h-10 lg:h-12"
+              />
             ))}
           </div>
         </div>

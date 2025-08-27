@@ -6,6 +6,7 @@ import { StatusCard } from "./status-card";
 
 import { ChefCard } from "@/components/cart/chef-card";
 import { bookingsService } from "@/lib/api/bookings";
+import { useBookingGuard } from "@/lib/use-booking-guard";
 import { showToast } from "@/lib/utils/toast";
 import { useAuthStore } from "@/lib/store/auth-store";
 import {
@@ -237,52 +238,77 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
     }
   };
 
+  const { guardBookingAction } = useBookingGuard();
+
   const handleContinue = async () => {
     if (!message.trim()) return;
     setError(null);
     setIsSubmitting(true);
 
-    try {
-      const payload = buildPayload();
-      const formattedPayload = {
-        ...payload,
-        message: message.trim(),
-      } as any; // Temporary any to handle dynamic properties
+    const createBooking = async () => {
+      try {
+        const payload = buildPayload();
+        const formattedPayload = {
+          ...payload,
+          message: message.trim(),
+        } as any; // Temporary any to handle dynamic properties
 
-      // Only include preferred_cuisines if it's not a Chef at Home booking
-      const isChefAtHome =
-        menu?.menu_type === "Chef at Home" || menu?.type === "Chef at Home";
+        // Only include preferred_cuisines if it's not a Chef at Home booking
+        const isChefAtHome =
+          menu?.menu_type === "Chef at Home" || menu?.type === "Chef at Home";
 
-      if (!isChefAtHome && "preferred_cuisines" in payload) {
-        formattedPayload.preferred_cuisines = preferredCuisines || [];
+        if (!isChefAtHome && "preferred_cuisines" in payload) {
+          formattedPayload.preferred_cuisines = preferredCuisines || [];
+        }
+
+        const result = await bookingsService.createBooking(formattedPayload);
+
+        setBooking({
+          ...result.data,
+          menu_price_per_person: menu?.price_per_person || 0,
+          menu_name: menu?.name || "",
+        });
+
+        showToast.success("Booking created successfully!");
+        setMessage("");
+
+        if (isCustomBooking) {
+          // For custom bookings, show the status card
+          setBookingId(result.data.id);
+          setShowStatusCard(true);
+        } else {
+          // For regular bookings, use the normal next step
+          onNext({ message, bookingId: result.data.id });
+        }
+      } catch (err: any) {
+        setIsSubmitting(false);
+        showToast.error(
+          err?.response?.data?.message ||
+            "Failed to create booking. Please try again.",
+        );
       }
+    };
 
-      const result = await bookingsService.createBooking(formattedPayload);
-
-      setBooking({
-        ...result.data,
-        menu_price_per_person: menu?.price_per_person || 0,
-        menu_name: menu?.name || "",
-      });
-
-      showToast.success("Booking created successfully!");
-      setMessage("");
-
-      if (isCustomBooking) {
-        // For custom bookings, show the status card
-        setBookingId(result.data.id);
-        setShowStatusCard(true);
-      } else {
-        // For regular bookings, use the normal next step
-        onNext({ message, bookingId: result.data.id });
-      }
-    } catch (err: any) {
-      setIsSubmitting(false);
-      showToast.error(
-        err?.response?.data?.message ||
-          "Failed to create booking. Please try again.",
-      );
-    }
+    // Guard the booking creation with auth check
+    const serviceTypeForIntent =
+      (bookingData.service as string) || menu?.menu_type || menu?.type || "";
+    guardBookingAction(
+      {
+        type: menu ? 'menu' : 'service',
+        id: menu?.id?.toString() || serviceTypeForIntent || 'unknown',
+        selectedDate: bookingData.eventDate || bookingData.startDate,
+        selectedTime: bookingData.eventTime || bookingData.deliveryTime,
+        guests: bookingData.guests || bookingData.numOfPersons || 1,
+        notes: message.trim(),
+        pricing: {
+          basePrice: menu?.price_per_person || 0,
+          totalPrice: (menu?.price_per_person || 0) * (bookingData.guests || 1),
+          currency: 'USD'
+        },
+        returnUrl: window.location.pathname + window.location.search,
+      },
+      createBooking
+    );
   };
 
   // If this is a custom booking and we should show the status card

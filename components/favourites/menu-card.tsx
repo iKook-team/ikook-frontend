@@ -1,6 +1,6 @@
 import React from "react";
-
-import { getCurrencySymbol } from "@/lib/utils/currency";
+import { useMarket } from "@/lib/market-context";
+import { getMarketConfig } from "@/lib/market-config";
 
 interface MenuCardProps {
   title: string;
@@ -12,8 +12,8 @@ interface MenuCardProps {
   reviewCount: string;
   imageUrl: string;
   chefImageUrl: string;
-  userCurrency?: string;
-  userCountry?: string;
+  userCurrency?: string; // deprecated
+  userCountry?: string; // deprecated
 }
 
 export const MenuCard: React.FC<MenuCardProps> = ({
@@ -29,11 +29,9 @@ export const MenuCard: React.FC<MenuCardProps> = ({
   userCurrency,
   userCountry,
 }) => {
-  // Get the appropriate currency symbol based on user's currency or country
-  const currencySymbol = getCurrencySymbol({
-    currency: userCurrency,
-    country: userCountry,
-  });
+  // Use market-based currency symbol
+  const { market } = useMarket();
+  const currencySymbol = getMarketConfig(market).currencySymbol;
 
   // Format the price with the currency symbol
   const formattedPrice = (price: string): string => {

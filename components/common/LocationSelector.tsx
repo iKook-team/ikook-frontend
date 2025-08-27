@@ -59,6 +59,8 @@ export const LocationSelector: React.FC = () => {
     setMarket(country.code as MarketCode);
     // Persist cookie for middleware/client reads
     document.cookie = `ikook_market=${country.code}; Path=/; Max-Age=${60 * 60 * 24 * 30}; SameSite=Lax`;
+    // Mark as user-selected to stop auto IP refinement from overriding
+    document.cookie = `ikook_market_src=user; Path=/; Max-Age=${60 * 60 * 24 * 30}; SameSite=Lax`;
   };
 
   return (

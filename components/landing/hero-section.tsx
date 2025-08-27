@@ -1,6 +1,8 @@
 "use client";
 
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useMarket } from "@/lib/market-context";
 
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -8,6 +10,88 @@ import TextWithHighlight from "@/components/common/TextWithHighlight";
 
 export default function HeroSection() {
   const router = useRouter();
+  const { market } = useMarket(); // 'NG' | 'ZA' | 'GB'
+
+  // Valid locations per market (mirror of backend City TextChoices)
+  const NG_LOCATIONS = [
+    "Abia","Adamawa","Akwa Ibom","Anambra","Bauchi","Bayelsa","Benue","Borno",
+    "Cross River","Delta","Ebonyi","Edo","Ekiti","Enugu","FCT","Gombe","Imo",
+    "Jigawa","Kaduna","Kano","Katsina","Kebbi","Kogi","Kwara","Lagos","Nasarawa",
+    "Niger","Ogun","Ondo","Oyo","Plateau","Rivers","Sokoto","Taraba","Yobe","Zamfara",
+  ];
+  const ZA_LOCATIONS = [
+    "Eastern Cape","Free State","Gauteng","Kwazulu Natal","Limpopo","Mpumalanga",
+    "North West","Northen Cape","Western Cape",
+  ];
+  const GB_LOCATIONS = [
+    "England","Scotland","Wales","Northern Ireland",
+  ];
+
+  const allLocations = useMemo(() => {
+    if (market === "NG") return NG_LOCATIONS;
+    if (market === "ZA") return ZA_LOCATIONS;
+    return GB_LOCATIONS; // default GB
+  }, [market]);
+
+  const [location, setLocation] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [filtered, setFiltered] = useState<string[]>(allLocations);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const dateRef = useRef<HTMLInputElement | null>(null);
+  const [eventDate, setEventDate] = useState<string>("");
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (!dropdownRef.current) return;
+      if (!dropdownRef.current.contains(e.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  // Update list when market changes, and clear invalid selection
+  useEffect(() => {
+    setFiltered(allLocations);
+    if (location && !allLocations.includes(location)) {
+      setLocation("");
+    }
+  }, [allLocations]);
+
+  const onFocusLocation = () => {
+    setFiltered(allLocations);
+    setShowDropdown(true);
+  };
+
+  const onChangeLocation = (val: string) => {
+    setLocation(val);
+    const v = val.trim().toLowerCase();
+    if (!v) {
+      setFiltered(allLocations);
+    } else {
+      setFiltered(
+        allLocations.filter((c) => c.toLowerCase().includes(v))
+      );
+    }
+    setShowDropdown(true);
+  };
+
+  const selectLocation = (val: string) => {
+    setLocation(val);
+    setShowDropdown(false);
+  };
+
+  const onSearch = () => {
+    const city = location.trim();
+    try {
+      if (typeof window !== "undefined") {
+        const payload = { city: city || undefined, date: eventDate || undefined, market };
+        window.sessionStorage.setItem("ikook_explore_pref", JSON.stringify(payload));
+      }
+    } catch {}
+    router.push("/explore");
+  };
 
   return (
     <section className="relative bg-white py-16 px-4 lg:px-24 overflow-hidden">
@@ -32,37 +116,102 @@ export default function HeroSection() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             {/* Location Input */}
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
               <div className="border border-gray-200 rounded-lg p-4 focus-within:outline-none focus-within:ring-0">
                 <label className="block text-sm font-semibold text-[#323335] opacity-70 mb-1">
                   Location
                 </label>
                 <Input
                   type="text"
-                  placeholder="City, Country"
+                  placeholder="City"
+                  value={location}
+                  onFocus={onFocusLocation}
+                  onChange={(e) => onChangeLocation(e.target.value)}
                   className="border-none p-0 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none focus:outline-none"
                 />
               </div>
+
+              {showDropdown && (
+                <div className="absolute z-20 mt-2 w-full max-h-64 overflow-auto bg-white border border-gray-200 rounded-md shadow-lg">
+                  {filtered.length === 0 && (
+                    <div className="px-3 py-2 text-sm text-neutral-500">No matches</div>
+                  )}
+                  {filtered.map((item) => (
+                    <button
+                      key={item}
+                      type="button"
+                      onClick={() => selectLocation(item)}
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-amber-50 focus:bg-amber-50"
+                    >
+                      {item}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Event Date Input */}
-            <div className="border border-gray-200 rounded-lg p-4 focus-within:outline-none focus-within:ring-0">
+            <div className="border border-gray-200 rounded-lg p-4 focus-within:outline-none focus-within:ring-0 relative">
               <label className="block text-sm font-semibold text-[#323335] opacity-70 mb-1">
                 Event Date
               </label>
-              <Input
+              <input
                 type="date"
                 placeholder="When is your Event"
                 min={new Date().toISOString().split("T")[0]}
-                className="border-none p-0 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none focus:outline-none"
+                ref={dateRef}
+                value={eventDate}
+                onChange={(e) => setEventDate(e.target.value)}
+                className="date-no-native-icon w-full border-none p-0 pr-10 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none focus:outline-none"
               />
+              {/* End icon button */}
+              <button
+                type="button"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-[#323335]"
+                aria-label="Open date picker"
+                onClick={() => {
+                  const el = dateRef.current;
+                  if (!el) return;
+                  // Prefer native showPicker if available
+                  if ("showPicker" in el && typeof (el as any).showPicker === "function") {
+                    (el as any).showPicker();
+                  } else {
+                    el.focus();
+                    el.click();
+                  }
+                }}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M7 2V6M17 2V6M3 10H21M5 6H19C20.1046 6 21 6.89543 21 8V20C21 21.1046 20.1046 22 19 22H5C3.89543 22 3 21.1046 3 20V8C3 6.89543 3.89543 6 5 6Z"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
             </div>
+            {/* Hide native date picker indicator for WebKit/Chromium */}
+            <style jsx>{`
+              input.date-no-native-icon::-webkit-calendar-picker-indicator {
+                display: none;
+                -webkit-appearance: none;
+              }
+            `}</style>
           </div>
 
           {/* Search Button */}
           <div className="flex justify-end">
             <Button
-              onClick={() => router.push("/explore")}
+              onClick={onSearch}
               className="bg-[#323335] hover:bg-[#323335]/90 text-white px-8 py-4 text-xl font-medium rounded-md flex items-center space-x-3"
             >
               <svg

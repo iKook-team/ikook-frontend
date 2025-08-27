@@ -103,7 +103,7 @@ export const Navigation: React.FC = () => {
             <nav className="hidden lg:flex items-center space-x-8">
               {showExplore && (
                 <Link
-                  href="#"
+                  href="/explore"
                   className="text-ikook-secondary hover:text-ikook-primary transition-colors font-medium"
                 >
                   Explore Services
@@ -116,10 +116,7 @@ export const Navigation: React.FC = () => {
                 How it Works
               </Link>
               <div className="flex items-center space-x-1">
-                <Link
-                  href="#"
-                  className="text-ikook-secondary hover:text-ikook-primary transition-colors font-medium"
-                >
+                <Link href="/" className="text-gray-700 hover:text-ikook-primary font-medium">
                   Gift
                 </Link>
                 <Gift className="w-5 h-5 text-[#FCC01C]" />
