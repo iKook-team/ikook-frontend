@@ -147,8 +147,11 @@ export function ChatArea({
       },
     };
 
-    // Add the optimistic message
-    addLocalMessage(optimisticMessage);
+    // Add optimistic message only if WS is not connected; otherwise rely on WS echo
+    const addedOptimistic = !isConnected;
+    if (addedOptimistic) {
+      addLocalMessage(optimisticMessage);
+    }
     setNewMessage("");
     setSelectedImage(null);
     setImagePreview(null);
@@ -176,14 +179,22 @@ export function ChatArea({
         throw new Error("No data received from server");
       }
 
-      // Replace the optimistic message with the actual server response
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === parseInt(tempId)
-            ? { ...response.data.data, is_read: true }
-            : msg,
-        ),
-      );
+      if (addedOptimistic) {
+        // Reconcile optimistic vs server/WS echo to avoid duplicates
+        setMessages((prev) => {
+          const serverMsg = { ...response.data.data, is_read: true } as Message;
+          const tempIdNum = parseInt(tempId);
+          const serverExists = prev.some((m) => m.id === serverMsg.id);
+
+          if (serverExists) {
+            // WS likely already appended the server message; remove optimistic
+            return prev.filter((m) => m.id !== tempIdNum);
+          }
+
+          // Replace optimistic placeholder with server message
+          return prev.map((m) => (m.id === tempIdNum ? serverMsg : m));
+        });
+      }
     } catch (error) {
       console.error("Failed to send message:", error);
       // Remove the optimistic message on error

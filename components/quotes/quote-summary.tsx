@@ -1,7 +1,22 @@
 "use client";
 import * as React from "react";
+import { useMarket } from "@/lib/market-context";
+import { getMarketConfig } from "@/lib/market-config";
 
-export const QuoteSummary = () => {
+type QuoteSummaryProps = {
+  total?: number; // numeric total in base currency
+};
+
+export const QuoteSummary: React.FC<QuoteSummaryProps> = ({ total }) => {
+  const { market } = useMarket();
+  const cfg = React.useMemo(() => getMarketConfig(market), [market]);
+  const formattedTotal = React.useMemo(() => {
+    const t = typeof total === "number" && !Number.isNaN(total) ? total : 0;
+    return `${cfg.currencySymbol}${t.toLocaleString(cfg.locale, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, [cfg, total]);
   return (
     <aside className="px-8 pt-10 pb-20 w-full bg-white rounded-2xl border border-solid shadow-2xl border-neutral-200 max-md:px-5 max-md:mt-7">
       <div className="flex flex-col w-full">
@@ -54,20 +69,11 @@ export const QuoteSummary = () => {
             />
             <div className="flex gap-9 items-start mt-2">
               <span className="text-zinc-800 w-[209px]">TOTAL</span>
-              <span className="text-right text-zinc-800">£1,435</span>
+              <span className="text-right text-zinc-800">{formattedTotal}</span>
             </div>
           </div>
         </div>
-        <button className="mt-7 w-full text-base font-semibold max-w-[310px] text-slate-700">
-          <div className="flex overflow-hidden gap-2 justify-center items-center px-5 py-2.5 w-full bg-white rounded-lg border border-solid shadow-sm border-stone-300">
-            <span className="self-stretch my-auto text-slate-700">
-              Edit quote
-            </span>
-          </div>
-        </button>
-        <button className="flex overflow-hidden gap-2 justify-center items-center px-10 py-3 mt-7 max-w-full text-base font-semibold text-white bg-amber-400 rounded-lg border border-amber-400 border-solid shadow-sm w-[310px] max-md:px-5">
-          <span className="self-stretch my-auto text-white">Send quote</span>
-        </button>
+        {/* Action buttons permanently removed */}
       </div>
     </aside>
   );

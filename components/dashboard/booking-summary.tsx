@@ -112,7 +112,13 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
               </button>
             )}
           {userType === "chef" && isCustom && isEnquiry && (
-            <button className="overflow-hidden gap-2 self-stretch px-5 py-2.5 mt-3 w-full text-white bg-black rounded-lg border border-solid shadow-sm border-[color:var(--Black,#020101)]">
+            <button
+              className="overflow-hidden gap-2 self-stretch px-5 py-2.5 mt-3 w-full text-white bg-black rounded-lg border border-solid shadow-sm border-[color:var(--Black,#020101)] hover:bg-gray-900 transition-colors"
+              onClick={() => {
+                if (!booking?.id) return;
+                router.push(`/quotes/create?bookingId=${booking.id}`);
+              }}
+            >
               Send Quote
             </button>
           )}

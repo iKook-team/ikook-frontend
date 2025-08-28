@@ -81,7 +81,7 @@ export interface SendMessageData {
 export const chatService = {
   async createChat(userId: number): Promise<Chat> {
     try {
-      const response = await apiClient.post<ApiResponse<Chat>>("/chats/create/", {
+      const response = await apiClient.post<ApiResponse<Chat>>("/chats/", {
         user_id: userId,
       });
 

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useMarket } from "@/lib/market-context";
+import { getMarketConfig } from "@/lib/market-config";
 
 import { FormField } from "../ui/form-field";
 import { PriceInput } from "../ui/price-input";
@@ -29,6 +31,9 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
   onAddItem,
   onRemoveItem,
 }) => {
+  const { market } = useMarket();
+  const cfg = getMarketConfig(market);
+  const currencySymbol = cfg.currencySymbol;
   const [itemInput, setItemInput] = useState({
     name: "",
     description: "",
@@ -79,6 +84,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
               placeholder="Enter price"
               value={itemInput.price}
               onChange={handlePriceChange}
+              currency={currencySymbol}
               className="max-w-full w-full"
             />
           </div>
@@ -109,7 +115,8 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
                         <span className="font-medium">{item.name}</span>
                         {item.price && (
                           <span className="ml-2 font-medium">
-                            ${item.price}
+                            {currencySymbol}
+                            {item.price}
                           </span>
                         )}
                       </div>

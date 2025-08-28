@@ -1,7 +1,15 @@
 "use client";
 import * as React from "react";
 
-interface MenuItem {
+export type QuoteCourse = "starter" | "main" | "dessert" | string;
+
+export type QuoteItem = {
+  id: string | number;
+  course: QuoteCourse;
+  name: string;
+};
+
+interface MenuItemState {
   id: string;
   name: string;
   checked: boolean;
@@ -9,7 +17,7 @@ interface MenuItem {
 
 interface MenuSectionProps {
   title: string;
-  items: MenuItem[];
+  items: MenuItemState[];
   onItemChange: (itemId: string, checked: boolean) => void;
 }
 
@@ -50,38 +58,36 @@ const MenuSection: React.FC<MenuSectionProps> = ({
   );
 };
 
-export const MenuSelection = () => {
-  const [menuItems, setMenuItems] = React.useState({
-    starters: [
-      {
-        id: "starter1",
-        name: "Mediterranean Chicken Kebab with Garlic Sauce",
+type SectionsState = {
+  starters: MenuItemState[];
+  mains: MenuItemState[];
+  desserts: MenuItemState[];
+  others: MenuItemState[];
+};
+
+export const MenuSelection: React.FC<{ items?: QuoteItem[] }> = ({ items }) => {
+  const initial: SectionsState = React.useMemo(() => {
+    const s: SectionsState = { starters: [], mains: [], desserts: [], others: [] };
+    (items || []).forEach((it, idx) => {
+      const entry: MenuItemState = {
+        id: String(it.id ?? idx),
+        name: it.name,
         checked: true,
-      },
-      {
-        id: "starter2",
-        name: "Roasted Red Pepper Greek Yoghurt Hummus",
-        checked: true,
-      },
-    ],
-    mains: [
-      {
-        id: "main1",
-        name: "Mackerel with Lemon Olive Oil and Tomatoes",
-        checked: true,
-      },
-    ],
-    desserts: [
-      {
-        id: "dessert1",
-        name: "Mackerel with Lemon Olive Oil and Tomatoes",
-        checked: true,
-      },
-    ],
-  });
+      };
+      const c = (it.course || "").toLowerCase();
+      if (c === "starter") s.starters.push(entry);
+      else if (c === "main" || c === "mains") s.mains.push(entry);
+      else if (c === "dessert" || c === "desert") s.desserts.push(entry);
+      else s.others.push(entry);
+    });
+    return s;
+  }, [items]);
+
+  const [menuItems, setMenuItems] = React.useState<SectionsState>(initial);
+  React.useEffect(() => setMenuItems(initial), [initial]);
 
   const handleItemChange = (
-    section: keyof typeof menuItems,
+    section: keyof SectionsState,
     itemId: string,
     checked: boolean,
   ) => {
@@ -93,29 +99,23 @@ export const MenuSelection = () => {
     }));
   };
 
+  const sections: { key: keyof SectionsState; title: string; items: MenuItemState[] }[] = [
+    { key: "starters" as const, title: `Starter x${menuItems.starters.length}`, items: menuItems.starters },
+    { key: "mains" as const, title: `Main x${menuItems.mains.length}`, items: menuItems.mains },
+    { key: "desserts" as const, title: `Dessert x${menuItems.desserts.length}`, items: menuItems.desserts },
+    { key: "others" as const, title: menuItems.others.length ? `Other x${menuItems.others.length}` : "", items: menuItems.others },
+  ].filter((s) => s.items.length > 0 && s.title);
+
   return (
     <section className="flex flex-col items-start px-2.5 pt-2.5 pb-6 mt-6 rounded-md bg-stone-50 min-h-[335px] max-md:max-w-full">
-      <MenuSection
-        title="Starter x2"
-        items={menuItems.starters}
-        onItemChange={(itemId, checked) =>
-          handleItemChange("starters", itemId, checked)
-        }
-      />
-      <MenuSection
-        title="Main x1"
-        items={menuItems.mains}
-        onItemChange={(itemId, checked) =>
-          handleItemChange("mains", itemId, checked)
-        }
-      />
-      <MenuSection
-        title="Desert x1"
-        items={menuItems.desserts}
-        onItemChange={(itemId, checked) =>
-          handleItemChange("desserts", itemId, checked)
-        }
-      />
+      {sections.map((sec) => (
+        <MenuSection
+          key={sec.key}
+          title={sec.title}
+          items={sec.items}
+          onItemChange={(itemId, checked) => handleItemChange(sec.key, itemId, checked)}
+        />
+      ))}
     </section>
   );
 };

@@ -186,7 +186,7 @@ export const ChefCard: React.FC<ChefCardProps> = ({
   const [liked, setLiked] = React.useState<boolean>(!!is_favourite);
   const [favouriteId, setFavouriteId] = React.useState<number | null>(null);
   return (
-    <article className="w-[310px] h-[331px] shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] relative max-md:w-[280px] max-md:h-[300px] max-sm:w-[250px] max-sm:h-[280px] bg-white rounded-[15px] border border-[#E7E7E7] overflow-hidden">
+    <article className="w-full h-80 shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] relative bg-white rounded-[15px] border border-[#E7E7E7] overflow-hidden">
       {/* Background image */}
       <div 
         className="absolute top-0 left-0 right-0 h-[220px] bg-cover bg-center bg-no-repeat rounded-t-[15px]"

@@ -22,11 +22,13 @@ const formatTime = (dateString: string): string => {
 interface ConversationListProps {
   onChatSelect: (chat: Chat) => void;
   activeChatId: number | null;
+  initialChatId?: number | null;
 }
 
 export function ConversationList({
   onChatSelect,
   activeChatId,
+  initialChatId,
 }: ConversationListProps) {
   const [chats, setChats] = React.useState<Chat[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -50,9 +52,20 @@ export function ConversationList({
 
         setChats(chatResults);
 
-        // Auto-select first chat if available and no chat is selected
+        // Auto-select logic:
+        // 1) If a specific initialChatId is provided and exists, select it.
+        // 2) Otherwise, select first chat if none is active.
         if (chatResults.length > 0 && !activeChatId) {
-          onChatSelect(chatResults[0]);
+          if (initialChatId) {
+            const match = chatResults.find((c) => c.id === initialChatId);
+            if (match) {
+              onChatSelect(match);
+            } else {
+              onChatSelect(chatResults[0]);
+            }
+          } else {
+            onChatSelect(chatResults[0]);
+          }
         }
       } catch (err) {
         if (isMounted) {
@@ -70,7 +83,7 @@ export function ConversationList({
     return () => {
       isMounted = false;
     };
-  }, [activeChatId, onChatSelect]);
+  }, [activeChatId, onChatSelect, initialChatId]);
 
   // Log rendering state
   React.useEffect(() => {

@@ -24,6 +24,13 @@ export interface CreateQuoteInput {
 }
 
 export const quotesService = {
+  async listQuotes(params?: Record<string, any>) {
+    const response = await apiClient.get("/quotes/", { params });
+
+    // Support both {results: [...]} and {data: {results: [...]}}
+    const results = response.data?.data?.results || response.data?.results || response.data;
+    return Array.isArray(results) ? results : [];
+  },
   async getQuoteById(id: string | number) {
     const response = await apiClient.get(`/quotes/${id}/`);
 
@@ -59,7 +66,7 @@ export const quotesService = {
 
   async createQuote(data: CreateQuoteInput) {
     const response = await apiClient.post("/quotes/", data);
-
-    return response.data;
+    // Some backends wrap payload in {data}
+    return response.data?.data || response.data;
   },
 };

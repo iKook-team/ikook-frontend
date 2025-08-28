@@ -123,18 +123,19 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
               onClick={async () => {
                 try {
                   setIsCreatingChat(true);
-                  // Get the other user's ID (if host is viewing, use chef ID and vice versa)
+                  // Determine the other user's ID
                   const otherUserId = booking.chef_id || booking.host_id;
 
                   if (!otherUserId) {
                     throw new Error("Unable to determine chat participant");
                   }
 
-                  // Create or get existing chat
-                  const chat = await chatService.getOrCreateChat(otherUserId);
+                  // Find or create the chat
+                  const chat = await chatService.getOrCreateChat(Number(otherUserId));
 
-                  // Navigate to the chat
-                  router.push(`/chat`);
+                  // Navigate to the chat and auto-open the conversation
+                  const back = encodeURIComponent(`/dashboard/booking-details?id=${booking.id}`);
+                  router.push(`/chat?chatId=${chat.id}&back=${back}`);
                 } catch (error) {
                   handleApiError(error, "Failed to start chat");
                 } finally {

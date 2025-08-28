@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import BackButton from "@/components/common/BackButton";
 import { useSearchParams } from "next/navigation";
 
@@ -49,7 +50,10 @@ import {
 // Ensure React is in scope for JSX
 
 export default function MessagingPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
+  const chatIdParam = searchParams?.get("chatId");
+  const initialChatId = chatIdParam ? Number(chatIdParam) : null;
   // Determine a context-aware back href
   const backHref = useMemo(() => {
     const qp = searchParams?.get("back");
@@ -198,6 +202,21 @@ export default function MessagingPage() {
               variant={isButtonDisabled ? "outline" : "primary"}
               disabled={isButtonDisabled}
               onClick={() => {
+                // If chef and no existing quote, go to Create Quote page
+                if (isChef && !quote) {
+                  const bookingId = activeChat?.last_booking?.id;
+                  const path = bookingId
+                    ? `/quotes/create?bookingId=${bookingId}`
+                    : "/quotes/create";
+                  router.push(path);
+                  return;
+                }
+                // If host and a quote exists, go to the quote details page
+                if (!isChef && quote?.id) {
+                  router.push(`/quotes/${quote.id}`);
+                  return;
+                }
+                // Otherwise, open the drawer (view or pay quote flows)
                 setIsDrawerOpen(true);
                 console.log("Quote button clicked", { quote });
               }}
@@ -215,6 +234,7 @@ export default function MessagingPage() {
           <ConversationList
             onChatSelect={handleChatSelect}
             activeChatId={activeChat?.id || null}
+            initialChatId={Number.isFinite(initialChatId as number) ? (initialChatId as number) : undefined}
           />
         </div>
 
