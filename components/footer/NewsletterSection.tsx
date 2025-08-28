@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { newsletterService } from "@/lib/api/newsletter";
+import { showToast, handleApiError } from "@/lib/utils/toast";
 
 interface NewsletterFormData {
   name: string;
@@ -28,8 +30,8 @@ export const NewsletterSection: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name.trim() || !formData.email.trim()) {
-      setMessage("Please fill in all fields");
+    if (!formData.email.trim()) {
+      setMessage("Please enter your email");
 
       return;
     }
@@ -44,12 +46,14 @@ export const NewsletterSection: React.FC = () => {
     setMessage("");
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setMessage("Thank you for subscribing!");
+      const res = await newsletterService.subscribe({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+      });
+      showToast.success("You have subscribed to our newsletter.");
       setFormData({ name: "", email: "" });
     } catch (error) {
-      setMessage("Something went wrong. Please try again.");
+      handleApiError(error, "Failed to subscribe to newsletter");
     } finally {
       setIsSubmitting(false);
     }
@@ -117,9 +121,7 @@ export const NewsletterSection: React.FC = () => {
         {message && (
           <div
             id="newsletter-message"
-            className={`w-full text-sm mt-2 ${
-              message.includes("Thank you") ? "text-green-600" : "text-red-600"
-            }`}
+            className={`w-full text-sm mt-2 text-red-600`}
             role="status"
             aria-live="polite"
           >
