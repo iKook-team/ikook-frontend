@@ -23,12 +23,12 @@ export const CustomDetailsForm: React.FC<CustomDetailsFormProps> = ({
   booking,
 }) => {
   // Map booking fields directly to content
-  const budget = booking?.budget ? booking.budget : "-";
+  const hasBudget = booking?.budget !== null && booking?.budget !== undefined;
   const isFlexible = booking?.is_flexible ?? false;
   const preferredCuisines = booking?.preferred_cuisines || [];
   const eventType = booking?.event_type ? [booking.event_type] : [];
   const dietaryRestrictions = booking?.dietary_restrictions || [];
-  const allergiesDetails = booking?.allergies_details || "-";
+  const allergiesDetails = booking?.dietary_restrictions_details || "-";
   const message = booking?.message || "-";
 
   const cuisineOptions = preferredCuisines;
@@ -37,28 +37,36 @@ export const CustomDetailsForm: React.FC<CustomDetailsFormProps> = ({
 
   return (
     <div className="max-w-none flex w-[489px] flex-col items-start gap-6 mx-auto max-md:max-w-[489px] max-md:w-full max-sm:max-w-screen-sm max-sm:w-full max-sm:box-border max-sm:px-4 max-sm:py-0">
-      <BudgetCard amount={budget} isFlexible={isFlexible} />
+      {hasBudget && (
+        <BudgetCard amount={String(booking.budget)} isFlexible={isFlexible} />
+      )}
 
-      <SectionWithTags
-        title="Preferred Cuisines"
-        tags={cuisineOptions}
-        selectedTags={cuisineOptions}
-        multiSelect={true}
-      />
+      {Array.isArray(cuisineOptions) && cuisineOptions.length > 0 && (
+        <SectionWithTags
+          title="Preferred Cuisines"
+          tags={cuisineOptions}
+          selectedTags={cuisineOptions}
+          multiSelect={true}
+        />
+      )}
 
-      <SectionWithTags
-        title="Event type"
-        tags={eventTypeOptions}
-        selectedTags={eventTypeOptions}
-        multiSelect={false}
-      />
+      {Array.isArray(eventTypeOptions) && eventTypeOptions.length > 0 && (
+        <SectionWithTags
+          title="Event type"
+          tags={eventTypeOptions}
+          selectedTags={eventTypeOptions}
+          multiSelect={false}
+        />
+      )}
 
-      <SectionWithTags
-        title="Dietary restrictions"
-        tags={dietaryOptions}
-        selectedTags={dietaryOptions}
-        multiSelect={true}
-      />
+      {Array.isArray(dietaryOptions) && dietaryOptions.length > 0 && (
+        <SectionWithTags
+          title="Dietary restrictions"
+          tags={dietaryOptions}
+          selectedTags={dietaryOptions}
+          multiSelect={true}
+        />
+      )}
 
       <TextSection
         title="Allergies details"

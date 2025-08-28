@@ -1,4 +1,6 @@
 import React from "react";
+import { useMarket } from "@/lib/market-context";
+import { getMarketConfig } from "@/lib/market-config";
 
 interface BudgetCardProps {
   amount: string;
@@ -8,9 +10,17 @@ interface BudgetCardProps {
 
 export const BudgetCard: React.FC<BudgetCardProps> = ({
   amount,
-  currency = "£",
+  currency,
   isFlexible = true,
 }) => {
+  const { market } = useMarket();
+  const marketCfg = getMarketConfig(market);
+  const displayCurrency = currency ?? marketCfg.currencySymbol;
+  const formattedAmount = (() => {
+    const n = Number(amount);
+    if (Number.isFinite(n)) return n.toLocaleString(marketCfg.locale);
+    return amount;
+  })();
   return (
     <section className="flex flex-col items-start gap-2.5 rounded w-full box-border bg-[#FFFCF5] p-2.5 max-md:w-full max-sm:p-3">
       <div className="flex items-center justify-between w-full max-md:flex-col max-md:items-start max-md:gap-3 max-sm:gap-4">
@@ -66,8 +76,8 @@ export const BudgetCard: React.FC<BudgetCardProps> = ({
               Host budget
             </label>
             <div className="text-[#323335] text-[23px] font-semibold max-sm:text-xl">
-              {currency}
-              {amount}
+              {displayCurrency}
+              {formattedAmount}
             </div>
           </div>
         </div>

@@ -44,6 +44,19 @@ export const authService = {
     return response.data;
   },
 
+  // Verify identity
+  verifyIdentity: async (payload: {
+    email: string;
+    identity_type: "NIN" | "BVN" | "SAID" | "PASSPORT";
+    identity_number: string;
+  }) => {
+    const response = await apiClient.post(`/users/auth/verify/`, {
+      action: "verify_identity",
+      ...payload,
+    });
+    return response.data;
+  },
+
   // Send OTP to email
   sendOtp: async (email: string): Promise<boolean> => {
     try {

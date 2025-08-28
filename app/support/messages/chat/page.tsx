@@ -10,6 +10,7 @@ import { useSupportTicketWebSocket } from "@/hooks/useSupportTicketWebSocket";
 import { supportsService, type TicketMessageItem } from "@/lib/api/supports";
 import { getToken } from "@/src/lib/auth";
 import { useAuthStore } from "@/lib/store/auth-store";
+import BackButton from "@/components/common/BackButton";
 
 function MessagesInterface() {
   const router = useRouter();
@@ -115,6 +116,9 @@ function MessagesInterface() {
   return (
     <main className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="flex max-w-[655px] mx-auto flex-col items-stretch">
+        <div className="mb-4">
+          <BackButton fallback="/support" />
+        </div>
         <div className="relative h-[721px] w-full max-md:w-full max-md:h-auto max-md:min-h-[721px] max-sm:box-border max-sm:p-4">
           <h1 className="absolute top-0 left-0 h-8 text-2xl font-semibold leading-8 text-black w-[123px] max-sm:text-xl max-sm:leading-7">
             Messages

@@ -23,8 +23,8 @@ export function DocumentNotification({
   }
 
   const handleUploadClick = () => {
-    // Always navigate to document verification page
-    router.push("/document-verification");
+    // Navigate to new verification page
+    router.push("/verification");
   };
 
   return (

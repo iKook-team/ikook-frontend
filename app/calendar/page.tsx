@@ -6,6 +6,7 @@ import CalendarControls from "@/components/calendar/calendar-controls";
 import BookingDetails from "@/components/calendar/booking-details";
 import SetAvailabilityModal from "@/components/calendar/set-availability-modals";
 import { getWeekDates, isSameDay } from "@/lib/date-utils";
+import BackButton from "@/components/common/BackButton";
 
 interface BookingEvent {
   id: string;
@@ -148,7 +149,10 @@ export default function CalendarPage() {
       <header className="bg-white shadow-sm">
         <div className="px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="flex flex-col justify-between gap-4 md:items-center md:flex-row">
-            <h1 className="text-2xl font-bold text-gray-900">Calendar</h1>
+            <div className="flex items-center gap-3">
+              <BackButton fallback="/dashboard" />
+              <h1 className="text-2xl font-bold text-gray-900">Calendar</h1>
+            </div>
             <div className="flex items-center space-x-4">
               <CalendarControls
                 currentDate={currentDate}

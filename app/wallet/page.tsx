@@ -9,6 +9,7 @@ import { RedeemVoucherModal } from "@/components/wallet/redeem-voucher-modal";
 import { AddMoneyModal } from "@/components/wallet/add-money-modal";
 import { paymentsService } from "@/lib/api/payments";
 import { showToast } from "@/lib/utils/toast";
+import BackButton from "@/components/common/BackButton";
 
 interface Transaction {
   id: string | number;
@@ -154,6 +155,9 @@ const Index: React.FC = () => {
   return (
     <div className="w-full min-h-screen relative bg-[#FBFBFB] flex justify-center px-2 sm:px-4">
       <main className="w-full max-w-4xl flex flex-col items-stretch py-4 sm:py-8 px-2 sm:px-4">
+        <div className="mb-4">
+          <BackButton fallback="/dashboard" />
+        </div>
         <h1 className="text-black text-xl sm:text-2xl font-semibold leading-none mb-4 sm:mb-6">
           Wallet
         </h1>

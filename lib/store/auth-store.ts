@@ -19,6 +19,7 @@ interface User {
   bio?: string;
   date_of_birth?: string;
   document_verified?: boolean;
+  identity_verified?: boolean;
   culinary_certificate?: string | null;
   currency?: string;
   country?: string;

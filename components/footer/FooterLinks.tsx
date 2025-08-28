@@ -30,13 +30,11 @@ export const FooterLinks: React.FC<FooterLinksProps> = ({ className = "" }) => {
         "About us",
         "How it works",
         "FAQs",
-        "Privacy Policy",
-        "Terms & Condition",
       ],
     },
     {
-      title: "iKooK Chef in",
-      links: ["United Kingdom", "Nigeria", "South Africa"],
+      title: "iKooK Legal",
+      links: ["Privacy Policy", "Terms & Condition"],
     },
     {
       isContact: true,
@@ -82,14 +80,6 @@ export const FooterLinks: React.FC<FooterLinksProps> = ({ className = "" }) => {
                     className="hover:text-black transition-colors block"
                   >
                     team@ikook.co.uk
-                  </a>
-                </div>
-                <div>
-                  <a
-                    href="/support"
-                    className="hover:text-black transition-colors block"
-                  >
-                    Support
                   </a>
                 </div>
                 <div className="mt-6">

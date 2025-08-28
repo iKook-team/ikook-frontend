@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
+import BackButton from "@/components/common/BackButton";
+import { useSearchParams } from "next/navigation";
 
 interface MenuItemInput {
   name: string;
@@ -47,6 +49,34 @@ import {
 // Ensure React is in scope for JSX
 
 export default function MessagingPage() {
+  const searchParams = useSearchParams();
+  // Determine a context-aware back href
+  const backHref = useMemo(() => {
+    const qp = searchParams?.get("back");
+    if (qp) {
+      try {
+        const url = new URL(qp, typeof window !== "undefined" ? window.location.origin : "http://localhost");
+        // Only allow same-origin navigations for safety
+        if (typeof window !== "undefined" && url.origin === window.location.origin) return url.pathname + url.search + url.hash;
+      } catch (_) {
+        // ignore malformed values
+      }
+    }
+    if (typeof document !== "undefined") {
+      const ref = document.referrer || "";
+      try {
+        const refUrl = new URL(ref);
+        if (typeof window !== "undefined" && refUrl.origin === window.location.origin) {
+          if (refUrl.pathname.startsWith("/dashboard/booking-details")) {
+            return refUrl.pathname + refUrl.search + refUrl.hash;
+          }
+        }
+      } catch (_) {
+        // ignore
+      }
+    }
+    return undefined;
+  }, [searchParams]);
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
   const [isLoadingQuote, setIsLoadingQuote] = useState(false);
   const [quote, setQuote] = useState<QuoteType | null>(null);
@@ -143,7 +173,10 @@ export default function MessagingPage() {
       <div className="flex-1 grid grid-cols-1 md:grid-cols-[minmax(0,30%)_1px_1fr] grid-rows-[auto_1px_1fr] h-[calc(100vh-4rem)] max-w-[2000px] mx-auto w-full">
         {/* Top Left - Messages Title */}
         <div className="p-4 border-b border-r border-gray-200 flex items-center">
-          <h1 className="text-2xl font-semibold text-black px-2">Messages</h1>
+          <div className="flex items-center gap-3">
+            <BackButton href={backHref} fallback="/dashboard" />
+            <h1 className="text-2xl font-semibold text-black px-2">Messages</h1>
+          </div>
         </div>
 
         {/* Top Middle - Vertical Divider */}

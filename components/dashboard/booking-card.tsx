@@ -136,7 +136,6 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
                   // Navigate to the chat
                   router.push(`/chat`);
                 } catch (error) {
-                  console.error("Error creating chat:", error);
                   handleApiError(error, "Failed to start chat");
                 } finally {
                   setIsCreatingChat(false);

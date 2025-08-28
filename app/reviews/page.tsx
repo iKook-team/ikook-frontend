@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { ReviewSection } from "@/components/review/review-section";
 import { ReviewsGrid } from "@/components/review/reviews-grid";
 import { reviewsService } from "@/lib/api/reviews";
+import BackButton from "@/components/common/BackButton";
 
 const Index: React.FC = () => {
   const [reviews, setReviews] = useState([]);
@@ -61,6 +62,9 @@ const Index: React.FC = () => {
       <main className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="flex flex-col items-center w-full">
           <div className="w-full max-w-4xl">
+            <div className="mb-4">
+              <BackButton fallback="/dashboard" />
+            </div>
             <ReviewSection />
             {loading ? (
               <div className="flex justify-center items-center min-h-[200px] w-full">

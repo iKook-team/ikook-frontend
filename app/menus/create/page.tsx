@@ -10,6 +10,7 @@ import CreateMenuStep5 from "@/components/menus/create-menu-step5";
 import { MenuFormData } from "@/types/menu-form";
 import { menuService } from "@/lib/api/menus";
 import { handleApiError } from "@/lib/utils/toast";
+import BackButton from "@/components/common/BackButton";
 const CreateMenuPage: React.FC = () => {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
@@ -207,6 +208,9 @@ const CreateMenuPage: React.FC = () => {
   return (
     <div className="w-full min-h-screen bg-[#FBFBFB] flex justify-center px-4 py-8">
       <div className="w-full max-w-4xl mx-auto">
+        <div className="mb-4">
+          <BackButton fallback="/menus" />
+        </div>
         <main className="w-full">{renderStep()}</main>
       </div>
     </div>

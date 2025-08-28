@@ -6,6 +6,7 @@ import { Toggle } from "@/components/ui/toggle";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { authService } from "@/lib/api/auth";
 import { showToast, handleApiError } from "@/lib/utils/toast";
+import BackButton from "@/components/common/BackButton";
 
 const NotificationSettings: React.FC = () => {
   const { user, setUser } = useAuthStore();
@@ -68,6 +69,9 @@ const NotificationSettings: React.FC = () => {
   return (
     <section className="max-w-[1440px] mx-auto my-0 px-12 py-6">
       <div className="w-[655px] relative mx-auto my-0">
+        <div className="mb-4">
+          <BackButton fallback="/settings" />
+        </div>
         <h1 className="text-black text-2xl font-semibold leading-8 mb-[53px]">
           Notification
         </h1>

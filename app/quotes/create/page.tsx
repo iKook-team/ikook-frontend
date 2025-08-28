@@ -8,6 +8,7 @@ import { MenuItemInput } from "@/components/quotes/quote-form";
 import { QuoteForm } from "@/components/quotes/quote-form";
 import { CreateSidebar } from "@/components/quotes/create-sidebar";
 import { quotesService } from "@/lib/api/quotes";
+import BackButton from "@/components/common/BackButton";
 
 const CreateQuotePage: React.FC = () => {
   const router = useRouter();
@@ -71,6 +72,9 @@ const CreateQuotePage: React.FC = () => {
   return (
     <main className="flex flex-col items-center justify-center mt-9 max-w-full w-full px-4">
       <div className="w-full max-w-[885px]">
+        <div className="mb-4">
+          <BackButton fallback="/quotes" />
+        </div>
         <h1 className="self-start text-2xl font-semibold leading-none text-black">
           Create Quote
         </h1>

@@ -6,6 +6,7 @@ import { paymentsService } from "@/lib/api/payments";
 import { showToast } from "@/lib/utils/toast";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { useMarket } from "@/lib/market-context";
+import BackButton from "@/components/common/BackButton";
 
 interface Bank {
   id: number;
@@ -188,6 +189,9 @@ const BankAccountForm: React.FC = () => {
       <main className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="flex flex-col items-center w-full">
           <div className="w-full max-w-3xl">
+            <div className="mb-4">
+              <BackButton fallback="/settings" />
+            </div>
             <section className="flex flex-col items-stretch mt-6">
               <h1 className="text-black text-2xl font-semibold leading-none">
                 {bankDetails ? 'Update Bank Account' : 'Add Bank Account'}

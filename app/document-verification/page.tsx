@@ -1,7 +1,9 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 import { useAuthStore } from "@/lib/store/auth-store";
+import BackButton from "@/components/common/BackButton";
 
 interface DocumentState {
   foodHygieneCertification: boolean;
@@ -211,6 +213,13 @@ const DocumentUploadModal = ({
 };
 
 const DocumentVerification = () => {
+  const router = useRouter();
+  useEffect(() => {
+    router.replace("/verification");
+  }, [router]);
+  // Stop rendering legacy page content
+  return null;
+
   const [showModal, setShowModal] = useState(false);
   const user = useAuthStore((state) => state.user);
   // Add a state to force re-render when user data changes
@@ -238,6 +247,9 @@ const DocumentVerification = () => {
 
   return (
     <main className="flex flex-col items-center px-4 py-8 max-w-4xl mx-auto">
+      <div className="w-full max-w-[653px] mb-4">
+        <BackButton fallback="/settings" />
+      </div>
       <div className="w-full max-w-[653px] mb-12">
         <h1 className="text-black text-2xl font-bold leading-8 mb-4 max-sm:text-xl">
           Document verification

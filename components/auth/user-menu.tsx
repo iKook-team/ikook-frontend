@@ -157,9 +157,9 @@ export const UserMenu: React.FC = () => {
                 </button>
                 <button
                   className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                  onClick={() => router.push("/document-verification")}
+                  onClick={() => router.push("/verification")}
                 >
-                  Document verification
+                  Verification
                 </button>
                 <button
                   className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
@@ -208,6 +208,12 @@ export const UserMenu: React.FC = () => {
                   onClick={() => router.push("/payment-cards")}
                 >
                   Payment
+                </button>
+                <button
+                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={() => router.push("/verification")}
+                >
+                  Verification
                 </button>
               </>
             )}

@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { useMarket } from "@/lib/market-context";
+import { getMarketConfig } from "@/lib/market-config";
 
 interface BookingSummaryProps {
   booking?: any;
@@ -14,6 +16,8 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
   userType,
 }) => {
   const router = useRouter();
+  const { market } = useMarket();
+  const marketCfg = getMarketConfig(market);
 
   if (!booking) {
     // fallback to old UI
@@ -41,8 +45,8 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
   const isUpcoming = booking.status === "Upcoming";
   const isEnquiry = booking.status === "Enquiries";
   const isCustom = booking.is_custom;
-  const total = booking.total_cost
-    ? `₦${Number(booking.total_cost).toLocaleString()}`
+  const total = booking.total_cost !== undefined && booking.total_cost !== null
+    ? `${marketCfg.currencySymbol}${Number(booking.total_cost).toLocaleString(marketCfg.locale)}`
     : "-";
   const guests = booking.num_of_guests || "-";
   const eventDate = booking.event_date || "-";

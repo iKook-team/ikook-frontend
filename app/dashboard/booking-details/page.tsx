@@ -7,16 +7,26 @@ import BookingDetails from "@/components/dashboard/booking-details";
 import BookingSummary from "@/components/dashboard/booking-summary";
 import { useBooking } from "@/hooks/useBookings";
 import { useAuthStore } from "@/lib/store/auth-store";
+import BackButton from "@/components/common/BackButton";
 
 export default function BookingDetailsPage() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const { booking, loading, error } = useBooking(id || undefined);
   const { userType } = useAuthStore();
+  const backFallback =
+    userType === "host"
+      ? "/dashboard/host"
+      : userType === "chef"
+        ? "/dashboard/chef"
+        : "/dashboard";
 
   return (
     <div className="flex overflow-hidden flex-col bg-zinc-50">
       <main className="self-center mt-9 max-w-full w-[885px]">
+        <div className="mb-4">
+          <BackButton fallback={backFallback} />
+        </div>
         {loading ? (
           <div className="text-center py-12 text-gray-500">
             Loading booking details...

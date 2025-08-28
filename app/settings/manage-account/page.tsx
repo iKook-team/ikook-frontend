@@ -6,6 +6,7 @@ import { Toggle } from "@/components/ui/toggle";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { authService } from "@/lib/api/auth";
 import { showToast, handleApiError } from "@/lib/utils/toast";
+import BackButton from "@/components/common/BackButton";
 
 const AccountManagement = () => {
   const { user, setUser } = useAuthStore();
@@ -87,6 +88,9 @@ const AccountManagement = () => {
       <main className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="flex flex-col items-center w-full">
           <div className="w-full max-w-4xl">
+            <div className="mb-4">
+              <BackButton fallback="/settings" />
+            </div>
             <h1 className="text-black text-2xl font-semibold leading-none mb-6">
               Manage Account
             </h1>
