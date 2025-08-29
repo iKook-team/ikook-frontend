@@ -110,7 +110,7 @@ export const Navigation: React.FC = () => {
                 </Link>
               )}
               <Link
-                href="#"
+                href="/how-it-works"
                 className="text-ikook-secondary hover:text-ikook-primary transition-colors font-medium"
               >
                 How it Works

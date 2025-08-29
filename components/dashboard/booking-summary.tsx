@@ -6,6 +6,8 @@ import React, { useEffect, useState } from "react";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
 import { quotesService } from "@/lib/api/quotes";
+import { chatService } from "@/lib/api/chat";
+import { handleApiError } from "@/lib/utils/toast";
 
 interface BookingSummaryProps {
   booking?: any;
@@ -22,6 +24,7 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
   const [quote, setQuote] = useState<any | null>(null);
   const [quoteLoading, setQuoteLoading] = useState(false);
   const [quoteError, setQuoteError] = useState<string | null>(null);
+  const [isCreatingChat, setIsCreatingChat] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -83,10 +86,30 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
     <aside className="flex flex-col grow justify-center px-8 py-9 mt-9 w-full bg-white rounded-2xl border border-solid shadow-2xl border-[color:var(--Black-100,#E7E7E7)] max-md:px-5 max-md:mt-10">
       <div className="flex flex-col w-full">
         <button
-          className="overflow-hidden gap-2 self-stretch px-10 py-3 max-w-full text-base font-semibold text-white bg-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)] w-[310px] max-md:px-5 hover:bg-amber-500 transition-colors"
-          onClick={() => router.push("/chat")}
+          className="overflow-hidden gap-2 self-stretch px-10 py-3 max-w-full text-base font-semibold text-white bg-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)] w-[310px] max-md:px-5 hover:bg-amber-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={async () => {
+            if (!booking?.id) return;
+            try {
+              setIsCreatingChat(true);
+              const otherUserId =
+                userType === "chef"
+                  ? booking.host_id
+                  : userType === "host"
+                  ? booking.chef_id
+                  : booking.chef_id || booking.host_id;
+              if (!otherUserId) throw new Error("Unable to determine chat participant");
+              const chat = await chatService.getOrCreateChat(Number(otherUserId));
+              const back = encodeURIComponent(`/dashboard/booking-details?id=${booking.id}`);
+              router.push(`/chat?chatId=${chat.id}&back=${back}`);
+            } catch (error) {
+              handleApiError(error, "Failed to start chat");
+            } finally {
+              setIsCreatingChat(false);
+            }
+          }}
+          disabled={isCreatingChat}
         >
-          {userType === "chef" ? "Message Host" : "Message Chef"}
+          {isCreatingChat ? "Starting chat..." : userType === "chef" ? "Message Host" : "Message Chef"}
         </button>
         <div className="flex flex-col items-start self-start mt-8 text-sm leading-none text-black">
           <div className="flex gap-2 items-center">
