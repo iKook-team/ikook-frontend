@@ -6,8 +6,9 @@ import React, { useEffect, useState } from "react";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
 import { quotesService } from "@/lib/api/quotes";
+import { bookingsService } from "@/lib/api/bookings";
 import { chatService } from "@/lib/api/chat";
-import { handleApiError } from "@/lib/utils/toast";
+import { handleApiError, showToast } from "@/lib/utils/toast";
 
 interface BookingSummaryProps {
   booking?: any;
@@ -25,6 +26,8 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
   const [quoteLoading, setQuoteLoading] = useState(false);
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [isCreatingChat, setIsCreatingChat] = useState(false);
+  const [isCompleting, setIsCompleting] = useState(false);
+  const [completedLocally, setCompletedLocally] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -155,9 +158,32 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
         </div>
         <div className="mt-8 w-full text-base font-semibold max-w-[310px]">
           {userType === "chef" &&
-            booking.status?.toLowerCase() === "upcoming" && (
-              <button className="overflow-hidden gap-2 self-stretch px-5 py-2.5 w-full bg-white rounded-lg border border-solid shadow-sm border-[color:var(--Gray-100,#CFCFCE)] text-slate-700">
-                Mark as completed
+            (booking.status?.toLowerCase() === "upcoming" || completedLocally) && (
+              <button
+                className="overflow-hidden gap-2 self-stretch px-5 py-2.5 w-full bg-white rounded-lg border border-solid shadow-sm border-[color:var(--Gray-100,#CFCFCE)] text-slate-700 disabled:opacity-60 disabled:cursor-not-allowed"
+                disabled={isCompleting || completedLocally}
+                onClick={async () => {
+                  if (!booking?.id) return;
+                  try {
+                    setIsCompleting(true);
+                    await bookingsService.updateBooking(booking.id, {
+                      status: "Completed",
+                    });
+                    showToast.success("Booking marked as completed");
+                    setCompletedLocally(true);
+                    router.refresh();
+                  } catch (error) {
+                    handleApiError(error, "Failed to mark booking as completed");
+                  } finally {
+                    setIsCompleting(false);
+                  }
+                }}
+              >
+                {isCompleting
+                  ? "Marking..."
+                  : completedLocally
+                    ? "Completed"
+                    : "Mark as completed"}
               </button>
             )}
           {quote ? (

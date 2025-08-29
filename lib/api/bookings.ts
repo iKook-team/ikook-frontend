@@ -19,4 +19,8 @@ export const bookingsService = {
     const response = await apiClient.post("/bookings/", payload);
     return response.data;
   },
+  async updateBooking(id: string | number, payload: any) {
+    const response = await apiClient.patch(`/bookings/${id}/`, payload);
+    return response.data;
+  },
 };
