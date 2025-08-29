@@ -22,8 +22,8 @@ export default function BookingDetailsPage() {
         : "/dashboard";
 
   return (
-    <div className="flex overflow-hidden flex-col bg-zinc-50">
-      <main className="self-center mt-9 max-w-full w-[885px]">
+    <div className="flex flex-col min-h-screen bg-zinc-50">
+      <main className="container mx-auto mt-6 px-4 sm:px-6 lg:px-8 max-w-5xl w-full">
         <div className="mb-4">
           <BackButton fallback={backFallback} />
         </div>
@@ -38,14 +38,14 @@ export default function BookingDetailsPage() {
             No booking found.
           </div>
         ) : (
-          <div className="flex gap-5 max-md:flex-col">
-            <div className="w-[57%] max-md:ml-0 max-md:w-full">
+          <div className="flex gap-6 md:gap-8 flex-col md:flex-row">
+            <div className="md:w-[57%] w-full">
               <BookingDetails
                 booking={booking}
                 userType={userType ?? undefined}
               />
             </div>
-            <div className="ml-5 w-[43%] max-md:ml-0 max-md:w-full">
+            <div className="md:w-[43%] w-full">
               <BookingSummary
                 booking={booking}
                 userType={userType ?? undefined}

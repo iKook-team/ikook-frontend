@@ -31,8 +31,8 @@ export const MyBookingsPage: React.FC = () => {
           <DocumentNotification />
         </section>
 
-        <nav className="flex gap-4 items-start self-start mt-9 ml-28 text-xs font-medium text-zinc-950 max-md:max-w-full">
-          <div className="flex flex-wrap gap-2.5 items-start min-w-60 max-md:max-w-full">
+        <nav className="flex gap-4 items-start mt-9 md:ml-28 ml-0 text-xs font-medium text-zinc-950 w-full">
+          <div className="flex flex-wrap gap-2.5 items-start w-full">
             {STATUS_OPTIONS.map((status) => (
               <button
                 key={status}
@@ -50,7 +50,7 @@ export const MyBookingsPage: React.FC = () => {
           </div>
         </nav>
 
-        <section className="self-center mt-9 max-w-full w-[887px]">
+        <section className="self-center md:mt-9 mt-2 max-w-full w-[887px]">
           {loading ? (
             <div className="text-center py-12 text-gray-500">
               Loading bookings...
@@ -71,7 +71,7 @@ export const MyBookingsPage: React.FC = () => {
               No bookings found for this status.
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-5 max-md:grid-cols-1">
+            <div className="grid grid-cols-2 gap-5 max-md:grid-cols-1 max-md:gap-1.5">
               {bookings.map((booking, idx) => (
                 <BookingCard key={idx} booking={booking} />
               ))}

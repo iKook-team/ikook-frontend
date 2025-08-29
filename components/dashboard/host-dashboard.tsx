@@ -66,7 +66,7 @@ export const MyBookingsPage: React.FC = () => {
             role="banner"
             aria-label="Identity verification notification"
           >
-            <div className="flex items-center gap-3.5 w-full max-sm:flex-col max-sm:gap-2.5">
+            <div className="flex items-center gap-3.5 w-full">
               <div className="flex-shrink-0" role="img" aria-label="Shield icon">
                 <svg
                   width="40"
@@ -80,8 +80,8 @@ export const MyBookingsPage: React.FC = () => {
                   <path d="M9 12l2 2 4-4" stroke="#1C58FC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
-              <div className="flex items-center gap-6 flex-1 max-sm:flex-col max-sm:gap-3 max-sm:items-center max-sm:w-full">
-                <p className="text-white text-sm font-normal leading-5 max-sm:text-xs max-sm:text-center">
+              <div className="flex items-center gap-4 flex-1 min-w-0">
+                <p className="text-white text-sm font-normal leading-5 min-w-0 break-words">
                   Verify your identity to complete your profile and ensure a safe experience.
                 </p>
                 <div className="flex items-start ml-auto">
@@ -144,8 +144,8 @@ export const MyBookingsPage: React.FC = () => {
           </section>
         )}
 
-        <nav className="flex gap-4 items-start self-start mt-9 ml-28 text-xs font-medium text-zinc-950 max-md:max-w-full">
-          <div className="flex flex-wrap gap-2.5 items-start min-w-60 max-md:max-w-full">
+        <nav className="flex gap-4 items-start mt-9 md:ml-28 ml-0 text-xs font-medium text-zinc-950 w-full">
+          <div className="flex flex-wrap gap-2.5 items-start w-full">
             {STATUS_OPTIONS.map((status) => (
               <button
                 key={status}
@@ -163,7 +163,7 @@ export const MyBookingsPage: React.FC = () => {
           </div>
         </nav>
 
-        <section className="self-center mt-9 max-w-full w-[887px]">
+        <section className="self-center md:mt-9 mt-2 max-w-full w-[887px]">
           {loading ? (
             <div className="text-center py-12 text-gray-500">
               Loading bookings...
@@ -184,7 +184,7 @@ export const MyBookingsPage: React.FC = () => {
               No bookings found for this status.
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-5 max-md:grid-cols-1">
+            <div className="grid grid-cols-2 gap-5 max-md:grid-cols-1 max-md:gap-1.5">
               {bookings.map((booking, idx) => (
                 <BookingCard key={idx} booking={booking} />
               ))}

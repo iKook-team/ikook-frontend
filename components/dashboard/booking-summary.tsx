@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
+import { quotesService } from "@/lib/api/quotes";
 
 interface BookingSummaryProps {
   booking?: any;
@@ -18,6 +19,31 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
   const router = useRouter();
   const { market } = useMarket();
   const marketCfg = getMarketConfig(market);
+  const [quote, setQuote] = useState<any | null>(null);
+  const [quoteLoading, setQuoteLoading] = useState(false);
+  const [quoteError, setQuoteError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      if (!booking?.id) return;
+      setQuoteLoading(true);
+      setQuoteError(null);
+      try {
+        const q = await quotesService.getQuoteByBookingId(booking.id);
+        if (mounted) setQuote(q);
+      } catch (e) {
+        // No quote is a valid state; suppress error to avoid UI noise
+        if (mounted) setQuote(null);
+      } finally {
+        if (mounted) setQuoteLoading(false);
+      }
+    };
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, [booking?.id]);
 
   if (!booking) {
     // fallback to old UI
@@ -111,16 +137,25 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
                 Mark as completed
               </button>
             )}
-          {userType === "chef" && isCustom && isEnquiry && (
+          {quote ? (
             <button
               className="overflow-hidden gap-2 self-stretch px-5 py-2.5 mt-3 w-full text-white bg-black rounded-lg border border-solid shadow-sm border-[color:var(--Black,#020101)] hover:bg-gray-900 transition-colors"
-              onClick={() => {
-                if (!booking?.id) return;
-                router.push(`/quotes/create?bookingId=${booking.id}`);
-              }}
+              onClick={() => router.push(`/quotes/${quote.id}`)}
             >
-              Send Quote
+              View Quote
             </button>
+          ) : (
+            userType === "chef" && isCustom && isEnquiry && (
+              <button
+                className="overflow-hidden gap-2 self-stretch px-5 py-2.5 mt-3 w-full text-white bg-black rounded-lg border border-solid shadow-sm border-[color:var(--Black,#020101)] hover:bg-gray-900 transition-colors"
+                onClick={() => {
+                  if (!booking?.id) return;
+                  router.push(`/quotes/create?bookingId=${booking.id}`);
+                }}
+              >
+                Send Quote
+              </button>
+            )
           )}
           {userType === "host" &&
             booking.status?.toLowerCase() === "pending" && (

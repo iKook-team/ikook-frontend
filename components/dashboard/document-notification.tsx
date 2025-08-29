@@ -29,11 +29,11 @@ export function DocumentNotification({
 
   return (
     <section
-      className={`flex justify-center items-center w-full max-w-[883px] h-[82px] box-border bg-[#1C58FC] pt-4 pb-[16.808px] px-[15px] rounded-[10px] max-md:max-w-full max-md:px-3 max-md:py-4 max-sm:h-auto max-sm:min-h-[60px] max-sm:px-2.5 max-sm:py-3 ${className}`}
+      className={`flex justify-center items-center w-full max-w-[883px] box-border bg-[#1C58FC] pt-4 pb-[16.808px] px-[15px] rounded-[10px] max-md:max-w-full max-md:px-3 max-md:py-4 max-sm:min-h-[60px] max-sm:px-2.5 max-sm:py-3 ${className}`}
       role="banner"
       aria-label="Document upload notification"
     >
-      <div className="flex items-center gap-3.5 w-full h-[49px] max-sm:flex-col max-sm:gap-2.5 max-sm:h-auto">
+      <div className="flex items-center gap-3.5 w-full min-h-[49px]">
         <div className="flex-shrink-0" role="img" aria-label="Documents icon">
           <svg
             width="57"
@@ -65,12 +65,12 @@ export function DocumentNotification({
           </svg>
         </div>
 
-        <div className="flex items-center gap-[365px] flex-1 max-md:gap-[200px] max-sm:flex-col max-sm:gap-3 max-sm:items-center max-sm:w-full">
-          <p className="text-white text-sm font-normal leading-5 whitespace-nowrap max-md:text-[13px] max-sm:text-xs max-sm:text-center max-sm:whitespace-normal">
+        <div className="flex items-center gap-4 flex-1 min-w-0">
+          <p className="text-white text-sm font-normal leading-5 min-w-0 break-words max-md:text-[13px]">
             Upload your documents to complete your profile
           </p>
 
-          <div className="flex items-start rounded-lg">
+          <div className="flex items-start rounded-lg ml-auto">
             <UploadButton
               onClick={handleUploadClick}
               className="px-3.5 py-2 max-sm:px-3 max-sm:py-1.5"
