@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
@@ -8,6 +8,7 @@ import { MenuItemInput } from "@/components/quotes/quote-form";
 import { QuoteForm } from "@/components/quotes/quote-form";
 import { CreateSidebar } from "@/components/quotes/create-sidebar";
 import { quotesService } from "@/lib/api/quotes";
+import { bookingsService } from "@/lib/api/bookings";
 import BackButton from "@/components/common/BackButton";
 
 const CreateQuotePage: React.FC = () => {
@@ -15,6 +16,8 @@ const CreateQuotePage: React.FC = () => {
   const searchParams = useSearchParams();
   const bookingIdParam = searchParams.get("bookingId");
   const bookingId = bookingIdParam ? Number(bookingIdParam) : NaN;
+  const [booking, setBooking] = useState<any | null>(null);
+  const [loadingBooking, setLoadingBooking] = useState(false);
   const [formData, setFormData] = useState({
     name: "New Quote",
     booking: Number.isFinite(bookingId) && bookingId > 0 ? bookingId : 0,
@@ -28,6 +31,27 @@ const CreateQuotePage: React.FC = () => {
     }>,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      const bId = Number.isFinite(bookingId) && bookingId > 0 ? bookingId : 0;
+      if (!bId) return;
+      setLoadingBooking(true);
+      try {
+        const data = await bookingsService.getBookingById(bId);
+        if (mounted) setBooking(data);
+      } catch (e) {
+        if (mounted) setBooking(null);
+      } finally {
+        if (mounted) setLoadingBooking(false);
+      }
+    };
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, [bookingId]);
 
   const handleCreateQuote = async (data: {
     items: MenuItemInput[];
@@ -132,6 +156,8 @@ const CreateQuotePage: React.FC = () => {
               <CreateSidebar
                 onPreview={handlePreview}
                 isSubmitting={isSubmitting}
+                booking={booking}
+                loadingBooking={loadingBooking}
               />
             </aside>
           </div>

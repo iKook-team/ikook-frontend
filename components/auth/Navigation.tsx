@@ -116,7 +116,7 @@ export const Navigation: React.FC = () => {
                 How it Works
               </Link>
               <div className="flex items-center space-x-1">
-                <Link href="/" className="text-gray-700 hover:text-ikook-primary font-medium">
+                <Link href="/gifts" className="text-gray-700 hover:text-ikook-primary font-medium">
                   Gift
                 </Link>
                 <Gift className="w-5 h-5 text-[#FCC01C]" />

@@ -37,9 +37,6 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
   const setBookingMenuSelection = useAuthStore(
     (s) => s.setBookingMenuSelection,
   );
-  const [location, setLocation] = useState("");
-  const [eventDate, setEventDate] = useState("");
-  const [guests, setGuests] = useState("");
 
   const currency = getCurrencySymbol(menu);
 
@@ -61,13 +58,7 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
       ? Math.min(100, Math.round((totalSelected / totalPossible) * 100))
       : 0;
 
-  // Parse guests as integer, fallback to 0 if invalid
-  const guestsNum = parseInt(guests, 10);
-  const pricePerPerson = menu?.price_per_person || 0;
-  const guestsValid = !isNaN(guestsNum) && guestsNum > 0;
-  const subtotal = guestsValid ? guestsNum * pricePerPerson : 0;
-  const platformFee = guestsValid ? Math.round(subtotal * 0.025) : 0;
-  const total = subtotal + platformFee;
+  // Guests input and pricing breakdown removed
 
   const handleProceedToCart = () => {
     if (!menu?.menu_type) {
@@ -137,97 +128,9 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
           </div>
         </div>
 
-        <form className="space-y-[18px] mt-4 max-md:mt-4">
-          <div className="w-full">
-            <label
-              htmlFor="location"
-              className="text-[#344054] text-sm font-medium leading-none block mb-1.5"
-            >
-              Location
-            </label>
-            <div className="items-center border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#101828] font-normal bg-white px-3.5 py-2.5 rounded-lg border-solid">
-              <input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="text-[#101828] self-stretch flex-1 shrink basis-[0%] min-w-60 w-full gap-2 my-auto bg-transparent outline-none"
-              />
-            </div>
-          </div>
+        {/* Inputs removed per requirement: location, event date, guests */}
 
-          <div className="w-full">
-            <label
-              htmlFor="eventDate"
-              className="text-[#344054] text-sm font-medium leading-none block mb-1.5"
-            >
-              Event Date
-            </label>
-            <div className="items-center border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#101828] font-normal whitespace-nowrap bg-white px-3.5 py-2.5 rounded-lg border-solid">
-              <input
-                type="date"
-                value={eventDate}
-                onChange={(e) => setEventDate(e.target.value)}
-                className="text-[#101828] self-stretch flex-1 shrink basis-[0%] min-w-60 gap-2 my-auto bg-transparent outline-none"
-              />
-            </div>
-          </div>
-
-          <div className="w-full">
-            <label
-              htmlFor="guests"
-              className="text-[#344054] text-sm font-medium leading-none block mb-1.5"
-            >
-              Guests
-            </label>
-            <div className="items-center border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#101828] font-normal bg-white px-3.5 py-2.5 rounded-lg border-solid">
-              <input
-                type="number"
-                value={guests}
-                onChange={(e) => setGuests(e.target.value)}
-                className="text-[#101828] self-stretch flex-1 shrink basis-[0%] min-w-60 gap-2 my-auto bg-transparent outline-none"
-              />
-            </div>
-          </div>
-        </form>
-
-        <div className="text-[#323335] mt-11 max-md:mt-10">
-          <div className="text-sm font-normal leading-none">
-            <div className="flex gap-[40px_86px]">
-              <span className="text-[#323335] w-[209px]">
-                {guestsValid
-                  ? `${guestsNum} Guests * ${currency}${pricePerPerson}`
-                  : `Guests * ${currency}${pricePerPerson}`}
-              </span>
-              <span className="text-[#323335] text-right w-[35px]">
-                {currency}
-                {subtotal}
-              </span>
-            </div>
-            <div className="flex gap-[40px_73px] mt-3">
-              <span className="text-[#323335] w-[209px]">
-                Platform fee 2.5%
-              </span>
-              <span className="text-[#323335] text-right w-12">
-                {currency}
-                {platformFee}
-              </span>
-            </div>
-          </div>
-          <div className="w-full max-w-[331px] text-base font-medium whitespace-nowrap mt-[17px]">
-            <img
-              src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/8f46afeac2620856dd07b20a735a96df5b2f333a?placeholderIfAbsent=true"
-              className="aspect-[333.33] object-contain w-full stroke-[1px] stroke-[#E7E7E7]"
-              alt="Divider"
-            />
-            <div className="flex gap-[40px_64px] mt-[7px]">
-              <span className="text-[#323335] w-[209px]">TOTAL</span>
-              <span className="text-[#323335] text-right w-[55px]">
-                {currency}
-                {total}
-              </span>
-            </div>
-          </div>
-        </div>
+        {/* Pricing breakdown removed per requirement */}
 
         <button
           onClick={() => {

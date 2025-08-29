@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { Button } from "../ui/button";
 import SectionHeader from "@/components/common/SectionHeader";
@@ -145,7 +146,9 @@ export default function TopMenuSection() {
               key={menu.id}
               className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
             >
-              <MenuCard menu={menu} />
+              <Link href={`/booking/menus/details/${menu.id}`} className="block" aria-label={`View details for ${menu.name}`}>
+                <MenuCard menu={menu} />
+              </Link>
             </div>
           ))}
         </div>

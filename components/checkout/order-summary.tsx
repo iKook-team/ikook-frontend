@@ -112,34 +112,34 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
 
       {/* Pricing Breakdown */}
       <div className="text-[#323335] mt-[33px]">
-        <div className="text-sm font-normal leading-none">
-          <div className="flex gap-[40px_86px]">
-            <span className="text-[#323335] w-[209px]">
+        <div className="text-sm font-normal">
+          <div className="flex items-start gap-4">
+            <span className="text-[#323335] flex-1 min-w-0">
               {guests} Guests * {currency}
               {pricePerPerson}
             </span>
-            <span className="text-[#323335] text-right w-[35px]">
+            <span className="text-[#323335] text-right ml-auto min-w-0 break-words">
               {currency}
               {(guests * pricePerPerson).toLocaleString()}
             </span>
           </div>
-          <div className="flex gap-[40px_73px] mt-3">
-            <span className="text-[#323335] w-[209px]">Platform fee 2.5%</span>
-            <span className="text-[#323335] text-right w-12">
+          <div className="flex items-start gap-4 mt-3">
+            <span className="text-[#323335] flex-1 min-w-0">Platform fee 2.5%</span>
+            <span className="text-[#323335] text-right ml-auto min-w-0 break-words">
               {currency}
               {platformFee.toLocaleString()}
             </span>
           </div>
         </div>
-        <div className="w-full max-w-[331px] text-base font-medium whitespace-nowrap mt-[17px]">
+        <div className="w-full text-base font-medium mt-[17px]">
           <img
             src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/0020aaefdb81e803abf669bc6129f6e3350cc333?placeholderIfAbsent=true"
             className="aspect-[333.33] object-contain w-full stroke-[1px] stroke-[#E7E7E7]"
             alt="Divider"
           />
-          <div className="flex gap-[40px_74px] mt-[7px]">
-            <span className="text-[#323335] w-[209px]">TOTAL</span>
-            <span className="text-[#323335] text-right w-12">
+          <div className="flex items-start gap-4 mt-[7px]">
+            <span className="text-[#323335] flex-1 min-w-0">TOTAL</span>
+            <span className="text-[#323335] text-right ml-auto min-w-0 break-words">
               {currency}
               {total.toLocaleString()}
             </span>
@@ -150,7 +150,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
       {/* Payment Button */}
       <button
         onClick={handlePayment}
-        className="text-white border border-[color:var(--Yellow-Pry,#FCC01C)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] min-w-60 w-[331px] gap-2 overflow-hidden bg-[#FCC01C] px-5 py-3 rounded-lg border-solid text-base font-bold mt-[59px] max-md:mt-10"
+        className="text-white border border-[color:var(--Yellow-Pry,#FCC01C)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] w-full gap-2 overflow-hidden bg-[#FCC01C] px-5 py-3 rounded-lg border-solid text-base font-bold mt-[59px] max-md:mt-10"
       >
         Make Payment ({currency}
         {total.toLocaleString()})

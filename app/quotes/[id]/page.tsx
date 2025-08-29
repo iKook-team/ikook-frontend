@@ -9,6 +9,7 @@ import BackButton from "@/components/common/BackButton";
 import { quotesService } from "@/lib/api/quotes";
 import { bookingsService } from "@/lib/api/bookings";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { Button } from "@/components/ui/button";
 
 const Page: React.FC = () => {
   const params = useParams<{ id: string }>();
@@ -88,6 +89,79 @@ const Page: React.FC = () => {
       return sum + (isNaN(v) ? 0 : v);
     }, 0);
   })();
+  const isPaid: boolean = Boolean((quote as any)?.is_paid);
+
+  // Sidebar info: date from quote.created_at; address and guests from booking
+  const dateText: string | undefined = (() => {
+    const created = (quote as any)?.created_at;
+    if (!created) return undefined;
+    try {
+      const d = new Date(created);
+      if (isNaN(d.getTime())) return undefined;
+      return d.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch {
+      return undefined;
+    }
+  })();
+  const addressText: string | undefined = (() => {
+    if (!booking) return undefined;
+    const parts = [booking.address, booking.city, booking.country].filter(Boolean);
+    return parts.length ? parts.join(", ") : undefined;
+  })();
+  const guestsText: string | undefined = (() => {
+    const n = booking?.num_of_guests;
+    if (!n && n !== 0) return undefined;
+    return `${n} Guest${Number(n) === 1 ? "" : "s"}`;
+  })();
+
+  // Pricing breakdown: derive from booking and quote totals
+  const breakdown = (() => {
+    const FEE_RATE = 0.025;
+    const total = typeof totalNum === "number" && !Number.isNaN(totalNum) ? totalNum : 0;
+    const platformFee = Math.round(total * FEE_RATE);
+    const subtotal = Math.max(total - platformFee, 0);
+
+    const guestsRaw = booking?.num_of_guests;
+    const pppRaw = (booking as any)?.menu_price_per_person;
+    const pricePerPersonFromBooking = typeof pppRaw === "string" || typeof pppRaw === "number"
+      ? Number(pppRaw)
+      : undefined;
+
+    let guests: number | undefined = typeof guestsRaw === "number" ? guestsRaw : undefined;
+    let pricePerPerson: number | undefined = pricePerPersonFromBooking;
+
+    if (typeof guests === "number" && (pricePerPerson === undefined || Number.isNaN(pricePerPerson))) {
+      // derive price per person if we have guests
+      pricePerPerson = guests > 0 ? subtotal / guests : 0;
+    } else if ((guests === undefined || Number.isNaN(guests)) && typeof pricePerPerson === "number" && pricePerPerson > 0) {
+      // derive guests if we have price per person
+      guests = Math.max(1, Math.round(subtotal / pricePerPerson));
+    }
+
+    return {
+      guests: typeof guests === "number" && Number.isFinite(guests) ? guests : undefined,
+      pricePerPerson:
+        typeof pricePerPerson === "number" && Number.isFinite(pricePerPerson)
+          ? pricePerPerson
+          : undefined,
+      subtotal,
+      platformFee,
+    };
+  })();
+
+  const onPayQuote = () => {
+    const bookingId = booking?.id || (quote as any)?.booking_id || (quote as any)?.booking?.id;
+    if (!bookingId) {
+      console.warn("No bookingId available for checkout");
+      return;
+    }
+    const url = `/booking/checkout?bookingId=${encodeURIComponent(String(bookingId))}`;
+    router.push(url);
+  };
 
   return (
     <div className="w-full min-h-screen relative bg-[#FBFBFB] flex justify-center max-md:w-full max-md:max-w-screen-lg max-md:h-auto max-md:min-h-screen">
@@ -123,7 +197,25 @@ const Page: React.FC = () => {
               </div>
 
               <div className="ml-5 w-[43%] max-md:ml-0 max-md:w-full">
-                <QuoteSummary total={totalNum} />
+                <QuoteSummary
+                  total={totalNum}
+                  dateText={dateText}
+                  addressText={addressText}
+                  guestsText={guestsText}
+                  breakdownGuests={breakdown.guests}
+                  breakdownPricePerPerson={breakdown.pricePerPerson}
+                  breakdownSubtotal={breakdown.subtotal}
+                  breakdownPlatformFee={breakdown.platformFee}
+                >
+                  {isHost && !isPaid && (
+                    <Button
+                      className="w-full bg-[#323335] hover:bg-[#323335]/90 text-white font-semibold"
+                      onClick={onPayQuote}
+                    >
+                      Pay Quote
+                    </Button>
+                  )}
+                </QuoteSummary>
               </div>
             </div>
           )}
