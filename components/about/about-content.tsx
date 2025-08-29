@@ -29,8 +29,8 @@ const AboutContent: React.FC = () => {
         </h2>
         <br />
         <p>
-          We're thrilled to have you as part of our community of food
-          enthusiasts. Whether it's an intimate dinner for two, a family
+          We&apos;re thrilled to have you as part of our community of food
+          enthusiasts. Whether it&apos;s an intimate dinner for two, a family
           celebration, or a social gathering, our chefs are here to make your
           occasions memorable and stress-free.
         </p>
