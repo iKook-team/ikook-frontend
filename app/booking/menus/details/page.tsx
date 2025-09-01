@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 import { useMenu } from "@/hooks/useMenu";
 import { HeroSection } from "@/components/booking/hero-section";
@@ -12,12 +13,21 @@ import { ChefProfile } from "@/components/booking/menu-chef-profile";
 
 const Index: React.FC = () => {
   const { id } = useParams();
+  const router = useRouter();
+  const userType = useAuthStore((s) => s.userType);
   const menuId = Array.isArray(id) ? id[0] : id;
   const { menu, loading, error } = useMenu(menuId);
   const [selectedItems, setSelectedItems] = useState<Record<
     string,
     Set<number>
   > | null>(null);
+
+  // Redirect chefs away from booking pages
+  React.useEffect(() => {
+    if (userType === "chef") {
+      router.replace("/dashboard/chef");
+    }
+  }, [userType, router]);
 
   React.useEffect(() => {
     if (menu && !selectedItems) {
@@ -29,6 +39,10 @@ const Index: React.FC = () => {
       setSelectedItems(initial);
     }
   }, [menu, selectedItems]);
+
+  if (userType === "chef") {
+    return null; // Avoid flicker during redirect
+  }
 
   if (loading) {
     return (

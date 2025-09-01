@@ -123,7 +123,7 @@ export const Navigation: React.FC = () => {
               </div>
               {showJoinAsChef && (
                 <Link
-                  href="#"
+                  href="/join?role=chef"
                   className="text-ikook-secondary hover:text-ikook-primary transition-colors font-medium"
                 >
                   Join as Chef

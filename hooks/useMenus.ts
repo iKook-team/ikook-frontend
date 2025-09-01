@@ -47,6 +47,7 @@ export function useMenus(limit: number = 8, useMarketFilter: boolean = true) {
         const params = new URLSearchParams({
           page: '1',
           page_size: limit.toString(),
+          status: 'Active',
         });
         
         // Add market filter only if explicitly requested
@@ -62,7 +63,6 @@ export function useMenus(limit: number = 8, useMarketFilter: boolean = true) {
           setError('Invalid response format');
         }
       } catch (err: any) {
-        console.error('Error fetching menus:', err);
         setError(err?.response?.data?.message || 'Failed to fetch menus');
       } finally {
         setLoading(false);

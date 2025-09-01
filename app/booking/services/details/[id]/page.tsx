@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 import { ChefProfile } from "@/components/booking/chef-profile";
 import { EventDetails } from "@/components/booking/event-details";
@@ -12,10 +13,18 @@ import { listingService } from "@/lib/api/listing";
 const ServiceDetailPage = () => {
   const params = useParams();
   const router = useRouter();
+  const userType = useAuthStore((s) => s.userType);
   const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
   const [service, setService] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Redirect chefs away from service booking details
+  useEffect(() => {
+    if (userType === "chef") {
+      router.replace("/dashboard/chef");
+    }
+  }, [userType, router]);
 
   useEffect(() => {
     if (!id) return;
@@ -26,6 +35,10 @@ const ServiceDetailPage = () => {
       .catch(() => setError("Failed to fetch service details."))
       .finally(() => setLoading(false));
   }, [id]);
+
+  if (userType === "chef") {
+    return null; // avoid flicker during redirect
+  }
 
   if (loading) {
     return (

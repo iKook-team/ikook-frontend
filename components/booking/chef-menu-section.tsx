@@ -119,7 +119,9 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({
                     alt="Rating"
                   />
                   <span className="text-[#323335] self-stretch w-7 my-auto">
-                    {menu.chef?.average_rating}
+                    {menu.chef?.average_rating != null
+                      ? Number(menu.chef.average_rating).toFixed(1)
+                      : "0.0"}
                   </span>
                 </div>
                 <span className="text-[#323335] font-light self-stretch my-auto">

@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import { showToast } from "@/lib/utils/toast";
 
 import { ProgressStepper } from "./progress-indicator";
 import { ImageUploadArea } from "./image-upload-area";
@@ -50,9 +51,27 @@ export const CreateMenuStep3: React.FC<MenuImagesStepProps> = ({
 
   const handleImageSelect = (files: FileList | null) => {
     if (!files) return;
-    const newFiles = Array.from(files);
+    const incoming = Array.from(files);
 
-    setUploadedImages((prev) => [...prev, ...newFiles]);
+    setUploadedImages((prev) => {
+      const totalExisting = existingImages.length + prev.length;
+      const remainingSlots = Math.max(0, 10 - totalExisting);
+
+      if (remainingSlots === 0) {
+        showToast.error("You can upload a maximum of 10 images per menu.");
+        return prev;
+      }
+
+      const accepted = incoming.slice(0, remainingSlots);
+      const rejectedCount = incoming.length - accepted.length;
+      if (rejectedCount > 0) {
+        showToast.warning(
+          `Only ${remainingSlots} more image${remainingSlots === 1 ? "" : "s"} allowed (max 10).`,
+        );
+      }
+
+      return [...prev, ...accepted];
+    });
   };
 
   const handleDeleteImage = (index: number) => {
@@ -63,7 +82,10 @@ export const CreateMenuStep3: React.FC<MenuImagesStepProps> = ({
     setExistingImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const canContinue = uploadedImages.length > 0 || existingImages.length > 0;
+  const totalImages = uploadedImages.length + existingImages.length;
+  const meetsMin = totalImages >= 5;
+  const withinMax = totalImages <= 10;
+  const canContinue = meetsMin && withinMax;
 
   return (
     <div className="flex flex-col w-full max-w-[655px] mx-auto">
@@ -80,9 +102,13 @@ export const CreateMenuStep3: React.FC<MenuImagesStepProps> = ({
           <h2 className="text-lg font-semibold text-gray-900 mb-4 text-center">
             Upload menu images
           </h2>
-          <p className="text-sm text-gray-600 mb-6 text-center">
-            Upload high-quality images of your menu items. You can upload up to
-            5 images.
+          <p className="text-sm text-gray-600 mb-2 text-center">
+            Upload 5–10 high-quality images of your menu items.
+          </p>
+          <p className={`text-xs mb-4 text-center ${canContinue ? "text-gray-500" : "text-red-600"}`}>
+            {totalImages < 5 && `You have ${totalImages}. Please upload at least ${5 - totalImages} more image${5 - totalImages === 1 ? "" : "s"}.`}
+            {totalImages > 10 && `You have ${totalImages}. Please remove ${totalImages - 10} image${totalImages - 10 === 1 ? "" : "s"} to continue.`}
+            {totalImages >= 5 && totalImages <= 10 && `${totalImages} / 10 images selected`}
           </p>
           <div className="w-full flex justify-center">
             <ImageUploadArea onImageSelect={handleImageSelect} />

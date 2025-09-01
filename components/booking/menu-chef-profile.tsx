@@ -61,7 +61,9 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
                         width={17}
                       />
                       <span className="text-[#323335] self-stretch w-7 my-auto">
-                        {chef?.average_rating}
+                        {chef?.average_rating != null
+                          ? Number(chef.average_rating).toFixed(1)
+                          : "0.0"}
                       </span>
                     </div>
                     <span className="text-[#323335] font-light self-stretch my-auto">

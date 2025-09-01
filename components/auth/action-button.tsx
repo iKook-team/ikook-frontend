@@ -6,12 +6,14 @@ export type UserType = "host" | "chef" | null;
 
 interface ActionButtonsProps {
   onSelectionChange?: (selection: UserType) => void;
+  initialSelectedType?: UserType;
 }
 
 export const ActionButtons: React.FC<ActionButtonsProps> = ({
   onSelectionChange,
+  initialSelectedType = "host",
 }) => {
-  const [selectedType, setSelectedType] = useState<UserType>("host");
+  const [selectedType, setSelectedType] = useState<UserType>(initialSelectedType);
 
   const handleSelection = (type: UserType) => {
     setSelectedType(type);

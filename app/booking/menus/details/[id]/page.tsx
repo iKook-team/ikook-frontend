@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 import { HeroSection } from "@/components/booking/hero-section";
 import { ImageGallery } from "@/components/booking/image-gallery";
@@ -12,6 +13,8 @@ import { useMenu } from "@/hooks/useMenu";
 
 export default function MenuDetailsPage() {
   const { id } = useParams();
+  const router = useRouter();
+  const userType = useAuthStore((s) => s.userType);
   // Ensure id is string or number
   const menuId = Array.isArray(id) ? id[0] : id;
   const { menu, loading, error } = useMenu(menuId);
@@ -21,6 +24,13 @@ export default function MenuDetailsPage() {
     string,
     Set<number>
   > | null>(null);
+
+  // Redirect chefs away from booking pages
+  React.useEffect(() => {
+    if (userType === "chef") {
+      router.replace("/dashboard/chef");
+    }
+  }, [userType, router]);
 
   // When menu loads, initialize selectedItems if not already set
   React.useEffect(() => {
@@ -33,6 +43,10 @@ export default function MenuDetailsPage() {
       setSelectedItems(initial);
     }
   }, [menu, selectedItems]);
+
+  if (userType === "chef") {
+    return null; // Avoid flicker during redirect
+  }
 
   if (loading) {
     return (

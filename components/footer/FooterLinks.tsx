@@ -30,11 +30,13 @@ export const FooterLinks: React.FC<FooterLinksProps> = ({ className = "" }) => {
         "About us",
         "How it works",
         "FAQs",
+        "Privacy Policy",
+        "Terms & Condition",
       ],
     },
     {
-      title: "iKooK Legal",
-      links: ["Privacy Policy", "Terms & Condition"],
+      title: "iKooK Chef In",
+      links: ["United Kingdom", "Nigeria", "South Africa"],
     },
     {
       isContact: true,
@@ -96,11 +98,15 @@ export const FooterLinks: React.FC<FooterLinksProps> = ({ className = "" }) => {
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
                     <a
-                      href={
-                        section.title === "iKooK Chef in"
-                          ? `/locations/${link.toLowerCase().replace(/\s+/g, "-")}`
-                          : `/${link.toLowerCase().replace(/\s+/g, "-")}`
-                      }
+                      href={(() => {
+                        const isCountry = section.title
+                          ?.trim()
+                          .toLowerCase() === "ikook chef in";
+                        const slug = encodeURIComponent(
+                          link.trim().toLowerCase().replace(/\s+/g, "-")
+                        );
+                        return isCountry ? `/locations/${slug}` : `/${slug}`;
+                      })()}
                       className="hover:text-black transition-colors"
                     >
                       {link}

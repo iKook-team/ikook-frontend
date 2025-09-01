@@ -32,6 +32,12 @@ export const SocialIcons: React.FC<SocialIconsProps> = ({ className = "" }) => {
       className: "aspect-[1] object-contain w-[30px] shrink-0",
       url: "https://www.linkedin.com/company/ikookapp/",
     },
+    {
+      src: "https://cdn.simpleicons.org/whatsapp/000000",
+      alt: "WhatsApp",
+      className: "aspect-[1] object-contain w-[30px] shrink-0",
+      url: "https://wa.me/2349160006924",
+    },
   ];
 
   return (

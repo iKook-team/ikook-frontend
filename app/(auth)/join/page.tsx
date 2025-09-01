@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AlertCircle, Loader2 } from "lucide-react";
 
 import { useGeolocation } from "@/hooks/useGeolocation";
@@ -12,6 +12,12 @@ const Index: React.FC = () => {
   const router = useRouter();
   const { error, isLoading } = useGeolocation();
   const [showError, setShowError] = useState(false);
+  const searchParams = useSearchParams();
+
+  const initialRole = useMemo(() => {
+    const role = (searchParams?.get("role") || "").toLowerCase();
+    return role === "chef" ? "chef" : "host";
+  }, [searchParams]);
 
   // Check if we have location or an error after loading
   useEffect(() => {
@@ -93,7 +99,7 @@ const Index: React.FC = () => {
   return (
     <div className="w-full min-h-screen relative bg-[#FBFBFB] max-md:w-full max-md:max-w-screen-lg max-md:h-auto max-md:min-h-screen">
       <main className="relative">
-        <JoinForm />
+        <JoinForm initialSelectedUserType={initialRole} />
       </main>
     </div>
   );

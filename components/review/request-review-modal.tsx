@@ -60,7 +60,6 @@ export const RequestReviewModal: React.FC<RequestReviewModalProps> = ({
       onClose();
     } catch (error) {
       // Error is handled by the parent component
-      console.error("Error in review request submission:", error);
     }
   };
 

@@ -27,6 +27,19 @@ export const showToast = {
     });
   },
 
+  warning: (message: string) => {
+    toast(message, {
+      duration: 5000,
+      position: "top-right",
+      style: {
+        background: "#F59E0B",
+        color: "#fff",
+        borderRadius: "8px",
+        fontSize: "14px",
+      },
+    });
+  },
+
   loading: (message: string) => {
     return toast.loading(message, {
       position: "top-right",

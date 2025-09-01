@@ -10,14 +10,16 @@ import { LoginPrompt } from "./login-prompt";
 interface JoinFormProps {
   onSubmit?: (userType: UserType) => void;
   onLoginClick?: () => void;
+  initialSelectedUserType?: UserType;
 }
 
 export const JoinForm: React.FC<JoinFormProps> = ({
   onSubmit,
   onLoginClick,
+  initialSelectedUserType = null,
 }) => {
   const router = useRouter();
-  const [selectedUserType, setSelectedUserType] = useState<UserType>(null);
+  const [selectedUserType, setSelectedUserType] = useState<UserType>(initialSelectedUserType);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSelectionChange = (type: UserType) => {
@@ -73,7 +75,10 @@ export const JoinForm: React.FC<JoinFormProps> = ({
 
           <fieldset className="border-0 p-0 m-0 w-full flex flex-col items-center">
             <legend className="sr-only">Choose your role on iKooK</legend>
-            <ActionButtons onSelectionChange={handleSelectionChange} />
+            <ActionButtons
+              onSelectionChange={handleSelectionChange}
+              initialSelectedType={selectedUserType}
+            />
           </fieldset>
 
           {selectedUserType && (

@@ -94,6 +94,7 @@ const useListings = ({
           page_size: pageSize,
           search: searchQuery,
           menu_type: menuIdToTag[selectedService as keyof typeof menuIdToTag],
+          status: "Active",
           city,
           market,
         });

@@ -176,7 +176,9 @@ export const MenuListing: React.FC<MenuListingProps> = ({
         </CardBody>
         <CardFooter className="flex flex-col items-start gap-1.5 px-4 py-3">
           <div className="flex items-center justify-between w-full">
-            <h3 className="text-base font-semibold text-gray-900">{title}</h3>
+            <h3 className="text-base font-semibold text-gray-900 truncate max-w-[60%]">
+              {title}
+            </h3>
             <span className="text-base font-semibold text-gray-900">
               {currencySymbol}
               {price}
