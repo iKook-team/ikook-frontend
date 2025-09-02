@@ -7,6 +7,7 @@ import { FaMoneyBillWave } from "react-icons/fa";
 
 import { chatService } from "@/lib/api/chat";
 import { handleApiError } from "@/lib/utils/toast";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 // Accept either a booking object or the old props for backward compatibility
 export type BookingCardProps =
@@ -25,6 +26,7 @@ export type BookingCardProps =
 export const BookingCard: React.FC<BookingCardProps> = (props) => {
   const router = useRouter();
   const [isCreatingChat, setIsCreatingChat] = useState(false);
+  const { userType, user: authUser } = useAuthStore();
 
   // If booking prop is present, use new mapping
   if ("booking" in props) {
@@ -38,6 +40,7 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
     const location = booking.city || "-";
     const title = booking.chef_service || "-";
     const status = booking.status || "-";
+    const isEnquiry = (booking.status || "").toLowerCase() === "enquiries";
     const attendees = booking.num_of_guests
       ? `${booking.num_of_guests} guests`
       : "-";
@@ -117,36 +120,55 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
         )}
         <hr className="my-4 border-t border-gray-200 w-full" />
         <div className="flex gap-3 items-start self-end mt-4 mr-9 text-sm font-semibold leading-none max-md:mr-2.5">
-          <div className="flex items-start whitespace-nowrap rounded-lg text-slate-700">
-            <button
-              className="overflow-hidden gap-2 self-stretch px-3.5 py-2 bg-white rounded-lg border border-solid shadow-sm border-[color:var(--Gray-100,#CFCFCE)] text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
-              onClick={async () => {
-                try {
-                  setIsCreatingChat(true);
-                  // Determine the other user's ID
-                  const otherUserId = booking.chef_id || booking.host_id;
+          {!isEnquiry && (
+            <div className="flex items-start whitespace-nowrap rounded-lg text-slate-700">
+              <button
+                className="overflow-hidden gap-2 self-stretch px-3.5 py-2 bg-white rounded-lg border border-solid shadow-sm border-[color:var(--Gray-100,#CFCFCE)] text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={async () => {
+                  try {
+                    setIsCreatingChat(true);
+                    // Determine the other user's ID
+                    let otherUserId: number | undefined = undefined;
 
-                  if (!otherUserId) {
-                    throw new Error("Unable to determine chat participant");
+                    // Prefer opposite party based on current role
+                    if (userType === "chef") {
+                      otherUserId = booking.host_id;
+                    } else if (userType === "host") {
+                      otherUserId = booking.chef_id;
+                    }
+
+                    // Fallback: pick an ID that is not the current user
+                    if (!otherUserId) {
+                      const currentId = authUser?.id;
+                      if (booking.host_id && booking.host_id !== currentId) {
+                        otherUserId = booking.host_id;
+                      } else if (booking.chef_id && booking.chef_id !== currentId) {
+                        otherUserId = booking.chef_id;
+                      }
+                    }
+
+                    if (!otherUserId) {
+                      throw new Error("Unable to determine chat participant");
+                    }
+
+                    // Find or create the chat
+                    const chat = await chatService.getOrCreateChat(Number(otherUserId));
+
+                    // Navigate to the chat and auto-open the conversation
+                    const back = encodeURIComponent(`/dashboard/booking-details?id=${booking.id}`);
+                    router.push(`/chat?chatId=${chat.id}&back=${back}`);
+                  } catch (error) {
+                    handleApiError(error, "Failed to start chat");
+                  } finally {
+                    setIsCreatingChat(false);
                   }
-
-                  // Find or create the chat
-                  const chat = await chatService.getOrCreateChat(Number(otherUserId));
-
-                  // Navigate to the chat and auto-open the conversation
-                  const back = encodeURIComponent(`/dashboard/booking-details?id=${booking.id}`);
-                  router.push(`/chat?chatId=${chat.id}&back=${back}`);
-                } catch (error) {
-                  handleApiError(error, "Failed to start chat");
-                } finally {
-                  setIsCreatingChat(false);
-                }
-              }}
-              disabled={isCreatingChat}
-            >
-              {isCreatingChat ? "Starting chat..." : "Message"}
-            </button>
-          </div>
+                }}
+                disabled={isCreatingChat}
+              >
+                {isCreatingChat ? "Starting chat..." : "Message"}
+              </button>
+            </div>
+          )}
           <div className="flex items-start text-white rounded-lg">
             <button
               className="overflow-hidden gap-2 self-stretch px-3.5 py-2 text-white bg-amber-400 rounded-lg border border-solid shadow-sm border-[color:var(--Primary,#FCC01C)]"
@@ -154,7 +176,7 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
                 router.push(`/dashboard/booking-details?id=${booking.id}`)
               }
             >
-              Booking details
+              {isEnquiry ? "Enquiry details" : "Booking details"}
             </button>
           </div>
         </div>
@@ -164,7 +186,7 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
 
   // fallback to old props for backward compatibility
   const {
-    user,
+    user: userRole,
     title,
     date,
     location,
@@ -270,7 +292,7 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
               )
             }
           >
-            {user === "host" ? "Enquiry" : "Booking"} details
+            {userRole === "host" ? "Enquiry" : "Booking"} details
           </button>
         </div>
       </div>

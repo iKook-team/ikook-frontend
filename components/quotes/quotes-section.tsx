@@ -16,7 +16,7 @@ type CardQuote = {
   price: string;
 };
 
-export const QuotesSection: React.FC = () => {
+export const QuotesSection: React.FC<{ bookingId?: string | number }> = ({ bookingId }) => {
   const [quotes, setQuotes] = React.useState<CardQuote[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -29,7 +29,8 @@ export const QuotesSection: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        const data: ApiQuote[] = await quotesService.listQuotes();
+        const params = bookingId ? { booking: bookingId } : undefined;
+        const data: ApiQuote[] = await quotesService.listQuotes(params);
 
         const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
         const mapped: CardQuote[] = (data || []).map((q: any) => {
@@ -76,7 +77,7 @@ export const QuotesSection: React.FC = () => {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [bookingId]);
 
   return (
     <section className="flex flex-col overflow-hidden bg-zinc-50">

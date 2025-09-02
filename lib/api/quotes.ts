@@ -55,11 +55,6 @@ export const quotesService = {
         `No quotes found for booking ${bookingId}. Response: ${JSON.stringify(response.data)}`,
       );
     } catch (error: any) {
-      console.error("Error in getQuoteByBookingId:", {
-        bookingId,
-        error: error?.message || "Unknown error",
-        response: error?.response?.data,
-      });
       throw error;
     }
   },
