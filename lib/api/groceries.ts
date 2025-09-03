@@ -49,7 +49,7 @@ export const groceriesService = {
     const data: Grocery | undefined = (payload && (payload as any).data) ? (payload as any).data : (payload as any);
     return data as Grocery;
   },
-  async getGroceries(params: Partial<{ page: number; page_size: number; status: GroceryStatus }>): Promise<ApiResponse<Grocery>> {
+  async getGroceries(params: Partial<{ page: number; page_size: number; status: GroceryStatus; chef_id: string | number }>): Promise<ApiResponse<Grocery>> {
     try {
       const response = await apiClient.get<Wrapped<Grocery> | ApiResponse<Grocery>>("/groceries/", {
         params: { page_size: 20, ...params },

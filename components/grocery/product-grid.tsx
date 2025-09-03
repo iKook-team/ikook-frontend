@@ -40,7 +40,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
         className="aspect-[333.33] object-contain w-full stroke-[1px] stroke-[#E7E7E7] mt-1.5 max-md:max-w-full"
         alt=""
       />
-      <div className="flex gap-9 flex-wrap mt-[23px] max-md:max-w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-[23px] max-md:max-w-full">
         {products.map((product) => (
           <ProductCard
             key={product.id}

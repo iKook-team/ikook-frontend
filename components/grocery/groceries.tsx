@@ -1,9 +1,12 @@
 "use client";
 import * as React from "react";
+import { useRouter } from "next/navigation";
 
 import { StoreInfo } from "./store-info";
 import { ProductGrid } from "./product-grid";
 import { ShoppingCart } from "./shopping-cart";
+import { QuantityModal } from "./quantity-modal";
+import type { GroceryItem } from "@/lib/api/groceries";
 
 interface CartItemData {
   id: string;
@@ -13,110 +16,55 @@ interface CartItemData {
   isSelected: boolean;
 }
 
-export default function Index() {
-  const [cartItems, setCartItems] = React.useState<CartItemData[]>([
-    {
-      id: "1",
-      name: "Full chicken with feather and long leg",
-      price: "7,999.99",
-      quantity: 1,
-      isSelected: true,
-    },
-    {
-      id: "2",
-      name: "Full chicken with feather and long leg",
-      price: "7,999.99",
-      quantity: 1,
-      isSelected: true,
-    },
-    {
-      id: "3",
-      name: "Full chicken with feather and long leg",
-      price: "7,999.99",
-      quantity: 1,
-      isSelected: true,
-    },
-    {
-      id: "4",
-      name: "Full chicken with feather and long leg",
-      price: "7,999.99",
-      quantity: 1,
-      isSelected: true,
-    },
-    {
-      id: "5",
-      name: "Full chicken with feather and long leg",
-      price: "7,999.99",
-      quantity: 1,
-      isSelected: true,
-    },
-    {
-      id: "6",
-      name: "Full chicken with feather and long leg",
-      price: "7,999.99",
-      quantity: 1,
-      isSelected: true,
-    },
-    {
-      id: "7",
-      name: "Full chicken with feather and long leg",
-      price: "7,999.99",
-      quantity: 1,
-      isSelected: true,
-    },
-  ]);
+type Product = {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  imageUrl: string;
+  items?: GroceryItem[];
+};
 
-  const popularProducts = [
-    {
-      id: "p1",
-      name: "Full chicken",
-      description: "10kg, Price",
-      price: "7,999.99",
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/3318ae1e655651698c038c58df20e289ade834ef?placeholderIfAbsent=true",
-    },
-    {
-      id: "p2",
-      name: "Full chicken",
-      description: "10kg, Price",
-      price: "7,999.99",
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/3318ae1e655651698c038c58df20e289ade834ef?placeholderIfAbsent=true",
-    },
-    {
-      id: "p3",
-      name: "Full chicken",
-      description: "10kg, Price",
-      price: "7,999.99",
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/3318ae1e655651698c038c58df20e289ade834ef?placeholderIfAbsent=true",
-    },
-    {
-      id: "p4",
-      name: "Full chicken",
-      description: "10kg, Price",
-      price: "7,999.99",
-      imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/3318ae1e655651698c038c58df20e289ade834ef?placeholderIfAbsent=true",
-    },
-  ];
+export default function Index({ products }: { products?: Product[] }) {
+  const router = useRouter();
+  const [cartItems, setCartItems] = React.useState<CartItemData[]>([]);
+
+  // Quantity modal state
+  const [isQtyModalOpen, setIsQtyModalOpen] = React.useState(false);
+  const [selectedProduct, setSelectedProduct] = React.useState<{
+    id: string;
+    name: string;
+    price: string;
+    imageUrl?: string;
+    items?: GroceryItem[];
+  } | null>(null);
+
+  // Use only external products provided to the component (no dummy items)
+  const displayProducts = React.useMemo(() => products ?? [], [products]);
 
   const handleSearch = (query: string) => {
     console.log("Searching for:", query);
   };
 
-  const handleAddToCart = (product: {
-    id: string;
-    name: string;
-    price: string;
-  }) => {
+  // When user clicks Add on a product card, open the quantity modal
+  const handleAddToCart = (product: { id: string; name: string; price: string }) => {
+    // Find product details (e.g., image) from the displayed list by id
+    const found = displayProducts.find((p) => p.id === product.id);
+    setSelectedProduct({ ...product, imageUrl: found?.imageUrl, items: found?.items });
+    setIsQtyModalOpen(true);
+  };
+
+  // Confirm add from quantity modal
+  const handleConfirmQuantity = (qty: number) => {
+    if (!selectedProduct) return;
+    const product = selectedProduct;
     const existingItem = cartItems.find((item) => item.id === product.id);
 
     if (existingItem) {
       setCartItems(
         cartItems.map((item) =>
           item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + qty }
             : item,
         ),
       );
@@ -127,11 +75,13 @@ export default function Index() {
           id: product.id,
           name: product.name,
           price: product.price,
-          quantity: 1,
+          quantity: qty,
           isSelected: true,
         },
       ]);
     }
+    setIsQtyModalOpen(false);
+    setSelectedProduct(null);
   };
 
   const handleToggleSelect = (id: string) => {
@@ -147,7 +97,18 @@ export default function Index() {
   };
 
   const handleContinue = () => {
-    console.log("Proceeding to checkout");
+    try {
+      const selectedIds = cartItems
+        .filter((it) => it.isSelected)
+        .map((it) => parseInt(it.id, 10))
+        .filter((n) => Number.isFinite(n));
+      if (typeof window !== "undefined") {
+        localStorage.setItem("grocerySelectedItemIds", JSON.stringify(selectedIds));
+      }
+    } catch (e) {
+      // no-op
+    }
+    router.push("/booking/groceries");
   };
 
   return (
@@ -167,12 +128,16 @@ export default function Index() {
             <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
               <div className="w-[64%] max-md:w-full max-md:ml-0">
                 <div className="w-full mt-[23px] max-md:max-w-full max-md:mt-10">
-                  <ProductGrid
-                    title="Popular"
-                    totalCount={20}
-                    products={popularProducts}
-                    onAddToCart={handleAddToCart}
-                  />
+                  {displayProducts.length > 0 ? (
+                    <ProductGrid
+                      title="Groceries"
+                      totalCount={displayProducts.length}
+                      products={displayProducts}
+                      onAddToCart={handleAddToCart}
+                    />
+                  ) : (
+                    <div className="text-sm text-gray-500">No groceries found.</div>
+                  )}
                 </div>
               </div>
               <ShoppingCart
@@ -185,6 +150,17 @@ export default function Index() {
           </div>
         </div>
       </main>
+
+      {/* Quantity selection modal */}
+      <QuantityModal
+        open={isQtyModalOpen}
+        onClose={() => {
+          setIsQtyModalOpen(false);
+          setSelectedProduct(null);
+        }}
+        product={selectedProduct}
+        onConfirm={handleConfirmQuantity}
+      />
     </div>
   );
 }

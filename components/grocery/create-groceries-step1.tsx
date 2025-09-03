@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { FormField } from "../ui/form-field";
 import { PriceInput } from "../ui/price-input";
@@ -80,12 +80,20 @@ const CreateGroceriesStep1: React.FC<CreateGroceriesStep1Props> = ({
   const [localFormData, setLocalFormData] = useState<Partial<GroceryFormData>>({
     productType: formData.productType || "Single Item",
     productName: formData.productName || "",
-    category: formData.category || undefined,
-    quantityUnit: formData.quantityUnit || undefined,
+    // Set a concrete default category so user doesn't need to open the select
+    category: (formData.category as GroceryFormData["category"]) || "Grains",
+    // Ensure select has a concrete default so validation doesn't wait for user interaction
+    quantityUnit: formData.quantityUnit || "Kilogram (kg)",
     quantityValue: formData.quantityValue || "",
     price: formData.price || "",
     items: formData.items || [{ item: "", weightValue: "", weightUnit: "Kilogram (kg)" }],
   });
+
+  // Propagate initial defaults to parent once on mount so validation/parent state is in sync
+  useEffect(() => {
+    updateFormData(localFormData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const progressSteps = [
     { id: "details", label: "Details", isCompleted: true },

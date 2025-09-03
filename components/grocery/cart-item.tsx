@@ -1,5 +1,7 @@
 "use client";
 import * as React from "react";
+import { useMarket } from "@/lib/market-context";
+import { getMarketConfig } from "@/lib/market-config";
 
 interface CartItemProps {
   id: string;
@@ -20,6 +22,8 @@ export const CartItem: React.FC<CartItemProps> = ({
   onToggleSelect,
   onRemove,
 }) => {
+  const { market } = useMarket();
+  const cfg = React.useMemo(() => getMarketConfig(market), [market]);
   return (
     <div className="flex w-full max-w-[332px] flex-col items-stretch mt-4">
       <div className="flex gap-[27px]">
@@ -52,6 +56,7 @@ export const CartItem: React.FC<CartItemProps> = ({
         </button>
       </div>
       <div className="z-10 gap-[3px] text-xs text-[rgba(61,61,61,1)] font-medium whitespace-nowrap tracking-[0.12px] leading-[22px] ml-8 max-md:ml-2.5">
+        {cfg.currencySymbol}
         {price}
       </div>
     </div>

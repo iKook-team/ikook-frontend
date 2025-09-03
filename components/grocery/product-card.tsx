@@ -2,6 +2,8 @@
 import * as React from "react";
 import Link from "next/link";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { useMarket } from "@/lib/market-context";
+import { getMarketConfig } from "@/lib/market-config";
 
 interface ProductCardProps {
   id: string;
@@ -23,6 +25,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   actionButton,
 }) => {
   const { user } = useAuthStore();
+  const { market } = useMarket();
+  const cfg = React.useMemo(() => getMarketConfig(market), [market]);
   const isChef = user?.user_type === "Chef";
   const placeholder = "https://via.placeholder.com/300x200?text=Grocery";
   const [src, setSrc] = React.useState<string>(imageUrl || placeholder);
@@ -52,7 +56,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             {description}
           </p>
           <div className="mt-3 flex items-center justify-between gap-2">
-            <span className="text-lg font-semibold text-zinc-900">{price}</span>
+            <span className="text-lg font-semibold text-zinc-900">{cfg.currencySymbol}{price}</span>
             <div className="flex items-center gap-2 whitespace-nowrap shrink-0">
               {actionButton && <>{actionButton}</>}
               {isChef ? (

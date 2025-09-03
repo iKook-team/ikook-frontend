@@ -9,6 +9,16 @@ import { ServiceListing } from "./listings/service";
 import Skeleton from "@/components/ui/skeleton";
 import useListings from "@/hooks/useListings";
 
+// Helper to ensure absolute image URLs (backend may return relative paths)
+const API_BASE = (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/+$/, "");
+const toAbsoluteUrl = (url?: string | null): string => {
+  if (!url) return "";
+  if (/^(?:https?:)?\/\//i.test(url) || url.startsWith("data:")) return url;
+  if (!API_BASE) return url.startsWith("/") ? url : `/${url}`;
+  const path = url.startsWith("/") ? url : `/${url}`;
+  return `${API_BASE}${path}`;
+};
+
 // Map API response to component props
 const mapMenuToItem = (menu: any) => ({
   id: menu.id,
@@ -16,7 +26,7 @@ const mapMenuToItem = (menu: any) => ({
   price: menu.price_per_person,
   img:
     menu.images && menu.images.length > 0
-      ? menu.images[0].image
+      ? toAbsoluteUrl(menu.images[0].image)
       : "/menus/menu1.png",
   is_favourite: menu.is_favourite,
   location: menu.chef_details?.city || menu.chef?.city || "Unknown location",
@@ -28,7 +38,8 @@ const mapMenuToItem = (menu: any) => ({
   reviewCount: menu.chef_details?.num_reviews || menu.chef?.num_reviews || 0,
   chefName:
     `${menu.chef_details?.first_name || menu.chef?.first_name || ""} ${menu.chef_details?.last_name || menu.chef?.last_name || ""}`.trim(),
-  chefAvatar: menu.chef_details?.avatar || menu.chef?.avatar || "",
+  chefAvatar:
+    toAbsoluteUrl(menu.chef_details?.avatar) || toAbsoluteUrl(menu.chef?.avatar) || "",
   cuisine_types: menu.cuisine_types || [],
   country: menu.chef_details?.country || menu.chef?.country,
   currency: menu.chef_details?.currency || menu.chef?.currency,
@@ -46,10 +57,10 @@ const mapChefToItem = (chef: any) => ({
   is_favourite: chef.is_favourite,
   // Provide safe fallbacks to avoid Next/Image errors on empty src
   mainImageUrl:
-    chef.cover_photo ||
+    toAbsoluteUrl(chef.cover_photo) ||
     "https://images.unsplash.com/photo-1504674900247-0877039348bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
   profileImageUrl:
-    chef.avatar ||
+    toAbsoluteUrl(chef.avatar) ||
     "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop",
   // Consider other verification flags if present
   isVerified:
@@ -61,9 +72,13 @@ const mapServiceToItem = (service: any) => {
   const chefLast = service.chef_details?.last_name || service.chef?.last_name || "";
   const derivedName = `${chefFirst} ${chefLast}`.trim() || service.chef_service || "Service";
   const price = service.price_per_person || service.starting_price_per_person || service.starting_price;
-  const mainImageUrl = service.cover_image || (service.images && service.images[0]?.image) || "/menus/menu1.png";
+  const mainImageUrl =
+    toAbsoluteUrl(service.cover_image) ||
+    toAbsoluteUrl(service.images && service.images[0]?.image) ||
+    "/menus/menu1.png";
   return {
     id: service.id,
+    chefId: service.chef_details?.id || service.chef?.id,
     title: service.name || derivedName,
     description: service.description,
     price,
@@ -79,8 +94,8 @@ const mapServiceToItem = (service: any) => {
       service.chef_details?.city || service.chef?.city || "Unknown location",
     services: [service.chef_service],
     profileImageUrl:
-      service.chef_details?.avatar ||
-      service.chef?.avatar ||
+      toAbsoluteUrl(service.chef_details?.avatar) ||
+      toAbsoluteUrl(service.chef?.avatar) ||
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     isVerified: service.chef_details?.is_verified || service.chef?.is_verified,
     chefName: derivedName,
