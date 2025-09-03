@@ -18,7 +18,8 @@ export interface CreateDiscountDto {
   discount_percentage: number;
   start_date: string; // yyyy-mm-dd
   end_date: string;   // yyyy-mm-dd
-  menu?: number;      // required if discount_item === 'Single Item'
+  menu?: number;      // required if discount_item === 'Single Item' for Chef service
+  grocery?: number;   // required if discount_item === 'Single Item' for Box Groceries service
 }
 
 export const createDiscount = async (payload: CreateDiscountDto) => {

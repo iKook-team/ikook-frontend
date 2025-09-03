@@ -7,6 +7,7 @@ import { CreateDiscountModal } from "@/components/discount/create-discount-modal
 
 import { createDiscount, getDiscounts } from "@/lib/api/discounts";
 import { showToast } from "@/lib/utils/toast";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 export const DiscountList: React.FC = () => {
   const [discounts, setDiscounts] = useState<any[]>([]);
@@ -14,6 +15,10 @@ export const DiscountList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const { user } = useAuthStore();
+  const isChef = user?.user_type === "Chef";
+  const serviceType = (user as any)?.service_type as string | undefined;
+  const isBoxGroceriesService = isChef && serviceType === "Box Groceries";
   
   const refresh = async (currentStatus: string) => {
     setLoading(true);
@@ -111,7 +116,9 @@ export const DiscountList: React.FC = () => {
               start_date: payload.start_date,
               end_date: payload.end_date,
               ...(payload.scope === "menu" && payload.menu_id
-                ? { menu: Number(payload.menu_id) }
+                ? isBoxGroceriesService
+                  ? { grocery: Number(payload.menu_id) }
+                  : { menu: Number(payload.menu_id) }
                 : {}),
             };
 

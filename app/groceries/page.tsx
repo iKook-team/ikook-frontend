@@ -15,17 +15,19 @@ const ChefGroceriesPage: React.FC = () => {
   const { isAuthenticated, user } = useAuthStore();
 
   useEffect(() => {
-    // Only allow chefs
+    // Only allow chefs with Box Groceries service
     if (!isAuthenticated) {
       router.replace("/login");
       return;
     }
-    if (user?.user_type !== "Chef") {
-      router.replace("/");
+    const isChef = user?.user_type === "Chef";
+    const isBoxGroceriesService = (user as any)?.service_type === "Box Groceries";
+    if (!isChef || !isBoxGroceriesService) {
+      router.replace("/dashboard/chef");
     }
   }, [isAuthenticated, user, router]);
 
-  if (!isAuthenticated || user?.user_type !== "Chef") return null;
+  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Box Groceries") return null;
 
   // State for fetched groceries
   const [groceries, setGroceries] = useState<Grocery[]>([]);

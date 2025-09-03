@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 import CalendarGrid from "@/components/calendar/calendar-grid";
 import CalendarControls from "@/components/calendar/calendar-controls";
@@ -7,6 +8,7 @@ import BookingDetails from "@/components/calendar/booking-details";
 import SetAvailabilityModal from "@/components/calendar/set-availability-modals";
 import { getWeekDates, isSameDay } from "@/lib/date-utils";
 import BackButton from "@/components/common/BackButton";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 interface BookingEvent {
   id: string;
@@ -23,6 +25,23 @@ interface BookingEvent {
 }
 
 export default function CalendarPage() {
+  const router = useRouter();
+  const { isAuthenticated, user } = useAuthStore();
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.replace("/login");
+      return;
+    }
+    const isChef = user?.user_type === "Chef";
+    const isChefService = (user as any)?.service_type === "Chef";
+    if (!isChef || !isChefService) {
+      router.replace("/dashboard/chef");
+    }
+  }, [isAuthenticated, user, router]);
+
+  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Chef") {
+    return null;
+  }
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<BookingEvent | null>(null);

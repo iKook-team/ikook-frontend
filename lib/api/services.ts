@@ -103,10 +103,46 @@ export const servicesService = {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        // Disable axios-retry for this request
+        ["axios-retry"]: { retries: 0 } as any,
       },
     );
 
     return response.data.data; // Extract the nested data property
+  },
+
+  // Get a single service by id
+  getService: async (id: number): Promise<Service> => {
+    const response = await apiClient.get<{ data: Service }>(`/services/${id}/`);
+    return response.data.data;
+  },
+
+  // Update a service entirely/partially (multipart for file compatibility)
+  updateService: async (
+    id: number,
+    data: Record<string, unknown>,
+  ): Promise<Service> => {
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      if (key === "cover_image" && value instanceof File) {
+        formData.append(key, value);
+      } else if (Array.isArray(value)) {
+        value.forEach((item) => formData.append(key, String(item)));
+      } else if (value !== null && value !== undefined) {
+        formData.append(key, String(value));
+      }
+    });
+
+    const response = await apiClient.patch<{ data: Service }>(
+      `/services/${id}/`,
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+        // Disable axios-retry for this request
+        ["axios-retry"]: { retries: 0 } as any,
+      },
+    );
+    return response.data.data;
   },
 };
 

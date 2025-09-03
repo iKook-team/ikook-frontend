@@ -11,11 +11,29 @@ import { MenuFormData } from "@/types/menu-form";
 import { menuService } from "@/lib/api/menus";
 import { handleApiError } from "@/lib/utils/toast";
 import BackButton from "@/components/common/BackButton";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 const EditMenuPage: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const menuId = params.id as string;
+  const { isAuthenticated, user } = useAuthStore();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.replace("/login");
+      return;
+    }
+    const isChef = user?.user_type === "Chef";
+    const isChefService = (user as any)?.service_type === "Chef";
+    if (!isChef || !isChefService) {
+      router.replace("/dashboard/chef");
+    }
+  }, [isAuthenticated, user, router]);
+
+  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Chef") {
+    return null;
+  }
   
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<Partial<MenuFormData>>({});

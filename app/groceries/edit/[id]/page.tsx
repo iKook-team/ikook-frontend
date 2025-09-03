@@ -9,11 +9,29 @@ import CreateGroceriesStep2 from "@/components/grocery/create-groceries-step2";
 import CreateGroceriesStep3 from "@/components/grocery/create-groceries-step3";
 import { groceriesService, Grocery } from "@/lib/api/groceries";
 import { handleApiError, showToast } from "@/lib/utils/toast";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 const EditGroceryPage: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const groceryId = params.id as string;
+  const { isAuthenticated, user } = useAuthStore();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.replace("/login");
+      return;
+    }
+    const isChef = user?.user_type === "Chef";
+    const isBoxGroceriesService = (user as any)?.service_type === "Box Groceries";
+    if (!isChef || !isBoxGroceriesService) {
+      router.replace("/dashboard/chef");
+    }
+  }, [isAuthenticated, user, router]);
+
+  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Box Groceries") {
+    return null;
+  }
 
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<Partial<GroceryFormData & { uploadedImages: File[]; existingImages: any[] }>>({});

@@ -56,30 +56,36 @@ const mapChefToItem = (chef: any) => ({
     chef.is_verified ?? chef.document_verified ?? chef.identity_verified ?? false,
 });
 
-const mapServiceToItem = (service: any) => ({
-  id: service.id,
-  title: service.name,
-  description: service.description,
-  price: service.price_per_person || service.starting_price_per_person,
-  mainImageUrl: service.cover_image || "/menus/menu1.png",
-  rating: service.chef_details?.average_rating
-    ? Math.round(service.chef_details.average_rating * 10) / 10
-    : service.chef?.average_rating
-      ? Math.round(service.chef.average_rating * 10) / 10
-      : 0,
-  reviewCount:
-    service.chef_details?.num_reviews || service.chef?.num_reviews || 0,
-  location:
-    service.chef_details?.city || service.chef?.city || "Unknown location",
-  services: [service.chef_service],
-  profileImageUrl:
-    service.chef_details?.avatar ||
-    service.chef?.avatar ||
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-  isVerified: service.chef_details?.is_verified || service.chef?.is_verified,
-  chefName:
-    `${service.chef_details?.first_name || service.chef?.first_name || ""} ${service.chef_details?.last_name || service.chef?.last_name || ""}`.trim(),
-});
+const mapServiceToItem = (service: any) => {
+  const chefFirst = service.chef_details?.first_name || service.chef?.first_name || "";
+  const chefLast = service.chef_details?.last_name || service.chef?.last_name || "";
+  const derivedName = `${chefFirst} ${chefLast}`.trim() || service.chef_service || "Service";
+  const price = service.price_per_person || service.starting_price_per_person || service.starting_price;
+  const mainImageUrl = service.cover_image || (service.images && service.images[0]?.image) || "/menus/menu1.png";
+  return {
+    id: service.id,
+    title: service.name || derivedName,
+    description: service.description,
+    price,
+    mainImageUrl,
+    rating: service.chef_details?.average_rating
+      ? Math.round(service.chef_details.average_rating * 10) / 10
+      : service.chef?.average_rating
+        ? Math.round(service.chef.average_rating * 10) / 10
+        : 0,
+    reviewCount:
+      service.chef_details?.num_reviews || service.chef?.num_reviews || 0,
+    location:
+      service.chef_details?.city || service.chef?.city || "Unknown location",
+    services: [service.chef_service],
+    profileImageUrl:
+      service.chef_details?.avatar ||
+      service.chef?.avatar ||
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+    isVerified: service.chef_details?.is_verified || service.chef?.is_verified,
+    chefName: derivedName,
+  };
+};
 
 // Skeleton Loader Component
 interface ListingSkeletonProps {

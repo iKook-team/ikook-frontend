@@ -62,6 +62,9 @@ export const UserMenu: React.FC = () => {
 
   const isChef = user?.user_type === "Chef";
   const isHost = user?.user_type === "Host";
+  const serviceType = (user as any)?.service_type as string | undefined;
+  const isChefService = isChef && serviceType === "Chef";
+  const isBoxGroceriesService = isChef && serviceType === "Box Groceries";
 
   return (
     <div className="w-[84px] h-12 relative max-sm:w-11 max-sm:h-11">
@@ -125,24 +128,32 @@ export const UserMenu: React.FC = () => {
             {/* Chef-specific items */}
             {isChef && (
               <>
-                <button
-                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                  onClick={() => router.push("/menus")}
-                >
-                  Menus
-                </button>
-                <button
-                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                  onClick={() => router.push("/groceries")}
-                >
-                  Groceries
-                </button>
-                <button
-                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                  onClick={() => router.push("/calendar")}
-                >
-                  Calendar
-                </button>
+                {isChefService && (
+                  <>
+                    <button
+                      className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => router.push("/menus")}
+                    >
+                      Menus
+                    </button>
+                    <button
+                      className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => router.push("/calendar")}
+                    >
+                      Calendar
+                    </button>
+                  </>
+                )}
+                {isBoxGroceriesService && (
+                  <>
+                    <button
+                      className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => router.push("/groceries")}
+                    >
+                      Groceries
+                    </button>
+                  </>
+                )}
                 <button
                   className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                   onClick={() => router.push("/revenue")}

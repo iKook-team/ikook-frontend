@@ -281,35 +281,38 @@ const VerificationPage = () => {
   const identityVerified = Boolean(user?.identity_verified);
   const isHost = user?.user_type === "Host";
   const isChef = user?.user_type === "Chef";
+  const isBoxGroceries = (user as any)?.service_type === "Box Groceries";
+  const chefDocument = isChef && (user as any)?.service_type === "Chef"; // Chef service flow only for chef service type
+  const hostLike = isHost || isBoxGroceries; // Box Groceries behaves like Host for verification
 
   // If host gets verified, clear selection and ensure identity card is disabled
   useEffect(() => {
-    if (isHost && identityVerified) {
+    if (hostLike && identityVerified) {
       if (selectedOption === "identity") setSelectedOption(null);
       if (showIdentityModal) setShowIdentityModal(false);
     }
-  }, [isHost, identityVerified, selectedOption, showIdentityModal]);
+  }, [hostLike, identityVerified, selectedOption, showIdentityModal]);
 
-  // For chefs: default to identity selection until identity is verified
+  // For chefs with chef service type: default to identity selection until verified
   useEffect(() => {
-    if (isChef && !identityVerified) {
+    if (chefDocument && !identityVerified) {
       setSelectedOption("identity");
     }
-  }, [isChef, identityVerified]);
+  }, [chefDocument, identityVerified]);
 
-  // After chef identity verification succeeds, auto-select document (if not already uploaded)
+  // After chef (service_type=Chef) identity verification succeeds, auto-select document (if not already uploaded)
   useEffect(() => {
-    if (isChef && identityVerified) {
+    if (chefDocument && identityVerified) {
       setSelectedOption(hasCertificate ? null : "document");
     }
-  }, [isChef, identityVerified, hasCertificate]);
+  }, [chefDocument, identityVerified, hasCertificate]);
 
   const handleContinue = () => {
     if (selectedOption === "identity") {
       setShowIdentityModal(true);
       return;
     }
-    if (selectedOption === "document" && user?.user_type === "Chef") {
+    if (selectedOption === "document" && chefDocument) {
       setShowModal(true);
       return;
     }
@@ -351,7 +354,7 @@ const VerificationPage = () => {
           )}
         </div>
 
-        {isChef && (
+        {chefDocument && (
           <div className={`border w-full px-4 py-3 rounded-md border-solid border-[#CFCFCE] max-sm:p-3 flex items-start gap-3 justify-between ${!identityVerified && !hasCertificate ? "opacity-90" : ""}`}>
             <div>
               <h3 className="text-[#3F3E3D] text-[15px] font-medium mb-1">Certified Level 2 food hygiene certification</h3>
@@ -388,12 +391,12 @@ const VerificationPage = () => {
           </div>
         )}
 
-        {!((isHost && identityVerified) || (isChef && hasCertificate)) && (
+        {!((hostLike && identityVerified) || (chefDocument && hasCertificate)) && (
           <button
             type="button"
             onClick={handleContinue}
-            disabled={!selectedOption || (selectedOption === "document" && !isChef)}
-            className={`flex w-[275px] justify-center items-center gap-2 border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] h-12 px-7 py-3 rounded-lg self-start max-sm:w-[90%] border-solid ${!selectedOption || (selectedOption === "document" && !isChef) ? "bg-gray-300 border-gray-300 cursor-not-allowed" : "bg-[#FCC01C] border-[#FCC01C] cursor-pointer"}`}
+            disabled={!selectedOption || (selectedOption === "document" && !chefDocument)}
+            className={`flex w-[275px] justify-center items-center gap-2 border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] h-12 px-7 py-3 rounded-lg self-start max-sm:w-[90%] border-solid ${!selectedOption || (selectedOption === "document" && !chefDocument) ? "bg-gray-300 border-gray-300 cursor-not-allowed" : "bg-[#FCC01C] border-[#FCC01C] cursor-pointer"}`}
           >
             <span className="text-white text-base font-bold leading-6">
               {selectedOption === "identity" ? "Verify" : selectedOption === "document" ? "Upload" : "Continue"}

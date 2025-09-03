@@ -161,11 +161,20 @@ export const listingService = {
     params: ServiceListingParams = {},
   ): Promise<ApiResponse<Service>> {
     try {
-      const response = await apiClient.get<ApiResponse<Service>>("/services/", {
+      const response = await apiClient.get("/services/", {
         params: { ...params, page_size: 20 },
       });
 
-      return response.data;
+      // Support wrapped responses: { status, message, data: { count, results, ... } }
+      // and unwrapped responses: { count, results, ... }
+      const payload: any = response.data;
+      const data: ApiResponse<Service> | undefined = payload?.data ?? payload;
+
+      if (!data || !Array.isArray(data.results)) {
+        return { count: 0, next: null, previous: null, results: [] };
+      }
+
+      return data;
     } catch (error) {
       throw error;
     }
