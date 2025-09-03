@@ -39,9 +39,6 @@ export default function CalendarPage() {
     }
   }, [isAuthenticated, user, router]);
 
-  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Chef") {
-    return null;
-  }
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<BookingEvent | null>(null);
@@ -161,6 +158,11 @@ export default function CalendarPage() {
     console.log("Closing panel");
     setPanelVisible(false);
   }, []);
+
+  // After all hooks are declared, guard rendering for unauthorized users
+  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Chef") {
+    return null;
+  }
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">

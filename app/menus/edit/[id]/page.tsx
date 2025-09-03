@@ -30,10 +30,6 @@ const EditMenuPage: React.FC = () => {
       router.replace("/dashboard/chef");
     }
   }, [isAuthenticated, user, router]);
-
-  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Chef") {
-    return null;
-  }
   
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<Partial<MenuFormData>>({});
@@ -346,6 +342,11 @@ const EditMenuPage: React.FC = () => {
     isSubmitting,
     submitError,
   ]);
+
+  // After all hooks are declared, guard rendering for unauthorized users
+  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Chef") {
+    return null;
+  }
 
   if (isLoading) {
     return (

@@ -28,11 +28,7 @@ const EditGroceryPage: React.FC = () => {
       router.replace("/dashboard/chef");
     }
   }, [isAuthenticated, user, router]);
-
-  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Box Groceries") {
-    return null;
-  }
-
+  
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<Partial<GroceryFormData & { uploadedImages: File[]; existingImages: any[] }>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -337,6 +333,11 @@ const EditGroceryPage: React.FC = () => {
         return <CreateGroceriesStep1 {...stepProps} />;
     }
   }, [commonProps, currentStep, handleFinalSubmit, isSubmitting]);
+
+  // After all hooks are declared, guard rendering for unauthorized users
+  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Box Groceries") {
+    return null;
+  }
 
   if (isLoading) {
     return (

@@ -26,10 +26,6 @@ const CreateMenuPage: React.FC = () => {
       router.replace("/dashboard/chef");
     }
   }, [isAuthenticated, user, router]);
-
-  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Chef") {
-    return null;
-  }
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<Partial<MenuFormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -221,6 +217,11 @@ const CreateMenuPage: React.FC = () => {
     isSubmitting,
     submitError,
   ]);
+
+  // After all hooks are declared, guard rendering for unauthorized users
+  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Chef") {
+    return null;
+  }
 
   return (
     <div className="w-full min-h-screen bg-[#FBFBFB] flex justify-center px-4 py-8">
