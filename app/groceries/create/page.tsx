@@ -36,9 +36,7 @@ const GroceriesCreatePage: React.FC = () => {
       router.replace("/dashboard/chef");
     }
   }, [isAuthenticated, user, router]);
-
-  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Box Groceries") return null;
-
+  
   const updateFormData = useCallback((data: Partial<GroceryFormData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
   }, []);
@@ -179,6 +177,9 @@ const GroceriesCreatePage: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
+  // After all hooks are declared, guard rendering for unauthorized users
+  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Box Groceries") return null;
 
   return (
     <div className="w-full min-h-screen relative bg-[#FBFBFB]">
