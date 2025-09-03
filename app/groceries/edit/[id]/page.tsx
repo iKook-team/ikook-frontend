@@ -49,9 +49,32 @@ const EditGroceryPage: React.FC = () => {
     return map[label] || label;
   };
 
-  const apiToUnitLabel = (api?: string): string | undefined => {
+  // Allowed UI units (must match GroceryFormData["quantityUnit"])
+  const UI_UNITS: GroceryFormData["quantityUnit"][] = [
+    "Kilogram (kg)",
+    "Gram (g)",
+    "Pound (lb)",
+    "Ounce (oz)",
+    "Metric Ton (tonne)",
+    "Liter (L)",
+    "Milliliter (mL)",
+    "Gallon (gal)",
+    "Quart (qt)",
+    "Pint (pt)",
+    "Cup",
+    "Fluid Ounce (fl oz)",
+    "Piece (pcs)",
+    "Unit",
+    "Dozen",
+    "Pack",
+    "Bundle",
+    "Tray",
+    "Case",
+  ];
+
+  const apiToUnitLabel = (api?: string): GroceryFormData["quantityUnit"] | undefined => {
     if (!api) return undefined;
-    const map: Record<string, string> = {
+    const map: Record<string, GroceryFormData["quantityUnit"]> = {
       Kg: "Kilogram (kg)",
       g: "Gram (g)",
       lb: "Pound (lb)",
@@ -72,14 +95,48 @@ const EditGroceryPage: React.FC = () => {
       Tray: "Tray",
       Case: "Case",
     };
-    return map[api] || api;
+    if (api in map) return map[api];
+    // If API already sends the same literal as UI, allow it if present in UI_UNITS
+    if ((UI_UNITS as readonly string[]).includes(api)) {
+      return api as GroceryFormData["quantityUnit"];
+    }
+    return undefined;
   };
 
-  const apiCategoryToForm = (api?: string): string | undefined => {
-    const reverseMap: Record<string, string> = {
+  // Allowed UI categories (must match GroceryFormData["category"])
+  const UI_CATEGORIES: GroceryFormData["category"][] = [
+    "Grains",
+    "Dairy and Eggs",
+    "Fruits",
+    "Vegetables",
+    "Proteins",
+    "Bakery Items",
+    "Snacks and Confectionery",
+    "Canned and Packaged Foods",
+    "Condiments and Spices",
+    "Beverages",
+    "Frozen Foods",
+    "Pantry Staples",
+    "Nuts and Seeds",
+    "Health Foods and Supplements",
+    "Non-Food Items",
+    "Herbs and Aromatics",
+    "Deli and Prepared Foods",
+    "Desserts and Sweets",
+    "Baking Supplies",
+  ];
+
+  const apiCategoryToForm = (api?: string): GroceryFormData["category"] | undefined => {
+    if (!api) return undefined;
+    const reverseMap: Record<string, GroceryFormData["category"]> = {
       Grain: "Grains",
     };
-    return (api && (reverseMap[api] || api)) as string | undefined;
+    if (api in reverseMap) return reverseMap[api];
+    // If API already sends the same literal as UI, accept it only if allowed
+    if ((UI_CATEGORIES as readonly string[]).includes(api)) {
+      return api as GroceryFormData["category"];
+    }
+    return undefined;
   };
 
   // Load existing grocery data
