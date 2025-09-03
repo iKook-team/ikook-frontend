@@ -133,6 +133,12 @@ export const UserMenu: React.FC = () => {
                 </button>
                 <button
                   className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={() => router.push("/groceries")}
+                >
+                  Groceries
+                </button>
+                <button
+                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                   onClick={() => router.push("/calendar")}
                 >
                   Calendar
