@@ -7,6 +7,7 @@ import { MenuSelection, QuoteItem as MenuQuoteItem } from "@/components/quotes/m
 import { QuoteSummary } from "@/components/quotes/quote-summary";
 import BackButton from "@/components/common/BackButton";
 import { quotesService } from "@/lib/api/quotes";
+import { showToast, handleApiError } from "@/lib/utils/toast";
 import { bookingsService } from "@/lib/api/bookings";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { Button } from "@/components/ui/button";
@@ -153,14 +154,28 @@ const Page: React.FC = () => {
     };
   })();
 
-  const onPayQuote = () => {
-    const bookingId = booking?.id || (quote as any)?.booking_id || (quote as any)?.booking?.id;
-    if (!bookingId) {
-      console.warn("No bookingId available for checkout");
-      return;
+  const [accepting, setAccepting] = React.useState(false);
+
+  const onPayQuote = async () => {
+    if (!quoteId) return;
+    if (accepting) return;
+    try {
+      setAccepting(true);
+      // Accept the quote first
+      await quotesService.acceptQuote(quoteId);
+
+      const bookingId = booking?.id || (quote as any)?.booking_id || (quote as any)?.booking?.id;
+      if (!bookingId) {
+        showToast.error("Booking information missing for checkout");
+        return;
+      }
+      const url = `/booking/checkout?bookingId=${encodeURIComponent(String(bookingId))}`;
+      router.push(url);
+    } catch (e: any) {
+      handleApiError(e, "Failed to accept quote");
+    } finally {
+      setAccepting(false);
     }
-    const url = `/booking/checkout?bookingId=${encodeURIComponent(String(bookingId))}`;
-    router.push(url);
   };
 
   return (
@@ -211,8 +226,9 @@ const Page: React.FC = () => {
                     <Button
                       className="w-full bg-[#323335] hover:bg-[#323335]/90 text-white font-semibold"
                       onClick={onPayQuote}
+                      disabled={accepting}
                     >
-                      Pay Quote
+                      {accepting ? "Processing..." : "Pay Quote"}
                     </Button>
                   )}
                 </QuoteSummary>

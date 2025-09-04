@@ -3,15 +3,17 @@
 import React from "react";
 import Groceries from "@/components/grocery/groceries";
 import { groceriesService, type Grocery, type GroceryItem } from "@/lib/api/groceries";
+import { listingService } from "@/lib/api/listing";
 
-export default function BoxGroceriesDetailsPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = React.use(params); // chef_id
+export default function BoxGroceriesDetailsPage({ params }: { params: { id: string } }) {
+  const { id } = params; // chef_id
 
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [products, setProducts] = React.useState<
     { id: string; name: string; description: string; price: string; imageUrl: string; items?: GroceryItem[] }[]
   >([]);
+  const [chefProfile, setChefProfile] = React.useState<any | null>(null);
 
   const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "";
   const extractImageUrl = (img: any): string | undefined => {
@@ -38,8 +40,13 @@ export default function BoxGroceriesDetailsPage({ params }: { params: Promise<{ 
       setLoading(true);
       setError(null);
       try {
-        const res = await groceriesService.getGroceries({ chef_id: id, page: 1, page_size: 20 });
+        const [res, chef] = await Promise.all([
+          groceriesService.getGroceries({ chef_id: id, page: 1, page_size: 20, status: "Active" }),
+          listingService.getChefById(id),
+        ]);
         const list = (res.results ?? []) as Grocery[];
+        const profile = (chef as any)?.data ?? chef;
+        setChefProfile(profile ?? null);
         const mapped = list.map((g) => {
           const isMultiple = Array.isArray(g.items) && g.items.length > 0;
           const firstImageRaw = extractImageUrl(g.images?.[0]);
@@ -82,7 +89,16 @@ export default function BoxGroceriesDetailsPage({ params }: { params: Promise<{ 
           </div>
         )}
         {/* Groceries UI consumes products; ProductCard will prefix currency symbol */}
-        <Groceries products={products} />
+        <Groceries
+          products={products}
+          hideSearch
+          storeName={chefProfile ? `${(chefProfile.first_name || "").trim()} ${(chefProfile.last_name || "").trim()}`.trim() : undefined}
+          location={chefProfile?.city || chefProfile?.country || undefined}
+          deliveryType="Instant delivery"
+          rating={typeof chefProfile?.average_rating === "number" ? chefProfile.average_rating : undefined}
+          reviewCount={typeof chefProfile?.num_reviews === "number" ? chefProfile.num_reviews : undefined}
+          avatarSrc={chefProfile?.avatar ? resolveImageUrl(chefProfile.avatar) : undefined}
+        />
         {loading && (
           <div className="text-gray-500 text-sm mt-4">Loading groceries…</div>
         )}

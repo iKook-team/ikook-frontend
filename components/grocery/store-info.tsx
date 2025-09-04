@@ -8,7 +8,12 @@ interface StoreInfoProps {
   rating: number;
   reviewCount: number;
   onSearch?: (query: string) => void;
+  showSearch?: boolean;
+  avatarSrc?: string;
 }
+
+const GRAVATAR_FALLBACK =
+  "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
 
 export const StoreInfo: React.FC<StoreInfoProps> = ({
   storeName,
@@ -17,6 +22,8 @@ export const StoreInfo: React.FC<StoreInfoProps> = ({
   rating,
   reviewCount,
   onSearch,
+  showSearch = true,
+  avatarSrc,
 }) => {
   const [searchQuery, setSearchQuery] = React.useState("");
 
@@ -30,8 +37,8 @@ export const StoreInfo: React.FC<StoreInfoProps> = ({
       <div className="self-stretch flex w-full items-stretch gap-5 flex-wrap justify-between max-md:max-w-full">
         <div className="flex items-center gap-3">
           <img
-            src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/784c770d5befe733173ac931245013c6e455c570?placeholderIfAbsent=true"
-            className="aspect-[1] object-contain w-[70px] shadow-[0px_4px_9px_rgba(0,0,0,0.1)] self-stretch shrink-0 my-auto rounded-[88px]"
+            src={avatarSrc || GRAVATAR_FALLBACK}
+            className="aspect-[1] object-cover w-[70px] h-[70px] shadow-[0px_4px_9px_rgba(0,0,0,0.1)] self-stretch shrink-0 my-auto rounded-full"
             alt={`${storeName} logo`}
           />
           <div className="self-stretch min-w-60 my-auto">
@@ -75,30 +82,32 @@ export const StoreInfo: React.FC<StoreInfoProps> = ({
             </div>
           </div>
         </div>
-        <div className="text-[15px] text-[#3F3E3D] font-normal whitespace-nowrap my-auto">
-          <form onSubmit={handleSearch} className="w-full">
-            <div className="w-full">
+        {showSearch && (
+          <div className="text-[15px] text-[#3F3E3D] font-normal whitespace-nowrap my-auto">
+            <form onSubmit={handleSearch} className="w-full">
               <div className="w-full">
-                <div className="items-center border border-[color:var(--Gray-100,#CFCFCE)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden bg-white px-3.5 py-2.5 rounded-lg border-solid">
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search"
-                    className="text-[#3F3E3D] self-stretch flex-1 shrink basis-[0%] min-w-60 gap-2 my-auto bg-transparent border-none outline-none"
-                  />
-                  <button type="submit">
-                    <img
-                      src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/14e166372f295292f57972e6258fba14c7e81b6d?placeholderIfAbsent=true"
-                      className="aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto"
-                      alt="Search"
+                <div className="w-full">
+                  <div className="items-center border border-[color:var(--Gray-100,#CFCFCE)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden bg-white px-3.5 py-2.5 rounded-lg border-solid">
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search"
+                      className="text-[#3F3E3D] self-stretch flex-1 shrink basis-[0%] min-w-60 gap-2 my-auto bg-transparent border-none outline-none"
                     />
-                  </button>
+                    <button type="submit">
+                      <img
+                        src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/14e166372f295292f57972e6258fba14c7e81b6d?placeholderIfAbsent=true"
+                        className="aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto"
+                        alt="Search"
+                      />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </form>
-        </div>
+            </form>
+          </div>
+        )}
       </div>
     </section>
   );

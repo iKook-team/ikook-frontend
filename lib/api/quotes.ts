@@ -64,4 +64,9 @@ export const quotesService = {
     // Some backends wrap payload in {data}
     return response.data?.data || response.data;
   },
+  async acceptQuote(id: string | number) {
+    const response = await apiClient.post(`/quotes/${id}/accept/`);
+    // Support both wrapped and unwrapped responses
+    return response.data?.data || response.data;
+  },
 };

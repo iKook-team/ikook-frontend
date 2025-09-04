@@ -99,8 +99,8 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
                   userType === "chef"
                     ? booking.host_id
                     : userType === "host"
-                    ? booking.chef_id
-                    : booking.chef_id || booking.host_id;
+                    ? (booking.chef_id || booking.selected_chef_id)
+                    : booking.chef_id || booking.selected_chef_id || booking.host_id;
                 if (!otherUserId) throw new Error("Unable to determine chat participant");
                 const chat = await chatService.getOrCreateChat(Number(otherUserId));
                 const back = encodeURIComponent(`/dashboard/booking-details?id=${booking.id}`);

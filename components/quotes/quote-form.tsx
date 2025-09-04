@@ -141,7 +141,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
 
   return (
     <form className="flex flex-col h-full" onSubmit={handleSubmit}>
-      <div className="flex flex-col justify-center px-2.5 py-3 w-full bg-white rounded-md border-solid shadow-2xl border-[0.639px] border-neutral-200 max-md:max-w-full">
+      {/* <div className="flex flex-col justify-center px-2.5 py-3 w-full bg-white rounded-md border-solid shadow-2xl border-[0.639px] border-neutral-200 max-md:max-w-full">
         <div className="flex gap-4 items-start">
           <img
             src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/9f5b325159a2a4814c8c96c3a0659ce4ebd41156?placeholderIfAbsent=true"
@@ -162,7 +162,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Menu Name Input */}
       <div className="my-6">

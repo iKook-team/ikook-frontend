@@ -152,14 +152,14 @@ const CreateQuotePage: React.FC = () => {
                 isSubmitting={isSubmitting}
               />
             </section>
-            <aside className="ml-5 w-[43%] max-md:ml-0 max-md:w-full">
+            {/* <aside className="ml-5 w-[43%] max-md:ml-0 max-md:w-full">
               <CreateSidebar
                 onPreview={handlePreview}
                 isSubmitting={isSubmitting}
                 booking={booking}
                 loadingBooking={loadingBooking}
               />
-            </aside>
+            </aside> */}
           </div>
         </div>
       </div>

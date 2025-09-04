@@ -134,7 +134,7 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
                     if (userType === "chef") {
                       otherUserId = booking.host_id;
                     } else if (userType === "host") {
-                      otherUserId = booking.chef_id;
+                      otherUserId = booking.chef_id || booking.selected_chef_id;
                     }
 
                     // Fallback: pick an ID that is not the current user
@@ -144,6 +144,8 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
                         otherUserId = booking.host_id;
                       } else if (booking.chef_id && booking.chef_id !== currentId) {
                         otherUserId = booking.chef_id;
+                      } else if (booking.selected_chef_id && booking.selected_chef_id !== currentId) {
+                        otherUserId = booking.selected_chef_id;
                       }
                     }
 

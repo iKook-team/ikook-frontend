@@ -25,7 +25,25 @@ type Product = {
   items?: GroceryItem[];
 };
 
-export default function Index({ products }: { products?: Product[] }) {
+export default function Index({
+  products,
+  hideSearch,
+  storeName,
+  location,
+  deliveryType,
+  rating,
+  reviewCount,
+  avatarSrc,
+}: {
+  products?: Product[];
+  hideSearch?: boolean;
+  storeName?: string;
+  location?: string;
+  deliveryType?: string;
+  rating?: number;
+  reviewCount?: number;
+  avatarSrc?: string;
+}) {
   const router = useRouter();
   const [cartItems, setCartItems] = React.useState<CartItemData[]>([]);
 
@@ -115,12 +133,14 @@ export default function Index({ products }: { products?: Product[] }) {
     <div className="w-full">
       <main className="w-full">
         <StoreInfo
-          storeName="Hubmart"
-          location="London"
-          deliveryType="Instant delivery"
-          rating={4.6}
-          reviewCount={23}
+          storeName={storeName || "Hubmart"}
+          location={location || "London"}
+          deliveryType={deliveryType || "Instant delivery"}
+          rating={rating ?? 4.6}
+          reviewCount={reviewCount ?? 23}
           onSearch={handleSearch}
+          showSearch={!hideSearch}
+          avatarSrc={avatarSrc}
         />
 
         <div className="w-full flex flex-col mt-[31px]">
