@@ -1,18 +1,14 @@
 "use client";
 
 import React from "react";
+import { useParams } from "next/navigation";
 import Groceries from "@/components/grocery/groceries";
 import { groceriesService, type Grocery, type GroceryItem } from "@/lib/api/groceries";
 import { listingService } from "@/lib/api/listing";
 
-export default function BoxGroceriesDetailsPage({
-  params,
-  searchParams,
-}: {
-  params: { id: string };
-  searchParams?: Record<string, string | string[] | undefined>;
-}) {
-  const { id } = params; // chef_id
+export default function BoxGroceriesDetailsPage() {
+  const params = useParams<{ id: string }>();
+  const id = params?.id as string; // chef_id
 
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
