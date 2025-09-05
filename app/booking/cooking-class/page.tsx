@@ -193,7 +193,13 @@ const CookingClassBookingPage = () => {
       );
       break;
     case "status":
-      StepComponent = <StatusCard />;
+      StepComponent = (
+        <StatusCard
+          bookingId={
+            formData?.bookingId != null ? String(formData.bookingId) : undefined
+          }
+        />
+      );
       break;
     default:
       StepComponent = null;

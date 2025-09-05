@@ -126,10 +126,6 @@ export const AddAddressModal = ({
           " Please try again.";
 
       showToast.error(errorMessage);
-      console.error(
-        `Error ${addressId ? "updating" : "adding"} address:`,
-        error,
-      );
     } finally {
       setIsSubmitting(false);
     }

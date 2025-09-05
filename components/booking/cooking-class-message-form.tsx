@@ -14,7 +14,8 @@ export interface CookingClassMessageFormProps {
   bookingData?: Record<string, any>;
   dietaryRestrictions?: string[];
   budget?: number;
-  budgetType?: "Flexible" | "Fixed" | null;
+  // Accept either Title Case or lowercase from previous steps
+  budgetType?: "Flexible" | "Fixed" | "flexible" | "fixed" | null;
   preferredCuisines?: string[];
   serviceId?: number | string;
   service?: any;
@@ -42,8 +43,8 @@ const CookingClassMessageForm: React.FC<CookingClassMessageFormProps> = ({
   const serviceToUse = service || bookingService;
 
   const progressSteps = [
-    { label: "Class Details", completed: true },
-    { label: "Preferences", completed: true },
+    { label: "Event Details", completed: true },
+    { label: "Budget", completed: true },
     { label: "Message", completed: false, inProgress: true },
   ];
 
@@ -81,6 +82,23 @@ const CookingClassMessageForm: React.FC<CookingClassMessageFormProps> = ({
 
       return;
     }
+
+    // Normalize budget type to match API enum (Title Case)
+    const normalizeBudgetType = (
+      bt?: string | null,
+    ): "Flexible" | "Fixed" | null => {
+      if (bt == null) return null;
+      const v = bt.toString().trim().toLowerCase();
+      if (v === "fixed") return "Fixed";
+      if (v === "flexible") return "Flexible";
+      // Default to Flexible if unrecognized
+      return "Flexible";
+    };
+
+    // Prefer explicit prop, but fall back to bookingData if needed
+    const normalizedBudgetType = normalizeBudgetType(
+      budgetType ?? (bookingData as any)?.budgetType ?? (bookingData as any)?.budget_type,
+    );
 
     // Compose payload for cooking class booking
     const payload = {
@@ -127,21 +145,21 @@ const CookingClassMessageForm: React.FC<CookingClassMessageFormProps> = ({
       message: message,
       delivery_time: "12:00:00", // Static delivery time as required by the API
       budget: budget || null,
-      budget_type: budgetType || null,
+      budget_type: normalizedBudgetType,
     };
 
     try {
       const result = await bookingsService.createBooking(payload);
 
       setBooking({
-        ...result.data,
+        ...result,
         service_price: service?.price || 0,
         service_name: service?.name || "Cooking Class",
       });
 
       showToast.success("Cooking class booking created successfully!");
       setIsSubmitting(false);
-      onNext({ message, bookingId: result.data.id });
+      onNext({ message, bookingId: result.id });
     } catch (err: any) {
       setIsSubmitting(false);
       let errorMessage =

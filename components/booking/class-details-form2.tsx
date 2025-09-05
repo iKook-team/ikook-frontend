@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import { ProgressIndicator } from "./progress-indicator";
 import { ActionButtons } from "./action-buttons";
 
-import { ChefCard } from "@/components/cart/chef-card";
-
 interface ClassDetailsForm2Props {
   onNext: (data: ClassDetailsForm2Data) => void;
   onBack: () => void;
@@ -30,8 +28,8 @@ const ClassDetailsForm2: React.FC<ClassDetailsForm2Props> = ({
   });
 
   const progressSteps = [
-    { label: "Class Detail", completed: true },
-    { label: "Class Preferences", completed: true, inProgress: true },
+    { label: "Event Details", completed: false, inProgress: true },
+    { label: "Budget", completed: false },
     { label: "Message", completed: false },
   ];
 
@@ -66,20 +64,6 @@ const ClassDetailsForm2: React.FC<ClassDetailsForm2Props> = ({
           <div className="mb-4">
             <ProgressIndicator steps={progressSteps} />
           </div>
-        </div>
-
-        {/* Chef Card Section */}
-        <div className="px-6 py-4 border-b border-gray-100">
-          <ChefCard
-            chefName="Chef Titilayo John"
-            dishName="Braised Chicken With Lemon and Olives"
-            imageUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/231d86006c0dab5ed39c08a8a310d23841a29a6f?placeholderIfAbsent=true"
-            location="London"
-            locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
-            rating="4.6"
-            ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
-            reviewCount="(23 Reviews)"
-          />
         </div>
 
         {/* Form Section */}

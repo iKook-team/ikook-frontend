@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useRouter } from "next/navigation";
 
@@ -20,6 +22,8 @@ export const StatusCard: React.FC<StatusCardProps> = (props) => {
   const router = useRouter();
 
   const handleButtonClick = () => {
+    // Debug: log bookingId on click
+    console.debug("[StatusCard] View Booking clicked, bookingId=", bookingId);
     if (onButtonClick) {
       onButtonClick();
     } else if (props.bookingId) {
@@ -54,7 +58,14 @@ export const StatusCard: React.FC<StatusCardProps> = (props) => {
               {description}
             </p>
           </div>
-          <div className="flex text-base text-white font-semibold mt-6 rounded-lg">
+          {/* Debug info for bookingId */}
+          {bookingId ? (
+            <p className="text-xs text-gray-500 mt-2">Debug: bookingId = {bookingId}</p>
+          ) : (
+            <p className="text-xs text-red-500 mt-2">Debug: No bookingId provided</p>
+          )}
+
+          <div className="flex text-base text-white font-semibold mt-4 rounded-lg">
             <button
               onClick={handleButtonClick}
               className="justify-center items-center border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex gap-2 overflow-hidden bg-[#FCC01C] px-7 py-3 rounded-lg border-solid border-[#FCC01C] max-md:px-5 hover:bg-[#e6ac19] transition-colors"

@@ -28,7 +28,7 @@ const PreferencesForm: React.FC<PreferencesFormProps> = ({
 
   const progressSteps = [
     { label: "Event Details", completed: true },
-    { label: "Preferences", completed: false, inProgress: true },
+    { label: "Budget", completed: false, inProgress: true },
     { label: "Message", completed: false },
   ];
 
