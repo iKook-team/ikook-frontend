@@ -190,7 +190,6 @@ export const ChefCard: React.FC<ChefCardProps> = ({
   return (
     <article
       className="w-full h-80 shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] relative bg-white rounded-[15px] border border-[#E7E7E7] overflow-hidden cursor-pointer"
-      role="button"
       tabIndex={0}
       onClick={() => router.push(`/chefs/${id}`)}
       onKeyDown={(e) => {

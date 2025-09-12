@@ -8,7 +8,7 @@ type ChefDetailsProps = {
 
 export const ChefDetails: React.FC<ChefDetailsProps> = ({ bio, cuisines = [] }) => {
   const qualities = ['Highly rated', 'Impeccable cleanliness', 'Reliable', 'Fast communication'];
-  const events = ['Wedding', 'Birthday', 'Gathering'];
+  const events = ['Wedding', 'Birthday', 'Bachelor\'s Party', 'Night Party'];
 
   return (
     <main className="grow max-md:max-w-full max-md:mt-[33px]">
@@ -38,7 +38,7 @@ export const ChefDetails: React.FC<ChefDetailsProps> = ({ bio, cuisines = [] }) 
               </div>
             </div>
             <div className="w-[613px] max-w-full mt-6">
-              <h3 className="text-black text-base font-semibold">Events I'm available for</h3>
+              <h3 className="text-black text-base font-semibold">Events I&apos;m available for</h3>
               <div className="flex w-full max-w-[613px] gap-2 text-sm text-[#060605] font-medium flex-wrap mt-[9px] max-md:max-w-full">
                 {events.map((event, index) => (
                   <Tag key={index}>{event}</Tag>

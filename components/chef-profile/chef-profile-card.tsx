@@ -93,14 +93,14 @@ export const ChefProfileCard: React.FC<ChefProfileCardProps> = ({
               <span className="text-white self-stretch my-auto">Message Chef</span>
             </button>
             <p className="text-[#3F3E3D] text-sm font-normal leading-none mt-2.5">
-              You won't be charged yet
+              You won&apos;t be charged yet
             </p>
           </div>
 
           <section className="w-full text-sm text-[#3F3E3D] font-normal mt-6">
             <div className="flex w-full flex-col bg-[#FFFCF5] px-[27px] py-[19px] rounded-[8.483px] max-md:px-5">
               <h3 className="text-black text-base font-medium self-stretch max-md:mr-[5px]">
-                Titilayo's confirmed information
+                Titilayo&apos;s confirmed information
               </h3>
               <div className="flex items-center gap-[13px] whitespace-nowrap leading-none mt-[18px]">
                 <img
