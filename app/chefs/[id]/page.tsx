@@ -2,12 +2,11 @@ import { ChefProfilePageClient } from "@/components/chef-profile/chef-profile-pa
 
 import React from "react";
 
-interface PageProps {
-  params: { id: string };
+interface PageParams {
+  id: string;
 }
 
-export default function Page({ params }: PageProps) {
-  return (
-    <ChefProfilePageClient id={params.id} />
-  );
+export default async function Page({ params }: { params: Promise<PageParams> }) {
+  const { id } = await params;
+  return <ChefProfilePageClient id={id} />;
 }
