@@ -66,11 +66,6 @@ export const ReviewsSection: React.FC<{ reviews?: ReviewItem[] }> = ({ reviews =
                   <div className="mt-3 w-full text-sm text-gray-500">No reviews yet.</div>
                 )}
               </div>
-              <div className="mt-8">
-                <Button variant="outline" size="sm">
-                  View all reviews (110)
-                </Button>
-              </div>
             </div>
           </div>
         </section>

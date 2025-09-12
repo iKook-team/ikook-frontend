@@ -1,9 +1,6 @@
 import React from "react";
 
 export const ReviewsSection: React.FC = () => {
-  const handleViewAllReviews = () => {
-    console.log("View all reviews clicked");
-  };
 
   const reviews = [
     {
@@ -141,14 +138,6 @@ export const ReviewsSection: React.FC = () => {
           </article>
         ))}
       </div>
-      <button
-        onClick={handleViewAllReviews}
-        className="flex text-sm text-[#344054] font-semibold leading-none mt-[31px] rounded-lg"
-      >
-        <div className="text-[#344054] self-stretch border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] gap-2 overflow-hidden bg-white px-3.5 py-2 rounded-lg border-solid">
-          View all reviews (110)
-        </div>
-      </button>
     </section>
   );
 };

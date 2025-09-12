@@ -90,7 +90,7 @@ export const ChefProfilePageClient: React.FC<{ id: string }> = ({ id }) => {
 
   return (
     <div className="bg-white flex flex-col overflow-hidden items-stretch">
-      <main className="self-center w-full max-w-[1117px] mt-[41px] max-md:max-w-full max-md:mt-10">
+      <main className="self-center w-full max-w-[1117px] mt-[41px] max-md:max-w-full max-md:mt-10 px-4 md:px-0 pb-6">
         <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
           <div className="w-[36%] max-md:w-full max-md:ml-0">
             <ChefProfileCard
@@ -99,6 +99,7 @@ export const ChefProfilePageClient: React.FC<{ id: string }> = ({ id }) => {
               avatar={chef.avatar}
               averageRating={chef.average_rating}
               numReviews={chef.num_reviews}
+              chefUserId={chef.id}
             />
           </div>
           <div className="w-[64%] ml-5 max-md:w-full max-md:ml-0">

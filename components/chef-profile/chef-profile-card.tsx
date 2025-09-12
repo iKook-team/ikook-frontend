@@ -3,6 +3,9 @@ import React from 'react';
 import { Tag } from '@/components/chef-profile/tag';
 
 import { RatingStars } from '@/components/chef-profile/rating-stars';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/lib/store/auth-store';
+import { chatService } from '@/lib/api/chat';
 
 type ChefProfileCardProps = {
   name: string;
@@ -10,6 +13,7 @@ type ChefProfileCardProps = {
   avatar?: string | null;
   averageRating?: number | null;
   numReviews?: number | null;
+  chefUserId: number;
 };
 
 export const ChefProfileCard: React.FC<ChefProfileCardProps> = ({
@@ -18,9 +22,22 @@ export const ChefProfileCard: React.FC<ChefProfileCardProps> = ({
   avatar,
   averageRating,
   numReviews,
+  chefUserId,
 }) => {
-  const handleMessageChef = () => {
-    console.log('Message chef clicked');
+  const router = useRouter();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const handleMessageChef = async () => {
+    const back = typeof window !== 'undefined' ? window.location.pathname : '/';
+    if (!isAuthenticated) {
+      router.push(`/login?next=${encodeURIComponent(back)}`);
+      return;
+    }
+    try {
+      const chat = await chatService.getOrCreateChat(Number(chefUserId));
+      router.push(`/chat?chatId=${chat.id}&back=${encodeURIComponent(back)}`);
+    } catch (e) {
+      // Silently ignore or add toast in future
+    }
   };
 
   const services = [
