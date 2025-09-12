@@ -14,12 +14,12 @@ const apiClient: AxiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10000, // 10 seconds
+  timeout: 20000, // 20 seconds for slower networks
 });
 
 // Configure retry mechanism
 axiosRetry(apiClient, {
-  retries: 3, // number of retries
+  retries: 5, // increase retries to better handle transient errors
   retryDelay: exponentialDelay, // exponential back-off between retries
   retryCondition: (error) => {
     // Retry on network errors and 5xx server errors

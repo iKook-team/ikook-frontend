@@ -118,8 +118,11 @@ export default function Index({
     try {
       const selectedIds = cartItems
         .filter((it) => it.isSelected)
-        .map((it) => parseInt(it.id, 10))
-        .filter((n) => Number.isFinite(n));
+        .flatMap((it) => {
+          const idNum = parseInt(it.id, 10);
+          if (!Number.isFinite(idNum) || it.quantity <= 0) return [] as number[];
+          return Array(it.quantity).fill(idNum);
+        });
       if (typeof window !== "undefined") {
         localStorage.setItem("grocerySelectedItemIds", JSON.stringify(selectedIds));
       }
@@ -133,11 +136,11 @@ export default function Index({
     <div className="w-full">
       <main className="w-full">
         <StoreInfo
-          storeName={storeName || "Hubmart"}
-          location={location || "London"}
+          storeName={storeName || ""}
+          location={location || ""}
           deliveryType={deliveryType || "Instant delivery"}
-          rating={rating ?? 4.6}
-          reviewCount={reviewCount ?? 23}
+          rating={rating ?? 0}
+          reviewCount={reviewCount ?? 0}
           onSearch={handleSearch}
           showSearch={!hideSearch}
           avatarSrc={avatarSrc}

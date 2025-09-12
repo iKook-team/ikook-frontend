@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import favouritesService from "@/lib/api/favourites";
+import { useRouter } from "next/navigation";
 
 // Sub-components
 const StarRating = ({
@@ -183,10 +184,22 @@ export const ChefCard: React.FC<ChefCardProps> = ({
   services,
   is_favourite = false,
 }) => {
+  const router = useRouter();
   const [liked, setLiked] = React.useState<boolean>(!!is_favourite);
   const [favouriteId, setFavouriteId] = React.useState<number | null>(null);
   return (
-    <article className="w-full h-80 shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] relative bg-white rounded-[15px] border border-[#E7E7E7] overflow-hidden">
+    <article
+      className="w-full h-80 shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] relative bg-white rounded-[15px] border border-[#E7E7E7] overflow-hidden cursor-pointer"
+      role="button"
+      tabIndex={0}
+      onClick={() => router.push(`/chefs/${id}`)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          router.push(`/chefs/${id}`);
+        }
+      }}
+    >
       {/* Background image */}
       <div 
         className="absolute top-0 left-0 right-0 h-[220px] bg-cover bg-center bg-no-repeat rounded-t-[15px]"

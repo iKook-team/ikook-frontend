@@ -24,7 +24,11 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
     ? parseFloat(booking.menu_price_per_person)
     : 0;
   const total = quote?.total_cost ? parseFloat(quote.total_cost) : 0;
-  const platformFee = Math.round(total * 0.025);
+  // Backend total already includes the 2.5% fee; extract fee portion:
+  const platformFee = total * (0.025 / 1.025);
+  const subtotal = total - platformFee;
+  const fmt = (n: number) =>
+    n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const currency = getCurrencySymbol({ country: booking?.country });
 
   const handlePayment = async () => {
@@ -115,19 +119,18 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
         <div className="text-sm font-normal">
           <div className="flex items-start gap-4">
             <span className="text-[#323335] flex-1 min-w-0">
-              {guests} Guests * {currency}
-              {pricePerPerson}
+              Subtotal
             </span>
             <span className="text-[#323335] text-right ml-auto min-w-0 break-words">
               {currency}
-              {(guests * pricePerPerson).toLocaleString()}
+              {fmt(subtotal)}
             </span>
           </div>
           <div className="flex items-start gap-4 mt-3">
             <span className="text-[#323335] flex-1 min-w-0">Platform fee 2.5%</span>
             <span className="text-[#323335] text-right ml-auto min-w-0 break-words">
               {currency}
-              {platformFee.toLocaleString()}
+              {fmt(platformFee)}
             </span>
           </div>
         </div>
@@ -141,7 +144,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
             <span className="text-[#323335] flex-1 min-w-0">TOTAL</span>
             <span className="text-[#323335] text-right ml-auto min-w-0 break-words">
               {currency}
-              {total.toLocaleString()}
+              {fmt(total)}
             </span>
           </div>
         </div>
@@ -153,7 +156,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
         className="text-white border border-[color:var(--Yellow-Pry,#FCC01C)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] w-full gap-2 overflow-hidden bg-[#FCC01C] px-5 py-3 rounded-lg border-solid text-base font-bold mt-[59px] max-md:mt-10"
       >
         Make Payment ({currency}
-        {total.toLocaleString()})
+        {fmt(total)})
       </button>
     </aside>
   );
