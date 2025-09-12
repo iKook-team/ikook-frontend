@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import favouritesService from "@/lib/api/favourites";
 import { useRouter } from "next/navigation";
@@ -188,16 +189,9 @@ export const ChefCard: React.FC<ChefCardProps> = ({
   const [liked, setLiked] = React.useState<boolean>(!!is_favourite);
   const [favouriteId, setFavouriteId] = React.useState<number | null>(null);
   return (
-    <article
-      className="w-full h-80 shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] relative bg-white rounded-[15px] border border-[#E7E7E7] overflow-hidden cursor-pointer"
-      tabIndex={0}
-      onClick={() => router.push(`/chefs/${id}`)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          router.push(`/chefs/${id}`);
-        }
-      }}
+    <Link
+      href={`/chefs/${id}`}
+      className="w-full h-80 block shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] relative bg-white rounded-[15px] border border-[#E7E7E7] overflow-hidden cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FCC01C]"
     >
       {/* Background image */}
       <div 
@@ -212,6 +206,7 @@ export const ChefCard: React.FC<ChefCardProps> = ({
         disabled={liked}
         onClick={async (e) => {
           e.stopPropagation();
+          e.preventDefault();
           if (liked) {
             // Unliking is disabled for now
             return;
@@ -269,6 +264,6 @@ export const ChefCard: React.FC<ChefCardProps> = ({
         isVerified={isVerified}
         profileImageUrl={profileImageUrl}
       />
-    </article>
+    </Link>
   );
 };
