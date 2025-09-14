@@ -134,7 +134,7 @@ export const Navbar = () => {
         <NavbarItem className="w-full">{searchInput}</NavbarItem>
       </NavbarContent>
 
-      {/* Desktop Login/User Buttons */}
+      {/* Desktop Login/User Buttons + Burger Toggle */}
       <NavbarContent className="hidden md:flex basis-1/5 gap-4" justify="end">
         <NavbarItem className="flex items-center gap-3">
           <FiShoppingCart />
@@ -149,16 +149,26 @@ export const Navbar = () => {
           )}
         </NavbarItem>
         <NavbarItem className="flex items-center gap-2">
+          {/* Keep the profile-styled button (non-interactive) */}
           <Button
             radius="full"
             size="sm"
             startContent={
               <FiUser className="text-yellow-400 bg-purple-50 p-1 rounded-full" />
             }
-            endContent={<IoMenu className="text-xl" />}
             variant="bordered"
             className="border-1"
           />
+          {/* Desktop burger icon to open slideover */}
+          <Button
+            isIconOnly
+            variant="light"
+            aria-label="Open menu"
+            className="text-xl"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <IoMenu />
+          </Button>
           <Image
             src="/usflag.png"
             alt="flag"
@@ -194,7 +204,7 @@ export const Navbar = () => {
                 className="w-full text-gray-800 py-3 px-4 block hover:bg-gray-100"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Logi
+                Login
               </Link>
             )}
           </NavbarMenuItem>

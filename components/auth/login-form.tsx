@@ -98,7 +98,7 @@ export const LoginForm: React.FC = () => {
           <button
             type="button"
             onClick={() => setUserType("host")}
-            className={`w-[235px] h-[30px] absolute left-[5px] top-1 rounded-sm transition-all ${
+            className={`w-[calc(50%-10px)] md:w-[235px] h-[30px] absolute left-[5px] top-1 rounded-sm transition-all flex items-center justify-center text-center ${
               userType === "host"
                 ? "shadow-[0.568px_0px_5.683px_0px_rgba(0,0,0,0.10)] bg-[#FCC01C]"
                 : "bg-transparent"
@@ -117,7 +117,7 @@ export const LoginForm: React.FC = () => {
           <button
             type="button"
             onClick={() => setUserType("chef")}
-            className={`absolute right-[5px] top-1 w-[235px] h-[30px] rounded-sm transition-all ${
+            className={`absolute right-[5px] top-1 w-[calc(50%-10px)] md:w-[235px] h-[30px] rounded-sm transition-all flex items-center justify-center text-center ${
               userType === "chef"
                 ? "shadow-[0.568px_0px_5.683px_0px_rgba(0,0,0,0.10)] bg-[#FCC01C]"
                 : "bg-transparent"

@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { Gift } from "lucide-react";
+import { Gift, Menu, X } from "lucide-react";
 
 import { LocationSelector } from "../common/LocationSelector";
 
@@ -13,6 +13,7 @@ import { useAuthStore } from "@/lib/store/auth-store";
 
 export const Navigation: React.FC = () => {
   const { isAuthenticated, userType } = useAuthStore();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const showExplore = !isAuthenticated || userType === "host";
   const showJoinAsChef = !isAuthenticated;
 
@@ -148,10 +149,93 @@ export const Navigation: React.FC = () => {
               <div className="hidden md:block">
                 <LocationSelector />
               </div>
+
+              {/* Burger icon - mobile only */}
+              <button
+                aria-label="Open menu"
+                className="inline-flex lg:hidden items-center justify-center rounded-md p-2 text-ikook-secondary hover:text-ikook-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FCC01C]"
+                onClick={() => setIsMenuOpen(true)}
+              >
+                <Menu className="h-6 w-6" />
+              </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Slideover Menu */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-50">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/30"
+            onClick={() => setIsMenuOpen(false)}
+          />
+
+          {/* Panel */}
+          <aside className="absolute right-0 top-0 h-full w-80 max-w-[90%] bg-white shadow-xl p-6 flex flex-col">
+            <div className="flex items-center justify-between mb-6">
+              <span className="text-lg font-semibold text-ikook-secondary">Menu</span>
+              <button
+                aria-label="Close menu"
+                className="p-2 rounded-md hover:bg-gray-100"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <nav className="flex-1 space-y-2">
+              {showExplore && (
+                <Link
+                  href="/explore"
+                  className="block rounded-md px-3 py-2 text-ikook-secondary hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Explore Services
+                </Link>
+              )}
+              <Link
+                href="/how-it-works"
+                className="block rounded-md px-3 py-2 text-ikook-secondary hover:bg-gray-50"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                How it Works
+              </Link>
+              <Link
+                href="/gifts"
+                className="block rounded-md px-3 py-2 text-ikook-secondary hover:bg-gray-50"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Gifts
+              </Link>
+              {showJoinAsChef && (
+                <Link
+                  href="/join?role=chef"
+                  className="block rounded-md px-3 py-2 text-ikook-secondary hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Join as Chef
+                </Link>
+              )}
+              {!isAuthenticated && (
+                <Link
+                  href="/login"
+                  className="block rounded-md px-3 py-2 text-ikook-secondary hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Sign In
+                </Link>
+              )}
+            </nav>
+
+            {/* Footer actions (optional) */}
+            <div className="pt-4 border-t mt-4">
+              <span className="text-sm text-gray-500">iKooK</span>
+            </div>
+          </aside>
+        </div>
+      )}
     </header>
   );
 };

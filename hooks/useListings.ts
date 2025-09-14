@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useMarket } from "@/lib/market-context";
 
 import {
   listingService,
@@ -43,6 +44,7 @@ const useListings = ({
   const [error, setError] = useState<string | null>(null);
   const [listingType, setListingType] = useState<ListingType>("menu");
   const [totalCount, setTotalCount] = useState<number>(0);
+  const { market: marketCtx } = useMarket();
 
   const fetchListings = async () => {
     setLoading(true);
@@ -51,21 +53,24 @@ const useListings = ({
     try {
       let response;
 
-      // Pull persisted filters from sessionStorage
+      // Pull persisted filters from sessionStorage (fallbacks)
       let city: string | undefined;
-      let market: string | undefined;
+      let marketFromStorage: string | undefined;
       try {
         const raw = typeof window !== "undefined" ? sessionStorage.getItem("ikook_explore_pref") : null;
         if (raw) {
           const pref = JSON.parse(raw || "{}");
           if (pref && typeof pref === "object") {
             city = pref.city;
-            market = pref.market;
+            marketFromStorage = pref.market;
           }
         }
       } catch {
         // ignore parse/storage errors
       }
+
+      // Prefer market from context, fallback to persisted value
+      const market = (marketCtx as string | undefined) || marketFromStorage;
 
       // Determine the type of listing based on the selected service
       if (selectedService === "chefs") {
@@ -120,7 +125,8 @@ const useListings = ({
 
   useEffect(() => {
     fetchListings();
-  }, [selectedService, searchQuery, page, pageSize]);
+    // include market context so switching markets refetches explore listings
+  }, [selectedService, searchQuery, page, pageSize, marketCtx]);
 
   const refetch = () => {
     fetchListings();
