@@ -169,7 +169,16 @@ export const Navigation: React.FC = () => {
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/30"
+            role="button"
+            tabIndex={0}
+            aria-label="Close menu"
             onClick={() => setIsMenuOpen(false)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape" || e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setIsMenuOpen(false);
+              }
+            }}
           />
 
           {/* Panel */}
