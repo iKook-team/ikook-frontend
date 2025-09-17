@@ -1,14 +1,16 @@
 "use client";
 
 import React from "react";
+import { useMarket } from "@/lib/market-context";
+import { getMarketConfig } from "@/lib/market-config";
 
 interface PriceInputProps {
   label: string;
   placeholder?: string;
   value?: string;
   onChange?: (value: string) => void;
-  currency?: string;
   className?: string;
+  currency?: string; // Optional override for currency symbol
 }
 
 export const PriceInput: React.FC<PriceInputProps> = ({
@@ -16,33 +18,29 @@ export const PriceInput: React.FC<PriceInputProps> = ({
   placeholder = "Price per person",
   value,
   onChange,
-  currency = "£",
+  currency: currencyProp,
   className = "",
 }) => {
+  const { market } = useMarket();
+  const marketConfig = getMarketConfig(market);
+  const currencySymbol = currencyProp || marketConfig.currencySymbol;
+
   return (
-    <div className={`max-w-full w-[615px] ${className}`}>
-      <div className="w-full max-md:max-w-full">
-        <div className="w-full max-md:max-w-full">
-          <label className="text-base font-medium text-neutral-500">
-            {label}
-          </label>
-          <div className="flex flex-wrap mt-1.5 w-full bg-white rounded-lg border border-solid shadow-sm border-stone-300 max-md:max-w-full">
-            <div className="flex items-center self-start py-2.5 pr-3 pl-3.5 text-base whitespace-nowrap rounded-lg text-neutral-700">
-              <div className="self-stretch my-auto text-neutral-700">
-                {currency}
-              </div>
-            </div>
-            <div className="flex overflow-hidden flex-1 shrink gap-2 items-center px-3.5 py-2.5 h-full text-base bg-white rounded-none border border-solid basis-0 border-stone-300 min-w-60 text-neutral-500 max-md:max-w-full">
-              <input
-                type="number"
-                placeholder={placeholder}
-                value={value}
-                onChange={(e) => onChange?.(e.target.value)}
-                className="flex-1 shrink self-stretch my-auto basis-0 text-neutral-500 max-md:max-w-full bg-transparent border-none outline-none placeholder-neutral-500"
-              />
-            </div>
-          </div>
+    <div className={`w-full ${className}`}>
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        {label}
+      </label>
+      <div className="relative rounded-md shadow-sm">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <span className="text-gray-500 sm:text-sm">{currencySymbol}</span>
         </div>
+        <input
+          type="number"
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => onChange?.(e.target.value)}
+          className="block w-full pl-7 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
+        />
       </div>
     </div>
   );

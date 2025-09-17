@@ -124,10 +124,11 @@ export const Navigation: React.FC = () => {
               </div>
               {showJoinAsChef && (
                 <Link
-                  href="/join?role=chef"
+                  // href="/join?role=chef"
+                  href="/join"
                   className="text-ikook-secondary hover:text-ikook-primary transition-colors font-medium"
                 >
-                  Join as Chef
+                  Join iKooK
                 </Link>
               )}
             </nav>
@@ -220,11 +221,12 @@ export const Navigation: React.FC = () => {
               </Link>
               {showJoinAsChef && (
                 <Link
-                  href="/join?role=chef"
+                  // href="/join?role=chef"
+                  href="/join"
                   className="block rounded-md px-3 py-2 text-ikook-secondary hover:bg-gray-50"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Join as Chef
+                  Join iKooK
                 </Link>
               )}
               {!isAuthenticated && (

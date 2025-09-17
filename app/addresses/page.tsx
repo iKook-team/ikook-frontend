@@ -7,14 +7,12 @@ import BackButton from "@/components/common/BackButton";
 
 const Index: React.FC = () => {
   return (
-    <div className="w-full min-h-screen relative bg-[#FBFBFB] max-md:w-full max-md:max-w-screen-lg max-md:h-auto max-md:min-h-screen">
-      <main className="relative flex justify-center">
-        <div className="w-[662px] max-w-full flex flex-col">
-          <div className="pt-4">
-            <BackButton fallback="/settings" />
-          </div>
-          <AddressList />
+    <div className="min-h-screen bg-[#FBFBFB] w-full">
+      <main className="container mx-auto px-4 py-6 sm:py-8 max-w-4xl">
+        <div className="mb-6">
+          <BackButton fallback="/settings" />
         </div>
+        <AddressList />
       </main>
     </div>
   );

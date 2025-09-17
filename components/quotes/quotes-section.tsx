@@ -80,12 +80,12 @@ export const QuotesSection: React.FC<{ bookingId?: string | number }> = ({ booki
   }, [bookingId]);
 
   return (
-    <section className="flex flex-col overflow-hidden bg-zinc-50">
-      <div className="flex flex-col self-center w-full max-w-[1114px] max-md:max-w-full">
-        <h2 className="self-start ml-28 mt-12 text-2xl font-semibold leading-none text-black max-md:ml-2.5">
+    <section className="w-full">
+      <div className="w-full">
+        <h2 className="text-2xl font-semibold leading-none text-black mb-6 sm:mb-8">
           Quotes
         </h2>
-        <div className="ml-28 w-[885px] gap-6 grid grid-cols-1 md:grid-cols-2 py-8">
+        <div className="w-full gap-4 sm:gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 py-4">
           {loading && (
             <>
               {Array.from({ length: 4 }).map((_, i) => (
@@ -104,7 +104,9 @@ export const QuotesSection: React.FC<{ bookingId?: string | number }> = ({ booki
             <div className="col-span-full text-red-600">{error}</div>
           )}
           {!loading && !error && quotes.length === 0 && (
-            <div className="col-span-full text-neutral-500">No quotes found.</div>
+            <div className="col-span-full text-center py-12 text-neutral-500">
+              No quotes found.
+            </div>
           )}
           {!loading && !error &&
             quotes.map((quote) => (

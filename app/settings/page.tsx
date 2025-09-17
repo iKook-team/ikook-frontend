@@ -42,33 +42,43 @@ const AccountSettings: React.FC = () => {
       : settingsItems;
 
   return (
-    <section className="flex w-[390px] max-w-full flex-col items-stretch ml-[278px] mt-[43px] max-md:ml-2.5 max-md:mt-10">
-      <h2 className="text-black text-2xl font-semibold leading-none">
-        Account settings
-      </h2>
-      <nav
-        className="text-[15px] text-[#020101] font-normal mt-[35px]"
-        aria-label="Account settings"
-      >
-        <ul className="space-y-8">
-          {filteredItems.map((item, index) => (
-            <li key={index}>
-              <button
-                onClick={() => handleItemClick(item)}
-                className="flex items-center gap-[40px_68px] w-full text-left hover:text-[#FCC01C] transition-colors"
-              >
-                <span className="text-[#020101] w-[298px]">{item.label}</span>
-                <img
-                  src="https://api.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/dcbe7f7e0b83ef989a5c16ee2f1f8ee7b8f31828?placeholderIfAbsent=true"
-                  alt=""
-                  className="aspect-[1] object-contain w-6 shrink-0"
-                />
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </section>
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 md:mb-12">
+          Account Settings
+        </h1>
+        
+        <nav className="bg-white rounded-lg shadow-sm overflow-hidden">
+          <ul className="space-y-2">
+            {filteredItems.map((item, index) => (
+              <li key={index} className="hover:bg-gray-50 transition-colors rounded-lg">
+                <button
+                  onClick={() => handleItemClick(item)}
+                  className="w-full px-6 py-4 text-left flex items-center justify-between group"
+                >
+                  <span className="text-base font-medium text-gray-900 group-hover:text-amber-500 transition-colors">
+                    {item.label}
+                  </span>
+                  <svg
+                    className="w-5 h-5 text-gray-400 group-hover:text-amber-500 transition-colors"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </div>
   );
 };
 

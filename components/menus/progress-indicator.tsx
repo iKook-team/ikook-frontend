@@ -26,38 +26,20 @@ export function ProgressStepper({
 }: ProgressStepperProps) {
   return (
     <section
-      className={`box-border flex justify-between items-start w-[615px] mx-auto max-md:flex-wrap max-md:gap-6 max-md:justify-center max-sm:flex-col max-sm:gap-4 max-sm:items-center ${className}`}
+      className={`w-full max-w-3xl mx-auto overflow-x-auto py-2 sm:py-4 ${className}`}
     >
-      {steps.map((step, index) => {
-        let stepClassName = "";
+      <div className="flex min-w-max w-full justify-between items-start gap-2 sm:gap-4 px-2">
+        {steps.map((step, index) => (
 
-        // Apply specific widths based on step index to match the design
-        switch (index) {
-          case 0:
-            stepClassName = "w-[95px]";
-            break;
-          case 1:
-            stepClassName = "w-[93.1px]";
-            break;
-          case 2:
-            stepClassName = "w-[95px]";
-            break;
-          case 3:
-            stepClassName = "w-[95px]";
-            break;
-          default:
-            stepClassName = "w-[95px]";
-        }
-
-        return (
-          <ProgressStep
-            key={step.id}
-            label={step.label}
-            isCompleted={step.isCompleted}
-            className={stepClassName}
-          />
-        );
-      })}
+          <div key={step.id} className="flex-1 min-w-[80px] max-w-[120px]">
+            <ProgressStep
+              label={step.label}
+              isCompleted={step.isCompleted}
+              className="w-full"
+            />
+          </div>
+        ))}
+      </div>
     </section>
   );
 }

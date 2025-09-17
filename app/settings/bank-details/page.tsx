@@ -185,138 +185,115 @@ const BankAccountForm: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FBFBFB] w-full">
-      <main className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="flex flex-col items-center w-full">
-          <div className="w-full max-w-3xl">
-            <div className="mb-4">
-              <BackButton fallback="/settings" />
-            </div>
-            <section className="flex flex-col items-stretch mt-6">
-              <h1 className="text-black text-2xl font-semibold leading-none">
-                {bankDetails ? 'Update Bank Account' : 'Add Bank Account'}
-              </h1>
-              
-              <div className="border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] flex flex-col items-stretch bg-white mt-[21px] pt-[29px] rounded-[15px] border-solid border-[#E7E7E7] max-md:max-w-full">
-                <form onSubmit={handleSubmit} className="ml-[17px] mr-[18px]">
-                  <fieldset className="border-0 p-0 m-0" disabled={isSubmitting}>
-                    <legend className="sr-only">
-                      Bank Account Information
-                    </legend>
-
-                    <div className="w-full max-md:max-w-full">
-                      <FormField
-                        label="Billing Address"
-                        value={getInputValue('billing_address')}
-                        onChange={handleInputChange('billing_address')}
-                        placeholder="Enter address"
-                        required
-                      />
-                    </div>
-
-                    <div className="w-full mt-6 max-md:max-w-full">
-                      <FormField
-                        label="City"
-                        value={getInputValue('city')}
-                        onChange={handleInputChange('city')}
-                        placeholder="Enter city"
-                        required
-                      />
-                    </div>
-
-                    <div className="w-full mt-6 max-md:max-w-full">
-                      <FormField
-                        label="Postal Code"
-                        value={getInputValue('postal_code')}
-                        onChange={handleInputChange('postal_code')}
-                        placeholder="Enter postal code"
-                        required
-                      />
-                    </div>
-
-                    <div className="w-full mt-6 max-md:max-w-full">
-                      <div className="w-full">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Bank <span className="text-red-500">*</span>
-                        </label>
-                        <select
-                          value={getInputValue('bank_name')}
-                          onChange={(e) => setFormData(prev => ({ ...prev, bank_name: e.target.value }))}
-                          disabled={isLoading || isSubmitting}
-                          className="w-full border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white px-3.5 py-2.5 rounded-lg border-solid border-[#CFCFCE] text-base font-normal leading-6 focus:outline-none focus:ring-2 focus:ring-[#FCC01C] focus:border-[#FCC01C] disabled:opacity-50"
-                          required
-                        >
-                          <option value="">Select a bank</option>
-                          {Array.isArray(banks) &&
-                            banks
-                              .filter((bank) => bank.active)
-                              .map((bank) => (
-                                <option key={bank.id} value={bank.id.toString()}>
-                                  {bank.name}
-                                </option>
-                              ))}
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="w-full mt-6 max-md:max-w-full">
-                      <FormField
-                        label="Account Name"
-                        value={getInputValue('account_name')}
-                        onChange={handleInputChange('account_name')}
-                        placeholder="Enter account name"
-                        required
-                      />
-                    </div>
-
-                    <div className="w-full mt-6 max-md:max-w-full">
-                      <FormField
-                        label="Account Number"
-                        value={getInputValue('account_number')}
-                        onChange={handleInputChange('account_number')}
-                        placeholder="Enter account number"
-                        required
-                      />
-                    </div>
-
-                    <div className="w-full mt-6 max-md:max-w-full">
-                      <FormField
-                        label="Sort Code"
-                        value={getInputValue('sort_code')}
-                        onChange={handleInputChange('sort_code')}
-                        placeholder="Enter sort code OR SWIFT/BIC code"
-                        required
-                      />
-                    </div>
-
-                    <div className="mt-8 py-6 border-t border-[#CFCFCE] w-full">
-                      <div className="flex justify-center w-full">
-                        <button
-                          type="submit"
-                          disabled={isSubmitting}
-                          className="justify-center items-center border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-[422px] max-w-full gap-2 overflow-hidden bg-[#FCC01C] px-7 py-3 rounded-lg border-solid border-[#FCC01C] max-md:px-5 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          <span className="text-white self-stretch my-auto">
-                            {isSubmitting ? (
-                              <span className="flex items-center">
-                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                {bankDetails ? 'Updating...' : 'Saving...'}
-                              </span>
-                            ) : bankDetails ? 'Update Bank Details' : 'Save Bank Details'}
-                          </span>
-                        </button>
-                      </div>
-                    </div>
-                  </fieldset>
-                </form>
-              </div>
-            </section>
-          </div>
+    <div className="min-h-screen bg-gray-50 w-full py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-6 sm:mb-8">
+          <BackButton fallback="/settings" />
         </div>
-      </main>
+        
+        <div className="bg-white rounded-xl shadow-sm p-6 sm:p-8">
+          <h1 className="text-2xl font-bold text-gray-900 mb-8">
+            {bankDetails ? 'Update Bank Account' : 'Add Bank Account'}
+          </h1>
+          
+          <form onSubmit={handleSubmit}>
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  label="Billing Address"
+                  value={getInputValue('billing_address')}
+                  onChange={handleInputChange('billing_address')}
+                  placeholder="Enter address"
+                  required
+                  className="md:col-span-2"
+                />
+                
+                <FormField
+                  label="City"
+                  value={getInputValue('city')}
+                  onChange={handleInputChange('city')}
+                  placeholder="Enter city"
+                  required
+                />
+                
+                <FormField
+                  label="Postal Code"
+                  value={getInputValue('postal_code')}
+                  onChange={handleInputChange('postal_code')}
+                  placeholder="Enter postal code"
+                  required
+                />
+                
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Bank <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={getInputValue('bank_name')}
+                    onChange={(e) => setFormData(prev => ({ ...prev, bank_name: e.target.value }))}
+                    disabled={isLoading || isSubmitting}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm py-2.5 px-3.5 border"
+                    required
+                  >
+                    <option value="">Select a bank</option>
+                    {Array.isArray(banks) &&
+                      banks
+                        .filter((bank) => bank.active)
+                        .map((bank) => (
+                          <option key={bank.id} value={bank.id.toString()}>
+                            {bank.name}
+                          </option>
+                        ))}
+                  </select>
+                </div>
+                
+                <FormField
+                  label="Account Name"
+                  value={getInputValue('account_name')}
+                  onChange={handleInputChange('account_name')}
+                  placeholder="Enter account name"
+                  required
+                  className="md:col-span-2"
+                />
+                
+                <FormField
+                  label="Account Number"
+                  value={getInputValue('account_number')}
+                  onChange={handleInputChange('account_number')}
+                  placeholder="Enter account number"
+                  required
+                />
+                
+                <FormField
+                  label="Sort Code / SWIFT / BIC"
+                  value={getInputValue('sort_code')}
+                  onChange={handleInputChange('sort_code')}
+                  placeholder="Enter sort code or SWIFT/BIC"
+                  required
+                />
+              </div>
+              
+              <div className="pt-6 border-t border-gray-200">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full sm:w-auto flex justify-center items-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-amber-500 hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center">
+                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      {bankDetails ? 'Updating...' : 'Saving...'}
+                    </span>
+                  ) : bankDetails ? 'Update Bank Details' : 'Save Bank Details'}
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };

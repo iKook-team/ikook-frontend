@@ -42,59 +42,59 @@ export const MenuItem = ({
   const cuisineLabel = (Array.isArray(cuisineTypes) && cuisineTypes[0]) || menuType || title;
   return (
     <Card
-      className="w-full max-w-lg h-80 hover:shadow-lg transition-shadow duration-200"
+      className="w-full h-full min-h-[320px] sm:min-h-[360px] hover:shadow-lg transition-shadow duration-200 flex flex-col"
       shadow="sm"
     >
       <CardBody
-        className="overflow-visible p-0 relative"
+        className="overflow-visible p-0 relative flex-grow"
         style={{
           backgroundImage: `url(${img})`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
+          backgroundPosition: "center"
         }}
       >
-        <span className="absolute top-2 left-2 bg-white rounded-full px-4 py-1 text-xs">
-          {cuisineLabel}
-        </span>
-        <span className="absolute bottom-2 left-2 text-white text-sm font-semibold">
-          {title}
-        </span>
-        <span className="absolute bottom-2 right-2 text-yellow-400 text-sm font-bold">
-          {currencySymbol}
-          {price}
-          pp
-        </span>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <div className="absolute inset-0 p-4 flex flex-col justify-between">
+          <div className="flex justify-between items-start">
+            <span className="bg-white/90 backdrop-blur-sm text-zinc-900 rounded-full px-3 py-1 text-xs font-medium">
+              {cuisineLabel}
+            </span>
+            <span className="bg-black/70 text-white rounded-full px-3 py-1 text-sm font-bold">
+              {currencySymbol}{price} <span className="text-xs font-normal">pp</span>
+            </span>
+          </div>
+          <h3 className="text-white text-lg font-semibold line-clamp-2">
+            {title}
+          </h3>
+        </div>
       </CardBody>
-      <CardFooter className="justify-between items-center">
-        <div className="flex items-center gap-3">
-          <img
-            src={avatarSrc}
-            alt={`${chefName || "Chef"} avatar`}
-            className="w-10 h-10 rounded-full object-cover"
-          />
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold text-zinc-800">{chefName || "Chef"}</span>
-            <div className="flex gap-1 items-center">
-              <FaStar className="text-yellow-400" />
-              <span className="text-xs">{averageRating ?? 0}</span>
-              <span className="text-gray-400 text-xs">• {location}</span>
+      <CardFooter className="p-3 sm:p-4 bg-white">
+        <div className="w-full flex justify-between items-center">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <img
+              src={avatarSrc}
+              alt={`${chefName || "Chef"} avatar`}
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover flex-shrink-0"
+            />
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-zinc-800 truncate">{chefName || "Chef"}</p>
+              <div className="flex items-center gap-1 text-xs">
+                <FaStar className="text-yellow-400 flex-shrink-0" />
+                <span className="font-medium">{averageRating?.toFixed(1) ?? '0.0'}</span>
+                <span className="text-gray-400">•</span>
+                <span className="text-gray-500 truncate">{location || 'Unknown'}</span>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex flex-col items-end gap-2">
-          <div className="flex gap-1 items-center">
-            <FaStar className="text-yellow-400" />
-            <span className="text-gray-700">{averageRating ?? 0}</span>
-          </div>
-          <div className="text-xs text-gray-700">({numReviews ?? 0} Reviews)</div>
           <button
             onClick={(e) => {
               e.stopPropagation();
               router.push(`/menus/edit/${id}`);
             }}
-            className="text-xs bg-amber-400 hover:bg-amber-500 text-white px-3 py-1 rounded-full transition-colors"
+            className="text-xs sm:text-sm bg-amber-400 hover:bg-amber-500 text-white px-3 sm:px-4 py-1.5 rounded-full transition-colors whitespace-nowrap flex-shrink-0"
           >
-            Edit
+            Edit Menu
           </button>
         </div>
       </CardFooter>

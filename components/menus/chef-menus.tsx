@@ -32,21 +32,21 @@ export const MyMenusPage: React.FC = () => {
   }, [status]);
 
   const statusOptions = [
-    { label: "Active menus", value: "Active" },
+    { label: "Active", value: "Active" },
     { label: "Pending", value: "Pending" },
     { label: "Review", value: "Review" },
     { label: "Deleted", value: "Deleted" },
   ];
 
   return (
-    <div className="flex overflow-hidden flex-col bg-zinc-50">
-      <main className="flex flex-col self-center mt-9 w-full max-w-[1114px] max-md:max-w-full">
-        <h1 className="self-start ml-28 text-2xl font-semibold leading-none text-black max-md:ml-2.5">
+    <div className="flex flex-col bg-zinc-50 w-full">
+      <main className="flex flex-col w-full px-4 sm:px-6 lg:px-8 py-6 max-w-7xl mx-auto">
+        <h1 className="text-2xl font-semibold leading-none text-black mb-6 sm:mb-8">
           Menus
         </h1>
 
-        <nav className="flex gap-4 justify-between w-[885px] mt-9 ml-28 text-xs font-medium text-zinc-950 max-md:max-w-full items-center">
-          <div className="flex flex-wrap gap-2.5 items-center min-w-60 max-md:max-w-full">
+        <nav className="flex flex-col sm:flex-row gap-4 justify-between w-full mb-6 sm:mb-8 text-sm font-medium text-zinc-950">
+          <div className="flex overflow-x-auto pb-2 sm:pb-0 gap-2 items-center w-full sm:w-auto">
             {statusOptions.map((option) => (
               <button
                 key={option.value}
@@ -59,18 +59,18 @@ export const MyMenusPage: React.FC = () => {
           </div>
           <Button
             size="sm"
-            className="bg-amber-400 border-solid border-[1.534px] border-[color:var(--Primary-200,#F9DF98)] rounded-[30.689px] text-white"
+            className="whitespace-nowrap bg-amber-400 border-solid border-[1.534px] border-[color:var(--Primary-200,#F9DF98)] rounded-[30.689px] text-white mt-2 sm:mt-0 ml-auto"
             onClick={() => router.push("/menus/create")}
           >
             New Menu
           </Button>
         </nav>
 
-        <div className="ml-28 w-[885px] gap-6 grid grid-cols-1 md:grid-cols-2 py-8">
+        <div className="w-full gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 py-4">
           {loading ? (
             <div>Loading...</div>
           ) : menus.length === 0 ? (
-            <div>No menus found.</div>
+            <div className="col-span-full text-center py-8 text-gray-500">No menus found.</div>
           ) : (
             menus.map((menu) => (
               <MenuItem
