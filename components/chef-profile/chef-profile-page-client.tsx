@@ -42,7 +42,7 @@ export const ChefProfilePageClient: React.FC<{ id: string }> = ({ id }) => {
         if (mounted) setChef(data as ChefProfile);
         // Fetch reviews for this chef id
         try {
-          const resp = await apiClient.get("/reviews/", { params: { chef: id } });
+          const resp = await apiClient.get("/reviews/", { params: { chef_id: id } });
           const results = (resp.data?.data?.results ?? resp.data?.results ?? []) as any[];
           const mapped = Array.isArray(results)
             ? results.map((r) => ({
@@ -54,6 +54,7 @@ export const ChefProfilePageClient: React.FC<{ id: string }> = ({ id }) => {
             : [];
           if (mounted) setReviews(mapped);
         } catch (_e) {
+          console.error("Error fetching reviews:", _e);
           if (mounted) setReviews([]);
         }
       } catch (e) {
