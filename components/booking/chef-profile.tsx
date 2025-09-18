@@ -79,7 +79,7 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
           <div className="flex items-center gap-5">
             {chef.avatar ? (
               <img
-                src={`${process.env.NEXT_PUBLIC_API_BASE_URL || ''}${chef.avatar}`}
+                src={chef.avatar}
                 className="aspect-[1] object-cover w-20 h-20 self-stretch shrink-0 my-auto rounded-lg"
                 alt={`${chef.first_name || ''} ${chef.last_name || ''}`}
                 onError={(e) => {

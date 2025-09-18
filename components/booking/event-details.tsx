@@ -127,10 +127,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
         <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
           <div className="w-[24%] max-md:w-full max-md:ml-0">
             <img
-              src={serviceData?.cover_image 
-                ? `${process.env.NEXT_PUBLIC_API_BASE_URL || ''}${serviceData.cover_image}`
-                : "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/2519ad68400128f1fb9c68f364b8cc6504d27b05?placeholderIfAbsent=true"
-              }
+              src={serviceData?.cover_image || "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/2519ad68400128f1fb9c68f364b8cc6504d27b05?placeholderIfAbsent=true"}
               className="aspect-[1.22] object-cover w-[142px] h-[120px] shrink-0 max-w-full rounded-lg max-md:mt-[29px]"
               alt={serviceData?.chef_service || 'Service'}
               onError={(e) => {
