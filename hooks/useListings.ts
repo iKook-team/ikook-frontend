@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useMarket } from "@/lib/market-context";
 
 import {
@@ -44,12 +44,17 @@ const useListings = ({
   const [error, setError] = useState<string | null>(null);
   const [listingType, setListingType] = useState<ListingType>("menu");
   const [totalCount, setTotalCount] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const isInitialMount = useRef(true);
   const { market: marketCtx } = useMarket();
 
-  const fetchListings = async () => {
+  const fetchListings = async (pageToFetch: number, append: boolean = false) => {
+    // Don't fetch if we've already loaded all items
+    if (append && listings.length >= totalCount && totalCount > 0) return;
+    
     setLoading(true);
     setError(null);
-
+    
     try {
       let response;
 
@@ -76,7 +81,7 @@ const useListings = ({
       if (selectedService === "chefs") {
         setListingType("chef");
         response = await listingService.getChefs({
-          page,
+          page: pageToFetch,
           page_size: pageSize,
           search: searchQuery,
           city,
@@ -84,18 +89,28 @@ const useListings = ({
         });
       } else if (selectedService in serviceIdToTag) {
         setListingType("service");
-        response = await listingService.getServices({
-          page,
+        const serviceTag = serviceIdToTag[selectedService];
+        console.log('Fetching services with params:', {
+          page: pageToFetch,
           page_size: pageSize,
           search: searchQuery,
-          chef_service: serviceIdToTag[selectedService],
+          chef_service: serviceTag,
           city,
           market,
         });
+        response = await listingService.getServices({
+          page: pageToFetch,
+          page_size: pageSize,
+          search: searchQuery,
+          chef_service: serviceTag,
+          city,
+          market,
+        });
+        console.log('Services API response:', response);
       } else if (selectedService in menuIdToTag) {
         setListingType("menu");
         response = await listingService.getMenus({
-          page,
+          page: pageToFetch,
           page_size: pageSize,
           search: searchQuery,
           menu_type: menuIdToTag[selectedService as keyof typeof menuIdToTag],
@@ -112,7 +127,17 @@ const useListings = ({
         return;
       }
 
-      setListings(response?.results || []);
+      // For first page, replace the listings, otherwise append
+      if (pageToFetch === 1) {
+        setListings(response?.results || []);
+      } else {
+        setListings(prev => {
+          const existingIds = new Set(prev.map(item => item.id));
+          const newItems = (response?.results || []).filter(item => !existingIds.has(item.id));
+          return [...prev, ...newItems];
+        });
+      }
+      
       setTotalCount(response?.count || 0);
     } catch (err) {
       setError("Failed to fetch listings. Please try again later.");
@@ -123,14 +148,24 @@ const useListings = ({
     }
   };
 
+  // Initial load and service change
   useEffect(() => {
-    fetchListings();
-    // include market context so switching markets refetches explore listings
-  }, [selectedService, searchQuery, page, pageSize, marketCtx]);
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      fetchListings(1, false);
+    } else {
+      fetchListings(1, false);
+    }
+  }, [selectedService, searchQuery]);
+  
+  // Load more when page changes
+  useEffect(() => {
+    if (currentPage > 1) {
+      fetchListings(currentPage, true);
+    }
+  }, [currentPage]);
 
-  const refetch = () => {
-    fetchListings();
-  };
+  const refetch = () => fetchListings(1, false);
 
   return {
     listings,
@@ -138,6 +173,8 @@ const useListings = ({
     error,
     listingType,
     totalCount,
+    currentPage,
+    setCurrentPage,
     refetch,
   };
 };

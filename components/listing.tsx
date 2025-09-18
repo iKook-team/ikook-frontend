@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 import { MenuListing } from "./listings/menu";
 import { ChefCard } from "./listings/chef";
@@ -146,18 +146,40 @@ interface ListingProps {
 }
 
 export const Listing = ({ selectedService = "chef-at-home" }: ListingProps) => {
-  const [page, setPage] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const pageSize = 12; // Show 12 items per page
+  const { 
+    listings, 
+    loading, 
+    error, 
+    listingType, 
+    totalCount, 
+    currentPage,
+    setCurrentPage,
+    refetch 
+  } = useListings({
+    selectedService,
+    pageSize,
+  });
 
-  const { listings, loading, error, listingType, totalCount, refetch } =
-    useListings({
-      selectedService,
-      page,
-      pageSize,
+  // Reset page when selectedService changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedService]);
+
+  // Debug log the listings data
+  useEffect(() => {
+    console.log('Current listings:', {
+      listings,
+      listingType,
+      totalCount,
+      loading,
+      isLoadingMore
     });
+  }, [listings, listingType, totalCount, loading, isLoadingMore]);
 
   // Map API data to component props
-  const mappedListings = listings.map((item) => {
+  const displayListings = listings.map((item: any) => {
     switch (listingType) {
       case "menu":
         return mapMenuToItem(item);
@@ -170,15 +192,19 @@ export const Listing = ({ selectedService = "chef-at-home" }: ListingProps) => {
     }
   });
 
-  // Handle page change
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  // Handle loading more items
+  const handleLoadMore = () => {
+    if (loading || isLoadingMore) return;
+    setIsLoadingMore(true);
+    setCurrentPage(prev => prev + 1);
   };
+
+  // Check if there are more items to load
+  const hasMore = listings.length < totalCount && !isLoadingMore;
 
   // Render the appropriate component based on listing type
   const renderContent = () => {
-    if (loading) {
+    if (loading && listings.length === 0) {
       return <ListingSkeleton type={listingType} count={4} />;
     }
 
@@ -197,7 +223,7 @@ export const Listing = ({ selectedService = "chef-at-home" }: ListingProps) => {
       );
     }
 
-    if (mappedListings.length === 0) {
+    if (listings.length === 0) {
       return (
         <div className="text-center py-12">
           <p className="text-gray-500">
@@ -211,7 +237,7 @@ export const Listing = ({ selectedService = "chef-at-home" }: ListingProps) => {
       case "menu":
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {mappedListings.map((item: any) => (
+            {displayListings.map((item: any) => (
               <MenuListing key={item.id} {...item} />
             ))}
           </div>
@@ -219,17 +245,38 @@ export const Listing = ({ selectedService = "chef-at-home" }: ListingProps) => {
       case "chef":
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {mappedListings.map((item: any) => (
+            {displayListings.map((item: any) => (
               <ChefCard key={item.id} {...item} />
             ))}
           </div>
         );
       case "service":
+        console.log('Rendering service listings:', displayListings);
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {mappedListings.map((item: any) => (
-              <ServiceListing key={item.id} {...item} />
-            ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {displayListings.length > 0 ? (
+              displayListings.map((item: any) => (
+                <ServiceListing 
+                  key={`${item.id}-service`}
+                  id={item.id}
+                  name={item.title || item.chefName}
+                  description={item.description}
+                  location={item.location}
+                  rating={item.rating}
+                  reviewCount={item.reviewCount}
+                  services={item.services}
+                  mainImageUrl={item.mainImageUrl}
+                  profileImageUrl={item.profileImageUrl}
+                  isVerified={item.isVerified}
+                  price={item.price}
+                  chefId={item.chefId}
+                />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-8">
+                <p className="text-gray-500">No services found</p>
+              </div>
+            )}
           </div>
         );
       default:
@@ -237,43 +284,61 @@ export const Listing = ({ selectedService = "chef-at-home" }: ListingProps) => {
     }
   };
 
-  // Render pagination controls
-  const renderPagination = () => {
-    if (totalCount <= pageSize || loading) return null;
+  // Handle scroll position and loading state after data loads
+  useEffect(() => {
+    if (loading) return;
+    
+    // Reset loading more state when data is loaded
+    if (isLoadingMore) {
+      setIsLoadingMore(false);
+      
+      // Scroll to show new items if user was near bottom
+      const scrollContainer = document.documentElement;
+      const isNearBottom = scrollContainer.scrollHeight - window.innerHeight - window.scrollY < 100;
+      
+      if (isNearBottom) {
+        requestAnimationFrame(() => {
+          window.scrollTo({
+            top: scrollContainer.scrollHeight,
+            behavior: 'smooth'
+          });
+        });
+      }
+    }
+  }, [loading, isLoadingMore]);
 
-    const totalPages = Math.ceil(totalCount / pageSize);
-    const showPrev = page > 1;
-    const showNext = page < totalPages;
+  // Render load more button
+  const renderLoadMore = () => {
+    if (listings.length === 0) {
+      return <div className="text-center py-4 text-gray-500">No items found</div>;
+    }
+
+    if (loading && !isLoadingMore) {
+      return <div className="text-center py-4">Loading...</div>;
+    }
+
+    if (hasMore) {
+      return (
+        <div className="text-center py-4">
+          <button
+            onClick={handleLoadMore}
+            disabled={isLoadingMore}
+            className="px-6 py-3 bg-yellow-500 text-gray-900 font-medium rounded-md hover:bg-yellow-400 transition-colors shadow-sm"
+            style={{
+              minWidth: '140px',
+              opacity: isLoadingMore ? 0.7 : 1,
+              cursor: isLoadingMore ? 'not-allowed' : 'pointer'
+            }}
+          >
+            {isLoadingMore ? 'Loading...' : 'Load More'}
+          </button>
+        </div>
+      );
+    }
 
     return (
-      <div className="flex justify-center mt-8 space-x-2">
-        <button
-          className={`px-4 py-2 rounded-md ${
-            showPrev
-              ? "bg-primary text-white hover:bg-primary/90"
-              : "bg-gray-200 text-gray-500 cursor-not-allowed"
-          }`}
-          disabled={!showPrev}
-          onClick={() => handlePageChange(page - 1)}
-          type="button"
-        >
-          Previous
-        </button>
-        <span className="px-4 py-2">
-          Page {page} of {totalPages}
-        </span>
-        <button
-          className={`px-4 py-2 rounded-md ${
-            showNext
-              ? "bg-primary text-white hover:bg-primary/90"
-              : "bg-gray-200 text-gray-500 cursor-not-allowed"
-          }`}
-          disabled={!showNext}
-          onClick={() => handlePageChange(page + 1)}
-          type="button"
-        >
-          Next
-        </button>
+      <div className="text-center py-4 text-gray-500">
+        No more items to load
       </div>
     );
   };
@@ -282,7 +347,7 @@ export const Listing = ({ selectedService = "chef-at-home" }: ListingProps) => {
     <div className="w-full px-12 max-md:px-6 max-sm:px-4 py-8">
       <div className="w-full max-w-[1440px] mx-auto">
         {renderContent()}
-        {renderPagination()}
+        {renderLoadMore()}
       </div>
     </div>
   );

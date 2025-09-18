@@ -91,7 +91,7 @@ const VerificationBadge = ({
   isVerified = true,
   profileImageUrl,
 }: VerificationBadgeProps) => (
-  <div className="w-[60px] h-[60px] shrink-0 absolute left-[270px] top-[191px] max-md:left-[205px] max-md:top-[175px] max-sm:left-[180px] max-sm:top-40">
+  <div className="w-[60px] h-[60px] shrink-0 relative">
     <div className="flex w-[60px] h-[60px] justify-center items-center overflow-hidden rounded-full border-[2.25px] border-solid border-white">
       <Image
         alt="Service provider"
@@ -110,9 +110,9 @@ const VerificationBadge = ({
           style={{
             flexShrink: 0,
             height: "15px",
-            left: "45px",
+            right: "-5px",
+            bottom: "-5px",
             position: "absolute",
-            top: "41px",
             width: "15px",
           }}
           viewBox="0 0 15 16"
@@ -222,16 +222,21 @@ export const ServiceListing: React.FC<
       )}
 
       <div className="absolute left-0 top-[225px] w-full px-4 pt-2">
-        <h2 className="text-[#323335] text-base font-bold leading-6">{name}</h2>
-        <div className="flex items-center">
-          <StarRating rating={rating} reviewCount={reviewCount} />
+        <div className="flex items-start justify-between">
+          <div>
+            <h2 className="text-[#323335] text-base font-bold leading-6">{name}</h2>
+            <div className="flex items-center">
+              <StarRating rating={rating} reviewCount={reviewCount} />
+            </div>
+          </div>
+          <div className="relative -mt-8 -mr-1">
+            <VerificationBadge
+              isVerified={isVerified}
+              profileImageUrl={profileImageUrl}
+            />
+          </div>
         </div>
       </div>
-
-      <VerificationBadge
-        isVerified={isVerified}
-        profileImageUrl={profileImageUrl}
-      />
     </button>
   );
 };

@@ -101,8 +101,8 @@ const VerificationBadge = ({
   isVerified = true,
   profileImageUrl,
 }: VerificationBadgeProps) => (
-  <div className="w-[60px] h-[60px] shrink-0 absolute left-[225px] top-[191px] max-md:left-[205px] max-md:top-[175px] max-sm:left-[180px] max-sm:top-40">
-    <div className="flex w-[60px] h-[60px] justify-center items-center shrink-0 absolute left-0 top-0 rounded-full overflow-hidden">
+  <div className="w-[60px] h-[60px] shrink-0 relative">
+    <div className="flex w-full h-full justify-center items-center rounded-full overflow-hidden">
       <Image
         alt="Chef profile"
         className="object-cover w-[60px] h-[60px] rounded-full border-[2.25px] border-solid border-white"
@@ -120,9 +120,9 @@ const VerificationBadge = ({
           style={{
             flexShrink: 0,
             height: "15px",
-            left: "45px",
+            right: "-5px",
+            bottom: "-5px",
             position: "absolute",
-            top: "41px",
             width: "15px",
           }}
           viewBox="0 0 15 16"
@@ -231,12 +231,22 @@ export const ChefCard: React.FC<ChefCardProps> = ({
         )}
       </button>
 
-      <header className="inline-flex flex-col items-start absolute w-[113px] h-[45px] left-[9px] top-[171px] max-md:left-2 max-md:top-[155px] max-sm:left-[7px] max-sm:top-[140px] z-20">
-        <h2 className="text-white text-base font-semibold leading-6 relative">
-          {name}
-        </h2>
-        <StarRating rating={rating} reviewCount={reviewCount} />
-      </header>
+      <div className="absolute left-0 top-[225px] w-full px-4 pt-2 z-20">
+        <div className="flex items-start justify-between">
+          <div>
+            <h2 className="text-[#323335] text-base font-bold leading-6">{name}</h2>
+            <div className="flex items-center">
+              <StarRating rating={rating} reviewCount={reviewCount} />
+            </div>
+          </div>
+          <div className="relative -mt-8 -mr-1">
+            <VerificationBadge
+              isVerified={isVerified}
+              profileImageUrl={profileImageUrl}
+            />
+          </div>
+        </div>
+      </div>
 
       <div className="z-20 relative">
         <LocationBadge location={location} />
@@ -260,10 +270,6 @@ export const ChefCard: React.FC<ChefCardProps> = ({
         </div>
       </section>
 
-      <VerificationBadge
-        isVerified={isVerified}
-        profileImageUrl={profileImageUrl}
-      />
     </Link>
   );
 };
