@@ -114,6 +114,7 @@ const CookingClassBookingPage = () => {
             teaching: formData.teaching || "",
             guests: formData.guests || 1,
           }}
+          chefName={bookingService?.chef?.first_name ? `Chef ${bookingService.chef.first_name}` : 'Chef'}
         />
       );
       break;
@@ -127,6 +128,7 @@ const CookingClassBookingPage = () => {
             experience: formData.experience || "",
             days: formData.days || 1,
           }}
+          chefName={bookingService?.chef?.first_name ? `Chef ${bookingService.chef.first_name}` : 'Chef'}
         />
       );
       break;
@@ -140,6 +142,7 @@ const CookingClassBookingPage = () => {
             endDate: formData.endDate || "",
             cuisines: formData.cuisines || [],
           }}
+          chefName={bookingService?.chef?.first_name ? `Chef ${bookingService.chef.first_name}` : 'Chef'}
         />
       );
       break;

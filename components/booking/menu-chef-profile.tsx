@@ -199,10 +199,10 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
                 />
                 <div className="self-stretch min-w-60 my-auto">
                   <h4 className="text-base font-semibold">
-                    Congratulations, She&apos;s available
+                    {chef?.first_name ? `Chef ${chef.first_name} is available` : 'Congratulations, available for booking'}
                   </h4>
                   <p className="text-sm font-normal leading-none">
-                    Chef Titilayo is usually fully booked.
+                    {chef?.first_name ? `${chef.first_name} is usually fully booked.` : 'This chef is usually fully booked.'}
                   </p>
                 </div>
               </div>
@@ -212,7 +212,7 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
                 Want to request a personalised menu based on your requirements?
               </h4>
               <p className="text-[#3F3E3D] font-normal leading-5 self-stretch mt-[21px] max-md:max-w-full">
-                Just message chef Titilayo and discuss the details of your event
+                Just message {chef?.first_name ? `chef ${chef.first_name}` : 'the chef'} and discuss the details of your event
                 and the requirements you have.
               </p>
               <button

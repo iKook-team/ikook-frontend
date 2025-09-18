@@ -1,9 +1,27 @@
 import React from "react";
-
+import { useRouter } from "next/navigation";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
-export const ChefProfile: React.FC = () => {
+interface ChefProfileProps {
+  chef: {
+    id: string | number;
+    first_name?: string;
+    last_name?: string;
+    city?: string;
+    rating?: number;
+    review_count?: number;
+    avatar?: string;
+    bio?: string;
+  };
+}
+
+export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
+  const router = useRouter();
+  
+  const handleViewProfile = () => {
+    router.push(`/chefs/${chef.id}`);
+  };
   const services = [
     {
       icon: "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/cb394a2dc5cbfdd445ad8e5ea66875e05bb351c6?placeholderIfAbsent=true",
@@ -55,18 +73,30 @@ export const ChefProfile: React.FC = () => {
   ];
 
   return (
-    <aside className="shadow-[0px_4px_70px_0px_rgba(0,0,0,0.07)] w-full bg-white px-[22px] py-[19px] rounded-lg max-md:mt-[33px] max-md:pl-5">
+    <div className="shadow-[0px_4px_70px_0px_rgba(0,0,0,0.07)] w-full bg-white px-[22px] py-[19px] rounded-lg max-md:mt-[33px] max-md:pl-5">
       <div className="flex w-full flex-col items-stretch">
         <div className="flex w-full max-w-[351px] flex-col items-stretch">
           <div className="flex items-center gap-5">
-            <img
-              src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/b8c11ad88b00cdfbfd0dac9c16bd04c1ac816df3?placeholderIfAbsent=true"
-              className="aspect-[1] object-contain w-20 self-stretch shrink-0 my-auto rounded-lg"
-              alt="Chef Titilayo John"
-            />
+            {chef.avatar ? (
+              <img
+                src={`${process.env.NEXT_PUBLIC_API_BASE_URL || ''}${chef.avatar}`}
+                className="aspect-[1] object-cover w-20 h-20 self-stretch shrink-0 my-auto rounded-lg"
+                alt={`${chef.first_name || ''} ${chef.last_name || ''}`}
+                onError={(e) => {
+                  // Fallback to default avatar if image fails to load
+                  const target = e.target as HTMLImageElement;
+                  target.onerror = null;
+                  target.src = '/images/default-avatar.png';
+                }}
+              />
+            ) : (
+              <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
+                <span className="text-gray-500 text-2xl">👨‍🍳</span>
+              </div>
+            )}
             <div className="self-stretch my-auto">
               <h2 className="text-[#323335] text-2xl font-semibold leading-none">
-                Chef Titilayo John
+                {chef.first_name || 'Chef'} {chef.last_name || ''}
               </h2>
               <div className="flex gap-2 text-sm mt-2">
                 <div className="flex items-center gap-1 text-[#3F3E3D] font-normal whitespace-nowrap leading-none">
@@ -76,7 +106,7 @@ export const ChefProfile: React.FC = () => {
                     alt="Location"
                   />
                   <span className="text-[#3F3E3D] self-stretch w-[55px] my-auto">
-                    London
+                    {chef.city || 'N/A'}
                   </span>
                 </div>
                 <div className="flex items-center text-[#323335]">
@@ -87,24 +117,68 @@ export const ChefProfile: React.FC = () => {
                       alt="Rating"
                     />
                     <span className="text-[#323335] self-stretch w-7 my-auto">
-                      4.6
+                      {chef.rating?.toFixed(1) || 'N/A'}
                     </span>
                   </div>
                   <span className="text-[#323335] font-light self-stretch my-auto">
-                    (23 Reviews)
+                    ({chef.review_count || 0} Reviews)
                   </span>
                 </div>
               </div>
             </div>
           </div>
 
-          <p className="text-[#6f6e6d] text-xs font-normal leading-[22px] mt-2">
-            3 years experience in culinary but became a chef a year ago. Worked
-            with restaurants and other chefs. Born in Milan, grew up in{" "}
-            <span className="underline text-[#FCC01C] cursor-pointer hover:text-[#e6ac19]">
-              read more
-            </span>
-          </p>
+          {chef.bio ? (
+            <div className="mt-2">
+              <p id="chef-bio-preview" className="text-[#6f6e6d] text-xs font-normal leading-[22px]">
+                {chef.bio.length > 120 ? (
+                  <>
+                    {chef.bio.substring(0, 120)}...{" "}
+                    <span 
+                      className="underline text-[#FCC01C] cursor-pointer hover:text-[#e6ac19]"
+                      onClick={() => {
+                        const bioElement = document.getElementById('chef-bio-full');
+                        const previewElement = document.getElementById('chef-bio-preview');
+                        if (bioElement && previewElement) {
+                          bioElement.classList.toggle('hidden');
+                          previewElement.classList.toggle('hidden');
+                        }
+                      }}
+                    >
+                      read more
+                    </span>
+                  </>
+                ) : (
+                  chef.bio
+                )}
+              </p>
+              {chef.bio.length > 120 && (
+                <p 
+                  id="chef-bio-full" 
+                  className="text-[#6f6e6d] text-xs font-normal leading-[22px] hidden"
+                >
+                  {chef.bio}{" "}
+                  <span 
+                    className="underline text-[#FCC01C] cursor-pointer hover:text-[#e6ac19]"
+                    onClick={() => {
+                      const bioElement = document.getElementById('chef-bio-full');
+                      const previewElement = document.getElementById('chef-bio-preview');
+                      if (bioElement && previewElement) {
+                        bioElement.classList.toggle('hidden');
+                        previewElement.classList.toggle('hidden');
+                      }
+                    }}
+                  >
+                    read less
+                  </span>
+                </p>
+              )}
+            </div>
+          ) : (
+            <p className="text-[#6f6e6d] text-xs font-normal leading-[22px] mt-2">
+              No bio available
+            </p>
+          )}
 
           <div className="flex w-full max-w-[349px] gap-[9px] text-[10px] text-[#060605] font-medium flex-wrap mt-2">
             {services.map((service, index) => (
@@ -124,7 +198,12 @@ export const ChefProfile: React.FC = () => {
         </div>
 
         <div className="mt-5">
-          <Button variant="outline" size="sm" className="w-full">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full"
+            onClick={handleViewProfile}
+          >
             View Profile
           </Button>
         </div>
@@ -138,16 +217,12 @@ export const ChefProfile: React.FC = () => {
             <div className="flex items-center gap-6">
               <img
                 src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/867c6c46926a904b42225a123b24281a7275bc9e?placeholderIfAbsent=true"
-                className="aspect-[1] object-contain w-[50px] self-stretch shrink-0 my-auto"
-                alt="Available"
+                alt="Booking included"
+                className="w-12 h-12 object-contain"
               />
-              <div className="self-stretch my-auto">
-                <h3 className="text-[#3F3E3D] text-sm font-semibold leading-none">
-                  Congratulations, She&apos;s available
-                </h3>
-                <p className="text-[#3F3E3D] text-xs font-normal">
-                  Chef Titilayo is usually fully booked.
-                </p>
+              <div>
+                <h3 className="text-black text-base font-medium">Booking Protection</h3>
+                <p className="text-sm text-[#3F3E3D]">Your booking is secure with us</p>
               </div>
             </div>
           </div>
@@ -167,7 +242,7 @@ export const ChefProfile: React.FC = () => {
                 <img
                   src={item.icon}
                   className="aspect-[0.96] object-contain w-[27px] self-stretch shrink-0 my-auto"
-                  alt=""
+                  alt={item.label}
                 />
                 <span className="text-[#3F3E3D] self-stretch my-auto">
                   {item.label}
@@ -181,6 +256,6 @@ export const ChefProfile: React.FC = () => {
           </div>
         </div>
       </div>
-    </aside>
+    </div>
   );
 };

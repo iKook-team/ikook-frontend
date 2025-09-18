@@ -7,31 +7,46 @@ import { Button } from "../ui/button";
 
 import { useAuthStore } from "@/lib/store/auth-store";
 
+interface ChefType {
+  id: number;
+  first_name: string;
+  last_name: string;
+  avatar: string;
+  city: string;
+  bio: string;
+  num_reviews: number;
+  average_rating: number;
+}
+
+interface ServiceData {
+  id: number;
+  chef_service: string;
+  starting_price_per_person: string;
+  min_num_of_guests: number;
+  cuisines: string[];
+  cooking_class_appearance?: string;
+  availability?: boolean;
+  cover_image?: string;
+  chef?: ChefType;
+}
+
 interface EventDetailsProps {
   onNext: (data?: Record<string, any>) => void;
   onBack: () => void;
   chefService?: string;
+  serviceData?: ServiceData;
 }
 
 export const EventDetails: React.FC<EventDetailsProps> = ({
   onNext,
   onBack,
   chefService,
+  serviceData,
 }) => {
   const router = useRouter();
 
   console.log("[EventDetails] chefService:", chefService);
-  const cuisines = [
-    "African",
-    "Italian",
-    "Chinese",
-    "European",
-    "Modern English",
-    "BBQ",
-    "Indian",
-    "Middle Eastern",
-    "Spanish",
-  ];
+  const cuisines = serviceData?.cuisines || [];
 
   const eventTypes = ["Wedding", "Birthday", "Bachelor's Party", "Night Party"];
 
@@ -67,12 +82,24 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
       return;
     }
 
-    // Create a clean service object with just the ID
-    const serviceObj = { id: serviceId };
+    // Create a service object with the ID and chef data
+    const serviceObj = { 
+      id: serviceId,
+      chef: serviceData?.chef ? {
+        id: serviceData.chef.id,
+        first_name: serviceData.chef.first_name,
+        last_name: serviceData.chef.last_name,
+        avatar: serviceData.chef.avatar,
+        city: serviceData.chef.city,
+        bio: serviceData.chef.bio,
+        num_reviews: serviceData.chef.num_reviews,
+        average_rating: serviceData.chef.average_rating
+      } : undefined
+    };
 
-    console.log("[EventDetails] Setting booking service with ID:", serviceId);
+    console.log("[EventDetails] Setting booking service with data:", serviceObj);
 
-    // Set the booking service with the minimal required data
+    // Set the booking service with the service data
     setBookingService(serviceObj);
 
     // Determine the target route based on chefService type
@@ -100,86 +127,79 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
         <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
           <div className="w-[24%] max-md:w-full max-md:ml-0">
             <img
-              src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/2519ad68400128f1fb9c68f364b8cc6504d27b05?placeholderIfAbsent=true"
-              className="aspect-[1.22] object-contain w-[142px] shrink-0 max-w-full grow max-md:mt-[29px]"
-              alt="Large Event"
+              src={serviceData?.cover_image 
+                ? `${process.env.NEXT_PUBLIC_API_BASE_URL || ''}${serviceData.cover_image}`
+                : "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/2519ad68400128f1fb9c68f364b8cc6504d27b05?placeholderIfAbsent=true"
+              }
+              className="aspect-[1.22] object-cover w-[142px] h-[120px] shrink-0 max-w-full rounded-lg max-md:mt-[29px]"
+              alt={serviceData?.chef_service || 'Service'}
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.onerror = null;
+                target.src = 'https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/2519ad68400128f1fb9c68f364b8cc6504d27b05?placeholderIfAbsent=true';
+              }}
             />
           </div>
           <div className="w-[76%] ml-5 max-md:w-full max-md:ml-0">
             <div className="flex gap-[40px_106px] mt-[9px] max-md:max-w-full max-md:mt-[38px]">
               <div className="flex flex-col items-stretch">
                 <h2 className="text-[#323335] text-base font-semibold">
-                  Large Event with Chef Titilayo
+                  {serviceData?.chef_service || 'Service'}
                 </h2>
                 <div className="flex flex-col items-stretch mt-3">
-                  <div className="flex items-center gap-2 text-sm text-[#6F6E6D]">
-                    <div className="self-stretch flex items-center gap-1 font-normal whitespace-nowrap leading-none my-auto">
-                      <img
-                        src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/96d216fadb053d93da7c14f73cffb0008e871d81?placeholderIfAbsent=true"
-                        className="aspect-[1] object-contain w-3.5 self-stretch shrink-0 my-auto rounded-lg"
-                        alt="Location"
-                      />
-                      <span className="text-[#6F6E6D] self-stretch my-auto">
-                        London
-                      </span>
-                    </div>
-                    <div className="self-stretch flex gap-1 my-auto">
-                      <div className="flex items-center gap-1 font-normal whitespace-nowrap leading-none">
-                        <img
-                          src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/2d38100501e115c51b04b010f2fb25f9924498c8?placeholderIfAbsent=true"
-                          className="aspect-[1] object-contain w-3 self-stretch shrink-0 my-auto rounded-lg"
-                          alt="Rating"
-                        />
-                        <span className="text-[#6F6E6D] self-stretch my-auto">
-                          4.6
-                        </span>
-                      </div>
-                      <span className="text-[#6F6E6D] font-light">
-                        (23 Reviews)
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex gap-3 text-xs text-[#323335] font-normal mt-2">
-                    <div className="flex items-center gap-1">
-                      <img
-                        src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/c1a987d99d2c244fb9522d8fbbfe394e4e300b55?placeholderIfAbsent=true"
-                        className="aspect-[1] object-contain w-3 self-stretch shrink-0 my-auto"
-                        alt="Cuisines"
-                      />
-                      <span className="self-stretch my-auto">5 Cuisines</span>
-                    </div>
+                  <div className="flex flex-wrap gap-2 text-xs text-[#323335] font-normal mt-2">
+                    {cuisines.length > 0 ? (
+                      cuisines.map((cuisine, index) => (
+                        <div key={index} className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded">
+                          <img
+                            src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/c1a987d99d2c244fb9522d8fbbfe394e4e300b55?placeholderIfAbsent=true"
+                            className="w-3 h-3"
+                            alt={cuisine}
+                          />
+                          <span>{cuisine}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <span className="text-gray-500">No cuisines specified</span>
+                    )}
                     <div className="flex items-center gap-1">
                       <img
                         src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/5c4cacdfe6acd0b6e0c79d9d71353217acd21ab8?placeholderIfAbsent=true"
-                        className="aspect-[1] object-contain w-3 self-stretch shrink-0 my-auto"
+                        className="w-3 h-3"
                         alt="People"
                       />
-                      <span className="self-stretch my-auto">40+ People</span>
+                      <span className="text-xs">
+                        {serviceData?.min_num_of_guests ? `${serviceData.min_num_of_guests}+ People` : 'Group size varies'}
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="text-[#030302] text-right text-base font-medium">
-                From £20pp
+                {serviceData?.starting_price_per_person 
+                  ? `From ₦${parseFloat(serviceData.starting_price_per_person).toLocaleString()}pp`
+                  : 'Price on request'}
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="w-full mt-[27px] max-md:max-w-full max-md:mr-[3px]">
-        <h3 className="text-black text-base font-semibold">Cuisines</h3>
-        <div className="flex w-full max-w-[641px] gap-2 text-xs text-[#060605] font-medium flex-wrap mt-[9px] max-md:max-w-full">
-          {cuisines.map((cuisine, index) => (
-            <Badge
-              key={index}
-              className="px-3 py-2 rounded-[20.223px] border-[1.011px]"
-            >
-              {cuisine}
-            </Badge>
-          ))}
+      {cuisines.length > 0 && (
+        <div className="w-full mt-[27px] max-md:max-w-full max-md:mr-[3px]">
+          <h3 className="text-black text-base font-semibold">Cuisines</h3>
+          <div className="flex w-full max-w-[641px] gap-2 text-xs text-[#060605] font-medium flex-wrap mt-[9px] max-md:max-w-full">
+            {cuisines.map((cuisine, index) => (
+              <Badge
+                key={index}
+                className="px-3 py-2 rounded-[20.223px] border-[1.011px] bg-gray-100 hover:bg-gray-200"
+              >
+                {cuisine}
+              </Badge>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="w-[613px] max-w-full mt-[21px]">
         <h3 className="text-black text-base font-semibold">Event type</h3>
@@ -199,9 +219,10 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
 
       <div className="flex w-full items-stretch gap-[40px_49px] flex-wrap mt-[19px] max-md:max-w-full">
         <p className="text-[#3F3E3D] text-xs font-normal leading-[18px] grow shrink w-[417px] basis-auto max-md:max-w-full">
-          Get in touch with chef Titilayo and discuss the details of your event
-          and the requirements you have, and you will get a quote that fits your
-          budget
+          {serviceData?.chef?.first_name 
+            ? `Get in touch with chef ${serviceData.chef.first_name} to discuss the details of your event and the requirements you have, and you will get a quote that fits your budget.`
+            : 'Contact the chef to discuss your event details and requirements for a personalized quote.'
+          }
         </p>
         <Button
           className="bg-[#FCC01C] hover:bg-[#e6ac19] text-white"

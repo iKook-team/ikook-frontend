@@ -8,6 +8,7 @@ interface ClassDetailsForm3Props {
   onNext: (data: ClassDetailsForm3Data) => void;
   onBack: () => void;
   initialValues?: Partial<ClassDetailsForm3Data>;
+  chefName?: string;
 }
 
 export interface ClassDetailsForm3Data {
@@ -31,6 +32,7 @@ const ClassDetailsForm3: React.FC<ClassDetailsForm3Props> = ({
   onNext,
   onBack,
   initialValues = {},
+  chefName = 'Chef'
 }) => {
   const [formData, setFormData] = useState<ClassDetailsForm3Data>({
     startDate: "",
@@ -62,7 +64,9 @@ const ClassDetailsForm3: React.FC<ClassDetailsForm3Props> = ({
         {/* Header Section */}
         <div className="px-6 pt-6 pb-4 border-b border-gray-100">
           <header className="mb-6">
-            <h1 className="text-2xl font-semibold text-gray-900">Chef Titilayo</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">
+              {chefName}
+            </h1>
           </header>
           <div className="mb-4">
             <ProgressIndicator steps={progressSteps} />

@@ -7,6 +7,7 @@ interface ClassDetailsFormProps {
   onNext: (data: ClassDetailsFormData) => void;
   onBack: () => void;
   initialValues?: Partial<ClassDetailsFormData>;
+  chefName?: string;
 }
 
 export interface ClassDetailsFormData {
@@ -19,6 +20,7 @@ const ClassDetailsForm: React.FC<ClassDetailsFormProps> = ({
   onNext,
   onBack,
   initialValues = {},
+  chefName = 'Chef'
 }) => {
   const [formData, setFormData] = useState<ClassDetailsFormData>({
     location: "",
@@ -54,7 +56,7 @@ const ClassDetailsForm: React.FC<ClassDetailsFormProps> = ({
         <div className="px-6 pt-6 pb-4 border-b border-gray-100">
           <header className="mb-6">
             <h1 className="text-2xl font-semibold text-gray-900">
-              Chef Titilayo
+              {chefName}
             </h1>
           </header>
 

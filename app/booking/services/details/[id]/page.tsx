@@ -6,8 +6,8 @@ import { useAuthStore } from "@/lib/store/auth-store";
 import { ChefProfile } from "@/components/booking/chef-profile";
 import { EventDetails } from "@/components/booking/event-details";
 import { ReviewsSection } from "@/components/booking/reviews-section";
-import { MenusSection } from "@/components/booking/menus-section";
-import { SimilarChefs } from "@/components/booking/similar-chefs";
+// import { MenusSection } from "@/components/booking/menus-section";
+// import { SimilarChefs } from "@/components/booking/similar-chefs";
 import { listingService } from "@/lib/api/listing";
 
 const ServiceDetailPage = () => {
@@ -60,24 +60,34 @@ const ServiceDetailPage = () => {
     <main className="mx-auto w-full max-w-[1117px] mt-[41px] px-4 mb-16 max-md:max-w-full max-md:mt-10">
       <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
         <div className="w-[36%] max-md:w-full max-md:ml-0">
-          <ChefProfile />
+          <ChefProfile 
+            chef={{
+              id: service.data?.chef?.id || 0,
+              first_name: service.data?.chef?.first_name || '',
+              last_name: service.data?.chef?.last_name || '',
+              city: service.data?.chef?.city || '',
+              rating: service.data?.chef?.average_rating || 0,
+              review_count: service.data?.chef?.num_reviews || 0,
+              avatar: service.data?.chef?.avatar || '',
+              bio: service.data?.chef?.bio || ''
+            }} 
+          />
         </div>
         <div className="w-[64%] ml-5 max-md:w-full max-md:ml-0">
           <div className="grow max-md:max-w-full max-md:mt-[33px]">
             {service.data && service.data.chef_service ? (
               <EventDetails
                 chefService={service.data.chef_service}
+                serviceData={service.data}
                 onNext={() => {}}
                 onBack={() => {}}
               />
             ) : (
               <div className="text-red-500">
-                No chef_service found in service details.
+                No service details found.
               </div>
             )}
             <ReviewsSection />
-            <MenusSection />
-            <SimilarChefs />
           </div>
         </div>
       </div>
