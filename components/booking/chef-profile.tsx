@@ -134,19 +134,28 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
                 {chef.bio.length > 120 ? (
                   <>
                     {chef.bio.substring(0, 120)}...{" "}
-                    <span 
-                      className="underline text-[#FCC01C] cursor-pointer hover:text-[#e6ac19]"
+                    <button 
+                      type="button"
+                      className="bg-transparent border-none p-0 text-[#FCC01C] hover:text-[#e6ac19] underline cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#FCC01C] focus:ring-offset-2 rounded"
                       onClick={() => {
                         const bioElement = document.getElementById('chef-bio-full');
                         const previewElement = document.getElementById('chef-bio-preview');
                         if (bioElement && previewElement) {
-                          bioElement.classList.toggle('hidden');
+                          const isExpanded = bioElement.classList.toggle('hidden');
                           previewElement.classList.toggle('hidden');
+                          const readMoreButton = document.getElementById('read-more-button');
+                          if (readMoreButton) {
+                            readMoreButton.setAttribute('aria-expanded', String(!isExpanded));
+                            readMoreButton.textContent = isExpanded ? 'read more' : 'read less';
+                          }
                         }
                       }}
+                      id="read-more-button"
+                      aria-expanded="false"
+                      aria-controls="chef-bio-full"
                     >
                       read more
-                    </span>
+                    </button>
                   </>
                 ) : (
                   chef.bio
@@ -158,19 +167,25 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
                   className="text-[#6f6e6d] text-xs font-normal leading-[22px] hidden"
                 >
                   {chef.bio}{" "}
-                  <span 
-                    className="underline text-[#FCC01C] cursor-pointer hover:text-[#e6ac19]"
+                  <button 
+                    type="button"
+                    className="bg-transparent border-none p-0 text-[#FCC01C] hover:text-[#e6ac19] underline cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#FCC01C] focus:ring-offset-2 rounded"
                     onClick={() => {
                       const bioElement = document.getElementById('chef-bio-full');
                       const previewElement = document.getElementById('chef-bio-preview');
-                      if (bioElement && previewElement) {
+                      const readMoreButton = document.getElementById('read-more-button');
+                      if (bioElement && previewElement && readMoreButton) {
                         bioElement.classList.toggle('hidden');
                         previewElement.classList.toggle('hidden');
+                        readMoreButton.setAttribute('aria-expanded', 'false');
+                        readMoreButton.textContent = 'read more';
                       }
                     }}
+                    aria-expanded="true"
+                    aria-controls="chef-bio-preview"
                   >
                     read less
-                  </span>
+                  </button>
                 </p>
               )}
             </div>
