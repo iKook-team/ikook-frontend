@@ -133,7 +133,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
         >
           <p className="mb-4 text-sm text-gray-600">
             {subtitleText ??
-              "Enter the 6-digit code sent to your phone number."}
+              "Enter the 6-digit code sent to your email address."}
           </p>
 
           <div className="mb-6 flex justify-center gap-2">

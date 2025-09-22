@@ -71,7 +71,7 @@ export const JoinForm: React.FC<JoinFormProps> = ({
           className="flex flex-col items-center w-full"
           onSubmit={handleSubmit}
         >
-          <WelcomeSection />
+          <WelcomeSection imageUrl="/join.png" />
 
           <fieldset className="border-0 p-0 m-0 w-full flex flex-col items-center">
             <legend className="sr-only">Choose your role on iKooK</legend>

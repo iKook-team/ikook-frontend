@@ -5,6 +5,8 @@ import Image from "next/image";
 
 import { SocialIcons } from "./SocialIcons";
 import { PaymentBadges } from "./PaymentBadges";
+import { useMarket } from "@/lib/market-context";
+import type { MarketCode } from "@/lib/market";
 
 interface FooterLinkSection {
   title: string;
@@ -18,6 +20,20 @@ interface FooterLinksProps {
 }
 
 export const FooterLinks: React.FC<FooterLinksProps> = ({ className = "" }) => {
+  const { market } = useMarket();
+
+  const getContact = (code: MarketCode) => {
+    switch (code) {
+      case "GB":
+        return { phoneDisplay: "+44 20 4520 7041", phoneHref: "+442045207041", email: "team@ikook.co.uk" };
+      case "ZA":
+        return { phoneDisplay: "+27 10 500 4144", phoneHref: "+27105004144", email: "team@ikook.co.za" };
+      case "NG":
+      default:
+        return { phoneDisplay: "+234 916 000 6924", phoneHref: "+2349160006924", email: "team@ikook.ng" };
+    }
+  };
+  const contact = getContact(market);
   const footerSections: FooterLinkSection[] = [
     {
       isLogo: true,
@@ -70,18 +86,18 @@ export const FooterLinks: React.FC<FooterLinksProps> = ({ className = "" }) => {
               <address className="not-italic text-[#3F3E3D] space-y-4">
                 <div>
                   <a
-                    href="tel:02038078500"
+                    href={`tel:${contact.phoneHref}`}
                     className="hover:text-black transition-colors block"
                   >
-                    0203 807 8500
+                    {contact.phoneDisplay}
                   </a>
                 </div>
                 <div>
                   <a
-                    href="mailto:team@ikook.co.uk"
+                    href={`mailto:${contact.email}`}
                     className="hover:text-black transition-colors block"
                   >
-                    team@ikook.co.uk
+                    {contact.email}
                   </a>
                 </div>
                 <div className="mt-6">

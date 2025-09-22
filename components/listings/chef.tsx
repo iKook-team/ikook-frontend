@@ -235,9 +235,6 @@ export const ChefCard: React.FC<ChefCardProps> = ({
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-[#323335] text-base font-bold leading-6">{name}</h2>
-            <div className="flex items-center">
-              <StarRating rating={rating} reviewCount={reviewCount} />
-            </div>
           </div>
           <div className="relative -mt-8 -mr-1">
             <VerificationBadge
@@ -253,7 +250,7 @@ export const ChefCard: React.FC<ChefCardProps> = ({
       </div>
 
       <section className="inline-flex flex-col items-start gap-3 absolute w-[287px] h-14 left-[11px] top-[258px] max-md:w-[260px] max-md:left-2.5 max-md:top-[235px] max-sm:w-[235px] max-sm:left-2 max-sm:top-[215px]">
-        <p className="w-[287px] h-8 text-[#6F6E6D] text-[10px] font-normal relative">
+        <p className="w-[287px] text-[#6F6E6D] text-[10px] font-normal relative line-clamp-3">
           {description}
         </p>
 
