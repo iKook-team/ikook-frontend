@@ -1,12 +1,67 @@
 import React from "react";
+import { showToast } from "@/lib/utils/toast";
+import favouritesService from "@/lib/api/favourites";
 
 interface HeroSectionProps {
   menu: any;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ menu }) => {
-  const handleShare = () => {};
-  const handleSave = () => {};
+  const [saved, setSaved] = React.useState<boolean>(() => !!menu?.is_favourite);
+
+  // Keep local state in sync if menu prop updates
+  React.useEffect(() => {
+    setSaved(!!menu?.is_favourite);
+  }, [menu?.is_favourite]);
+  const handleShare = async () => {
+    try {
+      const shareData = {
+        title: menu?.name ?? "Menu",
+        text: "Check out this menu on iKooK",
+        url: typeof window !== "undefined" ? window.location.href : undefined,
+      } as ShareData;
+
+      if (typeof navigator !== "undefined" && (navigator as any).share) {
+        // Use the native Web Share API when available
+        await (navigator as any).share(shareData);
+        // Do not show a toast on successful native share; UX is handled by OS
+        return;
+      }
+
+      // Fallback: copy the current URL to clipboard
+      const urlToCopy = shareData.url || "";
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(urlToCopy);
+        showToast.success("Link copied to clipboard");
+        return;
+      }
+
+      // Legacy fallback if Clipboard API is unavailable
+      const textArea = document.createElement("textarea");
+      textArea.value = urlToCopy;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+      showToast.success("Link copied to clipboard");
+    } catch (err: any) {
+      // If user cancels the native share, ignore silently
+      if (err?.name === "AbortError" || err?.message?.includes("Abort")) {
+        return;
+      }
+      showToast.error("Unable to share right now");
+    }
+  };
+  const handleSave = async () => {
+    if (saved) return; // mimic menu card behavior (no unlike for now)
+    setSaved(true);
+    try {
+      await favouritesService.addFavourite({ menuId: menu?.id });
+      showToast.success("Saved to favourites");
+    } catch (err) {
+      setSaved(false);
+    }
+  };
 
   return (
     <section className="flex flex-wrap mt-[47px] max-md:max-w-full max-md:mt-10 items-start justify-between w-full">
@@ -51,7 +106,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ menu }) => {
         <div className="w-[85px]">
           <button
             onClick={handleSave}
-            className="flex w-full flex-col items-stretch justify-center bg-[#FDEEC5] px-[9px] py-2.5 rounded-[15px]"
+            aria-pressed={saved}
+            disabled={saved}
+            className={`flex w-full flex-col items-stretch justify-center bg-[#FDEEC5] px-[9px] py-2.5 rounded-[15px] ${saved ? "opacity-60 cursor-not-allowed" : ""}`}
           >
             <div className="flex items-center gap-2">
               <img
@@ -59,7 +116,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ menu }) => {
                 className="aspect-[1] object-contain w-3.5 self-stretch shrink-0 my-auto"
                 alt="Save"
               />
-              <span className="self-stretch my-auto">Save</span>
+              <span className="self-stretch my-auto">{saved ? "Saved" : "Save"}</span>
             </div>
           </button>
         </div>
