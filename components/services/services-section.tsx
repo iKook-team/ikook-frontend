@@ -19,6 +19,7 @@ const SERVICE_MAPPING = {
   "Meal Delivery": "Meal delivery",
   "Cooking Class": "Cooking class",
   "Corporate Dining": "Corporate dining",
+  "Eating Coach": "Healthy eating coach",
   // Add other services as needed
 } as const;
 
@@ -37,6 +38,7 @@ export const ServicesSection: React.FC = () => {
     "Meal delivery": null,
     "Cooking class": null,
     "Corporate dining": null,
+    "Healthy eating coach": null,
   });
 
   useEffect(() => {
