@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { showToast } from "@/lib/utils/toast";
+import { menuService } from "@/lib/api/menus";
 
 import { FormField } from "../ui/form-field";
 import { PriceInput } from "../ui/price-input";
@@ -68,6 +70,7 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
     name: string;
     description: string;
   }>({ name: "", description: "" });
+  const [isGenerating, setIsGenerating] = useState(false);
   const [menuSelection, setMenuSelection] = useState<Record<string, string>>(
     () => {
       const initial: Record<string, string> = {};
@@ -120,7 +123,11 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
 
   const handleInputChange =
     (field: "name" | "description") =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >,
+    ) => {
       setItemInput((prev) => ({ ...prev, [field]: e.target.value }));
     };
 
@@ -323,8 +330,52 @@ export const CreateMenuStep2: React.FC<CreateMenuStep2Props> = ({
                 className="mt-5"
                 placeholder={`Describe the ${currentCourse?.toLowerCase?.() || 'menu item'}?`}
                 value={itemInput.description}
+                type="textarea"
+                rows={4}
                 onChange={handleInputChange("description")}
               />
+              <div className="mt-2 flex justify-end">
+                <button
+                  type="button"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    if (!itemInput.name?.trim()) {
+                      showToast.warning("Please enter the menu item name first.");
+                      return;
+                    }
+                    try {
+                      setIsGenerating(true);
+                      const payload = {
+                        name: itemInput.name,
+                        course: currentCourse,
+                        cuisine_types: Array.isArray(formData.cuisineTypes)
+                          ? formData.cuisineTypes
+                          : [],
+                      };
+                      const res = await menuService.generateMenuItemDescription(payload);
+                      const description = res?.data?.description || "";
+                      if (!description) {
+                        showToast.error("No description received. Please try again.");
+                        return;
+                      }
+                      setItemInput((prev) => ({ ...prev, description }));
+                      showToast.success("AI description generated.");
+                    } catch (err) {
+                      showToast.error("Failed to generate description. Please try again.");
+                    } finally {
+                      setIsGenerating(false);
+                    }
+                  }}
+                  disabled={isGenerating}
+                  className={`text-sm px-3 py-2 rounded-lg border border-stone-300 shadow-sm ${
+                    isGenerating
+                      ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                      : "bg-white text-slate-700 hover:bg-gray-50"
+                  }`}
+                >
+                  {isGenerating ? "Generating..." : "Generate with AI"}
+                </button>
+              </div>
               <button
                 className="flex justify-end mt-3 text-sm font-semibold leading-none rounded-lg text-slate-700"
                 onClick={handleAddItem}

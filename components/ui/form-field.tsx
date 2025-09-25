@@ -10,12 +10,15 @@ interface FormFieldProps {
   className?: string;
   value?: string;
   options?: { value: string; label: string }[] | string[];
-  onChange?: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  onChange?: (
+    event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+  ) => void;
   maxLength?: number;
+  rows?: number;
 }
 
 export const FormField = forwardRef<
-  HTMLInputElement | HTMLSelectElement,
+  HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
   FormFieldProps
 >(
   (
@@ -81,6 +84,13 @@ export const FormField = forwardRef<
               );
             })}
           </select>
+        ) : type === 'textarea' ? (
+          <textarea
+            ref={ref as React.RefObject<HTMLTextAreaElement>}
+            {...(commonProps as any)}
+            name={safeName}
+            rows={props.rows || 4}
+          />
         ) : (
           <input
             type={type}

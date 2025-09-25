@@ -39,4 +39,12 @@ export const menuService = {
     const response = await apiClient.delete(`/menus/images/${id}/`);
     return response.data;
   },
+  async generateMenuItemDescription(payload: {
+    name: string;
+    course?: string;
+    cuisine_types?: string[];
+  }) {
+    const response = await apiClient.post(`/menus/items/ai-description/`, payload);
+    return response.data;
+  },
 };
