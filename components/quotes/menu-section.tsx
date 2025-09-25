@@ -42,7 +42,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
 
   const handleInputChange =
     (field: "name" | "description" | "price") =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
       setItemInput((prev) => ({ ...prev, [field]: e.target.value }));
     };
 

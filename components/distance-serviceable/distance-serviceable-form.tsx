@@ -98,7 +98,7 @@ export const DistanceServiceableForm: React.FC = () => {
 
   const handleEventChange = (
     field: keyof FormData,
-  ) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  ) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setValue(field, e.target.value);
   };
 

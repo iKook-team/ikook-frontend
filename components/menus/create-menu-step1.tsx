@@ -69,7 +69,7 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
 
   const handleInputChange =
     (field: keyof MenuFormData) =>
-    (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
       const newData = { ...localFormData, [field]: event.target.value };
 
       setLocalFormData(newData);

@@ -122,7 +122,7 @@ const BankAccountForm: React.FC = () => {
   }, [user, market]);
 
   const handleInputChange = (field: keyof typeof formData) => 
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
       const { value } = e.target;
       setFormData((prev) => ({
         ...prev,

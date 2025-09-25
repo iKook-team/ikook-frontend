@@ -148,7 +148,7 @@ const CreateGroceriesStep1: React.FC<CreateGroceriesStep1Props> = ({
 
   const handleInputChange =
     (field: keyof GroceryFormData) =>
-    (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
       const newData = { ...localFormData, [field]: event.target.value };
       setLocalFormData(newData);
       updateFormData(newData);
