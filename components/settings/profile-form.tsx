@@ -7,6 +7,7 @@ import { TagSelector } from "@/components/ui/tag-selector";
 import { authService } from "@/lib/api/auth";
 import { handleApiError } from "@/lib/utils/toast";
 import { showToast } from "@/lib/utils/toast";
+import { getLocationsForCountry } from "@/lib/locations";
 
 type UserType = "chef" | "host";
 
@@ -213,29 +214,6 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
   ]);
   const [events, setEvents] = useState(["Naming", "Wedding", "Gathering"]);
 
-  // City/State options based on country
-  const getCitiesByCountry = (country: string) => {
-    const citiesByCountry: Record<string, string[]> = {
-      // Nigeria - States
-      'Nigeria': [
-        'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue', 'Borno', 
-        'Cross River', 'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu', 'FCT', 'Gombe', 'Imo', 
-        'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Kogi', 'Kwara', 'Lagos', 'Nasarawa', 
-        'Niger', 'Ogun', 'Ondo', 'Oyo', 'Plateau', 'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara'
-      ],
-      // South Africa - Provinces
-      'South Africa': [
-        'Eastern Cape', 'Free State', 'Gauteng', 'Kwazulu Natal', 'Limpopo', 
-        'Mpumalanga', 'North West', 'Northen Cape', 'Western Cape'
-      ],
-      // United Kingdom - Regions
-      'United Kingdom': [
-        'England', 'Scotland', 'Wales', 'Northern Ireland'
-      ]
-    };
-
-    return citiesByCountry[country] || [];
-  };
 
   const [cities, setCities] = useState<string[]>([]);
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
@@ -243,7 +221,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
   // Update cities when user's country changes
   useEffect(() => {
     if (user?.country) {
-      const countryCities = getCitiesByCountry(user.country);
+      const countryCities = getLocationsForCountry(user.country);
       setCities(countryCities);
     }
   }, [user?.country]);

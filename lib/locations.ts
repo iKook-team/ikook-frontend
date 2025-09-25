@@ -14,7 +14,11 @@ export const ZA_LOCATIONS: string[] = [
 ];
 
 export const GB_LOCATIONS: string[] = [
-  "England","Scotland","Wales","Northern Ireland",
+  "London", "Manchester", "Birmingham", "Leeds", "Glasgow", "Liverpool", "Bristol",
+  "Sheffield", "Edinburgh", "Leicester", "Coventry", "Bradford", "Cardiff", "Belfast",
+  "Nottingham", "Newcastle upon Tyne", "Southampton", "Portsmouth", "Brighton", "Plymouth",
+  "Derby", "Stoke-on-Trent", "Wolverhampton", "Reading", "Northampton", "Milton Keynes",
+  "Swindon", "Aberdeen", "Dundee", "York", "Cambridge", "Oxford",
 ];
 
 export function getLocationsForMarket(market: MarketCode): string[] {
