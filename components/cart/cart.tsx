@@ -61,11 +61,11 @@ export const Cart: React.FC<CartProps> = ({
   };
 
   return (
-    <main className="flex max-w-[655px] flex-col items-stretch">
+    <main className="flex w-full max-w-4xl mx-auto flex-col items-stretch px-2 sm:px-4">
       <CartHeader title="Cart" />
 
-      <div className="border border-[color:var(--Black-100,#E7E7E7)] shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] flex w-full flex-col items-stretch bg-white mt-2 py-[33px] rounded-[15px] border-solid max-md:max-w-full">
-        <div className="flex w-full flex-col items-stretch px-[19px] max-md:max-w-full max-md:pr-5">
+      <div className="border border-gray-200 shadow-sm flex w-full flex-col items-stretch bg-white mt-2 py-6 sm:py-8 rounded-2xl border-solid">
+        <div className="flex w-full flex-col items-stretch px-4 sm:px-6 lg:px-8">
           <ChefCard
             chefName={
               menu?.chef?.first_name && menu?.chef?.last_name

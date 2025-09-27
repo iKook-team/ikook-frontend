@@ -37,10 +37,10 @@ const PreferencesForm: React.FC<PreferencesFormProps> = ({
   };
 
   return (
-    <div className="flex justify-center items-start p-6">
-      <div className="w-full max-w-3xl bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div className="flex justify-center items-start p-2 sm:p-4 lg:p-6">
+      <div className="w-full max-w-4xl bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {/* Header Section */}
-        <div className="px-6 pt-6 pb-4 border-b border-gray-100">
+        <div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-4 border-b border-gray-100">
           {!isCustomBooking && (
             <header className="mb-6">
               <h1 className="text-2xl font-semibold text-gray-900 truncate">
@@ -58,7 +58,7 @@ const PreferencesForm: React.FC<PreferencesFormProps> = ({
 
         {/* Chef Card Section */}
         {!isCustomBooking && menu && (
-          <div className="px-6 py-4 border-b border-gray-100">
+          <div className="px-4 sm:px-6 py-4 border-b border-gray-100">
             <ChefCard
               chefName={
                 menu?.chef?.first_name && menu?.chef?.last_name
@@ -85,7 +85,7 @@ const PreferencesForm: React.FC<PreferencesFormProps> = ({
         )}
 
         {/* Form Section */}
-        <section className="p-6 space-y-6">
+        <section className="p-4 sm:p-6 space-y-6">
           <h2 className="text-2xl font-semibold text-gray-900">Preferences</h2>
 
           <form

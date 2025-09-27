@@ -23,9 +23,9 @@ export const ChefCard: React.FC<ChefCardProps> = ({
   reviewCount,
 }) => {
   return (
-    <article className="border border-[color:var(--Black-100,#E7E7E7)] shadow-[0px_4px_70px_0px_rgba(0,0,0,0.07)] bg-white pl-[15px] pr-[76px] py-[13px] rounded-lg border-solid max-md:max-w-full max-md:pr-5">
-      <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
-        <div className="w-[142px] h-[129px] flex-shrink-0 relative max-md:w-full max-md:ml-0">
+    <article className="border border-gray-200 shadow-sm bg-white p-3 sm:p-4 rounded-lg border-solid w-full">
+      <div className="gap-3 sm:gap-5 flex flex-col sm:flex-row items-stretch">
+        <div className="w-full sm:w-[142px] h-[200px] sm:h-[129px] flex-shrink-0 relative">
           <Image
             alt={dishName}
             className="object-cover w-full h-full rounded-lg"
@@ -33,8 +33,8 @@ export const ChefCard: React.FC<ChefCardProps> = ({
             src={imageUrl}
           />
         </div>
-        <div className="w-[72%] ml-5 max-md:w-full max-md:ml-0">
-          <div className="flex flex-col items-stretch mt-[13px] max-md:mt-10">
+        <div className="flex-1 sm:ml-5">
+          <div className="flex flex-col items-stretch mt-3 sm:mt-[13px]">
             <h2 className="text-[#323335] text-lg font-semibold leading-loose">
               {dishName}
             </h2>
@@ -42,7 +42,7 @@ export const ChefCard: React.FC<ChefCardProps> = ({
               <div className="text-[#6F6E6D] text-base font-medium">
                 {chefName}
               </div>
-              <div className="flex gap-2 text-sm mt-1">
+              <div className="flex flex-col sm:flex-row gap-2 text-sm mt-1">
                 <div className="flex items-center gap-1 font-normal whitespace-nowrap leading-none">
                   <Image
                     alt="Location"
@@ -51,7 +51,7 @@ export const ChefCard: React.FC<ChefCardProps> = ({
                     src={locationIconUrl}
                     width={15}
                   />
-                  <div className="text-[#6F6E6D] self-stretch w-[55px] my-auto">
+                  <div className="text-[#6F6E6D] self-stretch my-auto">
                     {location}
                   </div>
                 </div>
@@ -64,7 +64,7 @@ export const ChefCard: React.FC<ChefCardProps> = ({
                       src={ratingIconUrl}
                       width={17}
                     />
-                    <div className="text-[#6F6E6D] self-stretch w-7 my-auto">
+                    <div className="text-[#6F6E6D] self-stretch my-auto">
                       {rating}
                     </div>
                   </div>

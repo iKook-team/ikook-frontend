@@ -14,19 +14,19 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
   steps,
 }) => {
   return (
-    <div className="flex w-[613px] items-start gap-2 h-[29px]">
+    <div className="flex w-full max-w-full items-start gap-1 sm:gap-2 min-h-[29px] overflow-x-auto">
       {steps.map((step, index) => (
         <div
           key={index}
-          className="flex w-[200px] flex-col items-start gap-[3px] shrink-0"
+          className="flex w-[150px] sm:w-[200px] flex-col items-start gap-[3px] shrink-0"
         >
-          <div className="w-[200px] h-2 relative">
-            <div className="w-[200px] h-2 absolute bg-[#E7E7E7] rounded-[10px] left-0 top-0" />
+          <div className="w-[150px] sm:w-[200px] h-2 relative">
+            <div className="w-[150px] sm:w-[200px] h-2 absolute bg-[#E7E7E7] rounded-[10px] left-0 top-0" />
             {step.completed && (
-              <div className="w-[200px] h-2 absolute bg-[#12A132] rounded-[10px] left-0 top-0" />
+              <div className="w-[150px] sm:w-[200px] h-2 absolute bg-[#12A132] rounded-[10px] left-0 top-0" />
             )}
             {step.inProgress && (
-              <div className="w-[172px] h-2 absolute bg-[#12A132] rounded-[10px_0px_0px_10px] left-0 top-0" />
+              <div className="w-[130px] sm:w-[172px] h-2 absolute bg-[#12A132] rounded-[10px_0px_0px_10px] left-0 top-0" />
             )}
           </div>
           <div className="flex items-center gap-1">
@@ -50,7 +50,7 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
               ) : (
                 <div className="w-2.5 h-2.5 stroke-[1px] stroke-[rgba(18,161,50,0.50)]" />
               )}
-              <div className="text-[#3F3E3D] text-[8px] font-normal leading-[18px]">
+              <div className="text-[#3F3E3D] text-[7px] sm:text-[8px] font-normal leading-[18px] truncate">
                 {step.label}
               </div>
             </div>

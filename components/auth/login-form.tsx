@@ -24,7 +24,7 @@ export const LoginForm: React.FC = () => {
     try {
       // Call the real login API
       const response = await authService.login({
-        email,
+        email: email.toLowerCase(), // Normalize email to lowercase
         password,
         user_type: userType === "host" ? "Host" : "Chef",
       });

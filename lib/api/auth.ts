@@ -39,7 +39,10 @@ export const authService = {
 
   // Send or verify OTP
   verifyEmail: async (data: VerifyEmailPayload) => {
-    const response = await apiClient.post(`/users/auth/verify/`, data);
+    const response = await apiClient.post(`/users/auth/verify/`, {
+      ...data,
+      email: data.email.toLowerCase(), // Normalize email to lowercase
+    });
 
     return response.data;
   },
@@ -53,6 +56,7 @@ export const authService = {
     const response = await apiClient.post(`/users/auth/verify/`, {
       action: "verify_identity",
       ...payload,
+      email: payload.email.toLowerCase(), // Normalize email to lowercase
     });
     return response.data;
   },
@@ -88,7 +92,10 @@ export const authService = {
 
   // Login user
   login: async (data: LoginPayload) => {
-    const response = await apiClient.post(`/users/auth/login/`, data);
+    const response = await apiClient.post(`/users/auth/login/`, {
+      ...data,
+      email: data.email.toLowerCase(), // Normalize email to lowercase
+    });
 
     return response.data;
   },
@@ -151,7 +158,10 @@ export const authService = {
 
   // Sign up a new user
   signup: async (data: any) => {
-    const response = await apiClient.post(`/users/auth/signup/`, data);
+    const response = await apiClient.post(`/users/auth/signup/`, {
+      ...data,
+      email: data.email.toLowerCase(), // Normalize email to lowercase
+    });
 
     return response.data;
   },
@@ -159,7 +169,7 @@ export const authService = {
   // Forgot password - send OTP
   forgotPassword: async (email: string) => {
     const response = await apiClient.post(`/users/auth/forgot-password/`, {
-      email,
+      email: email.toLowerCase(), // Normalize email to lowercase
     });
 
     return response.data;
@@ -169,7 +179,10 @@ export const authService = {
   resetPassword: async (payload: { email: string; password: string }) => {
     const response = await apiClient.post(
       `/users/auth/reset-password/`,
-      payload,
+      {
+        email: payload.email.toLowerCase(), // Normalize email to lowercase
+        password: payload.password,
+      },
     );
 
     return response.data;

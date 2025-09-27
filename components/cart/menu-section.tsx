@@ -43,21 +43,21 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
   };
 
   return (
-    <section>
-      <div className="mt-7 max-md:max-w-full">
-        <h2 className="text-[#030302] text-2xl font-semibold leading-none">
+    <section className="w-full">
+      <div className="mt-7">
+        <h2 className="text-[#030302] text-xl sm:text-2xl font-semibold leading-none">
           Your menu pick
         </h2>
-        <p className="text-[#6F6E6D] text-xs font-normal max-md:max-w-full">
+        <p className="text-[#6F6E6D] text-xs font-normal mt-1">
           Your menu selection from {menuName} by {chefName}
         </p>
       </div>
       <hr className="w-full border-t border-gray-200 mt-3.5" />
-      <div className="mt-[22px] max-md:max-w-full">
+      <div className="mt-[22px]">
         {courses.map((course, courseIndex) => (
           <div
             key={courseIndex}
-            className={`flex max-w-full w-[613px] flex-col items-stretch ${courseIndex > 0 ? "mt-6" : ""}`}
+            className={`flex w-full flex-col items-stretch ${courseIndex > 0 ? "mt-6" : ""}`}
           >
             <div className="w-full text-lg text-black font-medium leading-loose">
               <h3>
