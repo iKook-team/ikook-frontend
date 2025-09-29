@@ -111,26 +111,24 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
   const isOTPComplete = otpValues.every((value) => value !== "");
 
   return (
-    <div className="mx-auto my-0 flex w-[603px] h-[786px] flex-col items-start justify-center gap-1.5 p-5 max-md:w-full max-md:max-w-[603px] max-md:p-[15px] max-sm:w-full max-sm:p-2.5">
+    <div className="mx-auto my-0 flex w-[603px] h-[786px] flex-col items-start justify-center gap-1.5 p-5 max-lg:w-full max-lg:max-w-[603px] max-lg:px-4 max-md:px-3 max-sm:px-2">
       <header className="mb-1.5 h-[30px] w-full font-medium leading-[30px] text-black text-xl max-sm:text-base">
         {headerText ?? (
           <>Join iKook as a {userType === "host" ? "Host" : "Chef"}</>
         )}
       </header>
 
-      <main className="relative h-[750px] w-[605px] rounded-[15px] border border-solid border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] max-md:w-full max-md:max-w-[605px] max-sm:h-auto max-sm:min-h-[650px] max-sm:w-full max-sm:pb-5">
-        <div className="absolute top-[27px] left-0 w-full px-0">
+      <main className="w-[605px] rounded-[15px] border border-solid border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] max-lg:w-full max-lg:max-w-[605px] max-sm:rounded-[10px]">
+        <div className="pt-[27px] w-full">
           <ProgressBar progress={48} />
         </div>
 
-        <h1 className="absolute top-[51px] left-[49px] h-[29px] w-[275px] font-medium text-black text-[19px] max-sm:text-sm">
-          OTP Verification
-        </h1>
+        <div className="px-[49px] pt-6 pb-8 max-md:px-6 max-sm:px-4">
+          <h1 className="text-[19px] font-medium text-black mb-6 max-sm:text-[17px]">
+            OTP Verification
+          </h1>
 
-        <form
-          className="absolute top-[104px] left-[49px] w-[508px] max-md:left-8 max-md:w-[calc(100%_-_64px)] max-sm:left-6 max-sm:top-[90px] max-sm:w-[calc(100%_-_48px)]"
-          onSubmit={handleSubmit}
-        >
+          <form onSubmit={handleSubmit}>
           <p className="mb-4 text-sm text-gray-600">
             {subtitleText ??
               "Enter the 6-digit code sent to your email address."}
@@ -164,7 +162,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
             </Button>
           </div>
 
-          <div className="mt-80">
+          <div className="mt-8">
             <Button
               className="w-full"
               disabled={!isOTPComplete || isSubmitting}
@@ -173,7 +171,8 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
               {isSubmitting ? "Verifying..." : "Verify & Continue"}
             </Button>
           </div>
-        </form>
+          </form>
+        </div>
       </main>
     </div>
   );

@@ -98,26 +98,24 @@ export const ChefRegistrationForm2: React.FC<ChefRegistrationForm2Props> = ({
   };
 
   return (
-    <div className="mx-auto my-0 flex w-[603px] flex-col items-start justify-center gap-1.5 p-5">
+    <div className="mx-auto my-0 flex w-[603px] flex-col items-start justify-center gap-1.5 p-5 max-lg:w-full max-lg:max-w-[603px] max-lg:px-4 max-md:px-3 max-sm:px-2">
       <header>
         <h1 className="h-[30px] w-[201px] text-xl font-medium leading-[30px] text-black">
           Join iKook as a Chef
         </h1>
       </header>
 
-      <main className="relative h-[750px] w-[605px] rounded-[15px] border border-solid border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)]">
-        <div className="absolute top-[27px] left-0 w-full px-0">
+      <main className="w-[605px] rounded-[15px] border border-solid border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] max-lg:w-full max-lg:max-w-[605px] max-sm:rounded-[10px]">
+        <div className="pt-[27px] w-full">
           <ProgressBar progress={40} />
         </div>
 
-        <h1 className="absolute top-[51px] left-[49px] h-[29px] w-[275px] text-[19px] font-medium text-black">
-          Contact Information
-        </h1>
+        <div className="px-[49px] pt-6 pb-8 max-md:px-6 max-sm:px-4">
+          <h1 className="text-[19px] font-medium text-black mb-6 max-sm:text-[17px]">
+            Contact Information
+          </h1>
 
-        <form
-          className="absolute top-[104px] left-[49px] w-[508px]"
-          onSubmit={handleSubmit}
-        >
+          <form onSubmit={handleSubmit}>
           <fieldset className="flex w-full flex-col items-start gap-6">
             <legend className="sr-only">Contact Information</legend>
 
@@ -149,16 +147,17 @@ export const ChefRegistrationForm2: React.FC<ChefRegistrationForm2Props> = ({
             </div>
           </fieldset>
 
-          <div className="absolute top-[400px] h-12 w-[508px]">
-            <button
-              className="h-12 w-full cursor-pointer gap-2 rounded-lg border border-solid border-[#FCC01C] bg-[#FCC01C] px-4 py-3 text-base font-semibold leading-6 text-white shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] disabled:cursor-not-allowed disabled:bg-gray-400"
-              disabled={isSubmitting}
-              type="submit"
-            >
-              {isSubmitting ? "Submitting..." : "Continue"}
-            </button>
-          </div>
-        </form>
+            <div className="mt-8 h-12 w-full">
+              <button
+                className="h-12 w-full cursor-pointer gap-2 rounded-lg border border-solid border-[#FCC01C] bg-[#FCC01C] px-4 py-3 text-base font-semibold leading-6 text-white shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] disabled:cursor-not-allowed disabled:bg-gray-400"
+                disabled={isSubmitting}
+                type="submit"
+              >
+                {isSubmitting ? "Submitting..." : "Continue"}
+              </button>
+            </div>
+          </form>
+        </div>
       </main>
     </div>
   );

@@ -38,7 +38,7 @@ const Index: React.FC = () => {
   // If we're still loading, show a loading state
   if (isLoading) {
     return (
-      <div className="w-full min-h-screen flex items-center justify-center bg-[#FBFBFB]">
+      <div className="w-full min-h-screen flex items-center justify-center bg-[#FBFBFB] px-2 sm:px-4">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-12 w-12 animate-spin text-[#FCC01C]" />
           <p className="text-gray-700 text-lg font-medium">
@@ -56,7 +56,7 @@ const Index: React.FC = () => {
   // If there was an error getting location
   if (showError) {
     return (
-      <div className="w-full min-h-screen flex items-center justify-center bg-[#FBFBFB] p-4">
+      <div className="w-full min-h-screen flex items-center justify-center bg-[#FBFBFB] p-4 px-2 sm:px-4">
         <div className="max-w-md w-full space-y-6">
           <div className="text-center space-y-2">
             <AlertCircle className="h-12 w-12 mx-auto text-red-500" />
@@ -99,7 +99,7 @@ const Index: React.FC = () => {
   }
 
   return (
-    <div className="w-full min-h-screen relative bg-[#FBFBFB] max-md:w-full max-md:max-w-screen-lg max-md:h-auto max-md:min-h-screen">
+    <div className="w-full min-h-screen relative bg-[#FBFBFB] px-2 sm:px-4 md:px-6 lg:px-8">
       <main className="relative">
         <JoinForm initialSelectedUserType={initialRole} />
       </main>

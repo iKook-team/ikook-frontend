@@ -96,26 +96,24 @@ export const HostRegistrationForm: React.FC<HostRegistrationFormProps> = ({
     Object.keys(errors).length === 0;
 
   return (
-    <div className="mx-auto my-0 flex w-[603px] flex-col items-start justify-center gap-1.5 p-5">
+    <div className="mx-auto my-0 flex w-[603px] flex-col items-start justify-center gap-1.5 p-5 max-lg:w-full max-lg:max-w-[603px] max-lg:px-4 max-md:px-3 max-sm:px-2">
       <header>
         <h1 className="h-[30px] w-[201px] text-xl font-medium leading-[30px] text-black">
           Join iKook as a Host
         </h1>
       </header>
 
-      <main className="relative h-[750px] w-[605px] rounded-[15px] border border-solid border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)]">
-        <div className="absolute top-[27px] left-0 w-full px-0">
+      <main className="w-[605px] rounded-[15px] border border-solid border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] max-lg:w-full max-lg:max-w-[605px] max-sm:rounded-[10px]">
+        <div className="pt-[27px] w-full">
           <ProgressBar progress={25} />
         </div>
 
-        <h1 className="absolute top-[51px] left-[49px] h-[29px] w-[275px] text-[19px] font-medium text-black">
-          Personal Information
-        </h1>
+        <div className="px-[49px] pt-6 pb-8 max-md:px-6 max-sm:px-4">
+          <h1 className="text-[19px] font-medium text-black mb-6 max-sm:text-[17px]">
+            Personal Information
+          </h1>
 
-        <form
-          onSubmit={handleSubmit(onLocalSubmit)}
-          className="absolute w-[508px] left-[49px] top-[104px] max-md:w-[calc(100%_-_64px)] max-md:left-8 max-sm:w-[calc(100%_-_48px)] max-sm:left-6 max-sm:top-[90px]"
-        >
+          <form onSubmit={handleSubmit(onLocalSubmit)}>
           <fieldset className="flex flex-col items-start gap-6 max-sm:gap-5">
             <legend className="sr-only">Personal Information</legend>
 
@@ -210,7 +208,8 @@ export const HostRegistrationForm: React.FC<HostRegistrationFormProps> = ({
           >
             {isSubmitting ? "Sending..." : "Continue"}
           </button>
-        </form>
+          </form>
+        </div>
       </main>
     </div>
   );
