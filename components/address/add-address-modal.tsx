@@ -32,7 +32,7 @@ export const AddAddressModal = ({
     country: userCountry,
   });
 
-  // Load address data when in edit mode
+  // Load address info when in edit mode
   useEffect(() => {
     const loadAddress = async () => {
       if (!addressId) return;
