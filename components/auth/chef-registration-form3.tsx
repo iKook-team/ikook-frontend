@@ -59,9 +59,7 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
       newErrors.city = "City is required.";
     }
 
-    if (!formData.postalCode) {
-      newErrors.postalCode = "Postal code is required.";
-    }
+    // Postal code is optional
 
     if (!formData.address) {
       newErrors.address = "Address is required.";
@@ -112,7 +110,7 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
         </div>
 
         <h1 className="absolute top-[51px] left-[49px] h-[29px] text-[19px] font-medium text-black">
-          Way to go Iyabo, Where are you based?
+          Way to go {chefFormData?.firstName || 'there'}, Where are you based?
         </h1>
 
         <form
@@ -133,7 +131,6 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
               onChange={(e) => handleInputChange("city", e.target.value)}
             />
             <FormField
-              required
               className="w-full"
               error={errors.postalCode}
               label="Postal Code"

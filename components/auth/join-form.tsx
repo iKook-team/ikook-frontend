@@ -24,36 +24,18 @@ export const JoinForm: React.FC<JoinFormProps> = ({
 
   const handleSelectionChange = (type: UserType) => {
     setSelectedUserType(type);
+    // Navigate immediately upon selection
+    if (type === "host") {
+      router.push("/host-signup");
+    } else if (type === "chef") {
+      router.push("/chef-requirements");
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!selectedUserType) {
-      alert("Please select whether you want to join as a Host or Chef");
-
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate API call
-
-      // Call the onSubmit prop if provided
-      onSubmit?.(selectedUserType);
-
-      // Navigate based on user type
-      if (selectedUserType === "host") {
-        router.push("/host-signup");
-      } else {
-        router.push("/chef-requirements");
-      }
-    } catch (_error) {
-      // Handle error appropriately in production
-    } finally {
-      setIsSubmitting(false);
-    }
+    // No-op: navigation happens immediately on selection now
   };
 
   const handleLoginClick = () => {
@@ -81,18 +63,7 @@ export const JoinForm: React.FC<JoinFormProps> = ({
             />
           </fieldset>
 
-          {selectedUserType && (
-            <button
-              type="submit"
-              aria-label={`Continue as ${selectedUserType}`}
-              className="mb-4 px-6 py-2 bg-[#FCC01C] text-white rounded-lg font-medium hover:bg-[#e6ac19] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FCC01C] focus:ring-opacity-50"
-              disabled={isSubmitting}
-            >
-              {isSubmitting
-                ? "Processing..."
-                : `Continue as ${selectedUserType === "host" ? "Host" : "Chef"}`}
-            </button>
-          )}
+          {/* Continue button removed; navigation occurs on selection */}
 
           <LoginPrompt onLoginClick={handleLoginClick} />
         </form>

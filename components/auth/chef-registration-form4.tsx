@@ -98,7 +98,7 @@ export const ChefRegistrationForm4: React.FC<ChefRegistrationForm4Props> = ({
         </div>
 
         <h1 className="absolute top-[51px] left-[49px] h-[29px] w-[350px] text-[19px] font-medium text-black">
-          Thank you Iyabo, Tell us about you?
+          Thank you {chefFormData?.firstName || "there"}, Tell us about you?
         </h1>
 
         <form

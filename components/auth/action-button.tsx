@@ -11,7 +11,7 @@ interface ActionButtonsProps {
 
 export const ActionButtons: React.FC<ActionButtonsProps> = ({
   onSelectionChange,
-  initialSelectedType = "host",
+  initialSelectedType = null,
 }) => {
   const [selectedType, setSelectedType] = useState<UserType>(initialSelectedType);
 
