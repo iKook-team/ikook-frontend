@@ -49,7 +49,7 @@ export const ServicesSection: React.FC = () => {
         const response = await servicesService.fetchServices();
 
         if (!response || !response.results) {
-          throw new Error('Invalid response format');
+          throw new Error("Invalid response format");
         }
 
         // Create a mapping of service names to their data
@@ -57,11 +57,18 @@ export const ServicesSection: React.FC = () => {
 
         response.results.forEach((service) => {
           if (!service?.chef_service) {
-            console.warn('Skipping service with missing chef_service:', service);
+            console.warn(
+              "Skipping service with missing chef_service:",
+              service,
+            );
+
             return;
           }
-          
-          const serviceName = SERVICE_MAPPING[service.chef_service as ServiceName] || service.chef_service;
+
+          const serviceName =
+            SERVICE_MAPPING[service.chef_service as ServiceName] ||
+            service.chef_service;
+
           servicesMap[serviceName] = service;
         });
 
@@ -125,7 +132,9 @@ export const ServicesSection: React.FC = () => {
   };
 
   // If chef is Box Groceries, render creation form instead of list
-  const isBoxGroceriesChef = user?.user_type === "Chef" && (user as any)?.service_type === "Box Groceries";
+  const isBoxGroceriesChef =
+    user?.user_type === "Chef" &&
+    (user as any)?.service_type === "Box Groceries";
 
   if (isBoxGroceriesChef) {
     return <BoxGroceriesCreationForm />;
@@ -226,10 +235,15 @@ const BoxGroceriesCreationForm: React.FC = () => {
   const resolveMediaUrl = (url?: string | null): string | null => {
     if (!url) return null;
     if (/^https?:\/\//i.test(url)) return url;
-    const base = process.env.NEXT_PUBLIC_API_BASE_URL || (apiClient?.defaults?.baseURL as string) || "";
+    const base =
+      process.env.NEXT_PUBLIC_API_BASE_URL ||
+      (apiClient?.defaults?.baseURL as string) ||
+      "";
+
     if (!base) return url; // fallback to raw if base is unknown
     const normalizedBase = base.replace(/\/$/, "");
     const normalizedPath = String(url).replace(/^\//, "");
+
     return `${normalizedBase}/${normalizedPath}`;
   };
 
@@ -240,8 +254,9 @@ const BoxGroceriesCreationForm: React.FC = () => {
         // Fetch all services and try to find the existing Box Grocery service
         const list = await servicesService.fetchServices();
         const existing = list.results.find(
-          (s) => (s as any).chef_service === "Box Grocery"
+          (s) => (s as any).chef_service === "Box Grocery",
         );
+
         if (active && existing) {
           setServiceId(existing.id);
           setAvailability(existing.availability);
@@ -259,18 +274,24 @@ const BoxGroceriesCreationForm: React.FC = () => {
         if (active) setIsMounted(true);
       }
     };
+
     loadExisting();
+
     return () => {
       active = false;
     };
   }, []);
 
-  const isFormValid = startingPrice.trim() !== "" && (Boolean(imageFile) || Boolean(uploadedImage));
+  const isFormValid =
+    startingPrice.trim() !== "" &&
+    (Boolean(imageFile) || Boolean(uploadedImage));
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     if (file) {
       const reader = new FileReader();
+
       reader.onload = (evt) => setUploadedImage(evt.target?.result as string);
       reader.readAsDataURL(file);
       setImageFile(file);
@@ -294,6 +315,7 @@ const BoxGroceriesCreationForm: React.FC = () => {
         availability,
         starting_price: startingPrice,
       };
+
       if (imageFile) basePayload.cover_image = imageFile;
 
       if (serviceId) {
@@ -313,8 +335,13 @@ const BoxGroceriesCreationForm: React.FC = () => {
       router.push("/services");
     } catch (err: any) {
       // Try to extract a useful backend message
-      const backendMessage = err?.response?.data?.message || err?.response?.data?.detail;
-      const friendly = backendMessage || err?.message || "Failed to create service. Please try again.";
+      const backendMessage =
+        err?.response?.data?.message || err?.response?.data?.detail;
+      const friendly =
+        backendMessage ||
+        err?.message ||
+        "Failed to create service. Please try again.";
+
       toast.error(friendly);
     } finally {
       setIsSubmitting(false);
@@ -324,7 +351,9 @@ const BoxGroceriesCreationForm: React.FC = () => {
   if (!isMounted) {
     return (
       <section className="self-center flex w-[538px] max-w-full flex-col items-stretch mt-[35px]">
-        <h2 className="text-black text-2xl font-semibold leading-none">Services</h2>
+        <h2 className="text-black text-2xl font-semibold leading-none">
+          Services
+        </h2>
         <div className="mt-[35px]">
           <div className="animate-pulse h-12 bg-gray-200 rounded-md" />
         </div>
@@ -334,12 +363,16 @@ const BoxGroceriesCreationForm: React.FC = () => {
 
   return (
     <section className="self-center flex w-[538px] max-w-full flex-col items-stretch mt-[35px]">
-      <h2 className="text-black text-2xl font-semibold leading-none">Services</h2>
+      <h2 className="text-black text-2xl font-semibold leading-none">
+        Services
+      </h2>
       <div className="mt-[35px]">
         <div className="bg-white rounded-[15px] border border-solid border-[#E7E7E7] shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] overflow-hidden">
           {/* Availability Toggle */}
           <div className="flex items-center justify-between px-[17px] py-11 max-sm:flex-col max-sm:gap-4 max-sm:items-start">
-            <label className="text-[#020101] text-[15px] font-normal">Availability</label>
+            <label className="text-[#020101] text-[15px] font-normal">
+              Availability
+            </label>
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -349,7 +382,9 @@ const BoxGroceriesCreationForm: React.FC = () => {
                 }`}
                 aria-label="Toggle availability"
               >
-                <span className={`${availability ? "translate-x-6" : "translate-x-1"} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`} />
+                <span
+                  className={`${availability ? "translate-x-6" : "translate-x-1"} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                />
               </button>
             </div>
           </div>
@@ -358,12 +393,17 @@ const BoxGroceriesCreationForm: React.FC = () => {
             <div className="space-y-6">
               {/* Starting Price */}
               <div className="space-y-1.5">
-                <label htmlFor="startingPrice" className="block text-[#3F3E3D] text-[15px] font-normal">
+                <label
+                  htmlFor="startingPrice"
+                  className="block text-[#3F3E3D] text-[15px] font-normal"
+                >
                   Starting price
                 </label>
                 <div className="flex border border-solid border-[#CFCFCE] rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white">
                   <div className="flex items-center px-3.5 py-2.5 bg-white rounded-l-lg">
-                    <span className="text-[#3F3E3D] text-[15px] font-normal">{currencySymbol}</span>
+                    <span className="text-[#3F3E3D] text-[15px] font-normal">
+                      {currencySymbol}
+                    </span>
                   </div>
                   <input
                     type="number"
@@ -383,21 +423,50 @@ const BoxGroceriesCreationForm: React.FC = () => {
                 {!uploadedImage ? (
                   <div className="flex flex-col items-center justify-center gap-2 border-dashed border-2 border-gray-300 rounded-xl p-6">
                     <p className="text-gray-500 text-sm mb-3 text-center">
-                      (Recommended 1000px width, 1000px height. Maximum of 1MB file size)
+                      (Recommended 1000px width, 1000px height. Maximum of 1MB
+                      file size)
                     </p>
                     <label htmlFor="imageUpload" className="cursor-pointer">
                       <div className="flex items-center justify-center gap-2 border border-gray-300 rounded-md px-4 py-2 bg-white hover:bg-gray-50">
-                        <span className="text-gray-700 text-sm">Select cover image</span>
+                        <span className="text-gray-700 text-sm">
+                          Select cover image
+                        </span>
                       </div>
-                      <input id="imageUpload" type="file" ref={fileInputRef} onChange={handleImageChange} accept="image/*" className="hidden" />
+                      <input
+                        id="imageUpload"
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleImageChange}
+                        accept="image/*"
+                        className="hidden"
+                      />
                     </label>
                   </div>
                 ) : (
                   <div className="relative">
-                    <img src={uploadedImage} alt="Uploaded cover" className="w-full h-64 rounded-lg object-cover" />
-                    <button type="button" onClick={handleRemoveImage} className="absolute top-3 right-3 bg-white/80 p-1.5 rounded-full hover:bg-white transition-colors" aria-label="Remove image">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M6 18L18 6M6 6l12 12" strokeWidth="2" strokeLinecap="round" />
+                    <img
+                      src={uploadedImage}
+                      alt="Uploaded cover"
+                      className="w-full h-64 rounded-lg object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      className="absolute top-3 right-3 bg-white/80 p-1.5 rounded-full hover:bg-white transition-colors"
+                      aria-label="Remove image"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                      >
+                        <path
+                          d="M6 18L18 6M6 6l12 12"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                        />
                       </svg>
                     </button>
                   </div>
@@ -410,7 +479,9 @@ const BoxGroceriesCreationForm: React.FC = () => {
                   type="submit"
                   disabled={!isFormValid || isSubmitting}
                   className={`w-full py-3 px-4 rounded-lg text-base font-medium leading-6 text-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#FCC01C] focus:ring-offset-2 ${
-                    isFormValid && !isSubmitting ? "bg-[#FCC01C] hover:bg-[#E5AC00] text-[#3F3E3D]" : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    isFormValid && !isSubmitting
+                      ? "bg-[#FCC01C] hover:bg-[#E5AC00] text-[#3F3E3D]"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
                   }`}
                 >
                   {isSubmitting ? "Saving..." : "Save Changes"}

@@ -2,11 +2,12 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useMarket } from "@/lib/market-context";
-import { getLocationsForMarket } from "@/lib/locations";
 
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+
+import { useMarket } from "@/lib/market-context";
+import { getLocationsForMarket } from "@/lib/locations";
 import TextWithHighlight from "@/components/common/TextWithHighlight";
 
 export default function HeroSection() {
@@ -30,7 +31,9 @@ export default function HeroSection() {
         setShowDropdown(false);
       }
     };
+
     document.addEventListener("mousedown", handler);
+
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
@@ -50,12 +53,11 @@ export default function HeroSection() {
   const onChangeLocation = (val: string) => {
     setLocation(val);
     const v = val.trim().toLowerCase();
+
     if (!v) {
       setFiltered(allLocations);
     } else {
-      setFiltered(
-        allLocations.filter((c) => c.toLowerCase().includes(v))
-      );
+      setFiltered(allLocations.filter((c) => c.toLowerCase().includes(v)));
     }
     setShowDropdown(true);
   };
@@ -67,10 +69,19 @@ export default function HeroSection() {
 
   const onSearch = () => {
     const city = location.trim();
+
     try {
       if (typeof window !== "undefined") {
-        const payload = { city: city || undefined, date: eventDate || undefined, market };
-        window.sessionStorage.setItem("ikook_explore_pref", JSON.stringify(payload));
+        const payload = {
+          city: city || undefined,
+          date: eventDate || undefined,
+          market,
+        };
+
+        window.sessionStorage.setItem(
+          "ikook_explore_pref",
+          JSON.stringify(payload),
+        );
       }
     } catch {}
     router.push("/explore");
@@ -86,7 +97,7 @@ export default function HeroSection() {
             className="text-4xl md:text-6xl lg:text-7xl font-bold text-[#323335] leading-tight mb-2"
           >
             {" "}
-            the new, easy way <br /> to book a {" "}
+            the new, easy way <br /> to book a{" "}
             <span className="text-[#FCC01C]">private chef</span>
           </TextWithHighlight>
         </div>
@@ -117,7 +128,9 @@ export default function HeroSection() {
               {showDropdown && (
                 <div className="absolute z-20 mt-2 w-full max-h-64 overflow-auto bg-white border border-gray-200 rounded-md shadow-lg">
                   {filtered.length === 0 && (
-                    <div className="px-3 py-2 text-sm text-neutral-500">No matches</div>
+                    <div className="px-3 py-2 text-sm text-neutral-500">
+                      No matches
+                    </div>
                   )}
                   {filtered.map((item) => (
                     <button
@@ -154,9 +167,13 @@ export default function HeroSection() {
                 aria-label="Open date picker"
                 onClick={() => {
                   const el = dateRef.current;
+
                   if (!el) return;
                   // Prefer native showPicker if available
-                  if ("showPicker" in el && typeof (el as any).showPicker === "function") {
+                  if (
+                    "showPicker" in el &&
+                    typeof (el as any).showPicker === "function"
+                  ) {
                     (el as any).showPicker();
                   } else {
                     el.focus();

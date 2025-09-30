@@ -57,7 +57,6 @@ const HostDashboard: React.FC = () => {
       </main>
     </div>
   );
-}
-;
+};
 
 export default HostDashboard;

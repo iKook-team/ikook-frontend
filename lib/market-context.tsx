@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
 import type { MarketCode } from "./market";
+
+import React from "react";
 
 const MARKET_COOKIE = "ikook_market";
 const MARKET_SRC_COOKIE = "ikook_market_src"; // 'auto' | 'user'
@@ -12,7 +13,7 @@ export type MarketContextValue = {
 };
 
 const MarketContext = React.createContext<MarketContextValue | undefined>(
-  undefined
+  undefined,
 );
 
 function readMarketFromCookie(): MarketCode {
@@ -21,7 +22,9 @@ function readMarketFromCookie(): MarketCode {
     .split("; ")
     .find((row) => row.startsWith(`${MARKET_COOKIE}=`));
   const value = match?.split("=")[1];
+
   if (value === "NG" || value === "GB" || value === "ZA") return value;
+
   return "GB";
 }
 
@@ -35,17 +38,26 @@ export function MarketProvider({ children }: { children: React.ReactNode }) {
   // Client-side fallback: try to refine using ipapi, but do not override explicit user choice
   React.useEffect(() => {
     let cancelled = false;
+
     async function refineFromIp() {
       try {
         const controller = new AbortController();
         const t = setTimeout(() => controller.abort(), 1500);
-        const res = await fetch("https://ipapi.co/json/", { signal: controller.signal });
+        const res = await fetch("https://ipapi.co/json/", {
+          signal: controller.signal,
+        });
+
         clearTimeout(t);
         if (!res.ok) return;
         const data = (await res.json()) as { country_code?: string };
         const code = (data.country_code || "").toUpperCase();
+
         if (!code) return;
-        const next = (code === "NG" || code === "ZA" || code === "GB") ? (code as MarketCode) : "GB";
+        const next =
+          code === "NG" || code === "ZA" || code === "GB"
+            ? (code as MarketCode)
+            : "GB";
+
         if (!cancelled && next !== market) {
           setMarket(next);
           document.cookie = `ikook_market=${next}; Path=/; Max-Age=${60 * 60 * 24 * 30}; SameSite=Lax`;
@@ -57,13 +69,19 @@ export function MarketProvider({ children }: { children: React.ReactNode }) {
       }
     }
     // Only attempt refinement if currently GB (default) AND there isn't a user override cookie
-    const src = typeof document !== "undefined"
-      ? document.cookie.split("; ").find((r) => r.startsWith(`${MARKET_SRC_COOKIE}=`))?.split("=")[1]
-      : undefined;
+    const src =
+      typeof document !== "undefined"
+        ? document.cookie
+            .split("; ")
+            .find((r) => r.startsWith(`${MARKET_SRC_COOKIE}=`))
+            ?.split("=")[1]
+        : undefined;
     const userOverrode = src === "user";
+
     if (market === "GB" && !userOverrode) {
       refineFromIp();
     }
+
     return () => {
       cancelled = true;
     };
@@ -78,6 +96,8 @@ export function MarketProvider({ children }: { children: React.ReactNode }) {
 
 export function useMarket(): MarketContextValue {
   const ctx = React.useContext(MarketContext);
+
   if (!ctx) throw new Error("useMarket must be used within MarketProvider");
+
   return ctx;
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const HeroSection = () => {
   return (
@@ -14,7 +14,12 @@ const HeroSection = () => {
               </span>
             </h1>
             <p className="text-[rgba(50,51,53,0.70)] text-base md:text-lg leading-7 mt-6">
-              Our platform connects you with top chefs, who bring their expertise and delicious menus right to your doorstep. Simply browse through our extensive list of menus, choose the one that suits your taste, and book a chef for the day and time that works best for you. Leave the cooking to the professionals and enjoy a unique dining experience, made just for you!
+              Our platform connects you with top chefs, who bring their
+              expertise and delicious menus right to your doorstep. Simply
+              browse through our extensive list of menus, choose the one that
+              suits your taste, and book a chef for the day and time that works
+              best for you. Leave the cooking to the professionals and enjoy a
+              unique dining experience, made just for you!
             </p>
           </div>
           <div className="relative flex justify-center md:justify-end">

@@ -117,7 +117,10 @@ export const Navigation: React.FC = () => {
                 How it Works
               </Link>
               <div className="flex items-center space-x-1">
-                <Link href="/gifts" className="text-gray-700 hover:text-ikook-primary font-medium">
+                <Link
+                  href="/gifts"
+                  className="text-gray-700 hover:text-ikook-primary font-medium"
+                >
                   Gift
                 </Link>
                 <Gift className="w-5 h-5 text-[#FCC01C]" />
@@ -185,7 +188,9 @@ export const Navigation: React.FC = () => {
           {/* Panel */}
           <aside className="absolute right-0 top-0 h-full w-80 max-w-[90%] bg-white shadow-xl p-6 flex flex-col">
             <div className="flex items-center justify-between mb-6">
-              <span className="text-lg font-semibold text-ikook-secondary">Menu</span>
+              <span className="text-lg font-semibold text-ikook-secondary">
+                Menu
+              </span>
               <button
                 aria-label="Close menu"
                 className="p-2 rounded-md hover:bg-gray-100"

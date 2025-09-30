@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
-import { useForm } from 'react-hook-form';
-import { FormField } from '../ui/form-field';
-import { MapVisualization } from './map-visualization';
-import { InfoBox } from './infobox';
-import { useAuthStore } from '@/lib/store/auth-store';
-import { authService } from '@/lib/api/auth';
-import { showToast, handleApiError } from '@/lib/utils/toast';
+import { FormField } from "../ui/form-field";
+
+import { InfoBox } from "./infobox";
+
+import { useAuthStore } from "@/lib/store/auth-store";
+import { authService } from "@/lib/api/auth";
+import { showToast, handleApiError } from "@/lib/utils/toast";
 
 interface FormData {
   location: string;
@@ -25,13 +26,19 @@ export const DistanceServiceableForm: React.FC = () => {
   const chefFormData = useAuthStore((s) => s.chefFormData) || {};
   const setChefFormData = useAuthStore((s) => s.setChefFormData);
 
-  const { handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<FormData>({
+  const {
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({
     defaultValues: {
-      location: '',
-      distance: '',
-      extraKm: '',
-      pricePerKm: ''
-    }
+      location: "",
+      distance: "",
+      extraKm: "",
+      pricePerKm: "",
+    },
   });
 
   const watchedValues = watch();
@@ -40,33 +47,42 @@ export const DistanceServiceableForm: React.FC = () => {
   useEffect(() => {
     if (!user) return;
     reset({
-      location: user.serviceable_location || '',
-      distance: (user.serviceable_radius ?? '').toString(),
-      extraKm: (user.extra_km ?? '').toString(),
-      pricePerKm: user.extra_km_charge || '',
+      location: user.serviceable_location || "",
+      distance: (user.serviceable_radius ?? "").toString(),
+      extraKm: (user.extra_km ?? "").toString(),
+      pricePerKm: user.extra_km_charge || "",
     });
     // also sync map distance from user if available
-    if (typeof user.serviceable_radius === 'number') {
+    if (typeof user.serviceable_radius === "number") {
       setMapDistance(user.serviceable_radius);
     }
   }, [user, reset]);
 
   const onSubmit = async (data: FormData) => {
     if (!user) {
-      showToast.error('User not found');
+      showToast.error("User not found");
+
       return;
     }
 
     try {
       const fd = new FormData();
-      if (data.location) fd.append('serviceable_location', data.location);
-      if (data.distance)
-        fd.append('serviceable_radius', String(parseInt(data.distance, 10) || 0));
-      if (data.extraKm)
-        fd.append('extra_km', String(parseInt(data.extraKm, 10) || 0));
-      if (data.pricePerKm) fd.append('extra_km_charge', data.pricePerKm);
 
-      const res = await authService.updateProfile(user.id, fd, userType === 'chef');
+      if (data.location) fd.append("serviceable_location", data.location);
+      if (data.distance)
+        fd.append(
+          "serviceable_radius",
+          String(parseInt(data.distance, 10) || 0),
+        );
+      if (data.extraKm)
+        fd.append("extra_km", String(parseInt(data.extraKm, 10) || 0));
+      if (data.pricePerKm) fd.append("extra_km_charge", data.pricePerKm);
+
+      const res = await authService.updateProfile(
+        user.id,
+        fd,
+        userType === "chef",
+      );
       const updated = res.data;
 
       // Update user in store with returned fields and our local inputs
@@ -80,7 +96,7 @@ export const DistanceServiceableForm: React.FC = () => {
       });
 
       // Also persist in chefFormData for quick access if relevant
-      if (userType === 'chef') {
+      if (userType === "chef") {
         setChefFormData({
           ...chefFormData,
           serviceable_location: data.location,
@@ -90,17 +106,21 @@ export const DistanceServiceableForm: React.FC = () => {
         });
       }
 
-      showToast.success('Serviceable distance updated');
+      showToast.success("Serviceable distance updated");
     } catch (error) {
-      handleApiError(error, 'Failed to update serviceable distance');
+      handleApiError(error, "Failed to update serviceable distance");
     }
   };
 
-  const handleEventChange = (
-    field: keyof FormData,
-  ) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setValue(field, e.target.value);
-  };
+  const handleEventChange =
+    (field: keyof FormData) =>
+    (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >,
+    ) => {
+      setValue(field, e.target.value);
+    };
 
   return (
     <div className="flex max-w-[655px] flex-col items-stretch">
@@ -109,21 +129,23 @@ export const DistanceServiceableForm: React.FC = () => {
           Distance serviceable
         </h1>
       </header>
-      
+
       <main className="border shadow-[0_4px_30px_0_rgba(0,0,0,0.03)] flex w-full flex-col items-center bg-white mt-[21px] pt-[26px] px-4 md:px-6 rounded-[15px] border-solid border-[#E7E7E7] max-md:max-w-full">
-        <form 
+        <form
           onSubmit={handleSubmit(onSubmit)}
           className="w-full max-w-[624px] max-md:max-w-full"
           noValidate
         >
           <fieldset className="border-0 p-0 m-0">
-            <legend className="sr-only">Service location and distance configuration</legend>
-            
+            <legend className="sr-only">
+              Service location and distance configuration
+            </legend>
+
             <FormField
               label="Location"
               placeholder="Enter address"
               value={watchedValues.location}
-              onChange={handleEventChange('location')}
+              onChange={handleEventChange("location")}
               name="location"
               required
             />
@@ -133,7 +155,7 @@ export const DistanceServiceableForm: React.FC = () => {
                 label="Distance (in KM)"
                 placeholder="Distance you can cover?"
                 value={watchedValues.distance}
-                onChange={handleEventChange('distance')}
+                onChange={handleEventChange("distance")}
                 type="number"
                 name="distance"
                 required
@@ -147,13 +169,15 @@ export const DistanceServiceableForm: React.FC = () => {
           /> */}
 
           <fieldset className="border-0 p-0 m-0 mt-[29px]">
-            <legend className="sr-only">Extra kilometer pricing configuration</legend>
-            
+            <legend className="sr-only">
+              Extra kilometer pricing configuration
+            </legend>
+
             <FormField
               label="Extra KM"
               placeholder="Extra KM you can cover"
               value={watchedValues.extraKm}
-              onChange={handleEventChange('extraKm')}
+              onChange={handleEventChange("extraKm")}
               type="number"
               name="extraKm"
             />
@@ -163,10 +187,10 @@ export const DistanceServiceableForm: React.FC = () => {
                 label="Price (per KM)"
                 placeholder="Enter the amount to charge per extra KM"
                 value={watchedValues.pricePerKm}
-                onChange={handleEventChange('pricePerKm')}
+                onChange={handleEventChange("pricePerKm")}
                 type="number"
                 name="pricePerKm"
-            />
+              />
             </div>
           </fieldset>
 

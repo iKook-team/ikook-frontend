@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
 
@@ -30,11 +31,13 @@ export const QuoteSummary: React.FC<QuoteSummaryProps> = ({
   const cfg = React.useMemo(() => getMarketConfig(market), [market]);
   const formattedTotal = React.useMemo(() => {
     const t = typeof total === "number" && !Number.isNaN(total) ? total : 0;
+
     return `${cfg.currencySymbol}${t.toLocaleString(cfg.locale, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })}`;
   }, [cfg, total]);
+
   return (
     <aside className="px-8 pt-10 pb-20 w-full bg-white rounded-2xl border border-solid shadow-2xl border-neutral-200 max-md:px-5 max-md:mt-7">
       <div className="flex flex-col w-full">
@@ -71,18 +74,33 @@ export const QuoteSummary: React.FC<QuoteSummaryProps> = ({
           ) : null}
         </div>
         <div className="mt-7 max-w-full text-zinc-800 w-[303px]">
-          {typeof breakdownSubtotal === "number" || typeof breakdownPlatformFee === "number" ? (
+          {typeof breakdownSubtotal === "number" ||
+          typeof breakdownPlatformFee === "number" ? (
             <div className="text-base font-medium">
               {typeof breakdownSubtotal === "number" && (
                 <div className="flex gap-10 items-start">
                   <span className="text-zinc-800 w-[209px]">Subtotal</span>
-                  <span className="text-right text-zinc-800 w-[80px]">{cfg.currencySymbol}{Number(breakdownSubtotal).toLocaleString(cfg.locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span className="text-right text-zinc-800 w-[80px]">
+                    {cfg.currencySymbol}
+                    {Number(breakdownSubtotal).toLocaleString(cfg.locale, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
                 </div>
               )}
               {typeof breakdownPlatformFee === "number" && (
                 <div className="flex gap-10 items-start mt-3">
-                  <span className="text-zinc-800 w-[209px]">Platform fee 2.5%</span>
-                  <span className="w-[80px] text-right text-zinc-800">{cfg.currencySymbol}{Number(breakdownPlatformFee).toLocaleString(cfg.locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span className="text-zinc-800 w-[209px]">
+                    Platform fee 2.5%
+                  </span>
+                  <span className="w-[80px] text-right text-zinc-800">
+                    {cfg.currencySymbol}
+                    {Number(breakdownPlatformFee).toLocaleString(cfg.locale, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
                 </div>
               )}
             </div>
@@ -99,11 +117,7 @@ export const QuoteSummary: React.FC<QuoteSummaryProps> = ({
             </div>
           </div>
         </div>
-        {children ? (
-          <div className="mt-6">
-            {children}
-          </div>
-        ) : null}
+        {children ? <div className="mt-6">{children}</div> : null}
       </div>
     </aside>
   );

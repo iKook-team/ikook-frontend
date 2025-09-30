@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useParams, useRouter } from "next/navigation";
+
 import { Navigation } from "@/components/auth/Navigation";
 import { Footer } from "@/components/footer/footer";
 
@@ -129,6 +130,7 @@ export default function CountryPage() {
 
     try {
       const payload = { city, market: data.market } as const;
+
       if (typeof window !== "undefined") {
         sessionStorage.setItem("ikook_explore_pref", JSON.stringify(payload));
       }

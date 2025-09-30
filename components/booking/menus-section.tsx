@@ -51,7 +51,10 @@ export const MenusSection: React.FC = () => {
             </h2>
             <div className="flex flex-wrap justify-center gap-2 mt-3 max-md:max-w-full">
               {menus.map((menu, index) => (
-                <article key={index} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-[210px]">
+                <article
+                  key={index}
+                  className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-[210px]"
+                >
                   <div className="border-[color:var(--Yellow-0,#FFFCF5)] bg-white rounded-[10.176px] border-[0.678px] border-solid">
                     <div className="flex flex-col relative aspect-[1.206] w-full px-2 py-2.5 rounded-[10px]">
                       <img

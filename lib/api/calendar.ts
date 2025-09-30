@@ -41,7 +41,11 @@ export const createTimeSlot = async (
   data: CreateTimeSlotData,
 ): Promise<TimeSlot> => {
   try {
-    const response = await apiClient.post<TimeSlot>("/calendar/time-slots/", data);
+    const response = await apiClient.post<TimeSlot>(
+      "/calendar/time-slots/",
+      data,
+    );
+
     return response.data;
   } catch (error) {
     console.error("Error creating time slot:", error);

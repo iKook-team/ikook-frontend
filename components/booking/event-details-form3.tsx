@@ -84,7 +84,11 @@ const EventDetailsForm3: React.FC<EventDetailsForm3Props> = ({
               }
               location={menu?.chef?.city || "Unknown"}
               locationIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6a979250a7b2e8fadafb588f6b48331c3ddaeb05?placeholderIfAbsent=true"
-              rating={menu?.chef?.average_rating ? menu.chef.average_rating.toFixed(1) : "-"}
+              rating={
+                menu?.chef?.average_rating
+                  ? menu.chef.average_rating.toFixed(1)
+                  : "-"
+              }
               ratingIconUrl="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/95ff912f680fb9cb0b65a4e92d4e4a21883cc4f2?placeholderIfAbsent=true"
               reviewCount={
                 menu?.chef?.num_reviews
@@ -97,7 +101,9 @@ const EventDetailsForm3: React.FC<EventDetailsForm3Props> = ({
 
         {/* Form Section */}
         <section className="p-6 space-y-6">
-          <h2 className="text-2xl font-semibold text-gray-900">Event Details</h2>
+          <h2 className="text-2xl font-semibold text-gray-900">
+            Event Details
+          </h2>
 
           <form
             className="space-y-6"
@@ -126,7 +132,9 @@ const EventDetailsForm3: React.FC<EventDetailsForm3Props> = ({
             </div>
 
             <div>
-              <h3 className="block text-sm font-medium text-gray-700 mb-1">Venue</h3>
+              <h3 className="block text-sm font-medium text-gray-700 mb-1">
+                Venue
+              </h3>
               <div className="space-y-3">
                 {venueOptions.map((option) => (
                   <div key={option.id} className="flex items-center">

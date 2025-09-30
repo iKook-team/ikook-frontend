@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
-import apiClient from '@/src/lib/axios';
-import { useMarket } from '@/lib/market-context';
+import { useState, useEffect } from "react";
+
+import apiClient from "@/src/lib/axios";
+import { useMarket } from "@/lib/market-context";
 
 export interface Menu {
   id: number;
@@ -43,27 +44,27 @@ export function useMenus(limit: number = 8, useMarketFilter: boolean = true) {
       try {
         setLoading(true);
         setError(null);
-        
+
         const params = new URLSearchParams({
-          page: '1',
+          page: "1",
           page_size: limit.toString(),
-          status: 'Active',
+          status: "Active",
         });
-        
+
         // Add market filter only if explicitly requested
         if (useMarketFilter && market) {
-          params.append('market', market);
+          params.append("market", market);
         }
 
         const response = await apiClient.get(`/menus/?${params.toString()}`);
-        
+
         if (response.data?.status && response.data?.data?.results) {
           setMenus(response.data.data.results);
         } else {
-          setError('Invalid response format');
+          setError("Invalid response format");
         }
       } catch (err: any) {
-        setError(err?.response?.data?.message || 'Failed to fetch menus');
+        setError(err?.response?.data?.message || "Failed to fetch menus");
       } finally {
         setLoading(false);
       }

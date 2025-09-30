@@ -1,9 +1,10 @@
 "use client";
 import * as React from "react";
-import { useMarket } from "@/lib/market-context";
-import { getMarketConfig } from "@/lib/market-config";
 
 import { CartItem } from "./cart-item";
+
+import { useMarket } from "@/lib/market-context";
+import { getMarketConfig } from "@/lib/market-config";
 
 interface CartItemData {
   id: string;
@@ -29,20 +30,31 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
   const { market } = useMarket();
   const cfg = React.useMemo(() => getMarketConfig(market), [market]);
   const selectedItems = items.filter((item) => item.isSelected);
-  const totalItems = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
+  const totalItems = selectedItems.reduce(
+    (sum, item) => sum + item.quantity,
+    0,
+  );
 
   const parsePrice = (s: string): number => {
     if (!s) return 0;
     const n = parseFloat(String(s).replace(/[^0-9.]/g, ""));
+
     return Number.isFinite(n) ? n : 0;
   };
 
-  const rawSubtotal = selectedItems.reduce((sum, item) => sum + parsePrice(item.price) * item.quantity, 0);
+  const rawSubtotal = selectedItems.reduce(
+    (sum, item) => sum + parsePrice(item.price) * item.quantity,
+    0,
+  );
   const subtotal = rawSubtotal;
   const platformFee = subtotal * 0.025;
   const total = subtotal + platformFee;
 
-  const fmt = (n: number) => n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const fmt = (n: number) =>
+    n.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
 
   return (
     <aside className="w-[36%] ml-5 max-md:w-full max-md:ml-0">
@@ -100,7 +112,10 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
             />
             <div className="flex gap-[40px_74px] mt-[7px]">
               <div className="text-[#323335] w-[209px]">TOTAL</div>
-              <div className="text-[#323335] text-right w-12">{cfg.currencySymbol}{fmt(total)}</div>
+              <div className="text-[#323335] text-right w-12">
+                {cfg.currencySymbol}
+                {fmt(total)}
+              </div>
             </div>
           </div>
         </div>
@@ -110,7 +125,9 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
             disabled={selectedItems.length === 0}
             aria-disabled={selectedItems.length === 0}
             className={`text-white self-stretch border border-[color:var(--Yellow-Pry,#FCC01C)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] min-w-60 w-[331px] gap-2 overflow-hidden px-5 py-3 rounded-lg border-solid transition-colors ${
-              selectedItems.length === 0 ? "bg-gray-300 cursor-not-allowed" : "bg-[#FCC01C] hover:bg-[#e6ac19]"
+              selectedItems.length === 0
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-[#FCC01C] hover:bg-[#e6ac19]"
             }`}
           >
             Continue

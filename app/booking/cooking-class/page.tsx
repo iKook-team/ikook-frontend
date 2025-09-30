@@ -114,7 +114,11 @@ const CookingClassBookingPage = () => {
             teaching: formData.teaching || "",
             guests: formData.guests || 1,
           }}
-          chefName={bookingService?.chef?.first_name ? `Chef ${bookingService.chef.first_name}` : 'Chef'}
+          chefName={
+            bookingService?.chef?.first_name
+              ? `Chef ${bookingService.chef.first_name}`
+              : "Chef"
+          }
         />
       );
       break;
@@ -128,7 +132,11 @@ const CookingClassBookingPage = () => {
             experience: formData.experience || "",
             days: formData.days || 1,
           }}
-          chefName={bookingService?.chef?.first_name ? `Chef ${bookingService.chef.first_name}` : 'Chef'}
+          chefName={
+            bookingService?.chef?.first_name
+              ? `Chef ${bookingService.chef.first_name}`
+              : "Chef"
+          }
         />
       );
       break;
@@ -142,7 +150,11 @@ const CookingClassBookingPage = () => {
             endDate: formData.endDate || "",
             cuisines: formData.cuisines || [],
           }}
-          chefName={bookingService?.chef?.first_name ? `Chef ${bookingService.chef.first_name}` : 'Chef'}
+          chefName={
+            bookingService?.chef?.first_name
+              ? `Chef ${bookingService.chef.first_name}`
+              : "Chef"
+          }
         />
       );
       break;
@@ -210,9 +222,7 @@ const CookingClassBookingPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-2 py-4 sm:px-4 lg:px-6">
-      <div className="w-full max-w-4xl">
-        {StepComponent}
-      </div>
+      <div className="w-full max-w-4xl">{StepComponent}</div>
     </div>
   );
 };

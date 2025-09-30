@@ -37,17 +37,26 @@ const EatingCoachForm: React.FC = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
 
   const allCuisines = [
-    "African", "Modern English", "Italian", "Chinese", "French", 
-    "English", "Spicy Mediterranean", "Pizza", "Pastries"
+    "African",
+    "Modern English",
+    "Italian",
+    "Chinese",
+    "French",
+    "English",
+    "Spicy Mediterranean",
+    "Pizza",
+    "Pastries",
   ];
 
   const allServices = ["Meal Planning", "Nutrition", "Weight Loss"];
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+
     if (file) {
       setImageFile(file);
       const reader = new FileReader();
+
       reader.onload = (e) => setUploadedImage(e.target?.result as string);
       reader.readAsDataURL(file);
     }
@@ -70,7 +79,10 @@ const EatingCoachForm: React.FC = () => {
     );
   }, [formData, imageFile]);
 
-  const handleInputChange = <K extends keyof FormData>(field: K, value: FormData[K]) => {
+  const handleInputChange = <K extends keyof FormData>(
+    field: K,
+    value: FormData[K],
+  ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -109,7 +121,10 @@ const EatingCoachForm: React.FC = () => {
 
       <section className="bg-white rounded-[15px] border border-solid border-[#E7E7E7] shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] overflow-hidden">
         <div className="flex items-center justify-between px-[17px] py-11 max-sm:flex-col max-sm:gap-4 max-sm:items-start">
-          <label htmlFor="availability" className="text-[#020101] text-[15px] font-normal">
+          <label
+            htmlFor="availability"
+            className="text-[#020101] text-[15px] font-normal"
+          >
             Availability
           </label>
           <Toggle
@@ -123,13 +138,19 @@ const EatingCoachForm: React.FC = () => {
           <div className="space-y-6">
             {/* Starting Price */}
             <div className="space-y-1.5">
-              <label htmlFor="startingPrice" className="block text-[#3F3E3D] text-[15px] font-normal">
+              <label
+                htmlFor="startingPrice"
+                className="block text-[#3F3E3D] text-[15px] font-normal"
+              >
                 Starting price (per person)
               </label>
               <div className="flex border border-solid border-[#CFCFCE] rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white">
                 <div className="flex items-center px-3.5 py-2.5 bg-white rounded-l-lg">
                   <span className="text-[#3F3E3D] text-[15px] font-normal">
-                    {getCurrencySymbol({ currency: user?.currency, country: user?.country })}
+                    {getCurrencySymbol({
+                      currency: user?.currency,
+                      country: user?.country,
+                    })}
                   </span>
                 </div>
                 <div className="flex-1 flex">
@@ -137,7 +158,9 @@ const EatingCoachForm: React.FC = () => {
                     id="startingPrice"
                     type="number"
                     value={formData.startingPrice}
-                    onChange={(e) => handleInputChange("startingPrice", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("startingPrice", e.target.value)
+                    }
                     className="w-full px-3.5 py-2.5 text-[#3F3E3D] text-[15px] font-normal bg-transparent border-0 focus:ring-0 focus:outline-none"
                     placeholder="0.00"
                     step="0.01"
@@ -149,7 +172,10 @@ const EatingCoachForm: React.FC = () => {
 
             {/* Minimum Guests */}
             <div className="space-y-1.5">
-              <label htmlFor="minGuests" className="block text-[#3F3E3D] text-[15px] font-normal">
+              <label
+                htmlFor="minGuests"
+                className="block text-[#3F3E3D] text-[15px] font-normal"
+              >
                 Minimum number of guests
               </label>
               <input
@@ -175,13 +201,19 @@ const EatingCoachForm: React.FC = () => {
 
             {/* Price Per Hour */}
             <div className="space-y-1.5">
-              <label htmlFor="pricePerHour" className="block text-[#3F3E3D] text-[15px] font-normal">
+              <label
+                htmlFor="pricePerHour"
+                className="block text-[#3F3E3D] text-[15px] font-normal"
+              >
                 Price per hour
               </label>
               <div className="flex border border-solid border-[#CFCFCE] rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white">
                 <div className="flex items-center px-3.5 py-2.5 bg-white rounded-l-lg">
                   <span className="text-[#3F3E3D] text-[15px] font-normal">
-                    {getCurrencySymbol({ currency: user?.currency, country: user?.country })}
+                    {getCurrencySymbol({
+                      currency: user?.currency,
+                      country: user?.country,
+                    })}
                   </span>
                 </div>
                 <div className="flex-1 flex">
@@ -189,7 +221,9 @@ const EatingCoachForm: React.FC = () => {
                     id="pricePerHour"
                     type="number"
                     value={formData.pricePerHour}
-                    onChange={(e) => handleInputChange("pricePerHour", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("pricePerHour", e.target.value)
+                    }
                     className="w-full px-3.5 py-2.5 text-[#3F3E3D] text-[15px] font-normal bg-transparent border-0 focus:ring-0 focus:outline-none"
                     placeholder="0.00"
                     step="0.01"
@@ -216,7 +250,8 @@ const EatingCoachForm: React.FC = () => {
             {!uploadedImage ? (
               <div className="flex flex-col items-center justify-center gap-[9px] border-dashed border border-[#CFCFCE] rounded-xl p-2.5 h-[122px]">
                 <p className="text-[#323335] text-center text-[10px] font-normal max-w-[272px]">
-                  (Recommended 1000px width, 1000px height. Maximum of 1MB file size)
+                  (Recommended 1000px width, 1000px height. Maximum of 1MB file
+                  size)
                 </p>
                 <label htmlFor="imageUpload" className="cursor-pointer">
                   <div className="flex justify-center items-center gap-2.5 border border-solid border-[#B7B7B6] p-2.5 rounded-md">
@@ -246,8 +281,20 @@ const EatingCoachForm: React.FC = () => {
                   onClick={handleRemoveImage}
                   className="absolute top-[11px] right-3 bg-[#FFF5F5] p-1 rounded-[30px] hover:bg-red-100 transition-colors"
                 >
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 4L4 12M4 4L12 12" stroke="#B8251B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 4L4 12M4 4L12 12"
+                      stroke="#B8251B"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </button>
               </div>

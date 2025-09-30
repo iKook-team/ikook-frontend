@@ -41,7 +41,9 @@ export const CreateDiscountModal: React.FC<CreateDiscountModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Menus
-  const [menus, setMenus] = useState<Array<{ id: number | string; name: string }>>([]);
+  const [menus, setMenus] = useState<
+    Array<{ id: number | string; name: string }>
+  >([]);
   const [loadingMenus, setLoadingMenus] = useState(false);
 
   useEffect(() => {
@@ -61,12 +63,20 @@ export const CreateDiscountModal: React.FC<CreateDiscountModalProps> = ({
         setLoadingMenus(true);
         if (isBoxGroceriesService) {
           const data = await groceriesService.getGroceries({});
-          const items = (data?.results ?? []).map((g: any) => ({ id: g.id, name: g.name }));
+          const items = (data?.results ?? []).map((g: any) => ({
+            id: g.id,
+            name: g.name,
+          }));
+
           setMenus(items);
         } else {
           // Fetch without status filter to include all of the chef's menus
           const data = await listingService.getMenus();
-          const items = (data?.results ?? []).map((m: any) => ({ id: m.id, name: m.name }));
+          const items = (data?.results ?? []).map((m: any) => ({
+            id: m.id,
+            name: m.name,
+          }));
+
           setMenus(items);
         }
       } catch (e) {
@@ -75,6 +85,7 @@ export const CreateDiscountModal: React.FC<CreateDiscountModalProps> = ({
         setLoadingMenus(false);
       }
     };
+
     fetchItems();
   }, [open, isBoxGroceriesService]);
 
@@ -82,8 +93,16 @@ export const CreateDiscountModal: React.FC<CreateDiscountModalProps> = ({
   const itemPlural = isBoxGroceriesService ? "groceries" : "menus";
 
   const menuOptions = useMemo(() => {
-    const base = [{ value: "", label: loadingMenus ? `Loading ${itemPlural}...` : `Select a ${itemSingular}` }];
+    const base = [
+      {
+        value: "",
+        label: loadingMenus
+          ? `Loading ${itemPlural}...`
+          : `Select a ${itemSingular}`,
+      },
+    ];
     const rest = menus.map((m) => ({ value: String(m.id), label: m.name }));
+
     return [...base, ...rest];
   }, [menus, loadingMenus, itemPlural, itemSingular]);
 
@@ -93,6 +112,7 @@ export const CreateDiscountModal: React.FC<CreateDiscountModalProps> = ({
     e.preventDefault();
     // Simple validation
     const pct = Number(percentage);
+
     if (Number.isNaN(pct) || pct <= 0 || pct > 100) return;
     if (!startDate || !endDate) return;
     if (scope === "menu" && !menuId) return;
@@ -119,7 +139,9 @@ export const CreateDiscountModal: React.FC<CreateDiscountModalProps> = ({
       <div className="relative w-full max-w-lg p-6 mx-4 bg-white rounded-lg shadow-xl">
         {/* Modal Header */}
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-gray-900">Create Discount</h3>
+          <h3 className="text-lg font-semibold text-gray-900">
+            Create Discount
+          </h3>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-500"
@@ -144,10 +166,11 @@ export const CreateDiscountModal: React.FC<CreateDiscountModalProps> = ({
 
         {/* Modal Body */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Scope selection */
-          }
+          {/* Scope selection */}
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-gray-900">Apply discount to</label>
+            <label className="text-sm font-medium text-gray-900">
+              Apply discount to
+            </label>
             <div className="flex items-center gap-6">
               <label className="inline-flex items-center gap-2">
                 <input
@@ -177,7 +200,9 @@ export const CreateDiscountModal: React.FC<CreateDiscountModalProps> = ({
               type="select"
               name="menu_id"
               label={itemSingular === "menu" ? "Menu" : "Grocery"}
-              placeholder={itemSingular === "menu" ? "Select a menu" : "Select a grocery"}
+              placeholder={
+                itemSingular === "menu" ? "Select a menu" : "Select a grocery"
+              }
               options={menuOptions}
               value={menuId}
               onChange={(e) => setMenuId(e.target.value)}

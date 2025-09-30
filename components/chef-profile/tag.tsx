@@ -1,6 +1,6 @@
 "use client";
-import clsx from 'clsx';
-import React from 'react';
+import clsx from "clsx";
+import React from "react";
 
 interface TagProps {
   children: React.ReactNode;
@@ -10,10 +10,12 @@ interface TagProps {
 
 export const Tag: React.FC<TagProps> = ({ children, icon, className }) => {
   return (
-    <div className={clsx(
-      "items-center content-center flex-wrap flex gap-[5px] bg-[#FFFCF5] px-3 py-2 rounded-[20px] border border-solid border-[#FDEEC5]",
-      className
-    )}>
+    <div
+      className={clsx(
+        "items-center content-center flex-wrap flex gap-[5px] bg-[#FFFCF5] px-3 py-2 rounded-[20px] border border-solid border-[#FDEEC5]",
+        className,
+      )}
+    >
       {icon && (
         <img
           src={icon}

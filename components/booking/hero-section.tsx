@@ -1,4 +1,5 @@
 import React from "react";
+
 import { showToast } from "@/lib/utils/toast";
 import favouritesService from "@/lib/api/favourites";
 
@@ -24,20 +25,24 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ menu }) => {
       if (typeof navigator !== "undefined" && (navigator as any).share) {
         // Use the native Web Share API when available
         await (navigator as any).share(shareData);
+
         // Do not show a toast on successful native share; UX is handled by OS
         return;
       }
 
       // Fallback: copy the current URL to clipboard
       const urlToCopy = shareData.url || "";
+
       if (navigator?.clipboard?.writeText) {
         await navigator.clipboard.writeText(urlToCopy);
         showToast.success("Link copied to clipboard");
+
         return;
       }
 
       // Legacy fallback if Clipboard API is unavailable
       const textArea = document.createElement("textarea");
+
       textArea.value = urlToCopy;
       document.body.appendChild(textArea);
       textArea.select();
@@ -116,7 +121,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ menu }) => {
                 className="aspect-[1] object-contain w-3.5 self-stretch shrink-0 my-auto"
                 alt="Save"
               />
-              <span className="self-stretch my-auto">{saved ? "Saved" : "Save"}</span>
+              <span className="self-stretch my-auto">
+                {saved ? "Saved" : "Save"}
+              </span>
             </div>
           </button>
         </div>

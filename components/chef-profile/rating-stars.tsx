@@ -1,16 +1,19 @@
 "use client";
-import React from 'react';
+import React from "react";
 
 interface RatingStarsProps {
   rating: number;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
 }
 
-export const RatingStars: React.FC<RatingStarsProps> = ({ rating, size = 'md' }) => {
+export const RatingStars: React.FC<RatingStarsProps> = ({
+  rating,
+  size = "md",
+}) => {
   const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-[17px] h-[17px]',
-    lg: 'w-[25px] h-[25px]'
+    sm: "w-4 h-4",
+    md: "w-[17px] h-[17px]",
+    lg: "w-[25px] h-[25px]",
   };
 
   return (

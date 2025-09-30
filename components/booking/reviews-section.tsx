@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "../ui/button";
 
 type ReviewItem = {
   name: string;
@@ -8,7 +7,9 @@ type ReviewItem = {
   avatar?: string | null;
 };
 
-export const ReviewsSection: React.FC<{ reviews?: ReviewItem[] }> = ({ reviews = [] }) => {
+export const ReviewsSection: React.FC<{ reviews?: ReviewItem[] }> = ({
+  reviews = [],
+}) => {
   const hasReviews = Array.isArray(reviews) && reviews.length > 0;
 
   return (
@@ -63,7 +64,9 @@ export const ReviewsSection: React.FC<{ reviews?: ReviewItem[] }> = ({ reviews =
                     </div>
                   </div>
                 ) : (
-                  <div className="mt-3 w-full text-sm text-gray-500">No reviews yet.</div>
+                  <div className="mt-3 w-full text-sm text-gray-500">
+                    No reviews yet.
+                  </div>
                 )}
               </div>
             </div>

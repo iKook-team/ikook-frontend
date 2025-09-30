@@ -129,48 +129,48 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
           </h1>
 
           <form onSubmit={handleSubmit}>
-          <p className="mb-4 text-sm text-gray-600">
-            {subtitleText ??
-              "Enter the 6-digit code sent to your email address."}
-          </p>
-
-          <div className="mb-6 flex justify-center gap-2">
-            {otpValues.map((value, index) => (
-              <OTPInput
-                key={index}
-                ref={(el) => {
-                  inputRefs.current[index] = el;
-                }}
-                value={value}
-                onChange={(value) => handleOTPChange(index, value)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-              />
-            ))}
-          </div>
-
-          <div className="mb-6 flex items-center justify-between">
-            <p className="text-sm text-gray-600">
-              Didn&apos;t receive the code?
+            <p className="mb-4 text-sm text-gray-600">
+              {subtitleText ??
+                "Enter the 6-digit code sent to your email address."}
             </p>
-            <Button
-              disabled={isResending}
-              type="button"
-              variant="ghost"
-              onClick={handleResendCode}
-            >
-              {isResending ? "Resending..." : "Resend Code"}
-            </Button>
-          </div>
 
-          <div className="mt-8">
-            <Button
-              className="w-full"
-              disabled={!isOTPComplete || isSubmitting}
-              type="submit"
-            >
-              {isSubmitting ? "Verifying..." : "Verify & Continue"}
-            </Button>
-          </div>
+            <div className="mb-6 flex justify-center gap-2">
+              {otpValues.map((value, index) => (
+                <OTPInput
+                  key={index}
+                  ref={(el) => {
+                    inputRefs.current[index] = el;
+                  }}
+                  value={value}
+                  onChange={(value) => handleOTPChange(index, value)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                />
+              ))}
+            </div>
+
+            <div className="mb-6 flex items-center justify-between">
+              <p className="text-sm text-gray-600">
+                Didn&apos;t receive the code?
+              </p>
+              <Button
+                disabled={isResending}
+                type="button"
+                variant="ghost"
+                onClick={handleResendCode}
+              >
+                {isResending ? "Resending..." : "Resend Code"}
+              </Button>
+            </div>
+
+            <div className="mt-8">
+              <Button
+                className="w-full"
+                disabled={!isOTPComplete || isSubmitting}
+                type="submit"
+              >
+                {isSubmitting ? "Verifying..." : "Verify & Continue"}
+              </Button>
+            </div>
           </form>
         </div>
       </main>

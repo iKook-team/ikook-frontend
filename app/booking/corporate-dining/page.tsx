@@ -273,9 +273,7 @@ const CorporateDiningBookingPage = () => {
 
   return (
     <div className="min-h-screen w-full bg-gray-50 flex items-center justify-center px-2 py-4 sm:px-4 lg:px-6">
-      <div className="w-full max-w-4xl">
-        {renderStep()}
-      </div>
+      <div className="w-full max-w-4xl">{renderStep()}</div>
     </div>
   );
 };

@@ -72,7 +72,7 @@ const NotificationSettings: React.FC = () => {
         <div className="mb-6">
           <BackButton fallback="/settings" />
         </div>
-        
+
         <h1 className="text-2xl font-semibold text-black mb-8 sm:mb-12">
           Notification
         </h1>
@@ -116,7 +116,7 @@ const NotificationSettings: React.FC = () => {
               disabled={isLoading}
             >
               <span className="text-white text-base font-semibold">
-                {isLoading ? 'Saving...' : 'Save changes'}
+                {isLoading ? "Saving..." : "Save changes"}
               </span>
             </button>
           </div>

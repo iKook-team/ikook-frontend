@@ -140,11 +140,18 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
                     // Fallback: pick an ID that is not the current user
                     if (!otherUserId) {
                       const currentId = authUser?.id;
+
                       if (booking.host_id && booking.host_id !== currentId) {
                         otherUserId = booking.host_id;
-                      } else if (booking.chef_id && booking.chef_id !== currentId) {
+                      } else if (
+                        booking.chef_id &&
+                        booking.chef_id !== currentId
+                      ) {
                         otherUserId = booking.chef_id;
-                      } else if (booking.selected_chef_id && booking.selected_chef_id !== currentId) {
+                      } else if (
+                        booking.selected_chef_id &&
+                        booking.selected_chef_id !== currentId
+                      ) {
                         otherUserId = booking.selected_chef_id;
                       }
                     }
@@ -154,10 +161,15 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
                     }
 
                     // Find or create the chat
-                    const chat = await chatService.getOrCreateChat(Number(otherUserId));
+                    const chat = await chatService.getOrCreateChat(
+                      Number(otherUserId),
+                    );
 
                     // Navigate to the chat and auto-open the conversation
-                    const back = encodeURIComponent(`/dashboard/booking-details?id=${booking.id}`);
+                    const back = encodeURIComponent(
+                      `/dashboard/booking-details?id=${booking.id}`,
+                    );
+
                     router.push(`/chat?chatId=${chat.id}&back=${back}`);
                   } catch (error) {
                     handleApiError(error, "Failed to start chat");

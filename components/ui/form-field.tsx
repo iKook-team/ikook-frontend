@@ -11,7 +11,9 @@ interface FormFieldProps {
   value?: string;
   options?: { value: string; label: string }[] | string[];
   onChange?: (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+    event: ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
   ) => void;
   maxLength?: number;
   rows?: number;
@@ -50,33 +52,34 @@ export const FormField = forwardRef<
       placeholder,
       required,
       value,
-      name: name || '',
+      name: name || "",
       onChange,
       ...props,
     };
-    
+
     // Remove name from props to avoid duplicates
     delete (commonProps as any).name;
 
     // Create a safe name that's always a string
-    const safeName = name || '';
-    
+    const safeName = name || "";
+
     return (
       <div className={`flex flex-col gap-1.5 ${className}`}>
         <label className="text-sm font-medium text-gray-900">
           {label}
           {required && <span className="text-red-500">*</span>}
         </label>
-        
-        {type === 'select' ? (
+
+        {type === "select" ? (
           <select
             ref={ref as React.RefObject<HTMLSelectElement>}
             {...commonProps}
             name={safeName}
           >
             {options?.map((option, index) => {
-              const value = typeof option === 'string' ? option : option.value;
-              const label = typeof option === 'string' ? option : option.label;
+              const value = typeof option === "string" ? option : option.value;
+              const label = typeof option === "string" ? option : option.label;
+
               return (
                 <option key={index} value={value}>
                   {label}
@@ -84,7 +87,7 @@ export const FormField = forwardRef<
               );
             })}
           </select>
-        ) : type === 'textarea' ? (
+        ) : type === "textarea" ? (
           <textarea
             ref={ref as React.RefObject<HTMLTextAreaElement>}
             {...(commonProps as any)}
@@ -99,12 +102,8 @@ export const FormField = forwardRef<
             name={safeName}
           />
         )}
-        
-        {error && (
-          <p className="text-sm text-red-500">
-            {error}
-          </p>
-        )}
+
+        {error && <p className="text-sm text-red-500">{error}</p>}
       </div>
     );
   },

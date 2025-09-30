@@ -71,6 +71,7 @@ const MealDetailsForm3: React.FC<MealDetailsForm3Props> = ({
       const next = exists
         ? prev.mealType.filter((m) => m !== option)
         : [...prev.mealType, option];
+
       return { ...prev, mealType: next };
     });
   };
@@ -142,21 +143,19 @@ const MealDetailsForm3: React.FC<MealDetailsForm3Props> = ({
                 Meal Type
               </label>
               <div className="space-y-3">
-                {(["Breakfast", "Lunch", "Dinner"] as const).map(
-                  (option) => (
-                    <label key={option} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name={`mealType-${option}`}
-                        value={option}
-                        checked={formData.mealType.includes(option)}
-                        onChange={() => toggleMealType(option)}
-                        className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300"
-                      />
-                      <span className="ml-2 text-gray-700">{option}</span>
-                    </label>
-                  ),
-                )}
+                {(["Breakfast", "Lunch", "Dinner"] as const).map((option) => (
+                  <label key={option} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name={`mealType-${option}`}
+                      value={option}
+                      checked={formData.mealType.includes(option)}
+                      onChange={() => toggleMealType(option)}
+                      className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300"
+                    />
+                    <span className="ml-2 text-gray-700">{option}</span>
+                  </label>
+                ))}
               </div>
             </div>
 

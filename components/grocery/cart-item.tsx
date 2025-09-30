@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
 
@@ -24,6 +25,7 @@ export const CartItem: React.FC<CartItemProps> = ({
 }) => {
   const { market } = useMarket();
   const cfg = React.useMemo(() => getMarketConfig(market), [market]);
+
   return (
     <div className="flex w-full max-w-[332px] flex-col items-stretch mt-4">
       <div className="flex gap-[27px]">

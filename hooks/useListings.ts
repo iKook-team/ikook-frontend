@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { useMarket } from "@/lib/market-context";
 
+import { useMarket } from "@/lib/market-context";
 import {
   listingService,
   type ServiceTag,
@@ -48,23 +48,32 @@ const useListings = ({
   const isInitialMount = useRef(true);
   const { market: marketCtx } = useMarket();
 
-  const fetchListings = async (pageToFetch: number, append: boolean = false) => {
+  const fetchListings = async (
+    pageToFetch: number,
+    append: boolean = false,
+  ) => {
     // Don't fetch if we've already loaded all items
     if (append && listings.length >= totalCount && totalCount > 0) return;
-    
+
     setLoading(true);
     setError(null);
-    
+
     try {
       let response;
 
       // Pull persisted filters from sessionStorage (fallbacks)
       let city: string | undefined;
       let marketFromStorage: string | undefined;
+
       try {
-        const raw = typeof window !== "undefined" ? sessionStorage.getItem("ikook_explore_pref") : null;
+        const raw =
+          typeof window !== "undefined"
+            ? sessionStorage.getItem("ikook_explore_pref")
+            : null;
+
         if (raw) {
           const pref = JSON.parse(raw || "{}");
+
           if (pref && typeof pref === "object") {
             city = pref.city;
             marketFromStorage = pref.market;
@@ -90,7 +99,8 @@ const useListings = ({
       } else if (selectedService in serviceIdToTag) {
         setListingType("service");
         const serviceTag = serviceIdToTag[selectedService];
-        console.log('Fetching services with params:', {
+
+        console.log("Fetching services with params:", {
           page: pageToFetch,
           page_size: pageSize,
           search: searchQuery,
@@ -106,7 +116,7 @@ const useListings = ({
           city,
           market,
         });
-        console.log('Services API response:', response);
+        console.log("Services API response:", response);
       } else if (selectedService in menuIdToTag) {
         setListingType("menu");
         response = await listingService.getMenus({
@@ -131,13 +141,16 @@ const useListings = ({
       if (pageToFetch === 1) {
         setListings(response?.results || []);
       } else {
-        setListings(prev => {
-          const existingIds = new Set(prev.map(item => item.id));
-          const newItems = (response?.results || []).filter(item => !existingIds.has(item.id));
+        setListings((prev) => {
+          const existingIds = new Set(prev.map((item) => item.id));
+          const newItems = (response?.results || []).filter(
+            (item) => !existingIds.has(item.id),
+          );
+
           return [...prev, ...newItems];
         });
       }
-      
+
       setTotalCount(response?.count || 0);
     } catch (err) {
       setError("Failed to fetch listings. Please try again later.");
@@ -157,7 +170,7 @@ const useListings = ({
       fetchListings(1, false);
     }
   }, [selectedService, searchQuery]);
-  
+
   // Load more when page changes
   useEffect(() => {
     if (currentPage > 1) {

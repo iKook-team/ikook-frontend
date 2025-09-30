@@ -56,6 +56,7 @@ const MealPrepBookingPage = () => {
       if (data.bookingId) setBookingId(data.bookingId);
       // Map step-specific keys to the keys expected by MessagesForm payload
       const mapped: Record<string, any> = { ...data };
+
       if ("deliveryAddress" in data) mapped.location = data.deliveryAddress;
       if ("guests" in data) {
         mapped.guests = data.guests;
@@ -161,7 +162,9 @@ const MealPrepBookingPage = () => {
             onNext={handleNext}
             isCustomBooking={isCustomBooking}
             menu={menu}
-            initialDeliveryAddress={bookingData.deliveryAddress || bookingData.location || ""}
+            initialDeliveryAddress={
+              bookingData.deliveryAddress || bookingData.location || ""
+            }
             initialGuests={bookingData.guests || bookingData.numOfPersons || 1}
             initialAppearance={bookingData.appearance || ""}
           />
@@ -173,8 +176,12 @@ const MealPrepBookingPage = () => {
             onNext={handleNext}
             isCustomBooking={isCustomBooking}
             menu={menu}
-            initialNumberOfWeeks={bookingData.numberOfWeeks || bookingData.numOfWeeks || 1}
-            initialWeeklyVisits={bookingData.weeklyVisits || bookingData.numOfWeeklyVisits || 1}
+            initialNumberOfWeeks={
+              bookingData.numberOfWeeks || bookingData.numOfWeeks || 1
+            }
+            initialWeeklyVisits={
+              bookingData.weeklyVisits || bookingData.numOfWeeklyVisits || 1
+            }
             initialExperience={bookingData.experience || ""}
           />
         );
@@ -185,11 +192,13 @@ const MealPrepBookingPage = () => {
             onNext={handleNext}
             isCustomBooking={isCustomBooking}
             menu={menu}
-            initialMealType={Array.isArray(bookingData.mealType)
-              ? bookingData.mealType
-              : bookingData.mealType
-              ? [bookingData.mealType]
-              : []}
+            initialMealType={
+              Array.isArray(bookingData.mealType)
+                ? bookingData.mealType
+                : bookingData.mealType
+                  ? [bookingData.mealType]
+                  : []
+            }
             initialPreferredCuisines={bookingData.preferredCuisines || []}
           />
         );
@@ -240,7 +249,12 @@ const MealPrepBookingPage = () => {
               });
               handleNext({
                 budget: data.budget,
-                budgetType: data.budgetType === "flexible" ? "Flexible" : data.budgetType === "fixed" ? "Fixed" : null,
+                budgetType:
+                  data.budgetType === "flexible"
+                    ? "Flexible"
+                    : data.budgetType === "fixed"
+                      ? "Fixed"
+                      : null,
               });
             }}
             menu={menu}
@@ -263,8 +277,8 @@ const MealPrepBookingPage = () => {
               budgetStep.budgetType === "fixed"
                 ? "Fixed"
                 : budgetStep.budgetType === "flexible"
-                ? "Flexible"
-                : null
+                  ? "Flexible"
+                  : null
             }
             isCustomBooking={isCustomBooking}
             menu={menu}
@@ -289,9 +303,7 @@ const MealPrepBookingPage = () => {
 
   return (
     <div className="min-h-screen w-full bg-gray-50 flex items-center justify-center px-2 py-4 sm:px-4 lg:px-6">
-      <div className="w-full max-w-4xl">
-        {renderStep()}
-      </div>
+      <div className="w-full max-w-4xl">{renderStep()}</div>
     </div>
   );
 };

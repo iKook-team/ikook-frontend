@@ -89,15 +89,19 @@ const CookingClassMessageForm: React.FC<CookingClassMessageFormProps> = ({
     ): "Flexible" | "Fixed" | null => {
       if (bt == null) return null;
       const v = bt.toString().trim().toLowerCase();
+
       if (v === "fixed") return "Fixed";
       if (v === "flexible") return "Flexible";
+
       // Default to Flexible if unrecognized
       return "Flexible";
     };
 
     // Prefer explicit prop, but fall back to bookingData if needed
     const normalizedBudgetType = normalizeBudgetType(
-      budgetType ?? (bookingData as any)?.budgetType ?? (bookingData as any)?.budget_type,
+      budgetType ??
+        (bookingData as any)?.budgetType ??
+        (bookingData as any)?.budget_type,
     );
 
     // Compose payload for cooking class booking

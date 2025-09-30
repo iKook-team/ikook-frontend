@@ -103,43 +103,43 @@ export const ChefRegistrationForm4: React.FC<ChefRegistrationForm4Props> = ({
           </h1>
 
           <form onSubmit={handleSubmit}>
-          <fieldset className="flex w-full flex-col items-start gap-6">
-            <legend className="sr-only">Additional Information</legend>
-            <FormField
-              required
-              className="w-full"
-              error={errors.criminalRecord}
-              label="Do you have any criminal record?"
-              options={criminalRecordOptions}
-              placeholder="Select"
-              type="select"
-              value={formData.criminalRecord}
-              onChange={(e) =>
-                handleInputChange("criminalRecord", e.target.value)
-              }
-            />
+            <fieldset className="flex w-full flex-col items-start gap-6">
+              <legend className="sr-only">Additional Information</legend>
+              <FormField
+                required
+                className="w-full"
+                error={errors.criminalRecord}
+                label="Do you have any criminal record?"
+                options={criminalRecordOptions}
+                placeholder="Select"
+                type="select"
+                value={formData.criminalRecord}
+                onChange={(e) =>
+                  handleInputChange("criminalRecord", e.target.value)
+                }
+              />
 
-            <FormField
-              className="w-full"
-              label="Cooking images (optional)"
-              placeholder="Link your cooking related Instagram account?"
-              type="text"
-              value={formData.instagramAccount}
-              onChange={(e) =>
-                handleInputChange("instagramAccount", e.target.value)
-              }
-            />
+              <FormField
+                className="w-full"
+                label="Cooking images (optional)"
+                placeholder="Link your cooking related Instagram account?"
+                type="text"
+                value={formData.instagramAccount}
+                onChange={(e) =>
+                  handleInputChange("instagramAccount", e.target.value)
+                }
+              />
 
-            <FormField
-              className="w-full"
-              error={errors.website}
-              label="Your website (optional)"
-              placeholder="Link your cooking related Website address?"
-              type="url"
-              value={formData.website}
-              onChange={(e) => handleInputChange("website", e.target.value)}
-            />
-          </fieldset>
+              <FormField
+                className="w-full"
+                error={errors.website}
+                label="Your website (optional)"
+                placeholder="Link your cooking related Website address?"
+                type="url"
+                value={formData.website}
+                onChange={(e) => handleInputChange("website", e.target.value)}
+              />
+            </fieldset>
 
             <div className="mt-8 h-12 w-full">
               <button

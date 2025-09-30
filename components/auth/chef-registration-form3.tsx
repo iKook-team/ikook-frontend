@@ -35,7 +35,9 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
 }) => {
   const { setChefFormData, chefFormData } = useAuthStore();
   const { market } = useMarket();
-  const marketCityOptions: CityOption[] = getLocationsForMarket(market).map((c) => ({ value: c, label: c }));
+  const marketCityOptions: CityOption[] = getLocationsForMarket(market).map(
+    (c) => ({ value: c, label: c }),
+  );
   const [formData, setFormData] = useState(() => ({
     city: initialFormData.city || "",
     postalCode: initialFormData.postalCode || "",
@@ -111,56 +113,61 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
 
         <div className="px-[49px] pt-6 pb-8 max-md:px-6 max-sm:px-4">
           <h1 className="text-[19px] font-medium text-black mb-6 max-sm:text-[17px]">
-            Way to go {chefFormData?.firstName || 'there'}, Where are you based?
+            Way to go {chefFormData?.firstName || "there"}, Where are you based?
           </h1>
 
           <form onSubmit={handleSubmit}>
-          <fieldset className="flex w-full flex-col items-start gap-6">
-            <legend className="sr-only">Location Information</legend>
-            <FormField
-              required
-              className="w-full"
-              error={errors.city}
-              label="City/State"
-              options={[{ value: "", label: "Select city" }, ...marketCityOptions]}
-              placeholder="Select city"
-              type="select"
-              value={formData.city}
-              onChange={(e) => handleInputChange("city", e.target.value)}
-            />
-            <FormField
-              className="w-full"
-              error={errors.postalCode}
-              label="Postal Code"
-              placeholder="Enter postal code"
-              type="text"
-              value={formData.postalCode}
-              onChange={(e) => handleInputChange("postalCode", e.target.value)}
-            />
-            <FormField
-              required
-              className="w-full"
-              error={errors.address}
-              label="Your Address"
-              placeholder="Enter address"
-              type="text"
-              value={formData.address}
-              onChange={(e) => handleInputChange("address", e.target.value)}
-            />
-            <FormField
-              required
-              className="w-full"
-              error={errors.workAuthorization}
-              label="Do you have right to work in this country?"
-              options={workAuthOptions}
-              placeholder="Select work authorization"
-              type="select"
-              value={formData.workAuthorization}
-              onChange={(e) =>
-                handleInputChange("workAuthorization", e.target.value)
-              }
-            />
-          </fieldset>
+            <fieldset className="flex w-full flex-col items-start gap-6">
+              <legend className="sr-only">Location Information</legend>
+              <FormField
+                required
+                className="w-full"
+                error={errors.city}
+                label="City/State"
+                options={[
+                  { value: "", label: "Select city" },
+                  ...marketCityOptions,
+                ]}
+                placeholder="Select city"
+                type="select"
+                value={formData.city}
+                onChange={(e) => handleInputChange("city", e.target.value)}
+              />
+              <FormField
+                className="w-full"
+                error={errors.postalCode}
+                label="Postal Code"
+                placeholder="Enter postal code"
+                type="text"
+                value={formData.postalCode}
+                onChange={(e) =>
+                  handleInputChange("postalCode", e.target.value)
+                }
+              />
+              <FormField
+                required
+                className="w-full"
+                error={errors.address}
+                label="Your Address"
+                placeholder="Enter address"
+                type="text"
+                value={formData.address}
+                onChange={(e) => handleInputChange("address", e.target.value)}
+              />
+              <FormField
+                required
+                className="w-full"
+                error={errors.workAuthorization}
+                label="Do you have right to work in this country?"
+                options={workAuthOptions}
+                placeholder="Select work authorization"
+                type="select"
+                value={formData.workAuthorization}
+                onChange={(e) =>
+                  handleInputChange("workAuthorization", e.target.value)
+                }
+              />
+            </fieldset>
 
             <div className="mt-8 h-12 w-full">
               <button

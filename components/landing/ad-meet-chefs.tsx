@@ -4,10 +4,26 @@ import React from "react";
 
 export const AdMeetChefs: React.FC = () => {
   const chefs = [
-    { name: "Chef Tunde", image: "/api/placeholder/300/300", specialty: "Nigerian Cuisine" },
-    { name: "Chef Amara", image: "/api/placeholder/300/300", specialty: "Continental" },
-    { name: "Chef Kemi", image: "/api/placeholder/300/300", specialty: "Pastry & Desserts" },
-    { name: "Chef David", image: "/api/placeholder/300/300", specialty: "Grills & BBQ" }
+    {
+      name: "Chef Tunde",
+      image: "/api/placeholder/300/300",
+      specialty: "Nigerian Cuisine",
+    },
+    {
+      name: "Chef Amara",
+      image: "/api/placeholder/300/300",
+      specialty: "Continental",
+    },
+    {
+      name: "Chef Kemi",
+      image: "/api/placeholder/300/300",
+      specialty: "Pastry & Desserts",
+    },
+    {
+      name: "Chef David",
+      image: "/api/placeholder/300/300",
+      specialty: "Grills & BBQ",
+    },
   ];
 
   return (
@@ -23,9 +39,15 @@ export const AdMeetChefs: React.FC = () => {
           {chefs.map((chef, index) => (
             <div key={index} className="text-center group">
               <div className="relative mb-4 overflow-hidden rounded-full mx-auto w-48 h-48">
-                <img src={chef.image} alt={chef.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
+                <img
+                  src={chef.image}
+                  alt={chef.name}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{chef.name}</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                {chef.name}
+              </h3>
               <p className="text-[#FCC01C] font-medium">{chef.specialty}</p>
             </div>
           ))}

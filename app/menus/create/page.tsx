@@ -15,13 +15,16 @@ import { useAuthStore } from "@/lib/store/auth-store";
 const CreateMenuPage: React.FC = () => {
   const router = useRouter();
   const { isAuthenticated, user } = useAuthStore();
+
   useEffect(() => {
     if (!isAuthenticated) {
       router.replace("/login");
+
       return;
     }
     const isChef = user?.user_type === "Chef";
     const isChefService = (user as any)?.service_type === "Chef";
+
     if (!isChef || !isChefService) {
       router.replace("/dashboard/chef");
     }
@@ -76,26 +79,39 @@ const CreateMenuPage: React.FC = () => {
     setSubmitError(null);
     try {
       // Filter out courses that have no items
-      const coursesWithItems = (formData.courses || []).filter((course: string) => {
-        const courseItems = formData.courseItems?.[course] || [];
-        return courseItems.length > 0;
-      });
+      const coursesWithItems = (formData.courses || []).filter(
+        (course: string) => {
+          const courseItems = formData.courseItems?.[course] || [];
+
+          return courseItems.length > 0;
+        },
+      );
 
       // Filter courses_selection_limit to only include courses that have items
-      const filteredSelectionLimit = Object.entries(formData.coursesSelectionLimit || {})
+      const filteredSelectionLimit = Object.entries(
+        formData.coursesSelectionLimit || {},
+      )
         .filter(([course]) => coursesWithItems.includes(course))
-        .reduce((acc, [key, value]) => ({
-          ...acc,
-          [key]: value
-        }), {});
+        .reduce(
+          (acc, [key, value]) => ({
+            ...acc,
+            [key]: value,
+          }),
+          {},
+        );
 
       // Filter courses_extra_charge_per_person to only include non-zero values
-      const filteredExtraCharges = Object.entries(formData.coursesExtraChargePerPerson || {})
-        .filter(([_, value]) => value && value !== '0' && value !== '0.00')
-        .reduce((acc, [key, value]) => ({
-          ...acc,
-          [key]: value
-        }), {});
+      const filteredExtraCharges = Object.entries(
+        formData.coursesExtraChargePerPerson || {},
+      )
+        .filter(([_, value]) => value && value !== "0" && value !== "0.00")
+        .reduce(
+          (acc, [key, value]) => ({
+            ...acc,
+            [key]: value,
+          }),
+          {},
+        );
 
       // 1. Create menu
       const menuPayload = {
@@ -219,7 +235,11 @@ const CreateMenuPage: React.FC = () => {
   ]);
 
   // After all hooks are declared, guard rendering for unauthorized users
-  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Chef") {
+  if (
+    !isAuthenticated ||
+    user?.user_type !== "Chef" ||
+    (user as any)?.service_type !== "Chef"
+  ) {
     return null;
   }
 

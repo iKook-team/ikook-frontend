@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React from "react";
 
 interface InfoBoxProps {
   children: React.ReactNode;
@@ -8,7 +8,7 @@ interface InfoBoxProps {
 
 export const InfoBox: React.FC<InfoBoxProps> = ({ children }) => {
   return (
-    <div 
+    <div
       className="flex w-full max-w-[624px] gap-3 text-xs text-[#3F3E3D] font-normal flex-wrap bg-[#FFFCF5] mt-6 p-2 rounded-md max-md:max-w-full"
       role="note"
       aria-label="Information about extra kilometers"
@@ -18,9 +18,7 @@ export const InfoBox: React.FC<InfoBoxProps> = ({ children }) => {
         alt="Information icon"
         className="aspect-[1] object-contain w-5 shrink-0"
       />
-      <div className="grow shrink w-[568px] max-md:max-w-full">
-        {children}
-      </div>
+      <div className="grow shrink w-[568px] max-md:max-w-full">{children}</div>
     </div>
   );
 };

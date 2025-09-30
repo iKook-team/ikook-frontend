@@ -1,7 +1,6 @@
 import React from "react";
 
 export const ReviewsSection: React.FC = () => {
-
   const reviews = [
     {
       id: 1,

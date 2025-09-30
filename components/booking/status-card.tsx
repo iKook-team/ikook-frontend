@@ -60,9 +60,13 @@ export const StatusCard: React.FC<StatusCardProps> = (props) => {
           </div>
           {/* Debug info for bookingId */}
           {bookingId ? (
-            <p className="text-xs text-gray-500 mt-2">Debug: bookingId = {bookingId}</p>
+            <p className="text-xs text-gray-500 mt-2">
+              Debug: bookingId = {bookingId}
+            </p>
           ) : (
-            <p className="text-xs text-red-500 mt-2">Debug: No bookingId provided</p>
+            <p className="text-xs text-red-500 mt-2">
+              Debug: No bookingId provided
+            </p>
           )}
 
           <div className="flex text-base text-white font-semibold mt-4 rounded-lg">

@@ -7,7 +7,12 @@ interface MessageItemProps {
   date: string;
 }
 
-export function MessageItem({ avatarSrc, name, messagePreview, date }: MessageItemProps) {
+export function MessageItem({
+  avatarSrc,
+  name,
+  messagePreview,
+  date,
+}: MessageItemProps) {
   return (
     <article className="flex flex-wrap gap-4 items-center mt-4 max-md:max-w-full cursor-pointer hover:bg-gray-50 rounded-md p-2 transition-colors">
       <img
@@ -17,16 +22,10 @@ export function MessageItem({ avatarSrc, name, messagePreview, date }: MessageIt
       />
       <div className="flex flex-wrap items-center self-stretch my-auto min-w-60 max-md:max-w-full">
         <div className="self-stretch my-auto">
-          <h3 className="text-base font-semibold text-zinc-800">
-            {name}
-          </h3>
+          <h3 className="text-base font-semibold text-zinc-800">{name}</h3>
           <div>
-            <p className="text-xs text-stone-950">
-              {messagePreview}
-            </p>
-            <time className="text-xs text-neutral-400">
-              {date}
-            </time>
+            <p className="text-xs text-stone-950">{messagePreview}</p>
+            <time className="text-xs text-neutral-400">{date}</time>
           </div>
         </div>
       </div>

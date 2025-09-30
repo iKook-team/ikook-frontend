@@ -159,7 +159,7 @@ export default function CalendarGrid({
                     className="h-16 border-b border-r border-gray-100 hover:bg-gray-50 transition-colors calendar-cell focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     onClick={(e) => handleDateSelect(e, date)}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
+                      if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
                         handleDateSelect(e as any, date);
                       }

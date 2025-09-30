@@ -4,7 +4,8 @@ export const paymentsService = {
   async pay(quoteId: number) {
     try {
       // Build return URL to host dashboard after checkout
-      const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+      const baseUrl =
+        typeof window !== "undefined" ? window.location.origin : "";
       const returnUrl = `${baseUrl}/dashboard/host`;
 
       const response = await apiClient.post("/payments/", {
@@ -40,13 +41,11 @@ export const paymentsService = {
 
   async verifyWalletFunding(reference: string) {
     try {
-      const response = await apiClient.post(
-        "/payments/wallets/transactions/",
-        {
-          action: "verify",
-          reference,
-        },
-      );
+      const response = await apiClient.post("/payments/wallets/transactions/", {
+        action: "verify",
+        reference,
+      });
+
       return response.data;
     } catch (error) {
       throw error;
@@ -55,7 +54,8 @@ export const paymentsService = {
 
   async fundWallet(amount: number | string) {
     try {
-      const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+      const baseUrl =
+        typeof window !== "undefined" ? window.location.origin : "";
       const returnUrl = `${baseUrl}/wallet`;
 
       const response = await apiClient.post("/payments/wallets/transactions/", {
@@ -90,6 +90,7 @@ export const paymentsService = {
   async getWalletDetails() {
     try {
       const response = await apiClient.get("/payments/wallets/details/");
+
       return response.data;
     } catch (error) {
       throw error;
@@ -99,6 +100,7 @@ export const paymentsService = {
   async getWalletTransactions() {
     try {
       const response = await apiClient.get("/payments/wallets/transactions/");
+
       return response.data;
     } catch (error) {
       throw error;
@@ -107,9 +109,13 @@ export const paymentsService = {
 
   async redeemGiftCard(cardNumber: string) {
     try {
-      const response = await apiClient.post("/payments/wallets/transactions/redeem-gift-card/", {
-        card_number: cardNumber,
-      });
+      const response = await apiClient.post(
+        "/payments/wallets/transactions/redeem-gift-card/",
+        {
+          card_number: cardNumber,
+        },
+      );
+
       return response.data;
     } catch (error) {
       throw error;
@@ -119,6 +125,7 @@ export const paymentsService = {
   async getBanks() {
     try {
       const response = await apiClient.get("/payments/banks/");
+
       return response.data;
     } catch (error) {
       throw error;
@@ -128,6 +135,7 @@ export const paymentsService = {
   async getBankDetails(bankId: number) {
     try {
       const response = await apiClient.get(`/earnings/bank-details/${bankId}/`);
+
       return response.data;
     } catch (error) {
       throw error;
@@ -136,7 +144,11 @@ export const paymentsService = {
 
   async updateBankDetails(bankId: number, data: any) {
     try {
-      const response = await apiClient.patch(`/earnings/bank-details/${bankId}/`, data);
+      const response = await apiClient.patch(
+        `/earnings/bank-details/${bankId}/`,
+        data,
+      );
+
       return response.data;
     } catch (error) {
       throw error;
@@ -146,6 +158,7 @@ export const paymentsService = {
   async createBankDetails(data: any) {
     try {
       const response = await apiClient.post("/earnings/bank-details/", data);
+
       return response.data;
     } catch (error) {
       throw error;

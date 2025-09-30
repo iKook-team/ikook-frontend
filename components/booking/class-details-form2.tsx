@@ -20,7 +20,7 @@ const ClassDetailsForm2: React.FC<ClassDetailsForm2Props> = ({
   onNext,
   onBack,
   initialValues = {},
-  chefName = 'Chef'
+  chefName = "Chef",
 }) => {
   const [formData, setFormData] = useState<ClassDetailsForm2Data>({
     appearance: "",
@@ -58,9 +58,7 @@ const ClassDetailsForm2: React.FC<ClassDetailsForm2Props> = ({
         {/* Header Section */}
         <div className="px-6 pt-6 pb-4 border-b border-gray-100">
           <header className="mb-6">
-            <h1 className="text-2xl font-semibold text-gray-900">
-              {chefName}
-            </h1>
+            <h1 className="text-2xl font-semibold text-gray-900">{chefName}</h1>
           </header>
 
           <div className="mb-4">

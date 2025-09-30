@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 
 import { Navigation } from "@/components/auth/Navigation";
 import HeroSection from "@/components/landing/hero-section";
-import TestimonialsSection from "@/components/landing/testimonials-section";
 import BlogSection from "@/components/landing/blog-section";
 import TopMenuSection from "@/components/landing/top-menu-section";
 import { TrustedOrganizationsSection } from "@/components/landing/trusted-organizations-section";
@@ -24,6 +23,7 @@ const Index = () => {
   if (isAuthenticated && user?.user_type === "Chef") {
     return null;
   }
+
   return (
     <div className="min-h-screen bg-white">
       <Navigation />

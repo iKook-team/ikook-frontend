@@ -69,7 +69,11 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
 
   const handleInputChange =
     (field: keyof MenuFormData) =>
-    (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    (
+      event: React.ChangeEvent<
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >,
+    ) => {
       const newData = { ...localFormData, [field]: event.target.value };
 
       setLocalFormData(newData);
@@ -149,7 +153,7 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
               onChange={handleValueChange("price")}
               currency={getCurrencySymbol({
                 currency: user?.currency,
-                country: chefFormData?.country
+                country: chefFormData?.country,
               })}
             />
 

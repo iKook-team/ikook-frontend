@@ -67,7 +67,13 @@ type SectionsState = {
 
 export const MenuSelection: React.FC<{ items?: QuoteItem[] }> = ({ items }) => {
   const initial: SectionsState = React.useMemo(() => {
-    const s: SectionsState = { starters: [], mains: [], desserts: [], others: [] };
+    const s: SectionsState = {
+      starters: [],
+      mains: [],
+      desserts: [],
+      others: [],
+    };
+
     (items || []).forEach((it, idx) => {
       const entry: MenuItemState = {
         id: String(it.id ?? idx),
@@ -75,15 +81,18 @@ export const MenuSelection: React.FC<{ items?: QuoteItem[] }> = ({ items }) => {
         checked: true,
       };
       const c = (it.course || "").toLowerCase();
+
       if (c === "starter") s.starters.push(entry);
       else if (c === "main" || c === "mains") s.mains.push(entry);
       else if (c === "dessert" || c === "desert") s.desserts.push(entry);
       else s.others.push(entry);
     });
+
     return s;
   }, [items]);
 
   const [menuItems, setMenuItems] = React.useState<SectionsState>(initial);
+
   React.useEffect(() => setMenuItems(initial), [initial]);
 
   const handleItemChange = (
@@ -99,11 +108,31 @@ export const MenuSelection: React.FC<{ items?: QuoteItem[] }> = ({ items }) => {
     }));
   };
 
-  const sections: { key: keyof SectionsState; title: string; items: MenuItemState[] }[] = [
-    { key: "starters" as const, title: `Starter x${menuItems.starters.length}`, items: menuItems.starters },
-    { key: "mains" as const, title: `Main x${menuItems.mains.length}`, items: menuItems.mains },
-    { key: "desserts" as const, title: `Dessert x${menuItems.desserts.length}`, items: menuItems.desserts },
-    { key: "others" as const, title: menuItems.others.length ? `Other x${menuItems.others.length}` : "", items: menuItems.others },
+  const sections: {
+    key: keyof SectionsState;
+    title: string;
+    items: MenuItemState[];
+  }[] = [
+    {
+      key: "starters" as const,
+      title: `Starter x${menuItems.starters.length}`,
+      items: menuItems.starters,
+    },
+    {
+      key: "mains" as const,
+      title: `Main x${menuItems.mains.length}`,
+      items: menuItems.mains,
+    },
+    {
+      key: "desserts" as const,
+      title: `Dessert x${menuItems.desserts.length}`,
+      items: menuItems.desserts,
+    },
+    {
+      key: "others" as const,
+      title: menuItems.others.length ? `Other x${menuItems.others.length}` : "",
+      items: menuItems.others,
+    },
   ].filter((s) => s.items.length > 0 && s.title);
 
   return (
@@ -113,7 +142,9 @@ export const MenuSelection: React.FC<{ items?: QuoteItem[] }> = ({ items }) => {
           key={sec.key}
           title={sec.title}
           items={sec.items}
-          onItemChange={(itemId, checked) => handleItemChange(sec.key, itemId, checked)}
+          onItemChange={(itemId, checked) =>
+            handleItemChange(sec.key, itemId, checked)
+          }
         />
       ))}
     </section>

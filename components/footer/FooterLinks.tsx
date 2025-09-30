@@ -1,12 +1,14 @@
 "use client";
 
+import type { MarketCode } from "@/lib/market";
+
 import React from "react";
 import Image from "next/image";
 
 import { SocialIcons } from "./SocialIcons";
 import { PaymentBadges } from "./PaymentBadges";
+
 import { useMarket } from "@/lib/market-context";
-import type { MarketCode } from "@/lib/market";
 
 interface FooterLinkSection {
   title: string;
@@ -25,12 +27,24 @@ export const FooterLinks: React.FC<FooterLinksProps> = ({ className = "" }) => {
   const getContact = (code: MarketCode) => {
     switch (code) {
       case "GB":
-        return { phoneDisplay: "+44 20 4520 7041", phoneHref: "+442045207041", email: "team@ikook.co.uk" };
+        return {
+          phoneDisplay: "+44 20 4520 7041",
+          phoneHref: "+442045207041",
+          email: "team@ikook.co.uk",
+        };
       case "ZA":
-        return { phoneDisplay: "+27 10 500 4144", phoneHref: "+27105004144", email: "team@ikook.co.za" };
+        return {
+          phoneDisplay: "+27 10 500 4144",
+          phoneHref: "+27105004144",
+          email: "team@ikook.co.za",
+        };
       case "NG":
       default:
-        return { phoneDisplay: "+234 916 000 6924", phoneHref: "+2349160006924", email: "team@ikook.ng" };
+        return {
+          phoneDisplay: "+234 916 000 6924",
+          phoneHref: "+2349160006924",
+          email: "team@ikook.ng",
+        };
     }
   };
   const contact = getContact(market);
@@ -115,12 +129,13 @@ export const FooterLinks: React.FC<FooterLinksProps> = ({ className = "" }) => {
                   <li key={linkIndex}>
                     <a
                       href={(() => {
-                        const isCountry = section.title
-                          ?.trim()
-                          .toLowerCase() === "ikook chef in";
+                        const isCountry =
+                          section.title?.trim().toLowerCase() ===
+                          "ikook chef in";
                         const slug = encodeURIComponent(
-                          link.trim().toLowerCase().replace(/\s+/g, "-")
+                          link.trim().toLowerCase().replace(/\s+/g, "-"),
                         );
+
                         return isCountry ? `/locations/${slug}` : `/${slug}`;
                       })()}
                       className="hover:text-black transition-colors"

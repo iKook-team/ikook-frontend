@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React from "react";
 
 interface MapVisualizationProps {
   distance: number;
@@ -9,7 +9,7 @@ interface MapVisualizationProps {
 
 export const MapVisualization: React.FC<MapVisualizationProps> = ({
   distance,
-  onDistanceChange
+  onDistanceChange,
 }) => {
   const handleDecrease = () => {
     if (distance > 0) {
@@ -22,7 +22,7 @@ export const MapVisualization: React.FC<MapVisualizationProps> = ({
   };
 
   return (
-    <section 
+    <section
       className="flex flex-col relative min-h-[451px] w-full max-w-[624px] mt-8 pl-1 pr-20 pt-[76px] pb-[18px] rounded-lg max-md:max-w-full max-md:pr-5"
       aria-label="Distance visualization map"
     >
@@ -38,7 +38,7 @@ export const MapVisualization: React.FC<MapVisualizationProps> = ({
           className="aspect-[1] object-contain w-6 -mb-7 max-md:mb-2.5"
         />
       </div>
-      <div 
+      <div
         className="relative items-center shadow-[0_4px_10px_0_rgba(0,0,0,0.10)] bg-white flex gap-3 text-base text-[#020101] font-medium whitespace-nowrap mt-[25px] px-2 py-1 rounded-[20px]"
         role="group"
         aria-label="Distance counter"

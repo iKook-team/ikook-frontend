@@ -7,8 +7,9 @@ import BackButton from "@/components/common/BackButton";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { groceriesService } from "@/lib/api/groceries";
 import { showToast, handleApiError } from "@/lib/utils/toast";
-
-import CreateGroceriesStep1, { GroceryFormData } from "@/components/grocery/create-groceries-step1";
+import CreateGroceriesStep1, {
+  GroceryFormData,
+} from "@/components/grocery/create-groceries-step1";
 import CreateGroceriesStep2 from "@/components/grocery/create-groceries-step2";
 import CreateGroceriesStep3 from "@/components/grocery/create-groceries-step3";
 
@@ -17,7 +18,9 @@ const GroceriesCreatePage: React.FC = () => {
   const { isAuthenticated, user } = useAuthStore();
 
   const [step, setStep] = useState<number>(1);
-  const [formData, setFormData] = useState<Partial<GroceryFormData & { uploadedImages: File[]; existingImages: any[] }>>({
+  const [formData, setFormData] = useState<
+    Partial<GroceryFormData & { uploadedImages: File[]; existingImages: any[] }>
+  >({
     productType: "Single Item",
     items: [{ item: "", weightUnit: "Kilogram (kg)" }],
     uploadedImages: [],
@@ -28,15 +31,18 @@ const GroceriesCreatePage: React.FC = () => {
   useEffect(() => {
     if (!isAuthenticated) {
       router.replace("/login");
+
       return;
     }
     const isChef = user?.user_type === "Chef";
-    const isBoxGroceriesService = (user as any)?.service_type === "Box Groceries";
+    const isBoxGroceriesService =
+      (user as any)?.service_type === "Box Groceries";
+
     if (!isChef || !isBoxGroceriesService) {
       router.replace("/dashboard/chef");
     }
   }, [isAuthenticated, user, router]);
-  
+
   const updateFormData = useCallback((data: Partial<GroceryFormData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
   }, []);
@@ -57,16 +63,17 @@ const GroceriesCreatePage: React.FC = () => {
       "Gallon (gal)": "gal",
       "Quart (qt)": "qt",
       "Pint (pt)": "pt",
-      "Cup": "cup",
+      Cup: "cup",
       "Fluid Ounce (fl oz)": "fl oz",
       "Piece (pcs)": "pcs",
-      "Unit": "Unit",
-      "Dozen": "Dozen",
-      "Pack": "Pack",
-      "Bundle": "Bundle",
-      "Tray": "Tray",
-      "Case": "Case",
+      Unit: "Unit",
+      Dozen: "Dozen",
+      Pack: "Pack",
+      Bundle: "Bundle",
+      Tray: "Tray",
+      Case: "Case",
     };
+
     return map[label] || label;
   };
 
@@ -74,20 +81,22 @@ const GroceriesCreatePage: React.FC = () => {
     try {
       setIsSubmitting(true);
 
-      const isMultiple = (formData.productType || "Single Item").startsWith("Multiple");
+      const isMultiple = (formData.productType || "Single Item").startsWith(
+        "Multiple",
+      );
       const productTypeForApi = isMultiple ? "Multiple Items" : "Single Item";
 
       const categoryMap: Record<string, string> = {
-        "Grains": "Grain",
+        Grains: "Grain",
         "Dairy and Eggs": "Dairy and Eggs",
-        "Fruits": "Fruits",
-        "Vegetables": "Vegetables",
-        "Proteins": "Proteins",
+        Fruits: "Fruits",
+        Vegetables: "Vegetables",
+        Proteins: "Proteins",
         "Bakery Items": "Bakery Items",
         "Snacks and Confectionery": "Snacks and Confectionery",
         "Canned and Packaged Foods": "Canned and Packaged Foods",
         "Condiments and Spices": "Condiments and Spices",
-        "Beverages": "Beverages",
+        Beverages: "Beverages",
         "Frozen Foods": "Frozen Foods",
         "Pantry Staples": "Pantry Staples",
         "Nuts and Seeds": "Nuts and Seeds",
@@ -98,7 +107,10 @@ const GroceriesCreatePage: React.FC = () => {
         "Desserts and Sweets": "Desserts and Sweets",
         "Baking Supplies": "Baking Supplies",
       };
-      const categoryForApi = categoryMap[(formData.category as string) || ""] || (formData.category as string) || "";
+      const categoryForApi =
+        categoryMap[(formData.category as string) || ""] ||
+        (formData.category as string) ||
+        "";
 
       const payload: any = {
         name: formData.productName || "",
@@ -109,11 +121,14 @@ const GroceriesCreatePage: React.FC = () => {
       };
 
       if (isMultiple) {
-        const mappedItems = (formData.items || []).filter(Boolean).map((r: any) => ({
-          name: r.item,
-          weight: String(r.weightValue ?? ""),
-          measurement_unit: unitLabelToApi(r.weightUnit),
-        }));
+        const mappedItems = (formData.items || [])
+          .filter(Boolean)
+          .map((r: any) => ({
+            name: r.item,
+            weight: String(r.weightValue ?? ""),
+            measurement_unit: unitLabelToApi(r.weightUnit),
+          }));
+
         payload.items = mappedItems;
         // Also include top-level weight/measurement to satisfy backend requirement
         const numericWeights = mappedItems
@@ -122,9 +137,16 @@ const GroceriesCreatePage: React.FC = () => {
             u: it.measurement_unit,
           }))
           .filter((x: any) => !isNaN(x.w) && x.w > 0 && !!x.u);
-        const uniqueUnits = Array.from(new Set(numericWeights.map((x: any) => x.u)));
+        const uniqueUnits = Array.from(
+          new Set(numericWeights.map((x: any) => x.u)),
+        );
+
         if (numericWeights.length > 0 && uniqueUnits.length === 1) {
-          const total = numericWeights.reduce((sum: number, x: any) => sum + x.w, 0);
+          const total = numericWeights.reduce(
+            (sum: number, x: any) => sum + x.w,
+            0,
+          );
+
           payload.weight_or_quantity = String(total);
           payload.measurement_unit = uniqueUnits[0];
         } else {
@@ -145,27 +167,41 @@ const GroceriesCreatePage: React.FC = () => {
 
       if (filesToUpload.length > 0 && created?.id) {
         try {
-          if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
-            console.log("[Grocery Create] uploading images (multipart):", filesToUpload.length, {
-              groceryId: created.id,
-              names: filesToUpload.map((f) => f.name),
-            });
+          if (
+            typeof window !== "undefined" &&
+            process.env.NODE_ENV !== "production"
+          ) {
+            console.log(
+              "[Grocery Create] uploading images (multipart):",
+              filesToUpload.length,
+              {
+                groceryId: created.id,
+                names: filesToUpload.map((f) => f.name),
+              },
+            );
           }
           // Backend expects a file in the "image" field (multipart/form-data)
           for (let i = 0; i < filesToUpload.length; i++) {
             const file = filesToUpload[i];
+
             if (!(file instanceof File)) continue;
             const form = new FormData();
+
             form.append("image", file);
             form.append("grocery", String(created.id));
-            if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
+            if (
+              typeof window !== "undefined" &&
+              process.env.NODE_ENV !== "production"
+            ) {
               console.log("[Grocery Create] POST /groceries/images/ #", i + 1);
             }
             await groceriesService.uploadGroceryImageForm(form);
           }
         } catch (imgErr) {
           // Warn but continue navigation
-          showToast.warning("Some images failed to upload. You can try again later.");
+          showToast.warning(
+            "Some images failed to upload. You can try again later.",
+          );
         }
       }
 
@@ -179,7 +215,12 @@ const GroceriesCreatePage: React.FC = () => {
   };
 
   // After all hooks are declared, guard rendering for unauthorized users
-  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Box Groceries") return null;
+  if (
+    !isAuthenticated ||
+    user?.user_type !== "Chef" ||
+    (user as any)?.service_type !== "Box Groceries"
+  )
+    return null;
 
   return (
     <div className="w-full min-h-screen relative bg-[#FBFBFB]">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface InfoCardProps {
   icon: string;
@@ -29,25 +29,23 @@ const InfoCard: React.FC<InfoCardProps> = ({ icon, title, content }) => {
 const ChefUserSection: React.FC = () => {
   const chefContent = (
     <>
-      <span className="font-bold">Earning Potential:</span> Fair
-      compensation for culinary expertise.
+      <span className="font-bold">Earning Potential:</span> Fair compensation
+      for culinary expertise.
       <br />
       <br />
-      <span className="font-bold">
-        Respect and Recognition:
-      </span>{" "}
-      Valued contributions and open communication.
+      <span className="font-bold">Respect and Recognition:</span> Valued
+      contributions and open communication.
     </>
   );
 
   const userContent = (
     <>
-      <span className="font-bold">Fair Pricing: </span>Transparent
-      and competitive pricing without hidden fees.
+      <span className="font-bold">Fair Pricing: </span>Transparent and
+      competitive pricing without hidden fees.
       <br />
       <br />
-      <span className="font-bold">Equal Opportunities:</span>{" "}
-      Diverse access to talented chefs, regardless of background.
+      <span className="font-bold">Equal Opportunities:</span> Diverse access to
+      talented chefs, regardless of background.
     </>
   );
 

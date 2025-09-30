@@ -22,15 +22,17 @@ const EditMenuPage: React.FC = () => {
   useEffect(() => {
     if (!isAuthenticated) {
       router.replace("/login");
+
       return;
     }
     const isChef = user?.user_type === "Chef";
     const isChefService = (user as any)?.service_type === "Chef";
+
     if (!isChef || !isChefService) {
       router.replace("/dashboard/chef");
     }
   }, [isAuthenticated, user, router]);
-  
+
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<Partial<MenuFormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -45,28 +47,33 @@ const EditMenuPage: React.FC = () => {
         setIsLoading(true);
         const response = await menuService.getMenuById(menuId);
         const menuData = response.data;
+
         setOriginalMenuData(menuData);
-        
+
         // Transform backend data to form format
         const menuItems = menuData.items || []; // Backend uses 'items' not 'menu_items'
-        
+
         // Group menu items by course for the form
-        const courseItems: Record<string, { name: string; description: string; id?: number }[]> = {};
+        const courseItems: Record<
+          string,
+          { name: string; description: string; id?: number }[]
+        > = {};
+
         menuItems.forEach((item: any) => {
           if (!courseItems[item.course]) {
             courseItems[item.course] = [];
           }
           courseItems[item.course].push({
             name: item.name,
-            description: item.description || '',
-            id: item.id
+            description: item.description || "",
+            id: item.id,
           });
         });
 
         // Handle existing images - convert to File-like objects for display
         const existingImages = menuData.images || [];
         const imageFiles: File[] = [];
-        
+
         const transformedData: Partial<MenuFormData> = {
           menuName: menuData.name,
           price: menuData.price_per_person,
@@ -77,13 +84,14 @@ const EditMenuPage: React.FC = () => {
           menuType: menuData.menu_type,
           courses: menuData.courses || [],
           coursesSelectionLimit: menuData.courses_selection_limit || {},
-          coursesExtraChargePerPerson: menuData.courses_extra_charge_per_person || {},
+          coursesExtraChargePerPerson:
+            menuData.courses_extra_charge_per_person || {},
           courseItems,
           menuItems,
           uploadedImages: imageFiles,
           existingImages, // Keep reference to existing images
         };
-        
+
         setFormData(transformedData);
       } catch (error) {
         handleApiError(error, "Failed to load menu data");
@@ -142,26 +150,39 @@ const EditMenuPage: React.FC = () => {
     setSubmitError(null);
     try {
       // Filter out courses that have no items
-      const coursesWithItems = (formData.courses || []).filter((course: string) => {
-        const courseItems = formData.courseItems?.[course] || [];
-        return courseItems.length > 0;
-      });
+      const coursesWithItems = (formData.courses || []).filter(
+        (course: string) => {
+          const courseItems = formData.courseItems?.[course] || [];
+
+          return courseItems.length > 0;
+        },
+      );
 
       // Filter courses_selection_limit to only include courses that have items
-      const filteredSelectionLimit = Object.entries(formData.coursesSelectionLimit || {})
+      const filteredSelectionLimit = Object.entries(
+        formData.coursesSelectionLimit || {},
+      )
         .filter(([course]) => coursesWithItems.includes(course))
-        .reduce((acc, [key, value]) => ({
-          ...acc,
-          [key]: value
-        }), {});
+        .reduce(
+          (acc, [key, value]) => ({
+            ...acc,
+            [key]: value,
+          }),
+          {},
+        );
 
       // Filter courses_extra_charge_per_person to only include non-zero values
-      const filteredExtraCharges = Object.entries(formData.coursesExtraChargePerPerson || {})
-        .filter(([_, value]) => value && value !== '0' && value !== '0.00')
-        .reduce((acc, [key, value]) => ({
-          ...acc,
-          [key]: value
-        }), {});
+      const filteredExtraCharges = Object.entries(
+        formData.coursesExtraChargePerPerson || {},
+      )
+        .filter(([_, value]) => value && value !== "0" && value !== "0.00")
+        .reduce(
+          (acc, [key, value]) => ({
+            ...acc,
+            [key]: value,
+          }),
+          {},
+        );
 
       // 1. Update menu
       const menuPayload = {
@@ -178,26 +199,30 @@ const EditMenuPage: React.FC = () => {
         courses_selection_limit: filteredSelectionLimit,
         courses_extra_charge_per_person: filteredExtraCharges,
       };
-      
+
       await menuService.updateMenu(menuId, menuPayload);
 
       // 2. Handle menu items updates
       const allItems = formData.menuItems || [];
-      console.log('Form menuItems:', allItems);
-      
+
+      console.log("Form menuItems:", allItems);
+
       const uniqueItems = Array.from(
         new Map(
           allItems.map((item: any) => [item.course + "|" + item.name, item]),
         ).values(),
       );
-      console.log('Unique items for processing:', uniqueItems);
+
+      console.log("Unique items for processing:", uniqueItems);
 
       // Delete existing items that are not in the new list
       const existingItems = originalMenuData?.items || []; // Backend uses 'items' not 'menu_items'
+
       for (const existingItem of existingItems) {
-        const stillExists = uniqueItems.some((newItem: any) => 
-          newItem.id === existingItem.id
+        const stillExists = uniqueItems.some(
+          (newItem: any) => newItem.id === existingItem.id,
         );
+
         if (!stillExists) {
           await menuService.deleteMenuItem(existingItem.id);
         }
@@ -206,33 +231,46 @@ const EditMenuPage: React.FC = () => {
       // Create or update items
       for (const item of uniqueItems) {
         if (item && typeof item === "object") {
-          const itemId = 'id' in item ? (item as any).id : null;
-          console.log('Processing item:', { name: (item as any).name, course: (item as any).course, id: itemId });
-          
+          const itemId = "id" in item ? (item as any).id : null;
+
+          console.log("Processing item:", {
+            name: (item as any).name,
+            course: (item as any).course,
+            id: itemId,
+          });
+
           if (itemId && itemId > 0) {
             // Check if item has actually changed
-            const originalItem = existingItems.find((orig: any) => orig.id === itemId);
-            const hasChanged = !originalItem || 
+            const originalItem = existingItems.find(
+              (orig: any) => orig.id === itemId,
+            );
+            const hasChanged =
+              !originalItem ||
               originalItem.name !== (item as any).name ||
               originalItem.description !== (item as any).description ||
               originalItem.course !== (item as any).course;
-            
+
             if (hasChanged) {
               // Update existing item only if it changed
-              console.log('UPDATING changed item with ID:', itemId);
+              console.log("UPDATING changed item with ID:", itemId);
               const updatePayload = { ...item } as any;
+
               delete updatePayload.menu; // Remove menu field for updates
               delete updatePayload.id; // Remove id from payload
               await menuService.updateMenuItem(itemId, updatePayload);
             } else {
-              console.log('SKIPPING unchanged item with ID:', itemId);
+              console.log("SKIPPING unchanged item with ID:", itemId);
             }
           } else {
             // Create new item (no ID or ID is null/undefined/0)
-            console.log('CREATING new item:', (item as any).name);
+            console.log("CREATING new item:", (item as any).name);
             const createPayload = { ...item } as any;
+
             delete createPayload.id; // Remove any undefined/null id
-            await menuService.createMenuItem({ ...createPayload, menu: menuId });
+            await menuService.createMenuItem({
+              ...createPayload,
+              menu: menuId,
+            });
           }
         }
       }
@@ -241,21 +279,23 @@ const EditMenuPage: React.FC = () => {
       const newImages = formData.uploadedImages || [];
       const currentExistingImages = formData.existingImages || [];
       const originalExistingImages = originalMenuData?.images || [];
-      
+
       // Delete removed existing images
       for (const originalImage of originalExistingImages) {
-        const stillExists = currentExistingImages.some((img: any) => 
-          img.id === originalImage.id
+        const stillExists = currentExistingImages.some(
+          (img: any) => img.id === originalImage.id,
         );
+
         if (!stillExists) {
           await menuService.deleteMenuImage(originalImage.id);
         }
       }
-      
+
       // Upload new images
       for (const image of newImages) {
         if (image instanceof File) {
           const form = new FormData();
+
           form.append("image", image);
           form.append("menu", menuId);
           await menuService.uploadMenuImage(form);
@@ -344,7 +384,11 @@ const EditMenuPage: React.FC = () => {
   ]);
 
   // After all hooks are declared, guard rendering for unauthorized users
-  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Chef") {
+  if (
+    !isAuthenticated ||
+    user?.user_type !== "Chef" ||
+    (user as any)?.service_type !== "Chef"
+  ) {
     return null;
   }
 
@@ -352,7 +396,7 @@ const EditMenuPage: React.FC = () => {
     return (
       <div className="w-full min-h-screen bg-[#FBFBFB] flex justify-center items-center px-4 py-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FCC01C] mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FCC01C] mx-auto mb-4" />
           <p>Loading menu data...</p>
         </div>
       </div>

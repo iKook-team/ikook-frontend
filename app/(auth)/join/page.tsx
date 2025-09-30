@@ -16,8 +16,10 @@ const Index: React.FC = () => {
 
   const initialRole = useMemo(() => {
     const role = (searchParams?.get("role") || "").toLowerCase();
+
     if (role === "chef") return "chef" as const;
     if (role === "host") return "host" as const;
+
     return null;
   }, [searchParams]);
 

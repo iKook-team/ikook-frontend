@@ -1,11 +1,11 @@
 "use client";
-import React from 'react';
-import { Tag } from '@/components/chef-profile/tag';
+import React from "react";
+import { useRouter } from "next/navigation";
 
-import { RatingStars } from '@/components/chef-profile/rating-stars';
-import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/lib/store/auth-store';
-import { chatService } from '@/lib/api/chat';
+import { Tag } from "@/components/chef-profile/tag";
+import { RatingStars } from "@/components/chef-profile/rating-stars";
+import { useAuthStore } from "@/lib/store/auth-store";
+import { chatService } from "@/lib/api/chat";
 
 type ChefProfileCardProps = {
   name: string;
@@ -27,13 +27,16 @@ export const ChefProfileCard: React.FC<ChefProfileCardProps> = ({
   const router = useRouter();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const handleMessageChef = async () => {
-    const back = typeof window !== 'undefined' ? window.location.pathname : '/';
+    const back = typeof window !== "undefined" ? window.location.pathname : "/";
+
     if (!isAuthenticated) {
       router.push(`/login?next=${encodeURIComponent(back)}`);
+
       return;
     }
     try {
       const chat = await chatService.getOrCreateChat(Number(chefUserId));
+
       router.push(`/chat?chatId=${chat.id}&back=${encodeURIComponent(back)}`);
     } catch (e) {
       // Silently ignore or add toast in future
@@ -41,13 +44,34 @@ export const ChefProfileCard: React.FC<ChefProfileCardProps> = ({
   };
 
   const services = [
-    { name: 'Chef at Home', icon: 'https://api.builder.io/api/v1/image/assets/TEMP/15342ec7c9e5b3d1ef18fa7438ecdc0190df0406?placeholderIfAbsent=true' },
-    { name: 'Meal Prep', icon: 'https://api.builder.io/api/v1/image/assets/TEMP/69cb6d210adf47c29dcb9f6ebc1b8dd288ea7e55?placeholderIfAbsent=true' },
-    { name: 'Large Event', icon: 'https://api.builder.io/api/v1/image/assets/TEMP/5affa372d0bdade93af8090878cdb347457a3ce0?placeholderIfAbsent=true' },
-    { name: 'Gormet Delivery', icon: 'https://api.builder.io/api/v1/image/assets/TEMP/96888d36b835387e74626f8334408464567a2366?placeholderIfAbsent=true' },
-    { name: 'Cooking Class', icon: 'https://api.builder.io/api/v1/image/assets/TEMP/e066dbfcc877e93023eef91333dcdaca9a9b5bdb?placeholderIfAbsent=true' },
-    { name: 'Fine Dining', icon: 'https://api.builder.io/api/v1/image/assets/TEMP/b7f2ee309d54083f5d1402231d95e489fb245951?placeholderIfAbsent=true' },
-    { name: 'Corporate Dining', icon: 'https://api.builder.io/api/v1/image/assets/TEMP/6caea4935837e0034ed861ef4d4a3f0483fb49fd?placeholderIfAbsent=true' }
+    {
+      name: "Chef at Home",
+      icon: "https://api.builder.io/api/v1/image/assets/TEMP/15342ec7c9e5b3d1ef18fa7438ecdc0190df0406?placeholderIfAbsent=true",
+    },
+    {
+      name: "Meal Prep",
+      icon: "https://api.builder.io/api/v1/image/assets/TEMP/69cb6d210adf47c29dcb9f6ebc1b8dd288ea7e55?placeholderIfAbsent=true",
+    },
+    {
+      name: "Large Event",
+      icon: "https://api.builder.io/api/v1/image/assets/TEMP/5affa372d0bdade93af8090878cdb347457a3ce0?placeholderIfAbsent=true",
+    },
+    {
+      name: "Gormet Delivery",
+      icon: "https://api.builder.io/api/v1/image/assets/TEMP/96888d36b835387e74626f8334408464567a2366?placeholderIfAbsent=true",
+    },
+    {
+      name: "Cooking Class",
+      icon: "https://api.builder.io/api/v1/image/assets/TEMP/e066dbfcc877e93023eef91333dcdaca9a9b5bdb?placeholderIfAbsent=true",
+    },
+    {
+      name: "Fine Dining",
+      icon: "https://api.builder.io/api/v1/image/assets/TEMP/b7f2ee309d54083f5d1402231d95e489fb245951?placeholderIfAbsent=true",
+    },
+    {
+      name: "Corporate Dining",
+      icon: "https://api.builder.io/api/v1/image/assets/TEMP/6caea4935837e0034ed861ef4d4a3f0483fb49fd?placeholderIfAbsent=true",
+    },
   ];
 
   return (
@@ -55,7 +79,10 @@ export const ChefProfileCard: React.FC<ChefProfileCardProps> = ({
       <article>
         <header className="flex items-center gap-5">
           <img
-            src={avatar || "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/b8c11ad88b00cdfbfd0dac9c16bd04c1ac816df3?placeholderIfAbsent=true"}
+            src={
+              avatar ||
+              "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/b8c11ad88b00cdfbfd0dac9c16bd04c1ac816df3?placeholderIfAbsent=true"
+            }
             className="aspect-[1] object-contain w-20 self-stretch shrink-0 my-auto rounded-lg"
             alt={name}
           />
@@ -70,14 +97,27 @@ export const ChefProfileCard: React.FC<ChefProfileCardProps> = ({
                   className="aspect-[1.07] object-contain w-[15px] self-stretch shrink-0 my-auto rounded-lg"
                   alt="Location"
                 />
-                <span className="text-[#3F3E3D] self-stretch w-[55px] my-auto">{city || "-"}</span>
+                <span className="text-[#3F3E3D] self-stretch w-[55px] my-auto">
+                  {city || "-"}
+                </span>
               </div>
               <div className="flex items-center text-[#323335]">
                 <div className="self-stretch flex items-center gap-1 font-normal whitespace-nowrap leading-none my-auto">
-                  <RatingStars rating={typeof averageRating === 'number' ? averageRating : 0} size="sm" />
-                  <span className="text-[#323335] self-stretch w-7 my-auto">{typeof averageRating === 'number' ? averageRating : '-'}</span>
+                  <RatingStars
+                    rating={
+                      typeof averageRating === "number" ? averageRating : 0
+                    }
+                    size="sm"
+                  />
+                  <span className="text-[#323335] self-stretch w-7 my-auto">
+                    {typeof averageRating === "number" ? averageRating : "-"}
+                  </span>
                 </div>
-                <span className="text-[#323335] font-light self-stretch my-auto">{typeof numReviews === 'number' ? `(${numReviews} Reviews)` : ''}</span>
+                <span className="text-[#323335] font-light self-stretch my-auto">
+                  {typeof numReviews === "number"
+                    ? `(${numReviews} Reviews)`
+                    : ""}
+                </span>
               </div>
               <div className="flex items-center gap-1 font-normal leading-none">
                 <img
@@ -85,7 +125,9 @@ export const ChefProfileCard: React.FC<ChefProfileCardProps> = ({
                   className="aspect-[1] object-contain w-3.5 self-stretch shrink-0 my-auto"
                   alt="Bookings"
                 />
-                <span className="text-[#3F3E3D] self-stretch my-auto">105 iKooK bookings</span>
+                <span className="text-[#3F3E3D] self-stretch my-auto">
+                  105 iKooK bookings
+                </span>
               </div>
             </div>
           </div>
@@ -107,7 +149,9 @@ export const ChefProfileCard: React.FC<ChefProfileCardProps> = ({
               onClick={handleMessageChef}
               className="justify-center items-center border shadow-[0_1px_2px_0_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-white font-semibold bg-[#FCC01C] px-5 py-3 rounded-lg border-solid border-[#D0D5DD] hover:bg-[#e6ac19] transition-colors"
             >
-              <span className="text-white self-stretch my-auto">Message Chef</span>
+              <span className="text-white self-stretch my-auto">
+                Message Chef
+              </span>
             </button>
             <p className="text-[#3F3E3D] text-sm font-normal leading-none mt-2.5">
               You won&apos;t be charged yet
@@ -125,7 +169,9 @@ export const ChefProfileCard: React.FC<ChefProfileCardProps> = ({
                   className="aspect-[0.96] object-contain w-[27px] self-stretch shrink-0 my-auto"
                   alt="Identity verified"
                 />
-                <span className="text-[#3F3E3D] self-stretch my-auto">Identity</span>
+                <span className="text-[#3F3E3D] self-stretch my-auto">
+                  Identity
+                </span>
               </div>
               <div className="flex items-center gap-[13px] leading-none mt-[13px]">
                 <img
@@ -133,7 +179,9 @@ export const ChefProfileCard: React.FC<ChefProfileCardProps> = ({
                   className="aspect-[1] object-contain w-[27px] self-stretch shrink-0 my-auto"
                   alt="Skills verified"
                 />
-                <span className="text-[#3F3E3D] self-stretch my-auto">Culinary skills</span>
+                <span className="text-[#3F3E3D] self-stretch my-auto">
+                  Culinary skills
+                </span>
               </div>
               <div className="flex items-center gap-[13px] leading-none mt-[13px]">
                 <img
@@ -141,7 +189,9 @@ export const ChefProfileCard: React.FC<ChefProfileCardProps> = ({
                   className="aspect-[1] object-contain w-[27px] self-stretch shrink-0 my-auto"
                   alt="Email verified"
                 />
-                <span className="text-[#3F3E3D] self-stretch my-auto">Email address</span>
+                <span className="text-[#3F3E3D] self-stretch my-auto">
+                  Email address
+                </span>
               </div>
               <div className="flex items-center gap-[13px] leading-none mt-[13px]">
                 <img
@@ -149,7 +199,9 @@ export const ChefProfileCard: React.FC<ChefProfileCardProps> = ({
                   className="aspect-[0.96] object-contain w-[27px] self-stretch shrink-0 my-auto"
                   alt="Money protection"
                 />
-                <span className="text-[#3F3E3D] self-stretch my-auto">Money Protection</span>
+                <span className="text-[#3F3E3D] self-stretch my-auto">
+                  Money Protection
+                </span>
               </div>
               <p className="text-[#3F3E3D] text-[8px] leading-[21px]">
                 We pay the chefs after the event, to protect your money

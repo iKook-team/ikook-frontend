@@ -85,49 +85,49 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
           </h1>
 
           <form onSubmit={handleSubmit}>
-          <fieldset className="flex w-full flex-col items-start gap-6">
-            <legend className="sr-only">Account Information</legend>
+            <fieldset className="flex w-full flex-col items-start gap-6">
+              <legend className="sr-only">Account Information</legend>
 
-            <FormField
-              required
-              className="w-full"
-              error={errors.username}
-              label="Username"
-              placeholder="Enter a username"
-              type="text"
-              value={formData.username}
-              onChange={(e) => handleInputChange("username", e.target.value)}
-            />
+              <FormField
+                required
+                className="w-full"
+                error={errors.username}
+                label="Username"
+                placeholder="Enter a username"
+                type="text"
+                value={formData.username}
+                onChange={(e) => handleInputChange("username", e.target.value)}
+              />
 
-            <FormField
-              required
-              className="w-full"
-              error={errors.password}
-              label="Password"
-              placeholder="Create a password"
-              type="password"
-              value={formData.password}
-              onChange={(e) => handleInputChange("password", e.target.value)}
-            />
+              <FormField
+                required
+                className="w-full"
+                error={errors.password}
+                label="Password"
+                placeholder="Create a password"
+                type="password"
+                value={formData.password}
+                onChange={(e) => handleInputChange("password", e.target.value)}
+              />
 
-            <FormField
-              required
-              className="w-full"
-              error={errors.confirmPassword}
-              label="Confirm Password"
-              placeholder="Confirm your password"
-              type="password"
-              value={formData.confirmPassword}
-              onChange={(e) =>
-                handleInputChange("confirmPassword", e.target.value)
-              }
-            />
+              <FormField
+                required
+                className="w-full"
+                error={errors.confirmPassword}
+                label="Confirm Password"
+                placeholder="Confirm your password"
+                type="password"
+                value={formData.confirmPassword}
+                onChange={(e) =>
+                  handleInputChange("confirmPassword", e.target.value)
+                }
+              />
 
-            <PasswordStrengthIndicator
-              confirmPassword={formData.confirmPassword}
-              password={formData.password}
-            />
-          </fieldset>
+              <PasswordStrengthIndicator
+                confirmPassword={formData.confirmPassword}
+                password={formData.password}
+              />
+            </fieldset>
 
             <div className="mt-8 h-12 w-full">
               <button

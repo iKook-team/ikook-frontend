@@ -112,6 +112,7 @@ export const MenuListing: React.FC<MenuListingProps> = ({
   const currencySymbol = React.useMemo(() => {
     // Prefer explicit currency symbol from market context
     const cfg = getMarketConfig(market);
+
     return cfg.currencySymbol;
   }, [market]);
 
@@ -152,7 +153,9 @@ export const MenuListing: React.FC<MenuListingProps> = ({
               }
               // Perform like once
               setLiked(true);
-              console.debug("[MenuListing] like -> addFavourite", { menuId: _id });
+              console.debug("[MenuListing] like -> addFavourite", {
+                menuId: _id,
+              });
               try {
                 await favouritesService.addFavourite({ menuId: _id });
               } catch (err) {

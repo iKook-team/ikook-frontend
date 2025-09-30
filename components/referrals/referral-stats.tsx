@@ -92,4 +92,3 @@ const ReferralStats = () => {
 };
 
 export default ReferralStats;
-

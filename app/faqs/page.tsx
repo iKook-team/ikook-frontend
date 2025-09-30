@@ -6,13 +6,13 @@ import { Footer } from "@/components/footer/footer";
 
 function Faqs() {
   return (
-      <>
-        <Navigation />
-        <div>
-          <FaqSection />
-        </div>
-        <Footer />
-      </>
+    <>
+      <Navigation />
+      <div>
+        <FaqSection />
+      </div>
+      <Footer />
+    </>
   );
 }
 

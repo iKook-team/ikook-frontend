@@ -32,7 +32,8 @@ export function FaqItem({ question, isLast = false }: FaqItemProps) {
 
         {open && (
           <div className="mt-3 text-base text-zinc-700 leading-relaxed">
-            This is a placeholder answer. We will provide detailed information here soon. For now, this demonstrates the expand/collapse behavior.
+            This is a placeholder answer. We will provide detailed information
+            here soon. For now, this demonstrates the expand/collapse behavior.
           </div>
         )}
       </div>

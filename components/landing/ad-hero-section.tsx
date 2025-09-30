@@ -5,6 +5,7 @@ import React from "react";
 export const AdHeroSection: React.FC = () => {
   const scrollToBooking = () => {
     const bookingSection = document.getElementById("booking-form");
+
     bookingSection?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -26,7 +27,7 @@ export const AdHeroSection: React.FC = () => {
           Book a Professional Chef,{" "}
           <span className="text-[#FCC01C]">Anywhere, Anytime.</span>
         </h1>
-        
+
         <p className="text-xl sm:text-2xl mb-8 text-gray-200 max-w-2xl mx-auto">
           Enjoy an exquisite dining experience in the comfort of your home.
         </p>

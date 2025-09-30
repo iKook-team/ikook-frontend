@@ -37,7 +37,9 @@ const ClassRate: React.FC<ClassRateProps> = ({ onBack, onNext }) => {
         {/* Header Section */}
         <div className="px-6 pt-6 pb-4 border-b border-gray-100">
           <header className="mb-6">
-            <h1 className="text-2xl font-semibold text-gray-900">Chef Titilayo</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">
+              Chef Titilayo
+            </h1>
           </header>
           <div className="mb-4">
             <ProgressIndicator steps={progressSteps} />

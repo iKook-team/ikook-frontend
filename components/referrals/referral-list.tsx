@@ -115,4 +115,3 @@ const ReferralList = () => {
 };
 
 export default ReferralList;
-

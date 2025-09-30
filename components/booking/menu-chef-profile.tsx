@@ -3,6 +3,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { FiUser } from "react-icons/fi";
 import { useState } from "react";
+
 import { chatService } from "@/lib/api/chat";
 import { handleApiError } from "@/lib/utils/toast";
 import { useAuthStore } from "@/lib/store/auth-store";
@@ -15,7 +16,7 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
   const router = useRouter();
   const [isCreatingChat, setIsCreatingChat] = useState(false);
   const { isAuthenticated, userType } = useAuthStore();
-  
+
   const handleViewProfile = () => {
     if (chef?.id) {
       router.push(`/chefs/${chef.id}`);
@@ -24,8 +25,11 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
 
   const handleMessageChef = async () => {
     if (!isAuthenticated) {
-      const back = typeof window !== 'undefined' ? window.location.pathname : '/';
+      const back =
+        typeof window !== "undefined" ? window.location.pathname : "/";
+
       router.push(`/login?next=${encodeURIComponent(back)}`);
+
       return;
     }
 
@@ -33,7 +37,7 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
       setIsCreatingChat(true);
       // For hosts messaging chefs, we use the chef's ID
       const otherUserId = chef.id;
-      
+
       if (!otherUserId) {
         throw new Error("Unable to determine chat participant");
       }
@@ -43,6 +47,7 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
 
       // Navigate to the chat and auto-open the conversation
       const back = encodeURIComponent(`/chefs/${chef.id}`);
+
       router.push(`/chat?chatId=${chat.id}&back=${back}`);
     } catch (error) {
       handleApiError(error, "Failed to start chat");
@@ -199,10 +204,14 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
                 />
                 <div className="self-stretch min-w-60 my-auto">
                   <h4 className="text-base font-semibold">
-                    {chef?.first_name ? `Chef ${chef.first_name} is available` : 'Congratulations, available for booking'}
+                    {chef?.first_name
+                      ? `Chef ${chef.first_name} is available`
+                      : "Congratulations, available for booking"}
                   </h4>
                   <p className="text-sm font-normal leading-none">
-                    {chef?.first_name ? `${chef.first_name} is usually fully booked.` : 'This chef is usually fully booked.'}
+                    {chef?.first_name
+                      ? `${chef.first_name} is usually fully booked.`
+                      : "This chef is usually fully booked."}
                   </p>
                 </div>
               </div>
@@ -212,26 +221,46 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
                 Want to request a personalised menu based on your requirements?
               </h4>
               <p className="text-[#3F3E3D] font-normal leading-5 self-stretch mt-[21px] max-md:max-w-full">
-                Just message {chef?.first_name ? `chef ${chef.first_name}` : 'the chef'} and discuss the details of your event
-                and the requirements you have.
+                Just message{" "}
+                {chef?.first_name ? `chef ${chef.first_name}` : "the chef"} and
+                discuss the details of your event and the requirements you have.
               </p>
               <button
                 className="flex text-[#344054] leading-none mt-[21px] rounded-lg"
                 onClick={handleMessageChef}
                 disabled={isCreatingChat}
               >
-                <div className="text-[#344054] self-stretch border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] gap-2 overflow-hidden bg-white px-3.5 py-2 rounded-lg border-solid flex items-center justify-center min-w-[120px]"
-                     style={{ opacity: isCreatingChat ? 0.7 : 1 }}
+                <div
+                  className="text-[#344054] self-stretch border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] gap-2 overflow-hidden bg-white px-3.5 py-2 rounded-lg border-solid flex items-center justify-center min-w-[120px]"
+                  style={{ opacity: isCreatingChat ? 0.7 : 1 }}
                 >
                   {isCreatingChat ? (
                     <>
-                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <svg
+                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-600"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
                       </svg>
                       Messaging...
                     </>
-                  ) : 'Message Chef'}
+                  ) : (
+                    "Message Chef"
+                  )}
                 </div>
               </button>
             </div>

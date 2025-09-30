@@ -13,7 +13,8 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   onSelectionChange,
   initialSelectedType = null,
 }) => {
-  const [selectedType, setSelectedType] = useState<UserType>(initialSelectedType);
+  const [selectedType, setSelectedType] =
+    useState<UserType>(initialSelectedType);
 
   const handleSelection = (type: UserType) => {
     setSelectedType(type);

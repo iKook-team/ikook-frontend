@@ -4,7 +4,9 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 
 import BackButton from "@/components/common/BackButton";
-import CreateGroceriesStep1, { GroceryFormData } from "@/components/grocery/create-groceries-step1";
+import CreateGroceriesStep1, {
+  GroceryFormData,
+} from "@/components/grocery/create-groceries-step1";
 import CreateGroceriesStep2 from "@/components/grocery/create-groceries-step2";
 import CreateGroceriesStep3 from "@/components/grocery/create-groceries-step3";
 import { groceriesService, Grocery } from "@/lib/api/groceries";
@@ -20,21 +22,27 @@ const EditGroceryPage: React.FC = () => {
   useEffect(() => {
     if (!isAuthenticated) {
       router.replace("/login");
+
       return;
     }
     const isChef = user?.user_type === "Chef";
-    const isBoxGroceriesService = (user as any)?.service_type === "Box Groceries";
+    const isBoxGroceriesService =
+      (user as any)?.service_type === "Box Groceries";
+
     if (!isChef || !isBoxGroceriesService) {
       router.replace("/dashboard/chef");
     }
   }, [isAuthenticated, user, router]);
-  
+
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<Partial<GroceryFormData & { uploadedImages: File[]; existingImages: any[] }>>({});
+  const [formData, setFormData] = useState<
+    Partial<GroceryFormData & { uploadedImages: File[]; existingImages: any[] }>
+  >({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [originalGroceryData, setOriginalGroceryData] = useState<Grocery | null>(null);
+  const [originalGroceryData, setOriginalGroceryData] =
+    useState<Grocery | null>(null);
 
   // helpers to convert unit labels <-> API codes
   const unitLabelToApi = (label?: string): string | undefined => {
@@ -50,16 +58,17 @@ const EditGroceryPage: React.FC = () => {
       "Gallon (gal)": "gal",
       "Quart (qt)": "qt",
       "Pint (pt)": "pt",
-      "Cup": "cup",
+      Cup: "cup",
       "Fluid Ounce (fl oz)": "fl oz",
       "Piece (pcs)": "pcs",
-      "Unit": "Unit",
-      "Dozen": "Dozen",
-      "Pack": "Pack",
-      "Bundle": "Bundle",
-      "Tray": "Tray",
-      "Case": "Case",
+      Unit: "Unit",
+      Dozen: "Dozen",
+      Pack: "Pack",
+      Bundle: "Bundle",
+      Tray: "Tray",
+      Case: "Case",
     };
+
     return map[label] || label;
   };
 
@@ -86,7 +95,9 @@ const EditGroceryPage: React.FC = () => {
     "Case",
   ];
 
-  const apiToUnitLabel = (api?: string): GroceryFormData["quantityUnit"] | undefined => {
+  const apiToUnitLabel = (
+    api?: string,
+  ): GroceryFormData["quantityUnit"] | undefined => {
     if (!api) return undefined;
     const map: Record<string, GroceryFormData["quantityUnit"]> = {
       Kg: "Kilogram (kg)",
@@ -109,11 +120,13 @@ const EditGroceryPage: React.FC = () => {
       Tray: "Tray",
       Case: "Case",
     };
+
     if (api in map) return map[api];
     // If API already sends the same literal as UI, allow it if present in UI_UNITS
     if ((UI_UNITS as readonly string[]).includes(api)) {
       return api as GroceryFormData["quantityUnit"];
     }
+
     return undefined;
   };
 
@@ -140,16 +153,20 @@ const EditGroceryPage: React.FC = () => {
     "Baking Supplies",
   ];
 
-  const apiCategoryToForm = (api?: string): GroceryFormData["category"] | undefined => {
+  const apiCategoryToForm = (
+    api?: string,
+  ): GroceryFormData["category"] | undefined => {
     if (!api) return undefined;
     const reverseMap: Record<string, GroceryFormData["category"]> = {
       Grain: "Grains",
     };
+
     if (api in reverseMap) return reverseMap[api];
     // If API already sends the same literal as UI, accept it only if allowed
     if ((UI_CATEGORIES as readonly string[]).includes(api)) {
       return api as GroceryFormData["category"];
     }
+
     return undefined;
   };
 
@@ -159,10 +176,13 @@ const EditGroceryPage: React.FC = () => {
       try {
         setIsLoading(true);
         const grocery = await groceriesService.getGroceryById(groceryId);
+
         setOriginalGroceryData(grocery);
 
         const isMultiple = grocery.product_type === "Multiple Items";
-        const transformed: Partial<GroceryFormData & { uploadedImages: File[]; existingImages: any[] }> = {
+        const transformed: Partial<
+          GroceryFormData & { uploadedImages: File[]; existingImages: any[] }
+        > = {
           productType: isMultiple ? "Multiple Item" : "Single Item",
           productName: grocery.name,
           category: apiCategoryToForm(grocery.category),
@@ -193,8 +213,14 @@ const EditGroceryPage: React.FC = () => {
   }, [groceryId, router]);
 
   // navigation
-  const nextStep = useCallback(() => setCurrentStep((p) => Math.min(p + 1, 3)), []);
-  const prevStep = useCallback(() => setCurrentStep((p) => Math.max(p - 1, 1)), []);
+  const nextStep = useCallback(
+    () => setCurrentStep((p) => Math.min(p + 1, 3)),
+    [],
+  );
+  const prevStep = useCallback(
+    () => setCurrentStep((p) => Math.max(p - 1, 1)),
+    [],
+  );
 
   const updateFormData = useCallback((newData: Partial<GroceryFormData>) => {
     setFormData((prev) => ({ ...prev, ...newData }));
@@ -205,20 +231,22 @@ const EditGroceryPage: React.FC = () => {
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      const isMultiple = (formData.productType || "Single Item").startsWith("Multiple");
+      const isMultiple = (formData.productType || "Single Item").startsWith(
+        "Multiple",
+      );
       const productTypeForApi = isMultiple ? "Multiple Items" : "Single Item";
 
       const categoryMap: Record<string, string> = {
-        "Grains": "Grain",
+        Grains: "Grain",
         "Dairy and Eggs": "Dairy and Eggs",
-        "Fruits": "Fruits",
-        "Vegetables": "Vegetables",
-        "Proteins": "Proteins",
+        Fruits: "Fruits",
+        Vegetables: "Vegetables",
+        Proteins: "Proteins",
         "Bakery Items": "Bakery Items",
         "Snacks and Confectionery": "Snacks and Confectionery",
         "Canned and Packaged Foods": "Canned and Packaged Foods",
         "Condiments and Spices": "Condiments and Spices",
-        "Beverages": "Beverages",
+        Beverages: "Beverages",
         "Frozen Foods": "Frozen Foods",
         "Pantry Staples": "Pantry Staples",
         "Nuts and Seeds": "Nuts and Seeds",
@@ -229,7 +257,10 @@ const EditGroceryPage: React.FC = () => {
         "Desserts and Sweets": "Desserts and Sweets",
         "Baking Supplies": "Baking Supplies",
       };
-      const categoryForApi = categoryMap[(formData.category as string) || ""] || (formData.category as string) || "";
+      const categoryForApi =
+        categoryMap[(formData.category as string) || ""] ||
+        (formData.category as string) ||
+        "";
 
       const payload: any = {
         name: formData.productName || "",
@@ -247,14 +278,25 @@ const EditGroceryPage: React.FC = () => {
             weight: String(r.weightValue ?? ""),
             measurement_unit: unitLabelToApi(r.weightUnit),
           }));
+
         payload.items = mappedItems;
 
         const numericWeights = mappedItems
-          .map((it: any) => ({ w: parseFloat(it.weight || "0"), u: it.measurement_unit }))
+          .map((it: any) => ({
+            w: parseFloat(it.weight || "0"),
+            u: it.measurement_unit,
+          }))
           .filter((x: any) => !isNaN(x.w) && x.w > 0 && !!x.u);
-        const uniqueUnits = Array.from(new Set(numericWeights.map((x: any) => x.u)));
+        const uniqueUnits = Array.from(
+          new Set(numericWeights.map((x: any) => x.u)),
+        );
+
         if (numericWeights.length > 0 && uniqueUnits.length === 1) {
-          const total = numericWeights.reduce((sum: number, x: any) => sum + x.w, 0);
+          const total = numericWeights.reduce(
+            (sum: number, x: any) => sum + x.w,
+            0,
+          );
+
           payload.weight_or_quantity = String(total);
           payload.measurement_unit = uniqueUnits[0];
         } else {
@@ -276,7 +318,10 @@ const EditGroceryPage: React.FC = () => {
 
       // Delete removed existing images
       for (const originalImg of originalExisting) {
-        const stillExists = currentExisting.some((img: any) => img.id === originalImg.id);
+        const stillExists = currentExisting.some(
+          (img: any) => img.id === originalImg.id,
+        );
+
         if (!stillExists) {
           await groceriesService.deleteGroceryImage(originalImg.id);
         }
@@ -286,6 +331,7 @@ const EditGroceryPage: React.FC = () => {
       for (const image of newImages) {
         if (image instanceof File) {
           const form = new FormData();
+
           form.append("image", image);
           form.append("grocery", String(groceryId));
           await groceriesService.uploadGroceryImageForm(form);
@@ -296,7 +342,9 @@ const EditGroceryPage: React.FC = () => {
       router.push("/groceries");
     } catch (err: any) {
       handleApiError(err, "Failed to update grocery. Please try again.");
-      setSubmitError(err?.message || "Failed to update grocery. Please try again.");
+      setSubmitError(
+        err?.message || "Failed to update grocery. Please try again.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -316,6 +364,7 @@ const EditGroceryPage: React.FC = () => {
 
   const renderStep = useCallback(() => {
     const stepProps = { ...commonProps } as any;
+
     switch (currentStep) {
       case 1:
         return <CreateGroceriesStep1 {...stepProps} />;
@@ -335,7 +384,11 @@ const EditGroceryPage: React.FC = () => {
   }, [commonProps, currentStep, handleFinalSubmit, isSubmitting]);
 
   // After all hooks are declared, guard rendering for unauthorized users
-  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Box Groceries") {
+  if (
+    !isAuthenticated ||
+    user?.user_type !== "Chef" ||
+    (user as any)?.service_type !== "Box Groceries"
+  ) {
     return null;
   }
 
@@ -343,7 +396,7 @@ const EditGroceryPage: React.FC = () => {
     return (
       <div className="w-full min-h-screen bg-[#FBFBFB] flex justify-center items-center px-4 py-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FCC01C] mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FCC01C] mx-auto mb-4" />
           <p>Loading grocery data...</p>
         </div>
       </div>

@@ -1,8 +1,14 @@
-import { getMarketConfig } from "./market-config";
 import type { MarketCode } from "./market";
 
-export function formatCurrency(amount: number, market: MarketCode, options?: Intl.NumberFormatOptions): string {
+import { getMarketConfig } from "./market-config";
+
+export function formatCurrency(
+  amount: number,
+  market: MarketCode,
+  options?: Intl.NumberFormatOptions,
+): string {
   const cfg = getMarketConfig(market);
+
   return new Intl.NumberFormat(cfg.locale, {
     style: "currency",
     currency: cfg.currency,
@@ -12,17 +18,30 @@ export function formatCurrency(amount: number, market: MarketCode, options?: Int
   }).format(amount);
 }
 
-export function formatNumber(value: number, market: MarketCode, options?: Intl.NumberFormatOptions): string {
+export function formatNumber(
+  value: number,
+  market: MarketCode,
+  options?: Intl.NumberFormatOptions,
+): string {
   const cfg = getMarketConfig(market);
+
   return new Intl.NumberFormat(cfg.locale, {
     maximumFractionDigits: 2,
     ...options,
   }).format(value);
 }
 
-export function formatDate(date: Date | string | number, market: MarketCode, options?: Intl.DateTimeFormatOptions): string {
-  const d = typeof date === "string" || typeof date === "number" ? new Date(date) : date;
+export function formatDate(
+  date: Date | string | number,
+  market: MarketCode,
+  options?: Intl.DateTimeFormatOptions,
+): string {
+  const d =
+    typeof date === "string" || typeof date === "number"
+      ? new Date(date)
+      : date;
   const cfg = getMarketConfig(market);
+
   return new Intl.DateTimeFormat(cfg.locale, {
     year: "numeric",
     month: "short",

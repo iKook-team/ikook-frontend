@@ -14,16 +14,22 @@ const Index: React.FC = () => {
   useEffect(() => {
     if (!isAuthenticated) {
       router.replace("/login");
+
       return;
     }
     const isChef = user?.user_type === "Chef";
     const isChefService = (user as any)?.service_type === "Chef";
+
     if (!isChef || !isChefService) {
       router.replace("/dashboard/chef");
     }
   }, [isAuthenticated, user, router]);
 
-  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Chef") {
+  if (
+    !isAuthenticated ||
+    user?.user_type !== "Chef" ||
+    (user as any)?.service_type !== "Chef"
+  ) {
     return null;
   }
 

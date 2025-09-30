@@ -1,6 +1,7 @@
-'use client';
-import React from 'react';
-import { FAQItem } from './faq-item';
+"use client";
+import React from "react";
+
+import { FAQItem } from "./faq-item";
 
 interface FAQ {
   id: string;
@@ -14,9 +15,10 @@ interface FAQListProps {
 }
 
 export const FAQList: React.FC<FAQListProps> = ({ faqs, searchTerm }) => {
-  const filteredFAQs = faqs.filter(faq =>
-    faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    faq.answer.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredFAQs = faqs.filter(
+    (faq) =>
+      faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      faq.answer.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   if (filteredFAQs.length === 0 && searchTerm) {

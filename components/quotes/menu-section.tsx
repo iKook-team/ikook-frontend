@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { useMarket } from "@/lib/market-context";
-import { getMarketConfig } from "@/lib/market-config";
 
 import { FormField } from "../ui/form-field";
 import { PriceInput } from "../ui/price-input";
+
+import { useMarket } from "@/lib/market-context";
+import { getMarketConfig } from "@/lib/market-config";
 
 export interface MenuItemInput {
   name: string;
@@ -42,7 +43,11 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
 
   const handleInputChange =
     (field: "name" | "description" | "price") =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >,
+    ) => {
       setItemInput((prev) => ({ ...prev, [field]: e.target.value }));
     };
 

@@ -83,21 +83,26 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
     }
 
     // Create a service object with the ID and chef data
-    const serviceObj = { 
+    const serviceObj = {
       id: serviceId,
-      chef: serviceData?.chef ? {
-        id: serviceData.chef.id,
-        first_name: serviceData.chef.first_name,
-        last_name: serviceData.chef.last_name,
-        avatar: serviceData.chef.avatar,
-        city: serviceData.chef.city,
-        bio: serviceData.chef.bio,
-        num_reviews: serviceData.chef.num_reviews,
-        average_rating: serviceData.chef.average_rating
-      } : undefined
+      chef: serviceData?.chef
+        ? {
+            id: serviceData.chef.id,
+            first_name: serviceData.chef.first_name,
+            last_name: serviceData.chef.last_name,
+            avatar: serviceData.chef.avatar,
+            city: serviceData.chef.city,
+            bio: serviceData.chef.bio,
+            num_reviews: serviceData.chef.num_reviews,
+            average_rating: serviceData.chef.average_rating,
+          }
+        : undefined,
     };
 
-    console.log("[EventDetails] Setting booking service with data:", serviceObj);
+    console.log(
+      "[EventDetails] Setting booking service with data:",
+      serviceObj,
+    );
 
     // Set the booking service with the service data
     setBookingService(serviceObj);
@@ -127,13 +132,18 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
         <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
           <div className="w-[24%] max-md:w-full max-md:ml-0">
             <img
-              src={serviceData?.cover_image || "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/2519ad68400128f1fb9c68f364b8cc6504d27b05?placeholderIfAbsent=true"}
+              src={
+                serviceData?.cover_image ||
+                "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/2519ad68400128f1fb9c68f364b8cc6504d27b05?placeholderIfAbsent=true"
+              }
               className="aspect-[1.22] object-cover w-[142px] h-[120px] shrink-0 max-w-full rounded-lg max-md:mt-[29px]"
-              alt={serviceData?.chef_service || 'Service'}
+              alt={serviceData?.chef_service || "Service"}
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
+
                 target.onerror = null;
-                target.src = 'https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/2519ad68400128f1fb9c68f364b8cc6504d27b05?placeholderIfAbsent=true';
+                target.src =
+                  "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/2519ad68400128f1fb9c68f364b8cc6504d27b05?placeholderIfAbsent=true";
               }}
             />
           </div>
@@ -141,13 +151,16 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
             <div className="flex gap-[40px_106px] mt-[9px] max-md:max-w-full max-md:mt-[38px]">
               <div className="flex flex-col items-stretch">
                 <h2 className="text-[#323335] text-base font-semibold">
-                  {serviceData?.chef_service || 'Service'}
+                  {serviceData?.chef_service || "Service"}
                 </h2>
                 <div className="flex flex-col items-stretch mt-3">
                   <div className="flex flex-wrap gap-2 text-xs text-[#323335] font-normal mt-2">
                     {cuisines.length > 0 ? (
                       cuisines.map((cuisine, index) => (
-                        <div key={index} className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded">
+                        <div
+                          key={index}
+                          className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded"
+                        >
                           <img
                             src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/c1a987d99d2c244fb9522d8fbbfe394e4e300b55?placeholderIfAbsent=true"
                             className="w-3 h-3"
@@ -157,7 +170,9 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
                         </div>
                       ))
                     ) : (
-                      <span className="text-gray-500">No cuisines specified</span>
+                      <span className="text-gray-500">
+                        No cuisines specified
+                      </span>
                     )}
                     <div className="flex items-center gap-1">
                       <img
@@ -166,16 +181,18 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
                         alt="People"
                       />
                       <span className="text-xs">
-                        {serviceData?.min_num_of_guests ? `${serviceData.min_num_of_guests}+ People` : 'Group size varies'}
+                        {serviceData?.min_num_of_guests
+                          ? `${serviceData.min_num_of_guests}+ People`
+                          : "Group size varies"}
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="text-[#030302] text-right text-base font-medium">
-                {serviceData?.starting_price_per_person 
+                {serviceData?.starting_price_per_person
                   ? `From ₦${parseFloat(serviceData.starting_price_per_person).toLocaleString()}pp`
-                  : 'Price on request'}
+                  : "Price on request"}
               </div>
             </div>
           </div>
@@ -216,10 +233,9 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
 
       <div className="flex w-full items-stretch gap-[40px_49px] flex-wrap mt-[19px] max-md:max-w-full">
         <p className="text-[#3F3E3D] text-xs font-normal leading-[18px] grow shrink w-[417px] basis-auto max-md:max-w-full">
-          {serviceData?.chef?.first_name 
+          {serviceData?.chef?.first_name
             ? `Get in touch with chef ${serviceData.chef.first_name} to discuss the details of your event and the requirements you have, and you will get a quote that fits your budget.`
-            : 'Contact the chef to discuss your event details and requirements for a personalized quote.'
-          }
+            : "Contact the chef to discuss your event details and requirements for a personalized quote."}
         </p>
         <Button
           className="bg-[#FCC01C] hover:bg-[#e6ac19] text-white"

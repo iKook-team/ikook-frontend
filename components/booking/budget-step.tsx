@@ -77,7 +77,9 @@ const BudgetStep: React.FC<BudgetStepProps> = ({
 
   const currencySymbol = getCurrencySymbol({
     currency:
-      user?.currency || menu?.chef?.chef_details?.currency || menu?.chef?.currency,
+      user?.currency ||
+      menu?.chef?.chef_details?.currency ||
+      menu?.chef?.currency,
     country:
       user?.country ||
       menu?.chef?.chef_details?.country ||

@@ -214,7 +214,6 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
   ]);
   const [events, setEvents] = useState(["Naming", "Wedding", "Gathering"]);
 
-
   const [cities, setCities] = useState<string[]>([]);
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
 
@@ -222,6 +221,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
   useEffect(() => {
     if (user?.country) {
       const countryCities = getLocationsForCountry(user.country);
+
       setCities(countryCities);
     }
   }, [user?.country]);
@@ -519,22 +519,30 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
                       <div className="w-full whitespace-nowrap mt-4 max-md:max-w-full">
                         <div className="w-full max-md:max-w-full">
                           <div className="w-full max-md:max-w-full">
-                            <label id="city-label" className="text-[#3F3E3D] text-sm font-medium leading-none">
+                            <label
+                              id="city-label"
+                              className="text-[#3F3E3D] text-sm font-medium leading-none"
+                            >
                               City/State
                             </label>
                             <div className="relative w-full">
-                              <button 
+                              <button
                                 type="button"
                                 aria-haspopup="listbox"
                                 aria-expanded={isCityDropdownOpen}
                                 aria-labelledby="city-label"
                                 className="items-center border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#0F0E0C] font-normal bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid border-[#CFCFCE] cursor-pointer text-left"
-                                onClick={() => setIsCityDropdownOpen(!isCityDropdownOpen)}
+                                onClick={() =>
+                                  setIsCityDropdownOpen(!isCityDropdownOpen)
+                                }
                                 onKeyDown={(e) => {
-                                  if (e.key === 'Enter' || e.key === ' ') {
+                                  if (e.key === "Enter" || e.key === " ") {
                                     e.preventDefault();
                                     setIsCityDropdownOpen(!isCityDropdownOpen);
-                                  } else if (e.key === 'Escape' && isCityDropdownOpen) {
+                                  } else if (
+                                    e.key === "Escape" &&
+                                    isCityDropdownOpen
+                                  ) {
                                     e.preventDefault();
                                     setIsCityDropdownOpen(false);
                                   }
@@ -550,11 +558,11 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
                                 <img
                                   src="https://api.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6fbc6bc48ccc3247e1e891a2d67fecfd2cde1c7c?placeholderIfAbsent=true"
                                   alt="Dropdown arrow"
-                                  className={`aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto transition-transform ${isCityDropdownOpen ? 'rotate-180' : ''}`}
+                                  className={`aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto transition-transform ${isCityDropdownOpen ? "rotate-180" : ""}`}
                                 />
                               </button>
                               {isCityDropdownOpen && (
-                                <div 
+                                <div
                                   role="listbox"
                                   aria-labelledby="city-label"
                                   className="absolute z-10 w-full mt-1 bg-white border border-solid border-[#CFCFCE] rounded-lg shadow-lg max-h-60 overflow-y-auto"
@@ -566,17 +574,20 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
                                         role="option"
                                         aria-selected={formData.city === city}
                                         tabIndex={0}
-                                        className={`px-4 py-2 hover:bg-gray-100 cursor-pointer ${formData.city === city ? 'bg-amber-100' : ''}`}
+                                        className={`px-4 py-2 hover:bg-gray-100 cursor-pointer ${formData.city === city ? "bg-amber-100" : ""}`}
                                         onClick={() => {
                                           handleInputChange("city", city);
                                           setIsCityDropdownOpen(false);
                                         }}
                                         onKeyDown={(e) => {
-                                          if (e.key === 'Enter' || e.key === ' ') {
+                                          if (
+                                            e.key === "Enter" ||
+                                            e.key === " "
+                                          ) {
                                             e.preventDefault();
                                             handleInputChange("city", city);
                                             setIsCityDropdownOpen(false);
-                                          } else if (e.key === 'Escape') {
+                                          } else if (e.key === "Escape") {
                                             e.preventDefault();
                                             setIsCityDropdownOpen(false);
                                           }
@@ -587,7 +598,8 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
                                     ))
                                   ) : (
                                     <div className="px-4 py-2 text-gray-500">
-                                      No cities available for {user?.country || 'selected country'}
+                                      No cities available for{" "}
+                                      {user?.country || "selected country"}
                                     </div>
                                   )}
                                 </div>
@@ -668,7 +680,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
                         label="Event type"
                         selectedTags={formData.eventTypes}
                         tags={events}
-                        onTagsChange={(newTags) => handleInputChange("eventTypes", newTags)}
+                        onTagsChange={(newTags) =>
+                          handleInputChange("eventTypes", newTags)
+                        }
                       />
 
                       <TagSelector
@@ -676,7 +690,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
                         label="Cuisines type"
                         selectedTags={formData.cuisineTypes}
                         tags={cuisines}
-                        onTagsChange={(newTags) => handleInputChange("cuisineTypes", newTags)}
+                        onTagsChange={(newTags) =>
+                          handleInputChange("cuisineTypes", newTags)
+                        }
                       />
                     </>
                   )}

@@ -99,7 +99,8 @@ export const chatService = {
   async getOrCreateChat(userId: number): Promise<Chat> {
     try {
       console.log("Fetching existing chats for user:", userId);
-      const response = await apiClient.get<ApiResponse<ChatsResponse>>("/chats/");
+      const response =
+        await apiClient.get<ApiResponse<ChatsResponse>>("/chats/");
 
       // Extract the chats from the nested response structure
       const chats = response.data?.data?.results || [];
@@ -119,6 +120,7 @@ export const chatService = {
 
       if (existingChat) {
         console.log("Found existing chat:", existingChat);
+
         return existingChat;
       }
 

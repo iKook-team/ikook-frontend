@@ -5,9 +5,7 @@ import React, { useState } from "react";
 import { ChefFinderCard } from "@/components/booking/custom/chef-finder-card";
 import { ServiceSelection } from "@/components/booking/custom/service-selection";
 
-type BookingStep =
-  | "chef-finder"
-  | "service-selection";
+type BookingStep = "chef-finder" | "service-selection";
 
 const CustomBookingPage = () => {
   const [currentStep, setCurrentStep] = useState<BookingStep>("chef-finder");
@@ -19,6 +17,7 @@ const CustomBookingPage = () => {
     }
     const steps: BookingStep[] = ["chef-finder", "service-selection"];
     const currentIndex = steps.indexOf(currentStep);
+
     if (currentIndex < steps.length - 1) {
       setCurrentStep(steps[currentIndex + 1]);
     }
@@ -27,6 +26,7 @@ const CustomBookingPage = () => {
   const handleBack = () => {
     const steps: BookingStep[] = ["chef-finder", "service-selection"];
     const currentIndex = steps.indexOf(currentStep);
+
     if (currentIndex > 0) {
       setCurrentStep(steps[currentIndex - 1]);
     }
@@ -51,9 +51,7 @@ const CustomBookingPage = () => {
 
   return (
     <div className="min-h-screen w-full bg-gray-50 flex items-center justify-center px-2 py-4 sm:px-4 lg:px-6">
-      <div className="w-full max-w-4xl">
-        {renderStep()}
-      </div>
+      <div className="w-full max-w-4xl">{renderStep()}</div>
     </div>
   );
 };

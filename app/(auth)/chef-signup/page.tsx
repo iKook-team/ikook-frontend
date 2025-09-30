@@ -105,7 +105,12 @@ const ChefSignupPage: React.FC = () => {
             : [];
 
         // Map market to country name
-        const countryName = market === "NG" ? "Nigeria" : market === "ZA" ? "South Africa" : "United Kingdom";
+        const countryName =
+          market === "NG"
+            ? "Nigeria"
+            : market === "ZA"
+              ? "South Africa"
+              : "United Kingdom";
 
         // Combine data from all forms
         const signupData = {

@@ -28,7 +28,9 @@ export const quotesService = {
     const response = await apiClient.get("/quotes/", { params });
 
     // Support both {results: [...]} and {data: {results: [...]}}
-    const results = response.data?.data?.results || response.data?.results || response.data;
+    const results =
+      response.data?.data?.results || response.data?.results || response.data;
+
     return Array.isArray(results) ? results : [];
   },
   async getQuoteById(id: string | number) {
@@ -61,11 +63,13 @@ export const quotesService = {
 
   async createQuote(data: CreateQuoteInput) {
     const response = await apiClient.post("/quotes/", data);
+
     // Some backends wrap payload in {data}
     return response.data?.data || response.data;
   },
   async acceptQuote(id: string | number) {
     const response = await apiClient.post(`/quotes/${id}/accept/`);
+
     // Support both wrapped and unwrapped responses
     return response.data?.data || response.data;
   },

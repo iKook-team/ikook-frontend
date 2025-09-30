@@ -28,7 +28,10 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
   const platformFee = total * (0.025 / 1.025);
   const subtotal = total - platformFee;
   const fmt = (n: number) =>
-    n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    n.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   const currency = getCurrencySymbol({ country: booking?.country });
 
   const handlePayment = async () => {
@@ -118,16 +121,16 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
       <div className="text-[#323335] mt-[33px]">
         <div className="text-sm font-normal">
           <div className="flex items-start gap-4">
-            <span className="text-[#323335] flex-1 min-w-0">
-              Subtotal
-            </span>
+            <span className="text-[#323335] flex-1 min-w-0">Subtotal</span>
             <span className="text-[#323335] text-right ml-auto min-w-0 break-words">
               {currency}
               {fmt(subtotal)}
             </span>
           </div>
           <div className="flex items-start gap-4 mt-3">
-            <span className="text-[#323335] flex-1 min-w-0">Platform fee 2.5%</span>
+            <span className="text-[#323335] flex-1 min-w-0">
+              Platform fee 2.5%
+            </span>
             <span className="text-[#323335] text-right ml-auto min-w-0 break-words">
               {currency}
               {fmt(platformFee)}

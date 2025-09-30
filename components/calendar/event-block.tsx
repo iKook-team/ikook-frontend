@@ -30,11 +30,11 @@ export default function EventBlock({
   const height =
     ((endHour - startHour) * 60 + (endMinute - startMinute)) * (64 / 60);
 
-  const eventTimeRange = `${format(event.start, 'h:mma')} - ${format(event.end, 'h:mma')}`;
-  const eventDate = format(event.start, 'EEEE, MMMM d, yyyy');
-  const eventTitle = event.booking 
-    ? `${event.booking.service} for ${event.booking.host_user}` 
-    : 'Available time slot';
+  const eventTimeRange = `${format(event.start, "h:mma")} - ${format(event.end, "h:mma")}`;
+  const eventDate = format(event.start, "EEEE, MMMM d, yyyy");
+  const eventTitle = event.booking
+    ? `${event.booking.service} for ${event.booking.host_user}`
+    : "Available time slot";
 
   return (
     <button

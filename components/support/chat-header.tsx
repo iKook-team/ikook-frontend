@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface ChatHeaderProps {
   userName: string;
@@ -20,7 +20,7 @@ export function ChatHeader({ userName, status, onBack }: ChatHeaderProps) {
             <div
               dangerouslySetInnerHTML={{
                 __html:
-                  "<svg id=\"2076:30130\" layer-name=\"chevron/left\" width=\"27\" height=\"24\" viewBox=\"0 0 27 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"back-icon\" style=\"width: 26.071px; height: 24px; position: relative\"> <path d=\"M16.071 6L10.3213 11.2929C9.89712 11.6834 9.89712 12.3166 10.3213 12.7071L16.071 18\" stroke=\"#020101\" stroke-width=\"2\" stroke-linecap=\"round\"></path> </svg>",
+                  '<svg id="2076:30130" layer-name="chevron/left" width="27" height="24" viewBox="0 0 27 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="back-icon" style="width: 26.071px; height: 24px; position: relative"> <path d="M16.071 6L10.3213 11.2929C9.89712 11.6834 9.89712 12.3166 10.3213 12.7071L16.071 18" stroke="#020101" stroke-width="2" stroke-linecap="round"></path> </svg>',
               }}
             />
           </button>
@@ -37,7 +37,7 @@ export function ChatHeader({ userName, status, onBack }: ChatHeaderProps) {
       <div
         dangerouslySetInnerHTML={{
           __html:
-            "<svg id=\"2076:30134\" width=\"656\" height=\"2\" viewBox=\"0 0 656 2\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"divider-line\" style=\"width: 655px; height: 0px; stroke-width: 1px; stroke: #CFCFCE; position: absolute; left: -1px; top: 66px\"> <path d=\"M0.486328 1H655.014\" stroke=\"#CFCFCE\"></path> </svg>",
+            '<svg id="2076:30134" width="656" height="2" viewBox="0 0 656 2" fill="none" xmlns="http://www.w3.org/2000/svg" class="divider-line" style="width: 655px; height: 0px; stroke-width: 1px; stroke: #CFCFCE; position: absolute; left: -1px; top: 66px"> <path d="M0.486328 1H655.014" stroke="#CFCFCE"></path> </svg>',
         }}
       />
     </header>

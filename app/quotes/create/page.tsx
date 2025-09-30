@@ -6,7 +6,6 @@ import { toast } from "sonner";
 
 import { MenuItemInput } from "@/components/quotes/quote-form";
 import { QuoteForm } from "@/components/quotes/quote-form";
-import { CreateSidebar } from "@/components/quotes/create-sidebar";
 import { quotesService } from "@/lib/api/quotes";
 import { bookingsService } from "@/lib/api/bookings";
 import BackButton from "@/components/common/BackButton";
@@ -36,10 +35,12 @@ const CreateQuotePage: React.FC = () => {
     let mounted = true;
     const load = async () => {
       const bId = Number.isFinite(bookingId) && bookingId > 0 ? bookingId : 0;
+
       if (!bId) return;
       setLoadingBooking(true);
       try {
         const data = await bookingsService.getBookingById(bId);
+
         if (mounted) setBooking(data);
       } catch (e) {
         if (mounted) setBooking(null);
@@ -47,7 +48,9 @@ const CreateQuotePage: React.FC = () => {
         if (mounted) setLoadingBooking(false);
       }
     };
+
     load();
+
     return () => {
       mounted = false;
     };
@@ -61,9 +64,14 @@ const CreateQuotePage: React.FC = () => {
       setIsSubmitting(true);
 
       // Validate booking id
-      const bId = Number.isFinite(bookingId) && bookingId > 0 ? bookingId : formData.booking;
+      const bId =
+        Number.isFinite(bookingId) && bookingId > 0
+          ? bookingId
+          : formData.booking;
+
       if (!bId || bId <= 0) {
         toast.error("Missing booking ID in URL");
+
         return;
       }
 
@@ -78,11 +86,20 @@ const CreateQuotePage: React.FC = () => {
           name: item.name,
           description: item.description,
           price,
-        } as { id?: number; course: string; name: string; description: string; price: string };
+        } as {
+          id?: number;
+          course: string;
+          name: string;
+          description: string;
+          price: string;
+        };
+
         if (item.id) {
           const idNum = Number(item.id);
+
           if (Number.isFinite(idNum)) base.id = idNum;
         }
+
         return base;
       });
 
@@ -102,14 +119,19 @@ const CreateQuotePage: React.FC = () => {
         // id at top level
         if (typeof quote.id !== "undefined") return quote.id;
         // nested common shapes
-        if (quote.quote && typeof quote.quote.id !== "undefined") return quote.quote.id;
-        if (quote.data && typeof quote.data.id !== "undefined") return quote.data.id;
-        if (Array.isArray(quote.results) && quote.results[0]?.id) return quote.results[0].id;
+        if (quote.quote && typeof quote.quote.id !== "undefined")
+          return quote.quote.id;
+        if (quote.data && typeof quote.data.id !== "undefined")
+          return quote.data.id;
+        if (Array.isArray(quote.results) && quote.results[0]?.id)
+          return quote.results[0].id;
+
         return undefined;
       })();
 
       if (!newId) {
         toast.error("Could not determine created quote ID");
+
         return;
       }
 

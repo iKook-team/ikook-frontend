@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Navigation } from "@/components/auth/Navigation";
 import { Footer } from "@/components/footer/footer";
 import PrivacySection from "@/components/privacy/privacy-section";
@@ -73,7 +74,6 @@ const Index = () => {
 
       <main className="w-full flex justify-center relative px-[91px] py-0">
         <div className="w-[1259px] shrink-0 relative mt-[99px] max-sm:w-full lg:pr-[420px] xl:pr-[520px] mb-20 md:mb-28 lg:mb-32">
-
           <header className="mb-[99px]">
             <h1 className="text-[#323335] text-[70px] font-bold leading-[71.4px] w-[504px] h-[71px] mb-[74px]">
               Privacy

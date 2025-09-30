@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { ProgressIndicator } from "./progress-indicator";
 import { ActionButtons } from "./action-buttons";
+
 import { TagSelector } from "@/components/ui/tag-selector";
 
 interface ClassDetailsForm3Props {
@@ -32,7 +33,7 @@ const ClassDetailsForm3: React.FC<ClassDetailsForm3Props> = ({
   onNext,
   onBack,
   initialValues = {},
-  chefName = 'Chef'
+  chefName = "Chef",
 }) => {
   const [formData, setFormData] = useState<ClassDetailsForm3Data>({
     startDate: "",
@@ -64,9 +65,7 @@ const ClassDetailsForm3: React.FC<ClassDetailsForm3Props> = ({
         {/* Header Section */}
         <div className="px-6 pt-6 pb-4 border-b border-gray-100">
           <header className="mb-6">
-            <h1 className="text-2xl font-semibold text-gray-900">
-              {chefName}
-            </h1>
+            <h1 className="text-2xl font-semibold text-gray-900">{chefName}</h1>
           </header>
           <div className="mb-4">
             <ProgressIndicator steps={progressSteps} />
@@ -75,7 +74,9 @@ const ClassDetailsForm3: React.FC<ClassDetailsForm3Props> = ({
 
         {/* Form Section */}
         <section className="p-6 space-y-6">
-          <h2 className="text-2xl font-semibold text-gray-900">Class Schedule</h2>
+          <h2 className="text-2xl font-semibold text-gray-900">
+            Class Schedule
+          </h2>
 
           <form
             className="space-y-6"

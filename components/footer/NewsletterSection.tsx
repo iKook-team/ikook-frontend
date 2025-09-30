@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+
 import { newsletterService } from "@/lib/api/newsletter";
 import { showToast, handleApiError } from "@/lib/utils/toast";
 
@@ -50,6 +51,7 @@ export const NewsletterSection: React.FC = () => {
         name: formData.name.trim(),
         email: formData.email.trim(),
       });
+
       showToast.success("You have subscribed to our newsletter.");
       setFormData({ name: "", email: "" });
     } catch (error) {

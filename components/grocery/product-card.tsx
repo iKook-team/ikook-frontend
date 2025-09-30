@@ -1,6 +1,7 @@
 "use client";
 import * as React from "react";
 import Link from "next/link";
+
 import { useAuthStore } from "@/lib/store/auth-store";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
@@ -30,6 +31,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const isChef = user?.user_type === "Chef";
   const placeholder = "https://via.placeholder.com/300x200?text=Grocery";
   const [src, setSrc] = React.useState<string>(imageUrl || placeholder);
+
   React.useEffect(() => {
     setSrc(imageUrl || placeholder);
   }, [imageUrl]);
@@ -51,12 +53,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </div>
         </div>
         <div className="flex flex-col p-4 text-[rgba(24,23,37,1)]">
-          <h3 className="text-base font-semibold leading-6 text-zinc-900">{name}</h3>
+          <h3 className="text-base font-semibold leading-6 text-zinc-900">
+            {name}
+          </h3>
           <p className="mt-1 text-xs text-zinc-500 overflow-hidden text-ellipsis whitespace-nowrap">
             {description}
           </p>
           <div className="mt-3 flex items-center justify-between gap-2">
-            <span className="text-lg font-semibold text-zinc-900">{cfg.currencySymbol}{price}</span>
+            <span className="text-lg font-semibold text-zinc-900">
+              {cfg.currencySymbol}
+              {price}
+            </span>
             <div className="flex items-center gap-2 whitespace-nowrap shrink-0">
               {actionButton && <>{actionButton}</>}
               {isChef ? (

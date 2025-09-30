@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const AboutContent: React.FC = () => {
   return (
@@ -12,9 +12,7 @@ const AboutContent: React.FC = () => {
         </p>
         <br />
         <br />
-        <h2 className="font-bold text-2xl leading-[56px] inline">
-          Our Story
-        </h2>
+        <h2 className="font-bold text-2xl leading-[56px] inline">Our Story</h2>
         <br />
         <p>
           iKooK was born out of a need for good food and the desire to create

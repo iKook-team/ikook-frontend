@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
 interface InputFieldProps {
   label: string;
   placeholder: string;
   value: string;
   onChange: (value: string) => void;
-  type?: 'text' | 'date' | 'time';
+  type?: "text" | "date" | "time";
   icon?: React.ReactNode;
   className?: string;
 }
@@ -15,9 +15,9 @@ export const InputField: React.FC<InputFieldProps> = ({
   placeholder,
   value,
   onChange,
-  type = 'text',
+  type = "text",
   icon,
-  className = ''
+  className = "",
 }) => {
   return (
     <div className={`flex flex-col items-start ${className}`}>

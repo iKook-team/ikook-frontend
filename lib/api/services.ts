@@ -114,6 +114,7 @@ export const servicesService = {
   // Get a single service by id
   getService: async (id: number): Promise<Service> => {
     const response = await apiClient.get<{ data: Service }>(`/services/${id}/`);
+
     return response.data.data;
   },
 
@@ -123,6 +124,7 @@ export const servicesService = {
     data: Record<string, unknown>,
   ): Promise<Service> => {
     const formData = new FormData();
+
     Object.entries(data).forEach(([key, value]) => {
       if (key === "cover_image" && value instanceof File) {
         formData.append(key, value);
@@ -142,6 +144,7 @@ export const servicesService = {
         ["axios-retry"]: { retries: 0 } as any,
       },
     );
+
     return response.data.data;
   },
 };

@@ -52,6 +52,7 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
 
 function BookingResumeHandler({ children }: { children?: React.ReactNode }) {
   useBookingResume();
+
   return <>{children}</>;
 }
 
@@ -63,9 +64,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
       <NextThemesProvider {...themeProps}>
         <MarketProvider>
           <AuthInitializer>
-            <BookingResumeHandler>
-              {children}
-            </BookingResumeHandler>
+            <BookingResumeHandler>{children}</BookingResumeHandler>
           </AuthInitializer>
           <Toaster
             position="top-right"

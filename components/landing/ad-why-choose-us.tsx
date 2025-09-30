@@ -4,30 +4,32 @@ import React from "react";
 
 export const AdWhyChooseUs: React.FC = () => {
   const scrollToBooking = () => {
-    document.getElementById("booking-form")?.scrollIntoView({ behavior: "smooth" });
+    document
+      .getElementById("booking-form")
+      ?.scrollIntoView({ behavior: "smooth" });
   };
 
   const features = [
     {
       icon: "🏆",
       title: "Trusted, vetted professional chefs",
-      description: "All our chefs are thoroughly screened and verified"
+      description: "All our chefs are thoroughly screened and verified",
     },
     {
       icon: "💎",
       title: "Affordable luxury",
-      description: "Restaurant-quality dining at home without the premium"
+      description: "Restaurant-quality dining at home without the premium",
     },
     {
       icon: "📱",
       title: "Convenience at your fingertips",
-      description: "Book in minutes, enjoy in hours"
+      description: "Book in minutes, enjoy in hours",
     },
     {
       icon: "🔒",
       title: "Secure payments and protection",
-      description: "Your money and experience are fully protected"
-    }
+      description: "Your money and experience are fully protected",
+    },
   ];
 
   return (
@@ -41,9 +43,14 @@ export const AdWhyChooseUs: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
-            <div key={index} className="text-center p-6 rounded-lg hover:shadow-lg transition-all duration-300">
+            <div
+              key={index}
+              className="text-center p-6 rounded-lg hover:shadow-lg transition-all duration-300"
+            >
               <div className="text-4xl mb-4">{feature.icon}</div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">{feature.title}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                {feature.title}
+              </h3>
               <p className="text-gray-600">{feature.description}</p>
             </div>
           ))}

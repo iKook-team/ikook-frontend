@@ -2,7 +2,9 @@
 
 import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+
 import BackButton from "@/components/common/BackButton";
+
 import { useSearchParams } from "next/navigation";
 
 interface MenuItemInput {
@@ -57,20 +59,36 @@ export default function MessagingPage() {
   // Determine a context-aware back href
   const backHref = useMemo(() => {
     const qp = searchParams?.get("back");
+
     if (qp) {
       try {
-        const url = new URL(qp, typeof window !== "undefined" ? window.location.origin : "http://localhost");
+        const url = new URL(
+          qp,
+          typeof window !== "undefined"
+            ? window.location.origin
+            : "http://localhost",
+        );
+
         // Only allow same-origin navigations for safety
-        if (typeof window !== "undefined" && url.origin === window.location.origin) return url.pathname + url.search + url.hash;
+        if (
+          typeof window !== "undefined" &&
+          url.origin === window.location.origin
+        )
+          return url.pathname + url.search + url.hash;
       } catch (_) {
         // ignore malformed values
       }
     }
     if (typeof document !== "undefined") {
       const ref = document.referrer || "";
+
       try {
         const refUrl = new URL(ref);
-        if (typeof window !== "undefined" && refUrl.origin === window.location.origin) {
+
+        if (
+          typeof window !== "undefined" &&
+          refUrl.origin === window.location.origin
+        ) {
           if (refUrl.pathname.startsWith("/dashboard/booking-details")) {
             return refUrl.pathname + refUrl.search + refUrl.hash;
           }
@@ -79,6 +97,7 @@ export default function MessagingPage() {
         // ignore
       }
     }
+
     return undefined;
   }, [searchParams]);
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
@@ -208,12 +227,15 @@ export default function MessagingPage() {
                   const path = bookingId
                     ? `/quotes/create?bookingId=${bookingId}`
                     : "/quotes/create";
+
                   router.push(path);
+
                   return;
                 }
                 // If host and a quote exists, go to the quote details page
                 if (!isChef && quote?.id) {
                   router.push(`/quotes/${quote.id}`);
+
                   return;
                 }
                 // Otherwise, open the drawer (view or pay quote flows)
@@ -234,7 +256,11 @@ export default function MessagingPage() {
           <ConversationList
             onChatSelect={handleChatSelect}
             activeChatId={activeChat?.id || null}
-            initialChatId={Number.isFinite(initialChatId as number) ? (initialChatId as number) : undefined}
+            initialChatId={
+              Number.isFinite(initialChatId as number)
+                ? (initialChatId as number)
+                : undefined
+            }
           />
         </div>
 

@@ -58,6 +58,7 @@ export function ConversationList({
         if (chatResults.length > 0 && !activeChatId) {
           if (initialChatId) {
             const match = chatResults.find((c) => c.id === initialChatId);
+
             if (match) {
               onChatSelect(match);
             } else {

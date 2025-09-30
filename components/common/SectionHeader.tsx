@@ -20,11 +20,17 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
   return (
     <div className={`text-center mb-12 ${containerClassName}`}>
       <div className="flex flex-col items-center">
-        <div className={`w-full max-w-2xl h-0.5 bg-gray-200 mb-6 ${lineClassName}`} />
-        <h2 className={`text-3xl lg:text-4xl font-medium text-[#323335] px-8 ${className}`}>
+        <div
+          className={`w-full max-w-2xl h-0.5 bg-gray-200 mb-6 ${lineClassName}`}
+        />
+        <h2
+          className={`text-3xl lg:text-4xl font-medium text-[#323335] px-8 ${className}`}
+        >
           {title}
         </h2>
-        <div className={`w-full max-w-2xl h-0.5 bg-gray-200 mt-6 ${lineClassName}`} />
+        <div
+          className={`w-full max-w-2xl h-0.5 bg-gray-200 mt-6 ${lineClassName}`}
+        />
       </div>
     </div>
   );

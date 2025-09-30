@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import { QuoteCard } from "./quote-card";
+
 import { quotesService, Quote as ApiQuote } from "@/lib/api/quotes";
 import Skeleton from "@/components/ui/skeleton";
 import { useMarket } from "@/lib/market-context";
@@ -16,7 +17,9 @@ type CardQuote = {
   price: string;
 };
 
-export const QuotesSection: React.FC<{ bookingId?: string | number }> = ({ bookingId }) => {
+export const QuotesSection: React.FC<{ bookingId?: string | number }> = ({
+  bookingId,
+}) => {
   const [quotes, setQuotes] = React.useState<CardQuote[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -25,6 +28,7 @@ export const QuotesSection: React.FC<{ bookingId?: string | number }> = ({ booki
 
   React.useEffect(() => {
     let mounted = true;
+
     (async () => {
       try {
         setLoading(true);
@@ -32,29 +36,41 @@ export const QuotesSection: React.FC<{ bookingId?: string | number }> = ({ booki
         const params = bookingId ? { booking: bookingId } : undefined;
         const data: ApiQuote[] = await quotesService.listQuotes(params);
 
-        const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+        const apiBase =
+          process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
         const mapped: CardQuote[] = (data || []).map((q: any) => {
           // Prefer backend-calculated total_cost; fallback to summing items
           let total = Number(q.total_cost);
+
           if (Number.isNaN(total)) {
             total = Array.isArray(q.items)
               ? q.items.reduce((sum: number, item: any) => {
                   const raw = item?.price ?? "0";
                   // Remove any non-numeric (except dot/comma) before parse
-                  const cleaned = typeof raw === "string" ? raw.replace(/[^0-9.,-]/g, "").replace(",", ".") : String(raw);
+                  const cleaned =
+                    typeof raw === "string"
+                      ? raw.replace(/[^0-9.,-]/g, "").replace(",", ".")
+                      : String(raw);
                   const n = parseFloat(cleaned);
+
                   return sum + (isNaN(n) ? 0 : n);
                 }, 0)
               : 0;
           }
-          const firstImage = Array.isArray(q.images) && q.images.length > 0 ? q.images[0]?.image : null;
+          const firstImage =
+            Array.isArray(q.images) && q.images.length > 0
+              ? q.images[0]?.image
+              : null;
           const normalizedFirstImage = firstImage
-            ? (firstImage.startsWith("http") ? firstImage : `${apiBase}${firstImage}`)
+            ? firstImage.startsWith("http")
+              ? firstImage
+              : `${apiBase}${firstImage}`
             : null;
           const formattedTotal = total.toLocaleString(marketCfg.locale, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           });
+
           return {
             id: String(q.id),
             imageUrl:
@@ -74,6 +90,7 @@ export const QuotesSection: React.FC<{ bookingId?: string | number }> = ({ booki
         if (mounted) setLoading(false);
       }
     })();
+
     return () => {
       mounted = false;
     };
@@ -89,7 +106,10 @@ export const QuotesSection: React.FC<{ bookingId?: string | number }> = ({ booki
           {loading && (
             <>
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="rounded-2xl border border-neutral-200 overflow-hidden w-full">
+                <div
+                  key={i}
+                  className="rounded-2xl border border-neutral-200 overflow-hidden w-full"
+                >
                   <Skeleton className="w-full h-40" />
                   <div className="p-6 space-y-3">
                     <Skeleton className="h-5 w-3/5" />
@@ -108,7 +128,8 @@ export const QuotesSection: React.FC<{ bookingId?: string | number }> = ({ booki
               No quotes found.
             </div>
           )}
-          {!loading && !error &&
+          {!loading &&
+            !error &&
             quotes.map((quote) => (
               <QuoteCard
                 key={quote.id}

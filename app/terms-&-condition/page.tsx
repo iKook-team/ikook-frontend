@@ -1,13 +1,14 @@
-import React from 'react';
-import { Navigation } from '@/components/auth/Navigation';
-import { Footer } from '@/components/footer/footer';
-import TermsSection from '@/components/terms/terms-section';
+import React from "react";
+
+import { Navigation } from "@/components/auth/Navigation";
+import { Footer } from "@/components/footer/footer";
+import TermsSection from "@/components/terms/terms-section";
 
 const Index = () => {
   return (
     <div className="bg-white flex flex-col overflow-hidden items-stretch">
       <Navigation />
-      
+
       <main className="flex w-full flex-col items-stretch mt-[110px] max-md:mt-10">
         <div className="max-w-7xl mx-auto px-6 lg:px-12 mb-20 md:mb-28 lg:mb-32">
           <div className="max-md:max-w-full">
@@ -27,8 +28,8 @@ const Index = () => {
                     carefully, and contact us if you have any questions.
                     <br />
                     Your use of our Website and App indicates that you have read
-                    and accepted these Terms of Use and you warrant that you have
-                    the legal capacity to accept these Terms of Use.
+                    and accepted these Terms of Use and you warrant that you
+                    have the legal capacity to accept these Terms of Use.
                     <br />
                     We are committed to protecting your privacy. Our privacy
                     policy is available at www.ikook.com. By agreeing to these

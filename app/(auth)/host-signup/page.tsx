@@ -27,6 +27,7 @@ interface AllFormData {
 function getCountryFromMarket(market: "NG" | "GB" | "ZA"): string {
   if (market === "NG") return "Nigeria";
   if (market === "ZA") return "South Africa";
+
   return "United Kingdom"; // GB
 }
 

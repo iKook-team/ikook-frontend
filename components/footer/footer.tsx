@@ -6,7 +6,8 @@ import { NewsletterSection } from "./NewsletterSection";
 import { FooterLinks } from "./FooterLinks";
 
 export const Footer: React.FC = () => {
-  const year = new Date().getFullYear()
+  const year = new Date().getFullYear();
+
   return (
     <footer className="w-full bg-[#FCC01C] pt-16 pb-6 px-12 max-md:px-5">
       <NewsletterSection />

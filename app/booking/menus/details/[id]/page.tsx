@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useAuthStore } from "@/lib/store/auth-store";
 
+import { useAuthStore } from "@/lib/store/auth-store";
 import { HeroSection } from "@/components/booking/hero-section";
 import { ImageGallery } from "@/components/booking/image-gallery";
 import { ChefMenuSection } from "@/components/booking/chef-menu-section";

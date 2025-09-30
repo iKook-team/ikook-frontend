@@ -1,5 +1,5 @@
-'use client';
-import React from 'react';
+"use client";
+import React from "react";
 
 interface SearchInputProps {
   value: string;
@@ -7,10 +7,10 @@ interface SearchInputProps {
   placeholder?: string;
 }
 
-export const SearchInput: React.FC<SearchInputProps> = ({ 
-  value, 
-  onChange, 
-  placeholder = "Search here" 
+export const SearchInput: React.FC<SearchInputProps> = ({
+  value,
+  onChange,
+  placeholder = "Search here",
 }) => {
   return (
     <div className="bg-[rgba(253,253,253,1)] border flex items-stretch gap-5 text-xs text-[rgba(150,155,160,1)] font-normal flex-wrap justify-between mt-4 px-[15px] py-3.5 rounded-[7px] border-[rgba(235,235,235,1)] border-solid max-md:max-w-full">

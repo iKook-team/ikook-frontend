@@ -27,13 +27,16 @@ interface BookingEvent {
 export default function CalendarPage() {
   const router = useRouter();
   const { isAuthenticated, user } = useAuthStore();
+
   useEffect(() => {
     if (!isAuthenticated) {
       router.replace("/login");
+
       return;
     }
     const isChef = user?.user_type === "Chef";
     const isChefService = (user as any)?.service_type === "Chef";
+
     if (!isChef || !isChefService) {
       router.replace("/dashboard/chef");
     }
@@ -160,7 +163,11 @@ export default function CalendarPage() {
   }, []);
 
   // After all hooks are declared, guard rendering for unauthorized users
-  if (!isAuthenticated || user?.user_type !== "Chef" || (user as any)?.service_type !== "Chef") {
+  if (
+    !isAuthenticated ||
+    user?.user_type !== "Chef" ||
+    (user as any)?.service_type !== "Chef"
+  ) {
     return null;
   }
 
@@ -220,7 +227,7 @@ export default function CalendarPage() {
             margin: 0,
           }}
           onKeyDown={(e) => {
-            if (e.key === 'Escape') {
+            if (e.key === "Escape") {
               e.preventDefault();
               handleClosePanel();
             }

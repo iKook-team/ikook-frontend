@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
 
@@ -163,7 +164,11 @@ interface ServiceCardProps {
 }
 
 export const ServiceListing: React.FC<
-  ServiceCardProps & { id?: number; services?: string[]; chefId?: number | string }
+  ServiceCardProps & {
+    id?: number;
+    services?: string[];
+    chefId?: number | string;
+  }
 > = ({
   description,
   isVerified = true,
@@ -181,7 +186,10 @@ export const ServiceListing: React.FC<
 }) => {
   const router = useRouter();
   const { market } = useMarket();
-  const currencySymbol = React.useMemo(() => getMarketConfig(market).currencySymbol, [market]);
+  const currencySymbol = React.useMemo(
+    () => getMarketConfig(market).currencySymbol,
+    [market],
+  );
   // Normalize service tag for comparison
   const tag =
     services && services[0]
@@ -192,6 +200,7 @@ export const ServiceListing: React.FC<
       router.push(`/booking/services/details/${id}`);
     } else if (tag === "boxgrocery") {
       const targetId = chefId ?? id;
+
       router.push(`/groceries/details/${targetId}`);
     }
   };
@@ -216,7 +225,8 @@ export const ServiceListing: React.FC<
       {price && (
         <div className="absolute left-[9px] top-[190px] right-4">
           <div className="text-white font-semibold leading-6">
-            From {currencySymbol}{price}
+            From {currencySymbol}
+            {price}
           </div>
         </div>
       )}
@@ -224,7 +234,9 @@ export const ServiceListing: React.FC<
       <div className="absolute left-0 top-[225px] w-full px-4 pt-2">
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-[#323335] text-base font-bold leading-6">{name}</h2>
+            <h2 className="text-[#323335] text-base font-bold leading-6">
+              {name}
+            </h2>
             <div className="flex items-center">
               <StarRating rating={rating} reviewCount={reviewCount} />
             </div>

@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useMemo } from 'react';
-import { InputField } from './input-field';
-import { FormField } from '@/components/ui/form-field';
-import { useMarket } from '@/lib/market-context';
-import { getLocationsForMarket } from '@/lib/locations';
+import React, { useMemo } from "react";
+
+import { InputField } from "./input-field";
+
+import { FormField } from "@/components/ui/form-field";
+import { useMarket } from "@/lib/market-context";
+import { getLocationsForMarket } from "@/lib/locations";
 
 interface AddressSectionProps {
   address: string;
@@ -23,18 +25,19 @@ export const AddressSection: React.FC<AddressSectionProps> = ({
   city,
   onCityChange,
 }) => {
-
   // Use market-based city/state options (same as signup flow)
   const { market } = useMarket();
   const allLocations = useMemo(() => getLocationsForMarket(market), [market]);
   const cityOptions = useMemo(
-    () => [{ value: '', label: 'Select city' }, ...allLocations.map((v) => ({ value: v, label: v }))],
-    [allLocations]
+    () => [
+      { value: "", label: "Select city" },
+      ...allLocations.map((v) => ({ value: v, label: v })),
+    ],
+    [allLocations],
   );
 
   return (
     <section className="w-full flex flex-col gap-4">
-
       <InputField
         label="Address"
         placeholder=""

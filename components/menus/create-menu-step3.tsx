@@ -1,11 +1,12 @@
 "use client";
 import * as React from "react";
-import { showToast } from "@/lib/utils/toast";
 
 import { ProgressStepper } from "./progress-indicator";
 import { ImageUploadArea } from "./image-upload-area";
 import { UploadedImage } from "./uploaded-image";
 import { FormNavigationFooter } from "./form-navigation-footer";
+
+import { showToast } from "@/lib/utils/toast";
 
 interface MenuImagesStepProps {
   onBack: () => void;
@@ -59,11 +60,13 @@ export const CreateMenuStep3: React.FC<MenuImagesStepProps> = ({
 
       if (remainingSlots === 0) {
         showToast.error("You can upload a maximum of 10 images per menu.");
+
         return prev;
       }
 
       const accepted = incoming.slice(0, remainingSlots);
       const rejectedCount = incoming.length - accepted.length;
+
       if (rejectedCount > 0) {
         showToast.warning(
           `Only ${remainingSlots} more image${remainingSlots === 1 ? "" : "s"} allowed (max 10).`,
@@ -105,15 +108,21 @@ export const CreateMenuStep3: React.FC<MenuImagesStepProps> = ({
           <p className="text-sm text-gray-600 mb-2 text-center">
             Upload 5–10 high-quality images of your menu items.
           </p>
-          <p className={`text-xs mb-4 text-center ${canContinue ? "text-gray-500" : "text-red-600"}`}>
-            {totalImages < 5 && `You have ${totalImages}. Please upload at least ${5 - totalImages} more image${5 - totalImages === 1 ? "" : "s"}.`}
-            {totalImages > 10 && `You have ${totalImages}. Please remove ${totalImages - 10} image${totalImages - 10 === 1 ? "" : "s"} to continue.`}
-            {totalImages >= 5 && totalImages <= 10 && `${totalImages} / 10 images selected`}
+          <p
+            className={`text-xs mb-4 text-center ${canContinue ? "text-gray-500" : "text-red-600"}`}
+          >
+            {totalImages < 5 &&
+              `You have ${totalImages}. Please upload at least ${5 - totalImages} more image${5 - totalImages === 1 ? "" : "s"}.`}
+            {totalImages > 10 &&
+              `You have ${totalImages}. Please remove ${totalImages - 10} image${totalImages - 10 === 1 ? "" : "s"} to continue.`}
+            {totalImages >= 5 &&
+              totalImages <= 10 &&
+              `${totalImages} / 10 images selected`}
           </p>
           <div className="w-full flex justify-center">
             <ImageUploadArea onImageSelect={handleImageSelect} />
           </div>
-          
+
           {/* Display existing images */}
           {existingImages.length > 0 && (
             <div className="mt-6 w-full flex flex-col items-center">
@@ -131,7 +140,7 @@ export const CreateMenuStep3: React.FC<MenuImagesStepProps> = ({
               </div>
             </div>
           )}
-          
+
           {/* Display newly uploaded images */}
           {uploadedImages.length > 0 && (
             <div className="mt-6 w-full flex flex-col items-center">

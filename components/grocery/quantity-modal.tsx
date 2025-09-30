@@ -1,18 +1,31 @@
 "use client";
 
+import type { GroceryItem } from "@/lib/api/groceries";
+
 import React from "react";
+
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
-import type { GroceryItem } from "@/lib/api/groceries";
 
 interface QuantityModalProps {
   open: boolean;
   onClose: () => void;
-  product: { id: string; name: string; price: string; imageUrl?: string; items?: GroceryItem[] } | null;
+  product: {
+    id: string;
+    name: string;
+    price: string;
+    imageUrl?: string;
+    items?: GroceryItem[];
+  } | null;
   onConfirm: (qty: number) => void;
 }
 
-export const QuantityModal: React.FC<QuantityModalProps> = ({ open, onClose, product, onConfirm }) => {
+export const QuantityModal: React.FC<QuantityModalProps> = ({
+  open,
+  onClose,
+  product,
+  onConfirm,
+}) => {
   const [qty, setQty] = React.useState<number>(1);
   const { market } = useMarket();
   const cfg = React.useMemo(() => getMarketConfig(market), [market]);
@@ -36,8 +49,19 @@ export const QuantityModal: React.FC<QuantityModalProps> = ({ open, onClose, pro
             className="text-gray-400 hover:text-gray-600"
             aria-label="Close modal"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </header>
@@ -53,19 +77,33 @@ export const QuantityModal: React.FC<QuantityModalProps> = ({ open, onClose, pro
 
         <div className="p-5 space-y-4">
           <div className="min-w-0">
-            <p className="text-base font-medium text-gray-900 truncate">{product.name}</p>
-            <p className="text-sm text-gray-600">{cfg.currencySymbol}{product.price}</p>
+            <p className="text-base font-medium text-gray-900 truncate">
+              {product.name}
+            </p>
+            <p className="text-sm text-gray-600">
+              {cfg.currencySymbol}
+              {product.price}
+            </p>
           </div>
 
           {Array.isArray(product.items) && product.items.length > 0 && (
             <div className="space-y-3">
-              <p className="text-sm font-medium text-gray-900">Items included</p>
+              <p className="text-sm font-medium text-gray-900">
+                Items included
+              </p>
               <div className="space-y-2 max-h-[30vh] overflow-y-auto pr-1">
                 {product.items.map((it, idx) => (
-                  <div key={`${it.name}-${idx}`} className="flex items-center justify-between py-2 px-3 rounded-md border border-gray-200">
+                  <div
+                    key={`${it.name}-${idx}`}
+                    className="flex items-center justify-between py-2 px-3 rounded-md border border-gray-200"
+                  >
                     <div>
-                      <p className="text-sm font-medium text-gray-900">{it.name}</p>
-                      <p className="text-xs text-gray-500">{it.measurement_unit}</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        {it.name}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {it.measurement_unit}
+                      </p>
                     </div>
                     <div className="text-sm text-gray-800">{it.weight}</div>
                   </div>
@@ -90,7 +128,9 @@ export const QuantityModal: React.FC<QuantityModalProps> = ({ open, onClose, pro
                 className="w-14 h-9 text-center border border-gray-300 rounded-md"
                 value={qty}
                 min={1}
-                onChange={(e) => setQty(Math.max(1, Number(e.target.value) || 1))}
+                onChange={(e) =>
+                  setQty(Math.max(1, Number(e.target.value) || 1))
+                }
               />
               <button
                 type="button"

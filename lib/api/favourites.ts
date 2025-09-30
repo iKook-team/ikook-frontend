@@ -181,14 +181,17 @@ export const favouritesService = {
     try {
       const hasChef = typeof chefId === "number";
       const hasMenu = typeof menuId === "number";
+
       if (Number(hasChef) + Number(hasMenu) !== 1) {
         throw new Error("Provide exactly one of chefId or menuId");
       }
 
       const payload: any = hasChef ? { chef: chefId } : { menu: menuId };
-      const response = await apiClient.post<
-        ApiResponse<{ id: number }>
-      >("/favourites/", payload);
+      const response = await apiClient.post<ApiResponse<{ id: number }>>(
+        "/favourites/",
+        payload,
+      );
+
       return response.data.data.id;
     } catch (error) {
       throw error;
@@ -243,6 +246,7 @@ export const favouritesService = {
     console.debug("[favourites] findFavouriteId start", { chefId, menuId });
     const hasChef = typeof chefId === "number";
     const hasMenu = typeof menuId === "number";
+
     if (Number(hasChef) + Number(hasMenu) !== 1) {
       throw new Error("Provide exactly one of chefId or menuId");
     }
@@ -253,10 +257,13 @@ export const favouritesService = {
     const list = await favouritesService.getFavourites(type, 1, pageSize);
     const match = list.results.find((fav) => {
       if (hasChef) return fav.chef && fav.chef.id === chefId;
+
       return fav.menu && fav.menu.id === menuId;
     });
     const result = match ? match.id : null;
+
     console.debug("[favourites] findFavouriteId result", { result });
+
     return result;
   },
 
@@ -270,11 +277,16 @@ export const favouritesService = {
     chefId?: number;
     menuId?: number;
   }): Promise<void> => {
-    console.debug("[favourites] removeFavouriteByTarget start", { chefId, menuId });
+    console.debug("[favourites] removeFavouriteByTarget start", {
+      chefId,
+      menuId,
+    });
     const favId = await favouritesService.findFavouriteId({ chefId, menuId });
+
     if (!favId) {
       // Nothing to delete (already not favourited)
       console.debug("[favourites] removeFavouriteByTarget: no favourite found");
+
       return;
     }
     await favouritesService.removeFromFavourites(favId);

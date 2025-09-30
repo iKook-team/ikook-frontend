@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useAuthStore } from "@/lib/store/auth-store";
 
+import { useAuthStore } from "@/lib/store/auth-store";
 import { ChefProfile } from "@/components/booking/chef-profile";
 import { EventDetails } from "@/components/booking/event-details";
 import { ReviewsSection } from "@/components/booking/reviews-section";
@@ -60,17 +60,17 @@ const ServiceDetailPage = () => {
     <main className="mx-auto w-full max-w-[1117px] mt-[41px] px-4 mb-16 max-md:max-w-full max-md:mt-10">
       <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
         <div className="w-[36%] max-md:w-full max-md:ml-0">
-          <ChefProfile 
+          <ChefProfile
             chef={{
               id: service.data?.chef?.id || 0,
-              first_name: service.data?.chef?.first_name || '',
-              last_name: service.data?.chef?.last_name || '',
-              city: service.data?.chef?.city || '',
+              first_name: service.data?.chef?.first_name || "",
+              last_name: service.data?.chef?.last_name || "",
+              city: service.data?.chef?.city || "",
               rating: service.data?.chef?.average_rating || 0,
               review_count: service.data?.chef?.num_reviews || 0,
-              avatar: service.data?.chef?.avatar || '',
-              bio: service.data?.chef?.bio || ''
-            }} 
+              avatar: service.data?.chef?.avatar || "",
+              bio: service.data?.chef?.bio || "",
+            }}
           />
         </div>
         <div className="w-[64%] ml-5 max-md:w-full max-md:ml-0">
@@ -83,9 +83,7 @@ const ServiceDetailPage = () => {
                 onBack={() => {}}
               />
             ) : (
-              <div className="text-red-500">
-                No service details found.
-              </div>
+              <div className="text-red-500">No service details found.</div>
             )}
             <ReviewsSection />
           </div>

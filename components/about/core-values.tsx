@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface CoreValueCardProps {
   icon: string;
@@ -7,11 +7,16 @@ interface CoreValueCardProps {
   isDark?: boolean;
 }
 
-const CoreValueCard: React.FC<CoreValueCardProps> = ({ icon, title, description, isDark = false }) => {
-  const cardClasses = isDark 
+const CoreValueCard: React.FC<CoreValueCardProps> = ({
+  icon,
+  title,
+  description,
+  isDark = false,
+}) => {
+  const cardClasses = isDark
     ? "flex grow flex-col text-white w-full bg-[#323335] pt-6 pb-[46px] px-[30px] rounded-[6.531px] border-[0.653px] border-solid border-[rgba(50,51,53,0.40)] max-md:mt-[38px] max-md:px-5"
     : "flex grow flex-col w-full px-[31px] py-[26px] rounded-[6.531px] border-[0.653px] border-solid border-[rgba(50,51,53,0.40)] max-md:mt-[38px] max-md:pl-5";
-  
+
   const textColor = isDark ? "text-white" : "text-[#323335]";
 
   return (
@@ -22,10 +27,10 @@ const CoreValueCard: React.FC<CoreValueCardProps> = ({ icon, title, description,
           className="aspect-[1] object-contain w-[76px] rounded-[0px_0px_0px_0px]"
           alt={`${title} icon`}
         />
-        <h3 className={`${textColor} text-2xl font-semibold mt-5`}>
-          {title}
-        </h3>
-        <p className={`${textColor} text-sm font-normal self-stretch mt-[15px]`}>
+        <h3 className={`${textColor} text-2xl font-semibold mt-5`}>{title}</h3>
+        <p
+          className={`${textColor} text-sm font-normal self-stretch mt-[15px]`}
+        >
           {description}
         </p>
       </article>
@@ -38,21 +43,24 @@ const CoreValues: React.FC = () => {
     {
       icon: "https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/02efae481f9daa524203ecff4c7cff919f2e55b5?placeholderIfAbsent=true",
       title: "Fairness",
-      description: "We ensure transparent and equitable experiences for clients and customer by uphold fairness in every aspect, fostering trust, inclusivity, and mutual success.",
-      isDark: false
+      description:
+        "We ensure transparent and equitable experiences for clients and customer by uphold fairness in every aspect, fostering trust, inclusivity, and mutual success.",
+      isDark: false,
     },
     {
       icon: "https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/40edcdb88634d065d10cfd71318310ed1e71e666?placeholderIfAbsent=true",
       title: "Building Community",
-      description: "Build more of a genuine community with chefs and local business",
-      isDark: false
+      description:
+        "Build more of a genuine community with chefs and local business",
+      isDark: false,
     },
     {
       icon: "https://api.builder.io/api/v1/image/assets/9d6446e875d44ea29d44396a5fa1d405/e4319786b0009034424a5b2074f218ca8dcc0b28?placeholderIfAbsent=true",
       title: "Security and Trust",
-      description: "By ensuring that our chef are verify and we also ensure that we follow the GDPR law in other to protect our user details.",
-      isDark: true
-    }
+      description:
+        "By ensuring that our chef are verify and we also ensure that we follow the GDPR law in other to protect our user details.",
+      isDark: true,
+    },
   ];
 
   return (

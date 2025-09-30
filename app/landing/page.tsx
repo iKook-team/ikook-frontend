@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+
 import { AdHeroSection } from "@/components/landing/ad-hero-section";
 import { AdHowItWorks } from "@/components/landing/ad-how-it-works";
 import { AdWhyChooseUs } from "@/components/landing/ad-why-choose-us";

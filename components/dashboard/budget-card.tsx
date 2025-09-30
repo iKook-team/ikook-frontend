@@ -1,4 +1,5 @@
 import React from "react";
+
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
 
@@ -18,9 +19,12 @@ export const BudgetCard: React.FC<BudgetCardProps> = ({
   const displayCurrency = currency ?? marketCfg.currencySymbol;
   const formattedAmount = (() => {
     const n = Number(amount);
+
     if (Number.isFinite(n)) return n.toLocaleString(marketCfg.locale);
+
     return amount;
   })();
+
   return (
     <section className="flex flex-col items-start gap-2.5 rounded w-full box-border bg-[#FFFCF5] p-2.5 max-md:w-full max-sm:p-3">
       <div className="flex items-center justify-between w-full max-md:flex-col max-md:items-start max-md:gap-3 max-sm:gap-4">

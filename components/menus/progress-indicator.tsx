@@ -30,7 +30,6 @@ export function ProgressStepper({
     >
       <div className="flex min-w-max w-full justify-between items-start gap-2 sm:gap-4 px-2">
         {steps.map((step, index) => (
-
           <div key={step.id} className="flex-1 min-w-[80px] max-w-[120px]">
             <ProgressStep
               label={step.label}

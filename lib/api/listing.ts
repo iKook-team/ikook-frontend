@@ -183,16 +183,13 @@ export const listingService = {
   // Get chef profiles
   async getChefs(params: ChefListingParams = {}): Promise<ApiResponse<Chef>> {
     try {
-      const response = await apiClient.get(
-        "/users/profiles/",
-        {
-          params: {
-            ...params,
-            user_type: "Chef",
-            page_size: 20,
-          },
+      const response = await apiClient.get("/users/profiles/", {
+        params: {
+          ...params,
+          user_type: "Chef",
+          page_size: 20,
         },
-      );
+      });
 
       // Response may be wrapped: { status, message, data: { count, results, ... } }
       // or unwrapped: { count, results, ... }

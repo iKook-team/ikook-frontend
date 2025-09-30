@@ -40,12 +40,17 @@ const CreateGroceriesStep3: React.FC<FinishUploadProps> = ({
     { title: "Quality control" },
     { title: "Chef's travel and insurance costs" },
     { title: "Customer support" },
-    { title: "Money Protection", description: "We pay the chefs after the event, to protect your money" },
+    {
+      title: "Money Protection",
+      description: "We pay the chefs after the event, to protect your money",
+    },
   ];
 
   return (
     <div className="flex flex-col w-full max-w-[655px] mx-auto">
-      <header className="text-xl font-semibold text-black mb-6">Create product</header>
+      <header className="text-xl font-semibold text-black mb-6">
+        Create product
+      </header>
 
       <div className="flex flex-col items-center w-full mt-8">
         <div className="flex flex-col w-full">
@@ -56,9 +61,12 @@ const CreateGroceriesStep3: React.FC<FinishUploadProps> = ({
 
             <main className="flex flex-col items-center w-full">
               <div className="w-full max-w-[613px]">
-                <h2 className="text-2xl font-semibold leading-8 text-black">Finish upload</h2>
+                <h2 className="text-2xl font-semibold leading-8 text-black">
+                  Finish upload
+                </h2>
                 <p className="mt-4 text-base leading-6 text-neutral-600">
-                  Your product has been prepared. Submit to publish it to your groceries list.
+                  Your product has been prepared. Submit to publish it to your
+                  groceries list.
                 </p>
 
                 <section className="mt-8">
@@ -84,7 +92,9 @@ const CreateGroceriesStep3: React.FC<FinishUploadProps> = ({
               <FormNavigationFooter
                 backButtonText="Back"
                 className="w-full"
-                continueButtonText={isSubmitting ? "Submitting..." : "Submit Product"}
+                continueButtonText={
+                  isSubmitting ? "Submitting..." : "Submit Product"
+                }
                 onBack={handleBack}
                 onContinue={handleContinue}
                 disabled={isSubmitting}

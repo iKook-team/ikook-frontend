@@ -149,6 +149,7 @@ export function ChatArea({
 
     // Add optimistic message only if WS is not connected; otherwise rely on WS echo
     const addedOptimistic = !isConnected;
+
     if (addedOptimistic) {
       addLocalMessage(optimisticMessage);
     }

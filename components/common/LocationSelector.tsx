@@ -1,10 +1,12 @@
 "use client";
 
+import type { MarketCode } from "@/lib/market";
+
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
-import { useMarket } from "@/lib/market-context";
-import type { MarketCode } from "@/lib/market";
 import { usePathname, useRouter } from "next/navigation";
+
+import { useMarket } from "@/lib/market-context";
 
 type Country = {
   code: string;
@@ -22,8 +24,8 @@ export const LocationSelector: React.FC = () => {
   const { market, setMarket } = useMarket();
   const pathname = usePathname();
   const router = useRouter();
-  const [selectedCountry, setSelectedCountry] = useState<Country>(() =>
-    COUNTRIES.find((c) => c.code === market) || COUNTRIES[1],
+  const [selectedCountry, setSelectedCountry] = useState<Country>(
+    () => COUNTRIES.find((c) => c.code === market) || COUNTRIES[1],
   );
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -31,6 +33,7 @@ export const LocationSelector: React.FC = () => {
   // Sync UI when market changes elsewhere
   useEffect(() => {
     const next = COUNTRIES.find((c) => c.code === market);
+
     if (next && next.code !== selectedCountry.code) {
       setSelectedCountry(next);
     }
@@ -47,6 +50,7 @@ export const LocationSelector: React.FC = () => {
     if (open) {
       document.addEventListener("mousedown", onDocClick);
     }
+
     return () => document.removeEventListener("mousedown", onDocClick);
   }, [open]);
 
@@ -62,6 +66,7 @@ export const LocationSelector: React.FC = () => {
   const onSelect = (country: Country) => {
     setSelectedCountry(country);
     const code = country.code as MarketCode;
+
     setMarket(code);
     setMarketCookie(code);
     setOpen(false);
@@ -95,7 +100,10 @@ export const LocationSelector: React.FC = () => {
         <span className="text-ikook-secondary text-sm font-medium">
           {selectedCountry.name}
         </span>
-        <ChevronDown className="w-3 h-3 text-ikook-secondary" aria-hidden="true" />
+        <ChevronDown
+          className="w-3 h-3 text-ikook-secondary"
+          aria-hidden="true"
+        />
       </button>
 
       {open && (
@@ -105,7 +113,11 @@ export const LocationSelector: React.FC = () => {
           className="absolute right-0 mt-1 w-48 rounded-md border bg-white shadow-lg z-50 py-1"
         >
           {COUNTRIES.map((c) => (
-            <li key={c.code} role="option" aria-selected={c.code === selectedCountry.code}>
+            <li
+              key={c.code}
+              role="option"
+              aria-selected={c.code === selectedCountry.code}
+            >
               <button
                 type="button"
                 className={`w-full text-left px-3 py-2 flex items-center gap-2 hover:bg-gray-50 ${

@@ -49,20 +49,25 @@ const Index: React.FC = () => {
 
   // Verify wallet funding after returning from checkout
   const hasVerifiedRef = useRef(false);
+
   useEffect(() => {
     const maybeVerifyFunding = async () => {
       if (hasVerifiedRef.current) return;
       const ref = sessionStorage.getItem("pendingWalletFundingReference");
+
       if (!ref) return;
 
       // Only verify if Paystack appended reference/trxref or status=success in URL
       const params = new URLSearchParams(window.location.search);
       const hasRefInUrl = !!(params.get("reference") || params.get("trxref"));
       const statusParam = (params.get("status") || "").toLowerCase();
-      const isSuccess = statusParam === "success" || statusParam === "completed";
+      const isSuccess =
+        statusParam === "success" || statusParam === "completed";
+
       if (!hasRefInUrl && !isSuccess) {
         // User likely canceled; clear pending and skip verification
         sessionStorage.removeItem("pendingWalletFundingReference");
+
         return;
       }
 
@@ -75,7 +80,10 @@ const Index: React.FC = () => {
         await refreshWallet();
       } catch (err: any) {
         const msg =
-          err?.response?.data?.message || err?.message || "Failed to verify wallet funding";
+          err?.response?.data?.message ||
+          err?.message ||
+          "Failed to verify wallet funding";
+
         showToast.error(msg);
       }
     };
@@ -123,11 +131,13 @@ const Index: React.FC = () => {
       // If checkout is required, redirect
       const checkoutUrl = data?.checkout_url ?? data?.data?.checkout_url;
       const reference = data?.reference ?? data?.data?.reference;
+
       if (checkoutUrl) {
         if (reference) {
           sessionStorage.setItem("pendingWalletFundingReference", reference);
         }
         window.location.assign(checkoutUrl);
+
         return; // stop here, redirecting
       }
 
@@ -137,6 +147,7 @@ const Index: React.FC = () => {
     } catch (err: any) {
       const msg =
         err?.response?.data?.message || err?.message || "Failed to fund wallet";
+
       showToast.error(msg);
       throw err; // keep modal open
     }

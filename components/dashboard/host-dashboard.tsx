@@ -67,7 +67,11 @@ export const MyBookingsPage: React.FC = () => {
             aria-label="Identity verification notification"
           >
             <div className="flex items-center gap-3.5 w-full">
-              <div className="flex-shrink-0" role="img" aria-label="Shield icon">
+              <div
+                className="flex-shrink-0"
+                role="img"
+                aria-label="Shield icon"
+              >
                 <svg
                   width="40"
                   height="40"
@@ -76,13 +80,24 @@ export const MyBookingsPage: React.FC = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-8 h-8 shrink-0"
                 >
-                  <path d="M12 2l7 4v6c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6l7-4z" fill="white" fillOpacity="0.9" />
-                  <path d="M9 12l2 2 4-4" stroke="#1C58FC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path
+                    d="M12 2l7 4v6c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6l7-4z"
+                    fill="white"
+                    fillOpacity="0.9"
+                  />
+                  <path
+                    d="M9 12l2 2 4-4"
+                    stroke="#1C58FC"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </div>
               <div className="flex items-center gap-4 flex-1 min-w-0">
                 <p className="text-white text-sm font-normal leading-5 min-w-0 break-words">
-                  Verify your identity to complete your profile and ensure a safe experience.
+                  Verify your identity to complete your profile and ensure a
+                  safe experience.
                 </p>
                 <div className="flex items-start ml-auto">
                   <button

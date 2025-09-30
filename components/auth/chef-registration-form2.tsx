@@ -116,36 +116,36 @@ export const ChefRegistrationForm2: React.FC<ChefRegistrationForm2Props> = ({
           </h1>
 
           <form onSubmit={handleSubmit}>
-          <fieldset className="flex w-full flex-col items-start gap-6">
-            <legend className="sr-only">Contact Information</legend>
+            <fieldset className="flex w-full flex-col items-start gap-6">
+              <legend className="sr-only">Contact Information</legend>
 
-            <FormField
-              required
-              className="w-full"
-              error={errors.email}
-              label="Email Address"
-              placeholder="your.email@example.com"
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange("email", e.target.value)}
-            />
-
-            <div className="w-full">
-              <PhoneInput
-                error={errors.phoneNumber}
-                label="Phone Number"
-                placeholder="Enter phone number"
-                required={true}
-                value={formData.phoneNumber}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleInputChange("phoneNumber", e.target.value)
-                }
-                onCountryChange={(_countryCode: string) => {
-                  // Handle country code change if needed
-                }}
+              <FormField
+                required
+                className="w-full"
+                error={errors.email}
+                label="Email Address"
+                placeholder="your.email@example.com"
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange("email", e.target.value)}
               />
-            </div>
-          </fieldset>
+
+              <div className="w-full">
+                <PhoneInput
+                  error={errors.phoneNumber}
+                  label="Phone Number"
+                  placeholder="Enter phone number"
+                  required={true}
+                  value={formData.phoneNumber}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    handleInputChange("phoneNumber", e.target.value)
+                  }
+                  onCountryChange={(_countryCode: string) => {
+                    // Handle country code change if needed
+                  }}
+                />
+              </div>
+            </fieldset>
 
             <div className="mt-8 h-12 w-full">
               <button

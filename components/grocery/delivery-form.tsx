@@ -2,8 +2,10 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+
 import { InputField } from "./input-field";
 import { AddressSection } from "./address-section";
+
 import { bookingsService } from "@/lib/api/bookings";
 import { showToast, handleApiError } from "@/lib/utils/toast";
 import { useMarket } from "@/lib/market-context";
@@ -27,17 +29,27 @@ export const DeliveryForm: React.FC = () => {
     try {
       if (!address || !city || !deliveryDate || !deliveryTime) {
         showToast.error("Please fill address, city, date and time");
+
         return;
       }
       setSubmitting(true);
-      const country = market === "NG" ? "Nigeria" : market === "ZA" ? "South Africa" : "United Kingdom";
+      const country =
+        market === "NG"
+          ? "Nigeria"
+          : market === "ZA"
+            ? "South Africa"
+            : "United Kingdom";
       let items: number[] = [];
+
       if (typeof window !== "undefined") {
         const raw = localStorage.getItem("grocerySelectedItemIds");
+
         if (raw) {
           try {
             const parsed = JSON.parse(raw);
-            if (Array.isArray(parsed)) items = parsed.filter((n: any) => Number.isFinite(n));
+
+            if (Array.isArray(parsed))
+              items = parsed.filter((n: any) => Number.isFinite(n));
           } catch {}
         }
       }
@@ -55,12 +67,17 @@ export const DeliveryForm: React.FC = () => {
       };
 
       const created = await bookingsService.createBooking(payload);
+
       showToast.success("Groceries booking created successfully");
       const bookingId = created?.data?.id ?? created?.data?.booking;
+
       if (typeof window !== "undefined" && bookingId) {
-        try { localStorage.setItem("lastBookingId", String(bookingId)); } catch {}
+        try {
+          localStorage.setItem("lastBookingId", String(bookingId));
+        } catch {}
       }
       const bookingIdParam = bookingId ? `?bookingId=${bookingId}` : "";
+
       router.push(`/booking/checkout${bookingIdParam}`);
     } catch (error) {
       handleApiError(error, "Failed to create groceries booking");

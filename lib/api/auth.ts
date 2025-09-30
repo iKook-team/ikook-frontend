@@ -58,6 +58,7 @@ export const authService = {
       ...payload,
       email: payload.email.toLowerCase(), // Normalize email to lowercase
     });
+
     return response.data;
   },
 
@@ -177,13 +178,10 @@ export const authService = {
 
   // Reset password
   resetPassword: async (payload: { email: string; password: string }) => {
-    const response = await apiClient.post(
-      `/users/auth/reset-password/`,
-      {
-        email: payload.email.toLowerCase(), // Normalize email to lowercase
-        password: payload.password,
-      },
-    );
+    const response = await apiClient.post(`/users/auth/reset-password/`, {
+      email: payload.email.toLowerCase(), // Normalize email to lowercase
+      password: payload.password,
+    });
 
     return response.data;
   },

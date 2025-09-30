@@ -11,6 +11,7 @@ export const newsletterService = {
       ...payload,
       email: payload.email.toLowerCase(), // Normalize email to lowercase
     });
+
     return res.data as { email: string; email_sent: boolean; message?: string };
   },
 };

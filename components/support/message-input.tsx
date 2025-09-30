@@ -16,8 +16,12 @@ export function MessageInput() {
         />
       </div>
       <div className="self-stretch my-auto">
-        <h2 className="text-base font-semibold text-zinc-800">Send us a message</h2>
-        <p className="mt-1 text-xs text-neutral-700">Hi there, How can I help you today?</p>
+        <h2 className="text-base font-semibold text-zinc-800">
+          Send us a message
+        </h2>
+        <p className="mt-1 text-xs text-neutral-700">
+          Hi there, How can I help you today?
+        </p>
       </div>
     </div>
   );

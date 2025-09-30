@@ -16,28 +16,30 @@ export function ProgressStep({
       {/* Progress line */}
       <div className="relative w-full h-1.5 bg-neutral-100 rounded-full overflow-hidden">
         {isCompleted && (
-          <div 
+          <div
             className="absolute top-0 left-0 h-full bg-green-500 rounded-full transition-all duration-300"
-            style={{ width: '100%' }}
+            style={{ width: "100%" }}
           />
         )}
       </div>
-      
+
       {/* Step indicator and label */}
       <div className="flex items-center gap-2">
-        <div className={`flex items-center justify-center w-4 h-4 rounded-full border ${isCompleted ? 'border-green-500 bg-green-500' : 'border-gray-300'}`}>
+        <div
+          className={`flex items-center justify-center w-4 h-4 rounded-full border ${isCompleted ? "border-green-500 bg-green-500" : "border-gray-300"}`}
+        >
           {isCompleted && (
-            <svg 
-              className="w-2.5 h-2.5 text-white" 
-              fill="none" 
-              viewBox="0 0 24 24" 
+            <svg
+              className="w-2.5 h-2.5 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={3} 
-                d="M5 13l4 4L19 7" 
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={3}
+                d="M5 13l4 4L19 7"
               />
             </svg>
           )}

@@ -4,8 +4,9 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
-import favouritesService from "@/lib/api/favourites";
 import { useRouter } from "next/navigation";
+
+import favouritesService from "@/lib/api/favourites";
 
 // Sub-components
 const StarRating = ({
@@ -188,15 +189,16 @@ export const ChefCard: React.FC<ChefCardProps> = ({
   const router = useRouter();
   const [liked, setLiked] = React.useState<boolean>(!!is_favourite);
   const [favouriteId, setFavouriteId] = React.useState<number | null>(null);
+
   return (
     <Link
       href={`/chefs/${id}`}
       className="w-full h-80 block shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] relative bg-white rounded-[15px] border border-[#E7E7E7] overflow-hidden cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FCC01C]"
     >
       {/* Background image */}
-      <div 
+      <div
         className="absolute top-0 left-0 right-0 h-[220px] bg-cover bg-center bg-no-repeat rounded-t-[15px]"
-        style={{ backgroundImage: 'url(/menus/menu6.png)' }}
+        style={{ backgroundImage: "url(/menus/menu6.png)" }}
       />
       {/* Like (heart) icon */}
       <button
@@ -215,7 +217,10 @@ export const ChefCard: React.FC<ChefCardProps> = ({
           setLiked(true);
           console.debug("[ChefCard] like -> addFavourite", { chefId: id });
           try {
-            const newId = await favouritesService.addFavourite({ chefId: id as unknown as number });
+            const newId = await favouritesService.addFavourite({
+              chefId: id as unknown as number,
+            });
+
             setFavouriteId(newId ?? null);
           } catch (err) {
             console.debug("[ChefCard] addFavourite failed", err);
@@ -234,7 +239,9 @@ export const ChefCard: React.FC<ChefCardProps> = ({
       <div className="absolute left-0 top-[225px] w-full px-4 pt-2 z-20">
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-[#323335] text-base font-bold leading-6">{name}</h2>
+            <h2 className="text-[#323335] text-base font-bold leading-6">
+              {name}
+            </h2>
           </div>
           <div className="relative -mt-8 -mr-1">
             <VerificationBadge
@@ -266,7 +273,6 @@ export const ChefCard: React.FC<ChefCardProps> = ({
           ))}
         </div>
       </section>
-
     </Link>
   );
 };

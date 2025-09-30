@@ -5,6 +5,7 @@ import { ProgressStepper } from "../menus/progress-indicator";
 import { ImageUploadArea } from "../menus/image-upload-area";
 import { UploadedImage } from "../menus/uploaded-image";
 import { FormNavigationFooter } from "../menus/form-navigation-footer";
+
 import { showToast } from "@/lib/utils/toast";
 
 interface GroceriesImagesStepProps {
@@ -52,11 +53,13 @@ const CreateGroceriesStep2: React.FC<GroceriesImagesStepProps> = ({
 
       if (remainingSlots === 0) {
         showToast.error("You can upload a maximum of 4 images per product.");
+
         return prev;
       }
 
       const accepted = incoming.slice(0, remainingSlots);
       const rejectedCount = incoming.length - accepted.length;
+
       if (rejectedCount > 0) {
         showToast.warning(
           `Only ${remainingSlots} more image${remainingSlots === 1 ? "" : "s"} allowed (max 4).`,
@@ -80,7 +83,9 @@ const CreateGroceriesStep2: React.FC<GroceriesImagesStepProps> = ({
 
   return (
     <div className="flex flex-col w-full max-w-[655px] mx-auto">
-      <header className="text-xl font-semibold text-black mb-6">Create product</header>
+      <header className="text-xl font-semibold text-black mb-6">
+        Create product
+      </header>
 
       <div className="bg-white rounded-2xl border border-solid shadow-lg border-neutral-200 p-6 w-full">
         <div className="mb-8">
@@ -94,9 +99,12 @@ const CreateGroceriesStep2: React.FC<GroceriesImagesStepProps> = ({
           <p className="text-sm text-gray-600 mb-2 text-center">
             Upload exactly 4 high-quality images of this product.
           </p>
-          <p className={`text-xs mb-4 text-center ${canContinue ? "text-gray-500" : "text-red-600"}`}>
+          <p
+            className={`text-xs mb-4 text-center ${canContinue ? "text-gray-500" : "text-red-600"}`}
+          >
             {totalImages <= 4 && `${totalImages} / 4 images selected`}
-            {totalImages > 4 && `Please remove ${totalImages - 4} image${totalImages - 4 === 1 ? "" : "s"} to continue.`}
+            {totalImages > 4 &&
+              `Please remove ${totalImages - 4} image${totalImages - 4 === 1 ? "" : "s"} to continue.`}
           </p>
           <div className="w-full flex justify-center">
             <ImageUploadArea onImageSelect={handleImageSelect} />

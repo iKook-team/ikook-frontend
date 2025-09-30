@@ -72,11 +72,11 @@ export default function DateHeaders({
             key={index}
             role="button"
             tabIndex={0}
-            aria-label={`Select date ${format(date, 'EEEE, MMMM d, yyyy')}`}
+            aria-label={`Select date ${format(date, "EEEE, MMMM d, yyyy")}`}
             className={`flex-1 text-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-yellow-400 ${getDayClasses(date)}`}
             onClick={() => handleDateClick(date)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
+              if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
                 handleDateClick(date);
               }

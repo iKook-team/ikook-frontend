@@ -8,11 +8,18 @@ interface Props {
 export const EventDetails: React.FC<Props> = ({ booking, loading = false }) => {
   const dateText = React.useMemo(() => {
     const d = booking?.event_date;
+
     if (!d) return undefined;
     try {
       const dt = new Date(d);
+
       if (isNaN(dt.getTime())) return String(d);
-      return dt.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+
+      return dt.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
     } catch {
       return String(d);
     }
@@ -20,13 +27,18 @@ export const EventDetails: React.FC<Props> = ({ booking, loading = false }) => {
 
   const addressText = React.useMemo(() => {
     if (!booking) return undefined;
-    const parts = [booking.address, booking.city, booking.country].filter(Boolean);
+    const parts = [booking.address, booking.city, booking.country].filter(
+      Boolean,
+    );
+
     return parts.length ? parts.join(", ") : undefined;
   }, [booking?.address, booking?.city, booking?.country]);
 
   const guestsText = React.useMemo(() => {
     const n = booking?.num_of_guests;
+
     if (!(typeof n === "number")) return undefined;
+
     return `${n} Guest${n === 1 ? "" : "s"}`;
   }, [booking?.num_of_guests]);
 

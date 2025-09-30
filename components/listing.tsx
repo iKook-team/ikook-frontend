@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect } from "react";
 
 import { MenuListing } from "./listings/menu";
 import { ChefCard } from "./listings/chef";
@@ -10,12 +10,16 @@ import Skeleton from "@/components/ui/skeleton";
 import useListings from "@/hooks/useListings";
 
 // Helper to ensure absolute image URLs (backend may return relative paths)
-const API_BASE = (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/+$/, "");
+const API_BASE = (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(
+  /\/+$/,
+  "",
+);
 const toAbsoluteUrl = (url?: string | null): string => {
   if (!url) return "";
   if (/^(?:https?:)?\/\//i.test(url) || url.startsWith("data:")) return url;
   if (!API_BASE) return url.startsWith("/") ? url : `/${url}`;
   const path = url.startsWith("/") ? url : `/${url}`;
+
   return `${API_BASE}${path}`;
 };
 
@@ -39,7 +43,9 @@ const mapMenuToItem = (menu: any) => ({
   chefName:
     `${menu.chef_details?.first_name || menu.chef?.first_name || ""} ${menu.chef_details?.last_name || menu.chef?.last_name || ""}`.trim(),
   chefAvatar:
-    toAbsoluteUrl(menu.chef_details?.avatar) || toAbsoluteUrl(menu.chef?.avatar) || "",
+    toAbsoluteUrl(menu.chef_details?.avatar) ||
+    toAbsoluteUrl(menu.chef?.avatar) ||
+    "",
   cuisine_types: menu.cuisine_types || [],
   country: menu.chef_details?.country || menu.chef?.country,
   currency: menu.chef_details?.currency || menu.chef?.currency,
@@ -64,18 +70,28 @@ const mapChefToItem = (chef: any) => ({
     "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop",
   // Consider other verification flags if present
   isVerified:
-    chef.is_verified ?? chef.document_verified ?? chef.identity_verified ?? false,
+    chef.is_verified ??
+    chef.document_verified ??
+    chef.identity_verified ??
+    false,
 });
 
 const mapServiceToItem = (service: any) => {
-  const chefFirst = service.chef_details?.first_name || service.chef?.first_name || "";
-  const chefLast = service.chef_details?.last_name || service.chef?.last_name || "";
-  const derivedName = `${chefFirst} ${chefLast}`.trim() || service.chef_service || "Service";
-  const price = service.price_per_person || service.starting_price_per_person || service.starting_price;
+  const chefFirst =
+    service.chef_details?.first_name || service.chef?.first_name || "";
+  const chefLast =
+    service.chef_details?.last_name || service.chef?.last_name || "";
+  const derivedName =
+    `${chefFirst} ${chefLast}`.trim() || service.chef_service || "Service";
+  const price =
+    service.price_per_person ||
+    service.starting_price_per_person ||
+    service.starting_price;
   const mainImageUrl =
     toAbsoluteUrl(service.cover_image) ||
     toAbsoluteUrl(service.images && service.images[0]?.image) ||
     "/menus/menu1.png";
+
   return {
     id: service.id,
     chefId: service.chef_details?.id || service.chef?.id,
@@ -148,15 +164,15 @@ interface ListingProps {
 export const Listing = ({ selectedService = "chef-at-home" }: ListingProps) => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const pageSize = 12; // Show 12 items per page
-  const { 
-    listings, 
-    loading, 
-    error, 
-    listingType, 
-    totalCount, 
+  const {
+    listings,
+    loading,
+    error,
+    listingType,
+    totalCount,
     currentPage,
     setCurrentPage,
-    refetch 
+    refetch,
   } = useListings({
     selectedService,
     pageSize,
@@ -169,12 +185,12 @@ export const Listing = ({ selectedService = "chef-at-home" }: ListingProps) => {
 
   // Debug log the listings data
   useEffect(() => {
-    console.log('Current listings:', {
+    console.log("Current listings:", {
       listings,
       listingType,
       totalCount,
       loading,
-      isLoadingMore
+      isLoadingMore,
     });
   }, [listings, listingType, totalCount, loading, isLoadingMore]);
 
@@ -196,7 +212,7 @@ export const Listing = ({ selectedService = "chef-at-home" }: ListingProps) => {
   const handleLoadMore = () => {
     if (loading || isLoadingMore) return;
     setIsLoadingMore(true);
-    setCurrentPage(prev => prev + 1);
+    setCurrentPage((prev) => prev + 1);
   };
 
   // Check if there are more items to load
@@ -251,12 +267,13 @@ export const Listing = ({ selectedService = "chef-at-home" }: ListingProps) => {
           </div>
         );
       case "service":
-        console.log('Rendering service listings:', displayListings);
+        console.log("Rendering service listings:", displayListings);
+
         return (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {displayListings.length > 0 ? (
               displayListings.map((item: any) => (
-                <ServiceListing 
+                <ServiceListing
                   key={`${item.id}-service`}
                   id={item.id}
                   name={item.title || item.chefName}
@@ -287,20 +304,22 @@ export const Listing = ({ selectedService = "chef-at-home" }: ListingProps) => {
   // Handle scroll position and loading state after data loads
   useEffect(() => {
     if (loading) return;
-    
+
     // Reset loading more state when data is loaded
     if (isLoadingMore) {
       setIsLoadingMore(false);
-      
+
       // Scroll to show new items if user was near bottom
       const scrollContainer = document.documentElement;
-      const isNearBottom = scrollContainer.scrollHeight - window.innerHeight - window.scrollY < 100;
-      
+      const isNearBottom =
+        scrollContainer.scrollHeight - window.innerHeight - window.scrollY <
+        100;
+
       if (isNearBottom) {
         requestAnimationFrame(() => {
           window.scrollTo({
             top: scrollContainer.scrollHeight,
-            behavior: 'smooth'
+            behavior: "smooth",
           });
         });
       }
@@ -310,7 +329,9 @@ export const Listing = ({ selectedService = "chef-at-home" }: ListingProps) => {
   // Render load more button
   const renderLoadMore = () => {
     if (listings.length === 0) {
-      return <div className="text-center py-4 text-gray-500">No items found</div>;
+      return (
+        <div className="text-center py-4 text-gray-500">No items found</div>
+      );
     }
 
     if (loading && !isLoadingMore) {
@@ -325,12 +346,12 @@ export const Listing = ({ selectedService = "chef-at-home" }: ListingProps) => {
             disabled={isLoadingMore}
             className="px-6 py-3 bg-yellow-500 text-gray-900 font-medium rounded-md hover:bg-yellow-400 transition-colors shadow-sm"
             style={{
-              minWidth: '140px',
+              minWidth: "140px",
               opacity: isLoadingMore ? 0.7 : 1,
-              cursor: isLoadingMore ? 'not-allowed' : 'pointer'
+              cursor: isLoadingMore ? "not-allowed" : "pointer",
             }}
           >
-            {isLoadingMore ? 'Loading...' : 'Load More'}
+            {isLoadingMore ? "Loading..." : "Load More"}
           </button>
         </div>
       );

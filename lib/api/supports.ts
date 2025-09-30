@@ -83,37 +83,67 @@ export interface TicketMessagesResponse {
 
 export const supportsService = {
   async getFaqs(user_type: UserTypeParam, params: Record<string, any> = {}) {
-    const response = await apiClient.get<ApiEnvelope<FaqListResponse>>("/supports/faqs/", {
-      params: { user_type, ...params },
-    });
+    const response = await apiClient.get<ApiEnvelope<FaqListResponse>>(
+      "/supports/faqs/",
+      {
+        params: { user_type, ...params },
+      },
+    );
+
     return response.data.data;
   },
   async getTickets(params: Record<string, any> = {}) {
-    const response = await apiClient.get<ApiEnvelope<TicketsResponse>>("/supports/tickets/", {
-      params,
-    });
+    const response = await apiClient.get<ApiEnvelope<TicketsResponse>>(
+      "/supports/tickets/",
+      {
+        params,
+      },
+    );
+
     return response.data.data;
   },
-  async createTicket(data: { category: string; title: string; message: string }) {
-    const response = await apiClient.post<ApiEnvelope<TicketItem>>("/supports/tickets/", data);
+  async createTicket(data: {
+    category: string;
+    title: string;
+    message: string;
+  }) {
+    const response = await apiClient.post<ApiEnvelope<TicketItem>>(
+      "/supports/tickets/",
+      data,
+    );
+
     return response.data.data;
   },
   async getTicketMessages(ticketId: number, params: Record<string, any> = {}) {
-    const response = await apiClient.get<ApiEnvelope<TicketMessagesResponse>>("/supports/tickets/messages/", {
-      params: { ticket: ticketId, ...params },
-    });
+    const response = await apiClient.get<ApiEnvelope<TicketMessagesResponse>>(
+      "/supports/tickets/messages/",
+      {
+        params: { ticket: ticketId, ...params },
+      },
+    );
+
     return response.data.data;
   },
-  async sendTicketMessage(data: { ticket: number; message?: string; image?: File | null }) {
+  async sendTicketMessage(data: {
+    ticket: number;
+    message?: string;
+    image?: File | null;
+  }) {
     // Use FormData to support optional image upload
     const formData = new FormData();
+
     formData.append("ticket", String(data.ticket));
     if (data.message) formData.append("message", data.message);
     if (data.image) formData.append("image", data.image);
 
-    const response = await apiClient.post<ApiEnvelope<TicketMessageItem>>("/supports/tickets/messages/", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    const response = await apiClient.post<ApiEnvelope<TicketMessageItem>>(
+      "/supports/tickets/messages/",
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      },
+    );
+
     return response.data.data;
   },
 };

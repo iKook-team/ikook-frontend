@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+
 import { MessageInput } from "@/components/support/message-input";
 import { MessagesList } from "@/components/support/messages-list";
 import { CreateSupportTicketModal } from "@/components/support/create-support-ticket-modal";
@@ -14,7 +15,11 @@ export default function Messages() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleCreate = async (data: { category: string; title: string; message: string }) => {
+  const handleCreate = async (data: {
+    category: string;
+    title: string;
+    message: string;
+  }) => {
     try {
       setIsSubmitting(true);
       await supportsService.createTicket(data);
@@ -35,7 +40,9 @@ export default function Messages() {
         <div className="mb-4">
           <BackButton fallback="/support" />
         </div>
-        <header className="text-2xl font-semibold leading-none text-black">Messages</header>
+        <header className="text-2xl font-semibold leading-none text-black">
+          Messages
+        </header>
         <section className="flex flex-col items-start px-7 pt-10 pb-72 mt-5 w-full bg-white rounded-2xl border border-solid shadow-lg border-neutral-200 max-md:px-5 max-md:pb-24 max-md:max-w-full">
           <button
             type="button"

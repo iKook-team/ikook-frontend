@@ -21,6 +21,7 @@ export const BackButton: React.FC<BackButtonProps> = ({
   const onClick = React.useCallback(() => {
     if (href) {
       router.push(href);
+
       return;
     }
     // If we have history, go back. Otherwise fallback to a safe route

@@ -1,11 +1,17 @@
 import React from "react";
+
 import SectionHeader from "@/components/common/SectionHeader";
 
 export function TrustedOrganizationsSection() {
   const companies = React.useMemo(
-    () => Array.from({ length: 6 }, (_, index) => `/organisations/company-${index + 1}.webp`),
-    []
+    () =>
+      Array.from(
+        { length: 6 },
+        (_, index) => `/organisations/company-${index + 1}.webp`,
+      ),
+    [],
   );
+
   return (
     <section className="bg-white py-16 px-6 lg:px-16">
       <div className="max-w-7xl mx-auto text-center">

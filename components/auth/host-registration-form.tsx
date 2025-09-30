@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
@@ -39,7 +39,7 @@ export const HostRegistrationForm: React.FC<HostRegistrationFormProps> = ({
   const allLocations = useMemo(() => getLocationsForMarket(market), [market]);
   const cityOptions = useMemo(
     () => allLocations.map((v) => ({ value: v, label: v })),
-    [allLocations]
+    [allLocations],
   );
 
   const {
@@ -114,100 +114,100 @@ export const HostRegistrationForm: React.FC<HostRegistrationFormProps> = ({
           </h1>
 
           <form onSubmit={handleSubmit(onLocalSubmit)}>
-          <fieldset className="flex flex-col items-start gap-6 max-sm:gap-5">
-            <legend className="sr-only">Personal Information</legend>
+            <fieldset className="flex flex-col items-start gap-6 max-sm:gap-5">
+              <legend className="sr-only">Personal Information</legend>
 
-            <FormField
-              label="First Name"
-              placeholder="Given name"
-              required
-              {...register("firstName", {
-                required: "First name is required",
-                minLength: {
-                  value: 2,
-                  message: "First name must be at least 2 characters",
-                },
-              })}
-              error={errors.firstName?.message}
-              className="w-full"
-            />
+              <FormField
+                label="First Name"
+                placeholder="Given name"
+                required
+                {...register("firstName", {
+                  required: "First name is required",
+                  minLength: {
+                    value: 2,
+                    message: "First name must be at least 2 characters",
+                  },
+                })}
+                error={errors.firstName?.message}
+                className="w-full"
+              />
 
-            <FormField
-              label="Last Name"
-              placeholder="Family name"
-              required
-              {...register("lastName", {
-                required: "Last name is required",
-                minLength: {
-                  value: 2,
-                  message: "Last name must be at least 2 characters",
-                },
-              })}
-              error={errors.lastName?.message}
-              className="w-full"
-            />
+              <FormField
+                label="Last Name"
+                placeholder="Family name"
+                required
+                {...register("lastName", {
+                  required: "Last name is required",
+                  minLength: {
+                    value: 2,
+                    message: "Last name must be at least 2 characters",
+                  },
+                })}
+                error={errors.lastName?.message}
+                className="w-full"
+              />
 
-            <FormField
-              label="Email Address"
-              placeholder="info@ikook.co.uk"
-              type="email"
-              required
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address",
-                },
-              })}
-              error={errors.email?.message}
-              className="w-full"
-            />
+              <FormField
+                label="Email Address"
+                placeholder="info@ikook.co.uk"
+                type="email"
+                required
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address",
+                  },
+                })}
+                error={errors.email?.message}
+                className="w-full"
+              />
 
-            {/* City selector (market-based) using standard FormField UI */}
-            <FormField
-              label="City/State"
-              required
-              type="select"
-              options={[{ value: "", label: "Select city" }, ...cityOptions]}
-              value={formValues.city || ""}
-              placeholder="Select city"
-              onChange={(e) => {
-                setValue("city", e.target.value, { shouldValidate: true });
-                clearErrors("city");
-              }}
-              error={errors.city?.message}
-              className="w-full"
-            />
+              {/* City selector (market-based) using standard FormField UI */}
+              <FormField
+                label="City/State"
+                required
+                type="select"
+                options={[{ value: "", label: "Select city" }, ...cityOptions]}
+                value={formValues.city || ""}
+                placeholder="Select city"
+                onChange={(e) => {
+                  setValue("city", e.target.value, { shouldValidate: true });
+                  clearErrors("city");
+                }}
+                error={errors.city?.message}
+                className="w-full"
+              />
 
-            <PhoneInput
-              label="Phone Number"
-              placeholder="Enter your phone number"
-              required
-              value={formValues.phoneNumber}
-              onChange={(e) => {
-                setValue("phoneNumber", e.target.value);
-                clearErrors("phoneNumber");
-              }}
-              onCountryChange={(code) => setCountryCode(code)}
-              error={errors.phoneNumber?.message}
-              className="w-full"
-            />
+              <PhoneInput
+                label="Phone Number"
+                placeholder="Enter your phone number"
+                required
+                value={formValues.phoneNumber}
+                onChange={(e) => {
+                  setValue("phoneNumber", e.target.value);
+                  clearErrors("phoneNumber");
+                }}
+                onCountryChange={(code) => setCountryCode(code)}
+                error={errors.phoneNumber?.message}
+                className="w-full"
+              />
 
-            <FormField
-              label="Referral Code (Optional)"
-              placeholder="Enter referral code"
-              {...register("referralCode")}
-              className="w-full"
-            />
-          </fieldset>
+              <FormField
+                label="Referral Code (Optional)"
+                placeholder="Enter referral code"
+                {...register("referralCode")}
+                className="w-full"
+              />
+            </fieldset>
 
-          <button
-            className="mt-8 h-12 w-full cursor-pointer gap-2 rounded-lg border border-solid border-[#FCC01C] bg-[#FCC01C] px-4 py-3 text-base font-semibold leading-6 text-white shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] disabled:cursor-not-allowed disabled:opacity-60"
-            disabled={!isFormValid || isSubmitting}
-            type="submit"
-          >
-            {isSubmitting ? "Sending..." : "Continue"}
-          </button>
+            <button
+              className="mt-8 h-12 w-full cursor-pointer gap-2 rounded-lg border border-solid border-[#FCC01C] bg-[#FCC01C] px-4 py-3 text-base font-semibold leading-6 text-white shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={!isFormValid || isSubmitting}
+              type="submit"
+            >
+              {isSubmitting ? "Sending..." : "Continue"}
+            </button>
           </form>
         </div>
       </main>

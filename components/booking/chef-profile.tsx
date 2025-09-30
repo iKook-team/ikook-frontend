@@ -1,5 +1,6 @@
 import React from "react";
 import { useRouter } from "next/navigation";
+
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
@@ -18,7 +19,7 @@ interface ChefProfileProps {
 
 export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
   const router = useRouter();
-  
+
   const handleViewProfile = () => {
     router.push(`/chefs/${chef.id}`);
   };
@@ -81,12 +82,13 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
               <img
                 src={chef.avatar}
                 className="aspect-[1] object-cover w-20 h-20 self-stretch shrink-0 my-auto rounded-lg"
-                alt={`${chef.first_name || ''} ${chef.last_name || ''}`}
+                alt={`${chef.first_name || ""} ${chef.last_name || ""}`}
                 onError={(e) => {
                   // Fallback to default avatar if image fails to load
                   const target = e.target as HTMLImageElement;
+
                   target.onerror = null;
-                  target.src = '/images/default-avatar.png';
+                  target.src = "/images/default-avatar.png";
                 }}
               />
             ) : (
@@ -96,7 +98,7 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
             )}
             <div className="self-stretch my-auto">
               <h2 className="text-[#323335] text-2xl font-semibold leading-none">
-                {chef.first_name || 'Chef'} {chef.last_name || ''}
+                {chef.first_name || "Chef"} {chef.last_name || ""}
               </h2>
               <div className="flex gap-2 text-sm mt-2">
                 <div className="flex items-center gap-1 text-[#3F3E3D] font-normal whitespace-nowrap leading-none">
@@ -106,7 +108,7 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
                     alt="Location"
                   />
                   <span className="text-[#3F3E3D] self-stretch w-[55px] my-auto">
-                    {chef.city || 'N/A'}
+                    {chef.city || "N/A"}
                   </span>
                 </div>
                 <div className="flex items-center text-[#323335]">
@@ -117,7 +119,7 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
                       alt="Rating"
                     />
                     <span className="text-[#323335] self-stretch w-7 my-auto">
-                      {chef.rating?.toFixed(1) || 'N/A'}
+                      {chef.rating?.toFixed(1) || "N/A"}
                     </span>
                   </div>
                   <span className="text-[#323335] font-light self-stretch my-auto">
@@ -130,23 +132,38 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
 
           {chef.bio ? (
             <div className="mt-2">
-              <p id="chef-bio-preview" className="text-[#6f6e6d] text-xs font-normal leading-[22px]">
+              <p
+                id="chef-bio-preview"
+                className="text-[#6f6e6d] text-xs font-normal leading-[22px]"
+              >
                 {chef.bio.length > 120 ? (
                   <>
                     {chef.bio.substring(0, 120)}...{" "}
-                    <button 
+                    <button
                       type="button"
                       className="bg-transparent border-none p-0 text-[#FCC01C] hover:text-[#e6ac19] underline cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#FCC01C] focus:ring-offset-2 rounded"
                       onClick={() => {
-                        const bioElement = document.getElementById('chef-bio-full');
-                        const previewElement = document.getElementById('chef-bio-preview');
+                        const bioElement =
+                          document.getElementById("chef-bio-full");
+                        const previewElement =
+                          document.getElementById("chef-bio-preview");
+
                         if (bioElement && previewElement) {
-                          const isExpanded = bioElement.classList.toggle('hidden');
-                          previewElement.classList.toggle('hidden');
-                          const readMoreButton = document.getElementById('read-more-button');
+                          const isExpanded =
+                            bioElement.classList.toggle("hidden");
+
+                          previewElement.classList.toggle("hidden");
+                          const readMoreButton =
+                            document.getElementById("read-more-button");
+
                           if (readMoreButton) {
-                            readMoreButton.setAttribute('aria-expanded', String(!isExpanded));
-                            readMoreButton.textContent = isExpanded ? 'read more' : 'read less';
+                            readMoreButton.setAttribute(
+                              "aria-expanded",
+                              String(!isExpanded),
+                            );
+                            readMoreButton.textContent = isExpanded
+                              ? "read more"
+                              : "read less";
                           }
                         }
                       }}
@@ -162,23 +179,27 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
                 )}
               </p>
               {chef.bio.length > 120 && (
-                <p 
-                  id="chef-bio-full" 
+                <p
+                  id="chef-bio-full"
                   className="text-[#6f6e6d] text-xs font-normal leading-[22px] hidden"
                 >
                   {chef.bio}{" "}
-                  <button 
+                  <button
                     type="button"
                     className="bg-transparent border-none p-0 text-[#FCC01C] hover:text-[#e6ac19] underline cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#FCC01C] focus:ring-offset-2 rounded"
                     onClick={() => {
-                      const bioElement = document.getElementById('chef-bio-full');
-                      const previewElement = document.getElementById('chef-bio-preview');
-                      const readMoreButton = document.getElementById('read-more-button');
+                      const bioElement =
+                        document.getElementById("chef-bio-full");
+                      const previewElement =
+                        document.getElementById("chef-bio-preview");
+                      const readMoreButton =
+                        document.getElementById("read-more-button");
+
                       if (bioElement && previewElement && readMoreButton) {
-                        bioElement.classList.toggle('hidden');
-                        previewElement.classList.toggle('hidden');
-                        readMoreButton.setAttribute('aria-expanded', 'false');
-                        readMoreButton.textContent = 'read more';
+                        bioElement.classList.toggle("hidden");
+                        previewElement.classList.toggle("hidden");
+                        readMoreButton.setAttribute("aria-expanded", "false");
+                        readMoreButton.textContent = "read more";
                       }
                     }}
                     aria-expanded="true"
@@ -213,9 +234,9 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
         </div>
 
         <div className="mt-5">
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             className="w-full"
             onClick={handleViewProfile}
           >
@@ -236,8 +257,12 @@ export const ChefProfile: React.FC<ChefProfileProps> = ({ chef }) => {
                 className="w-12 h-12 object-contain"
               />
               <div>
-                <h3 className="text-black text-base font-medium">Booking Protection</h3>
-                <p className="text-sm text-[#3F3E3D]">Your booking is secure with us</p>
+                <h3 className="text-black text-base font-medium">
+                  Booking Protection
+                </h3>
+                <p className="text-sm text-[#3F3E3D]">
+                  Your booking is secure with us
+                </p>
               </div>
             </div>
           </div>

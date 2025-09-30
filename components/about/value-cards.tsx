@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface ValueCardProps {
   title: string;
@@ -24,16 +24,19 @@ const ValueCards: React.FC = () => {
   const values = [
     {
       title: "Purpose",
-      description: "To elevate the dining experiences from mere meal to cherish moment"
+      description:
+        "To elevate the dining experiences from mere meal to cherish moment",
     },
     {
       title: "Vision",
-      description: "To offer a diverse selection of private chefs who cater to a rich array of cuisines thereby bringing global culinary delights to your doorstep."
+      description:
+        "To offer a diverse selection of private chefs who cater to a rich array of cuisines thereby bringing global culinary delights to your doorstep.",
     },
     {
       title: "Mission",
-      description: "To provide a platform that brings talented chefs and food enthusiasts together"
-    }
+      description:
+        "To provide a platform that brings talented chefs and food enthusiasts together",
+    },
   ];
 
   return (

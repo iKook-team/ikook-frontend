@@ -1,7 +1,9 @@
 "use client";
 import * as React from "react";
 import Link from "next/link";
+
 import { MessageItem } from "./message-item";
+
 import { supportsService, type TicketItem } from "@/lib/api/supports";
 
 const GRAVATAR_FALLBACK =
@@ -10,6 +12,7 @@ const GRAVATAR_FALLBACK =
 const formatDate = (iso: string): string => {
   try {
     const d = new Date(iso);
+
     return d.toLocaleDateString(undefined, {
       day: "2-digit",
       month: "short",
@@ -29,24 +32,29 @@ export function MessagesList() {
 
   React.useEffect(() => {
     let active = true;
+
     (async () => {
       setLoading(true);
       setError(null);
       try {
         const data = await supportsService.getTickets();
+
         if (!active) return;
         const list = Array.isArray(data?.results) ? data.results : [];
         // Group by admin.id and keep the most recent ticket per admin
         const byAdmin = new Map<number, TicketItem>();
+
         for (const t of list) {
           const key = t.admin?.id;
           const prev = key != null ? byAdmin.get(key) : undefined;
+
           if (key == null) continue;
           if (!prev) {
             byAdmin.set(key, t);
           } else {
             const prevDate = new Date(prev.created_at).getTime();
             const currDate = new Date(t.created_at).getTime();
+
             if (currDate > prevDate) byAdmin.set(key, t);
           }
         }
@@ -59,6 +67,7 @@ export function MessagesList() {
         setLoading(false);
       }
     })();
+
     return () => {
       active = false;
     };
@@ -66,7 +75,9 @@ export function MessagesList() {
 
   return (
     <section>
-      <h2 className="mt-8 text-base font-medium text-zinc-800">Previous messages</h2>
+      <h2 className="mt-8 text-base font-medium text-zinc-800">
+        Previous messages
+      </h2>
       <div className="mt-4 mb-0 max-md:mb-2.5 max-md:max-w-full">
         {loading && (
           <div className="text-center py-6 text-neutral-500">Loading...</div>
@@ -77,18 +88,26 @@ export function MessagesList() {
         {!loading && !error && tickets.length === 0 && (
           <div className="text-center py-6 text-neutral-500">No messages</div>
         )}
-        {!loading && !error &&
+        {!loading &&
+          !error &&
           tickets.map((t) => {
             const admin: any = t.admin || {};
             const first = admin.first_name ?? admin.firstName ?? "";
             const last = admin.last_name ?? admin.lastName ?? "";
             let name = `${first} ${last}`.trim();
-            if (!name) name = admin.name || admin.full_name || admin.username || "Admin";
+
+            if (!name)
+              name = admin.name || admin.full_name || admin.username || "Admin";
             const avatarSrc = t.admin?.avatar || GRAVATAR_FALLBACK;
             const messagePreview = t.category || ""; // show category under name
             const date = formatDate(t.created_at);
+
             return (
-              <Link key={t.id} href={`/support/messages/chat?ticket=${t.id}`} className="block">
+              <Link
+                key={t.id}
+                href={`/support/messages/chat?ticket=${t.id}`}
+                className="block"
+              >
                 <MessageItem
                   avatarSrc={avatarSrc}
                   name={name}

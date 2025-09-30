@@ -16,39 +16,52 @@ function MessagesInterface() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const ticketIdParam = searchParams.get("ticket");
-  const ticketId = useMemo(() => (ticketIdParam ? Number(ticketIdParam) : null), [ticketIdParam]);
+  const ticketId = useMemo(
+    () => (ticketIdParam ? Number(ticketIdParam) : null),
+    [ticketIdParam],
+  );
 
   const storeUser = useAuthStore((s) => s.user);
   const accessToken = getToken() || storeUser?.access_token || null;
   const currentUserId = storeUser?.id || 0;
 
-  const { isConnected, messages, addLocalMessage, replaceLocalMessage, error } = useSupportTicketWebSocket(
-    ticketId,
-    accessToken,
-  );
+  const { isConnected, messages, addLocalMessage, replaceLocalMessage, error } =
+    useSupportTicketWebSocket(ticketId, accessToken);
 
   const [isSending, setIsSending] = useState(false);
   const listRef = useRef<HTMLDivElement | null>(null);
 
   // Derive admin name (other participant) from messages
   const adminName = useMemo(() => {
-    const other = messages.find((m) => m.sender?.id && m.sender.id !== currentUserId)?.sender;
+    const other = messages.find(
+      (m) => m.sender?.id && m.sender.id !== currentUserId,
+    )?.sender;
+
     if (!other) return "Support";
-    const full = [other.first_name, other.last_name].filter(Boolean).join(" ").trim();
+    const full = [other.first_name, other.last_name]
+      .filter(Boolean)
+      .join(" ")
+      .trim();
+
     return full || other.username || "Support";
   }, [messages, currentUserId]);
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
     const el = listRef.current;
+
     if (!el) return;
     // Always scroll for now; can add near-bottom check later
     el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
   }, [messages.length]);
 
-  const handleSendMessage = async (messageText: string, imageFile?: File | null) => {
+  const handleSendMessage = async (
+    messageText: string,
+    imageFile?: File | null,
+  ) => {
     if (!ticketId || isSending) return;
     const trimmed = messageText.trim();
+
     if (!trimmed && !imageFile) return;
     setIsSending(true);
 
@@ -70,10 +83,16 @@ function MessagesInterface() {
       is_read: true,
       created_at: new Date().toISOString(),
     };
+
     addLocalMessage(optimistic);
 
     try {
-      const saved = await supportsService.sendTicketMessage({ ticket: ticketId, message: trimmed, image: imageFile || undefined });
+      const saved = await supportsService.sendTicketMessage({
+        ticket: ticketId,
+        message: trimmed,
+        image: imageFile || undefined,
+      });
+
       // Reconcile optimistic temp message with server message to avoid duplicates
       replaceLocalMessage(tempId, saved);
     } catch (e) {
@@ -128,10 +147,13 @@ function MessagesInterface() {
             <ChatHeader
               userName={adminName}
               status={isConnected ? "Online" : "Not connected"}
-              onBack={() => router.push('/support/messages')}
+              onBack={() => router.push("/support/messages")}
             />
 
-            <div ref={listRef} className="relative px-5 py-5 max-md:p-5 max-sm:px-3 max-sm:py-4 overflow-y-auto h-[560px] mt-20">
+            <div
+              ref={listRef}
+              className="relative px-5 py-5 max-md:p-5 max-sm:px-3 max-sm:py-4 overflow-y-auto h-[560px] mt-20"
+            >
               {!!error && (
                 <div className="mb-3 text-sm text-red-500">{error.message}</div>
               )}
@@ -153,13 +175,18 @@ function MessagesInterface() {
                 />
               ))}
               {messages.length === 0 && (
-                <div className="text-center text-neutral-500 text-sm py-8">No messages yet.</div>
+                <div className="text-center text-neutral-500 text-sm py-8">
+                  No messages yet.
+                </div>
               )}
               {/* spacer to separate last message from input */}
               <div className="h-4" />
             </div>
 
-            <MessageInput onSendMessage={handleSendMessage} placeholder={"Type message..."} />
+            <MessageInput
+              onSendMessage={handleSendMessage}
+              placeholder={"Type message..."}
+            />
           </section>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { Button } from "../ui/button";
+
 import SectionHeader from "@/components/common/SectionHeader";
 import { useMenus, type Menu } from "@/hooks/useMenus";
 import { useMarket } from "@/lib/market-context";
@@ -36,7 +37,7 @@ function MenuCard({ menu }: { menu: Menu }) {
   const { market } = useMarket();
   const currencySymbol = getMarketConfig(market).currencySymbol;
   const chefName = `${menu.chef.first_name} ${menu.chef.last_name}`;
-  const location = menu.chef.city || menu.chef.country || 'Unknown';
+  const location = menu.chef.city || menu.chef.country || "Unknown";
   const rating = menu.chef.average_rating || 0;
   const avatarUrl =
     (menu as any)?.chef?.avatar ||
@@ -59,7 +60,10 @@ function MenuCard({ menu }: { menu: Menu }) {
         />
       </div>
       <div className="p-4 space-y-2">
-        <h3 className="font-semibold text-lg text-[#323335] truncate" title={menu.name}>
+        <h3
+          className="font-semibold text-lg text-[#323335] truncate"
+          title={menu.name}
+        >
           {menu.name}
         </h3>
         <div className="flex items-center space-x-3">
@@ -92,7 +96,8 @@ function MenuCard({ menu }: { menu: Menu }) {
           <div className="flex items-center space-x-2">
             <StarRating rating={Math.round(rating)} />
             <span className="text-xs text-[#323335]">
-              {currencySymbol}{menu.price_per_person}pp
+              {currencySymbol}
+              {menu.price_per_person}pp
             </span>
           </div>
         </div>
@@ -148,7 +153,11 @@ export default function TopMenuSection() {
               key={menu.id}
               className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
             >
-              <Link href={`/booking/menus/details/${menu.id}`} className="block" aria-label={`View details for ${menu.name}`}>
+              <Link
+                href={`/booking/menus/details/${menu.id}`}
+                className="block"
+                aria-label={`View details for ${menu.name}`}
+              >
                 <MenuCard menu={menu} />
               </Link>
             </div>

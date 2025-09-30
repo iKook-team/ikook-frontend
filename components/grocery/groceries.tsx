@@ -1,4 +1,6 @@
 "use client";
+import type { GroceryItem } from "@/lib/api/groceries";
+
 import * as React from "react";
 import { useRouter } from "next/navigation";
 
@@ -6,7 +8,6 @@ import { StoreInfo } from "./store-info";
 import { ProductGrid } from "./product-grid";
 import { ShoppingCart } from "./shopping-cart";
 import { QuantityModal } from "./quantity-modal";
-import type { GroceryItem } from "@/lib/api/groceries";
 
 interface CartItemData {
   id: string;
@@ -65,10 +66,19 @@ export default function Index({
   };
 
   // When user clicks Add on a product card, open the quantity modal
-  const handleAddToCart = (product: { id: string; name: string; price: string }) => {
+  const handleAddToCart = (product: {
+    id: string;
+    name: string;
+    price: string;
+  }) => {
     // Find product details (e.g., image) from the displayed list by id
     const found = displayProducts.find((p) => p.id === product.id);
-    setSelectedProduct({ ...product, imageUrl: found?.imageUrl, items: found?.items });
+
+    setSelectedProduct({
+      ...product,
+      imageUrl: found?.imageUrl,
+      items: found?.items,
+    });
     setIsQtyModalOpen(true);
   };
 
@@ -120,11 +130,18 @@ export default function Index({
         .filter((it) => it.isSelected)
         .flatMap((it) => {
           const idNum = parseInt(it.id, 10);
-          if (!Number.isFinite(idNum) || it.quantity <= 0) return [] as number[];
+
+          if (!Number.isFinite(idNum) || it.quantity <= 0)
+            return [] as number[];
+
           return Array(it.quantity).fill(idNum);
         });
+
       if (typeof window !== "undefined") {
-        localStorage.setItem("grocerySelectedItemIds", JSON.stringify(selectedIds));
+        localStorage.setItem(
+          "grocerySelectedItemIds",
+          JSON.stringify(selectedIds),
+        );
       }
     } catch (e) {
       // no-op
@@ -159,7 +176,9 @@ export default function Index({
                       onAddToCart={handleAddToCart}
                     />
                   ) : (
-                    <div className="text-sm text-gray-500">No groceries found.</div>
+                    <div className="text-sm text-gray-500">
+                      No groceries found.
+                    </div>
                   )}
                 </div>
               </div>

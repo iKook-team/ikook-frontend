@@ -44,26 +44,24 @@ export const ChefRequirementsData: React.FC = () => {
 
       <div className="w-[605px] shrink-0 border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] bg-white rounded-[15px] border-solid border-[#E7E7E7] max-lg:w-full max-lg:max-w-[605px] max-sm:rounded-[10px]">
         <div className="px-[49px] pt-[39px] pb-8 max-md:px-6 max-sm:px-4">
-          <h2 className="font-medium text-[19px] text-black mb-6">
-            Note
-          </h2>
+          <h2 className="font-medium text-[19px] text-black mb-6">Note</h2>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <section aria-labelledby="requirements-notice">
-            <WarningCard>
-              <div>
-                <span>
-                  We require you to have the following as a minimum requirement
-                  before applying.
-                </span>
-                <br />
-                <span>
-                  Also note that your personal images is a prerequisite for
-                  upload menus on iKooK.
-                </span>
-              </div>
-            </WarningCard>
-          </section>
+              <WarningCard>
+                <div>
+                  <span>
+                    We require you to have the following as a minimum
+                    requirement before applying.
+                  </span>
+                  <br />
+                  <span>
+                    Also note that your personal images is a prerequisite for
+                    upload menus on iKooK.
+                  </span>
+                </div>
+              </WarningCard>
+            </section>
 
             <section className="mt-8" aria-labelledby="minimum-requirements">
               <h3 className="sr-only" id="minimum-requirements">

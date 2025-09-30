@@ -180,7 +180,9 @@ const MealDetailsForm4: React.FC<MealDetailsForm4Props> = ({
                 id="deliveryTime"
                 name="deliveryTime"
                 value={formData.deliveryTime}
-                onChange={(e) => handleInputChange("deliveryTime", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("deliveryTime", e.target.value)
+                }
                 className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-amber-500 focus:border-amber-500"
                 step={60}
                 required

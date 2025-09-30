@@ -23,8 +23,10 @@ export class SupportTicketWebSocketService {
 
   public static getInstance(): SupportTicketWebSocketService {
     if (!SupportTicketWebSocketService.instance) {
-      SupportTicketWebSocketService.instance = new SupportTicketWebSocketService();
+      SupportTicketWebSocketService.instance =
+        new SupportTicketWebSocketService();
     }
+
     return SupportTicketWebSocketService.instance;
   }
 
@@ -39,7 +41,9 @@ export class SupportTicketWebSocketService {
         const apiBaseUrl =
           process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
         const wsProtocol = apiBaseUrl.startsWith("https") ? "wss:" : "ws:";
-        const baseUrl = apiBaseUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
+        const baseUrl = apiBaseUrl
+          .replace(/^https?:\/\//, "")
+          .replace(/\/$/, "");
         const wsUrl = `${wsProtocol}//${baseUrl}/ws/supports/tickets/${ticketId}/?token=${accessToken}`;
 
         this.socket = new WebSocket(wsUrl);
@@ -74,6 +78,7 @@ export class SupportTicketWebSocketService {
   private onMessage = (event: MessageEvent) => {
     try {
       const message = JSON.parse(event.data) as TicketMessageItem;
+
       this.notifyMessageHandlers(message);
     } catch (error) {
       // Swallow parse errors in production and emit a generic system message if needed
@@ -130,11 +135,13 @@ export class SupportTicketWebSocketService {
 
   public addMessageHandler(handler: MessageHandler): () => void {
     this.messageHandlers.add(handler);
+
     return () => this.messageHandlers.delete(handler);
   }
 
   public onConnectionChange(handler: ConnectionChangeHandler): () => void {
     this.connectionChangeHandlers.add(handler);
+
     return () => this.connectionChangeHandlers.delete(handler);
   }
 

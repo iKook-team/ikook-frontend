@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
-
 import type { GroceryItem } from "@/lib/api/groceries";
+
+import React from "react";
 
 interface ItemsModalProps {
   open: boolean;
@@ -11,7 +11,12 @@ interface ItemsModalProps {
   items: GroceryItem[];
 }
 
-export const ItemsModal: React.FC<ItemsModalProps> = ({ open, onClose, title = "Items", items }) => {
+export const ItemsModal: React.FC<ItemsModalProps> = ({
+  open,
+  onClose,
+  title = "Items",
+  items,
+}) => {
   if (!open) return null;
 
   return (
@@ -24,8 +29,19 @@ export const ItemsModal: React.FC<ItemsModalProps> = ({ open, onClose, title = "
             className="text-gray-400 hover:text-gray-600"
             aria-label="Close modal"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -35,7 +51,10 @@ export const ItemsModal: React.FC<ItemsModalProps> = ({ open, onClose, title = "
             <p className="text-sm text-gray-500">No items found.</p>
           ) : (
             items.map((it, idx) => (
-              <div key={`${it.name}-${idx}`} className="flex items-center justify-between py-2 px-3 rounded-md border border-gray-200">
+              <div
+                key={`${it.name}-${idx}`}
+                className="flex items-center justify-between py-2 px-3 rounded-md border border-gray-200"
+              >
                 <div>
                   <p className="text-sm font-medium text-gray-900">{it.name}</p>
                   <p className="text-xs text-gray-500">{it.measurement_unit}</p>

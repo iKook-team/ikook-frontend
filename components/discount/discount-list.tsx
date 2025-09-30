@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 
 import { DiscountItem } from "./discount-item";
-import { CreateDiscountModal } from "@/components/discount/create-discount-modal";
 
+import { CreateDiscountModal } from "@/components/discount/create-discount-modal";
 import { createDiscount, getDiscounts } from "@/lib/api/discounts";
 import { showToast } from "@/lib/utils/toast";
 import { useAuthStore } from "@/lib/store/auth-store";
@@ -19,12 +19,13 @@ export const DiscountList: React.FC = () => {
   const isChef = user?.user_type === "Chef";
   const serviceType = (user as any)?.service_type as string | undefined;
   const isBoxGroceriesService = isChef && serviceType === "Box Groceries";
-  
+
   const refresh = async (currentStatus: string) => {
     setLoading(true);
     setError("");
     try {
       const data = await getDiscounts(currentStatus);
+
       setDiscounts(data.results || []);
     } catch (err) {
       setError("Failed to load discounts");
@@ -111,7 +112,10 @@ export const DiscountList: React.FC = () => {
           onClose={() => setIsCreateOpen(false)}
           onSubmit={async (payload) => {
             const backendPayload = {
-              discount_item: payload.scope === "all" ? ("All" as const) : ("Single Item" as const),
+              discount_item:
+                payload.scope === "all"
+                  ? ("All" as const)
+                  : ("Single Item" as const),
               discount_percentage: payload.discount_percentage,
               start_date: payload.start_date,
               end_date: payload.end_date,
@@ -127,7 +131,11 @@ export const DiscountList: React.FC = () => {
               showToast.success("Discount created successfully");
               await refresh(status);
             } catch (err: any) {
-              const msg = err?.response?.data?.message || err?.message || "Failed to create discount";
+              const msg =
+                err?.response?.data?.message ||
+                err?.message ||
+                "Failed to create discount";
+
               showToast.error(msg);
               throw err; // propagate to allow caller to decide
             }

@@ -48,6 +48,7 @@ const DocumentUploadModal = ({
     setError("");
     try {
       const formData = new FormData();
+
       formData.append("culinary_certificate", file);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"}/users/profiles/${user.id}/`,
@@ -62,19 +63,20 @@ const DocumentUploadModal = ({
 
       if (res.ok) {
         const response = await res.json();
-        
+
         // Access the nested data from the response
         const userData = response.data || {};
-        
+
         // Update the user data in the store with the response
         if (user) {
           const updatedUser = {
             ...user,
             culinary_certificate: userData.culinary_certificate || null,
-            document_verified: userData.document_verified || false
+            document_verified: userData.document_verified || false,
           };
+
           // Update the user in the store
-          setUser(updatedUser)
+          setUser(updatedUser);
         }
         // Close the modal before triggering parent update
         onClose();
@@ -82,6 +84,7 @@ const DocumentUploadModal = ({
         onUploadSuccess?.();
       } else {
         const errorData = await res.json().catch(() => ({}));
+
         setError(errorData.detail || "Failed to upload document");
       }
     } catch (err) {
@@ -214,9 +217,11 @@ const DocumentUploadModal = ({
 
 const DocumentVerification = () => {
   const router = useRouter();
+
   useEffect(() => {
     router.replace("/verification");
   }, [router]);
+
   // Stop rendering legacy page content
   return null;
 
@@ -225,19 +230,23 @@ const DocumentVerification = () => {
   // Add a state to force re-render when user data changes
   // Use a ref to track if we need to force an update
   const updateTriggerRef = useRef(0);
-  
+
   // Debug effect to log user state changes
   useEffect(() => {
-    console.log('User state changed:', user);
-    console.log('hasCertificate:', Boolean(user?.culinary_certificate), 
-                'isVerified:', Boolean(user?.document_verified));
+    console.log("User state changed:", user);
+    console.log(
+      "hasCertificate:",
+      Boolean(user?.culinary_certificate),
+      "isVerified:",
+      Boolean(user?.document_verified),
+    );
   }, [user]);
-  
+
   const handleUploadSuccess = () => {
     // Force a re-render to ensure the latest user data is used
     updateTriggerRef.current += 1;
   };
-  
+
   const hasCertificate = Boolean(user?.culinary_certificate);
   const isVerified = Boolean(user?.document_verified);
 
@@ -277,9 +286,11 @@ const DocumentVerification = () => {
 
         {/* Alert Message */}
         {hasCertificate && (
-          <div className={`flex w-full items-center gap-3 p-3 rounded-md ${
-            isVerified ? 'bg-green-50' : 'bg-yellow-50'
-          }`}>
+          <div
+            className={`flex w-full items-center gap-3 p-3 rounded-md ${
+              isVerified ? "bg-green-50" : "bg-yellow-50"
+            }`}
+          >
             <div className="flex-shrink-0">
               <svg
                 width="20"
@@ -289,7 +300,12 @@ const DocumentVerification = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 className="relative"
               >
-                <circle cx="10" cy="10" r="10" fill={isVerified ? '#D1FAE5' : '#FDEEC5'} />
+                <circle
+                  cx="10"
+                  cy="10"
+                  r="10"
+                  fill={isVerified ? "#D1FAE5" : "#FDEEC5"}
+                />
                 {isVerified ? (
                   <path
                     d="M6 10L9 13L14 7"
@@ -309,11 +325,12 @@ const DocumentVerification = () => {
                 )}
               </svg>
             </div>
-            <p className={`text-sm ${isVerified ? 'text-green-700' : 'text-yellow-700'}`}>
+            <p
+              className={`text-sm ${isVerified ? "text-green-700" : "text-yellow-700"}`}
+            >
               {isVerified
                 ? "Your document has been verified"
-                : "Your documents are under review, you'll receive an email on the outcome"
-              }
+                : "Your documents are under review, you'll receive an email on the outcome"}
             </p>
           </div>
         )}

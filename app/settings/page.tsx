@@ -47,11 +47,14 @@ const AccountSettings: React.FC = () => {
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 md:mb-12">
           Account Settings
         </h1>
-        
+
         <nav className="bg-white rounded-lg shadow-sm overflow-hidden">
           <ul className="space-y-2">
             {filteredItems.map((item, index) => (
-              <li key={index} className="hover:bg-gray-50 transition-colors rounded-lg">
+              <li
+                key={index}
+                className="hover:bg-gray-50 transition-colors rounded-lg"
+              >
                 <button
                   onClick={() => handleItemClick(item)}
                   className="w-full px-6 py-4 text-left flex items-center justify-between group"

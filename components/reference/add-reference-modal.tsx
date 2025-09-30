@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+
 import { useAuthStore } from "@/lib/store/auth-store";
 import { showToast } from "@/lib/utils/toast";
 import { FormField } from "@/components/ui/form-field";
@@ -121,7 +122,7 @@ export const AddReferenceModal: React.FC<AddReferenceModalProps> = ({
     const currentUser = useAuthStore.getState().user;
     const referenceData = {
       ...formData,
-      country: currentUser?.country || formData.country
+      country: currentUser?.country || formData.country,
     };
 
     try {

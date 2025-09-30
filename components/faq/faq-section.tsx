@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+
 import { FaqItem } from "./faq-item";
 
 export function FaqSection() {
@@ -10,14 +11,14 @@ export function FaqSection() {
     "What time will the chef arrive?",
     "What do I need to provide?",
     "How do I let you know about guests who have specific dietary requirements?",
-    "Do I have to choose one of the set menus?"
+    "Do I have to choose one of the set menus?",
   ];
 
   return (
     <section className="w-full mt-32 max-md:mt-10">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <h1 className="self-start text-7xl font-bold leading-none text-zinc-800 max-md:text-4xl">
-          Frequently asked {" "}
+          Frequently asked{" "}
           <span className="relative inline-block">
             <span className="absolute bottom-1 md:bottom-2 left-0 w-full h-3 md:h-4 bg-[#FCC01C] z-[2]" />
             <span className="z-[3] relative">questions</span>

@@ -19,7 +19,9 @@ export const JoinForm: React.FC<JoinFormProps> = ({
   initialSelectedUserType = null,
 }) => {
   const router = useRouter();
-  const [selectedUserType, setSelectedUserType] = useState<UserType>(initialSelectedUserType);
+  const [selectedUserType, setSelectedUserType] = useState<UserType>(
+    initialSelectedUserType,
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSelectionChange = (type: UserType) => {

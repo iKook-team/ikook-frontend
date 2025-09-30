@@ -174,11 +174,11 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
     };
 
     // Normalize budget and budget type using props first, then fallback to bookingData
-    const normalizeBudgetType = (
-      bt?: string | null,
-    ): "Flexible" | "Fixed" => {
+    const normalizeBudgetType = (bt?: string | null): "Flexible" | "Fixed" => {
       const v = (bt || "").toString().trim().toLowerCase();
+
       if (v === "fixed") return "Fixed";
+
       return "Flexible"; // default
     };
 
@@ -224,7 +224,8 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
         budget: effectiveBudget,
         budget_type: effectiveBudgetType,
         // Prefer the prop provided by the step flow, fallback to bookingData
-        preferred_cuisines: preferredCuisines || bookingData.preferredCuisines || [],
+        preferred_cuisines:
+          preferredCuisines || bookingData.preferredCuisines || [],
       } as LargeEventPayload;
     } else {
       // Default to Chef at Home / Fine Dining
@@ -292,10 +293,11 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
     // Guard the booking creation with auth check
     const serviceTypeForIntent =
       (bookingData.service as string) || menu?.menu_type || menu?.type || "";
+
     guardBookingAction(
       {
-        type: menu ? 'menu' : 'service',
-        id: menu?.id?.toString() || serviceTypeForIntent || 'unknown',
+        type: menu ? "menu" : "service",
+        id: menu?.id?.toString() || serviceTypeForIntent || "unknown",
         selectedDate: bookingData.eventDate || bookingData.startDate,
         selectedTime: bookingData.eventTime || bookingData.deliveryTime,
         guests: bookingData.guests || bookingData.numOfPersons || 1,
@@ -303,11 +305,11 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
         pricing: {
           basePrice: menu?.price_per_person || 0,
           totalPrice: (menu?.price_per_person || 0) * (bookingData.guests || 1),
-          currency: 'USD'
+          currency: "USD",
         },
         returnUrl: window.location.pathname + window.location.search,
       },
-      createBooking
+      createBooking,
     );
   };
 

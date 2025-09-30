@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+
 import { ChefProfileCard } from "@/components/chef-profile/chef-profile-card";
 import { ChefDetails } from "@/components/chef-profile/chef-details";
 import { ReviewsSection } from "@/components/booking/reviews-section";
@@ -29,7 +30,14 @@ export const ChefProfilePageClient: React.FC<{ id: string }> = ({ id }) => {
   const [chef, setChef] = useState<ChefProfile | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [reviews, setReviews] = useState<Array<{ name: string; comment: string; date: string; avatar?: string | null }>>([]);
+  const [reviews, setReviews] = useState<
+    Array<{
+      name: string;
+      comment: string;
+      date: string;
+      avatar?: string | null;
+    }>
+  >([]);
 
   useEffect(() => {
     let mounted = true;
@@ -39,19 +47,30 @@ export const ChefProfilePageClient: React.FC<{ id: string }> = ({ id }) => {
         setError(null);
         const payload = await listingService.getChefById(id);
         const data = (payload as any)?.data ?? payload;
+
         if (mounted) setChef(data as ChefProfile);
         // Fetch reviews for this chef id
         try {
-          const resp = await apiClient.get("/reviews/", { params: { chef_id: id } });
-          const results = (resp.data?.data?.results ?? resp.data?.results ?? []) as any[];
+          const resp = await apiClient.get("/reviews/", {
+            params: { chef_id: id },
+          });
+          const results = (resp.data?.data?.results ??
+            resp.data?.results ??
+            []) as any[];
           const mapped = Array.isArray(results)
             ? results.map((r) => ({
-                name: `${r?.reviewer?.first_name ?? ""} ${r?.reviewer?.last_name ?? ""}`.trim() || r?.reviewer?.email || "Anonymous",
+                name:
+                  `${r?.reviewer?.first_name ?? ""} ${r?.reviewer?.last_name ?? ""}`.trim() ||
+                  r?.reviewer?.email ||
+                  "Anonymous",
                 comment: r?.comment ?? "",
-                date: r?.created_at ? new Date(r.created_at).toLocaleDateString() : "",
+                date: r?.created_at
+                  ? new Date(r.created_at).toLocaleDateString()
+                  : "",
                 avatar: r?.reviewer?.avatar ?? null,
               }))
             : [];
+
           if (mounted) setReviews(mapped);
         } catch (_e) {
           console.error("Error fetching reviews:", _e);
@@ -63,7 +82,9 @@ export const ChefProfilePageClient: React.FC<{ id: string }> = ({ id }) => {
         if (mounted) setLoading(false);
       }
     };
+
     load();
+
     return () => {
       mounted = false;
     };
@@ -85,9 +106,10 @@ export const ChefProfilePageClient: React.FC<{ id: string }> = ({ id }) => {
   }
   if (!chef) return null;
 
-  const name = `${chef.first_name ?? ""} ${chef.last_name ?? ""}`.trim() || "Chef";
+  const name =
+    `${chef.first_name ?? ""} ${chef.last_name ?? ""}`.trim() || "Chef";
   const cuisines = Array.isArray(chef.cuisines) ? chef.cuisines : [];
-  const bio = (chef.bio && chef.bio.trim().length > 0) ? chef.bio : undefined;
+  const bio = chef.bio && chef.bio.trim().length > 0 ? chef.bio : undefined;
 
   return (
     <div className="bg-white flex flex-col overflow-hidden items-stretch">

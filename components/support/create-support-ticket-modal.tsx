@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+
 import { FormField } from "@/components/ui/form-field";
 
 export interface CreateSupportTicketPayload {
@@ -18,12 +19,9 @@ interface CreateSupportTicketModalProps {
 
 const CATEGORY_OPTIONS = ["Booking", "Payment", "Service", "Others"] as const;
 
-export const CreateSupportTicketModal: React.FC<CreateSupportTicketModalProps> = ({
-  open,
-  onClose,
-  onSubmit,
-  isSubmitting = false,
-}) => {
+export const CreateSupportTicketModal: React.FC<
+  CreateSupportTicketModalProps
+> = ({ open, onClose, onSubmit, isSubmitting = false }) => {
   const [formData, setFormData] = useState<CreateSupportTicketPayload>({
     category: CATEGORY_OPTIONS[0],
     title: "",
@@ -38,13 +36,20 @@ export const CreateSupportTicketModal: React.FC<CreateSupportTicketModalProps> =
 
   if (!open) return null;
 
-  const handleChange = (field: keyof CreateSupportTicketPayload, value: string) => {
+  const handleChange = (
+    field: keyof CreateSupportTicketPayload,
+    value: string,
+  ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.category || !formData.title.trim() || !formData.message.trim()) {
+    if (
+      !formData.category ||
+      !formData.title.trim() ||
+      !formData.message.trim()
+    ) {
       return;
     }
     await onSubmit({
@@ -59,7 +64,9 @@ export const CreateSupportTicketModal: React.FC<CreateSupportTicketModalProps> =
       <div className="relative w-full max-w-md p-6 mx-4 bg-white rounded-lg shadow-xl">
         {/* Modal Header */}
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-gray-900">Create Support Ticket</h3>
+          <h3 className="text-lg font-semibold text-gray-900">
+            Create Support Ticket
+          </h3>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-500"
@@ -72,7 +79,12 @@ export const CreateSupportTicketModal: React.FC<CreateSupportTicketModalProps> =
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -124,7 +136,12 @@ export const CreateSupportTicketModal: React.FC<CreateSupportTicketModalProps> =
             <button
               type="submit"
               className="px-4 py-2 text-sm font-medium text-white bg-amber-500 rounded-md hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed min-w-[120px]"
-              disabled={isSubmitting || !formData.category || !formData.title.trim() || !formData.message.trim()}
+              disabled={
+                isSubmitting ||
+                !formData.category ||
+                !formData.title.trim() ||
+                !formData.message.trim()
+              }
             >
               {isSubmitting ? "Creating..." : "Create Ticket"}
             </button>

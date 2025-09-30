@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
 import { quotesService } from "@/lib/api/quotes";
@@ -37,6 +38,7 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
       setQuoteError(null);
       try {
         const q = await quotesService.getQuoteByBookingId(booking.id);
+
         if (mounted) setQuote(q);
       } catch (e) {
         // No quote is a valid state; suppress error to avoid UI noise
@@ -45,7 +47,9 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
         if (mounted) setQuoteLoading(false);
       }
     };
+
     load();
+
     return () => {
       mounted = false;
     };
@@ -77,9 +81,10 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
   const isUpcoming = booking.status === "Upcoming";
   const isEnquiry = booking.status === "Enquiries";
   const isCustom = booking.is_custom;
-  const total = booking.total_cost !== undefined && booking.total_cost !== null
-    ? `${marketCfg.currencySymbol}${Number(booking.total_cost).toLocaleString(marketCfg.locale)}`
-    : "-";
+  const total =
+    booking.total_cost !== undefined && booking.total_cost !== null
+      ? `${marketCfg.currencySymbol}${Number(booking.total_cost).toLocaleString(marketCfg.locale)}`
+      : "-";
   const guests = booking.num_of_guests || "-";
   const eventDate = booking.event_date || "-";
   const eventTime = booking.event_time || "-";
@@ -99,11 +104,20 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
                   userType === "chef"
                     ? booking.host_id
                     : userType === "host"
-                    ? (booking.chef_id || booking.selected_chef_id)
-                    : booking.chef_id || booking.selected_chef_id || booking.host_id;
-                if (!otherUserId) throw new Error("Unable to determine chat participant");
-                const chat = await chatService.getOrCreateChat(Number(otherUserId));
-                const back = encodeURIComponent(`/dashboard/booking-details?id=${booking.id}`);
+                      ? booking.chef_id || booking.selected_chef_id
+                      : booking.chef_id ||
+                        booking.selected_chef_id ||
+                        booking.host_id;
+
+                if (!otherUserId)
+                  throw new Error("Unable to determine chat participant");
+                const chat = await chatService.getOrCreateChat(
+                  Number(otherUserId),
+                );
+                const back = encodeURIComponent(
+                  `/dashboard/booking-details?id=${booking.id}`,
+                );
+
                 router.push(`/chat?chatId=${chat.id}&back=${back}`);
               } catch (error) {
                 handleApiError(error, "Failed to start chat");
@@ -113,7 +127,11 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
             }}
             disabled={isCreatingChat}
           >
-            {isCreatingChat ? "Starting chat..." : userType === "chef" ? "Message Host" : "Message Chef"}
+            {isCreatingChat
+              ? "Starting chat..."
+              : userType === "chef"
+                ? "Message Host"
+                : "Message Chef"}
           </button>
         )}
         <div className="flex flex-col items-start self-start mt-8 text-sm leading-none text-black">
@@ -160,7 +178,8 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
         </div>
         <div className="mt-8 w-full text-base font-semibold max-w-[310px]">
           {userType === "chef" &&
-            (booking.status?.toLowerCase() === "upcoming" || completedLocally) && (
+            (booking.status?.toLowerCase() === "upcoming" ||
+              completedLocally) && (
               <button
                 className="overflow-hidden gap-2 self-stretch px-5 py-2.5 w-full bg-white rounded-lg border border-solid shadow-sm border-[color:var(--Gray-100,#CFCFCE)] text-slate-700 disabled:opacity-60 disabled:cursor-not-allowed"
                 disabled={isCompleting || completedLocally}
@@ -175,7 +194,10 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
                     setCompletedLocally(true);
                     router.refresh();
                   } catch (error) {
-                    handleApiError(error, "Failed to mark booking as completed");
+                    handleApiError(
+                      error,
+                      "Failed to mark booking as completed",
+                    );
                   } finally {
                     setIsCompleting(false);
                   }
@@ -203,7 +225,9 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
               View Quote
             </button>
           ) : (
-            userType === "chef" && isCustom && isEnquiry && (
+            userType === "chef" &&
+            isCustom &&
+            isEnquiry && (
               <button
                 className="overflow-hidden gap-2 self-stretch px-5 py-2.5 mt-3 w-full text-white bg-black rounded-lg border border-solid shadow-sm border-[color:var(--Black,#020101)] hover:bg-gray-900 transition-colors"
                 onClick={() => {

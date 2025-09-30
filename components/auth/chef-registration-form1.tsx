@@ -114,54 +114,61 @@ export const ChefRegistrationForm1: React.FC<ChefRegistrationForm1Props> = ({
           </h1>
 
           <form onSubmit={handleSubmit}>
-          <fieldset className="flex w-full flex-col items-start gap-6">
-            <legend className="sr-only">Personal Information</legend>
+            <fieldset className="flex w-full flex-col items-start gap-6">
+              <legend className="sr-only">Personal Information</legend>
 
-            <FormField
-              required
-              className="w-full"
-              error={errors.firstName}
-              label="First Name"
-              placeholder="Given name"
-              type="text"
-              value={formData.firstName}
-              onChange={(e) => handleInputChange("firstName", e.target.value)}
-            />
+              <FormField
+                required
+                className="w-full"
+                error={errors.firstName}
+                label="First Name"
+                placeholder="Given name"
+                type="text"
+                value={formData.firstName}
+                onChange={(e) => handleInputChange("firstName", e.target.value)}
+              />
 
-            <FormField
-              required
-              className="w-full"
-              error={errors.lastName}
-              label="Last Name"
-              placeholder="Family name"
-              type="text"
-              value={formData.lastName}
-              onChange={(e) => handleInputChange("lastName", e.target.value)}
-            />
+              <FormField
+                required
+                className="w-full"
+                error={errors.lastName}
+                label="Last Name"
+                placeholder="Family name"
+                type="text"
+                value={formData.lastName}
+                onChange={(e) => handleInputChange("lastName", e.target.value)}
+              />
 
-            <FormField
-              required
-              className="w-full"
-              error={errors.dateOfBirth}
-              label="Date of Birth"
-              placeholder="13/08/1990"
-              type="date"
-              value={formData.dateOfBirth}
-              onChange={(e) => handleInputChange("dateOfBirth", e.target.value)}
-            />
+              <FormField
+                required
+                className="w-full"
+                error={errors.dateOfBirth}
+                label="Date of Birth"
+                placeholder="13/08/1990"
+                type="date"
+                value={formData.dateOfBirth}
+                onChange={(e) =>
+                  handleInputChange("dateOfBirth", e.target.value)
+                }
+              />
 
-            <FormField
-              required
-              className="w-full"
-              error={errors.serviceType}
-              label="What type of service are you providing?"
-              options={[{ value: "", label: "Select service type" }, ...serviceOptions]}
-              placeholder="Select service type"
-              type="select"
-              value={formData.serviceType}
-              onChange={(e) => handleInputChange("serviceType", e.target.value)}
-            />
-          </fieldset>
+              <FormField
+                required
+                className="w-full"
+                error={errors.serviceType}
+                label="What type of service are you providing?"
+                options={[
+                  { value: "", label: "Select service type" },
+                  ...serviceOptions,
+                ]}
+                placeholder="Select service type"
+                type="select"
+                value={formData.serviceType}
+                onChange={(e) =>
+                  handleInputChange("serviceType", e.target.value)
+                }
+              />
+            </fieldset>
 
             <div className="mt-8 h-12 w-full">
               <button
