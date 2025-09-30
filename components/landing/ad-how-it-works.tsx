@@ -76,30 +76,34 @@ export const AdHowItWorks: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
-          {steps.map((step, index) => (
-            <div key={index} className="text-center group">
-              <div className="relative mb-6">
-                <div className="w-20 h-20 mx-auto bg-white rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
-                  {step.icon}
+        <div className="relative">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+            {steps.map((step, index) => (
+              <div key={index} className="text-center group relative">
+                <div className="relative mb-8 pb-4">
+                  <div className="w-20 h-20 mx-auto bg-white rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 relative z-10">
+                    {step.icon}
+                  </div>
+                  <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-8 h-8 bg-[#FCC01C] text-white rounded-full flex items-center justify-center text-sm font-bold z-20">
+                    {index + 1}
+                  </div>
                 </div>
-                {index < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-gradient-to-r from-[#FCC01C] to-gray-300 transform -translate-x-10" />
-                )}
-                <div className="absolute -top-2 -right-2 w-8 h-8 bg-[#FCC01C] text-white rounded-full flex items-center justify-center text-sm font-bold">
-                  {index + 1}
-                </div>
+
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  {step.title}
+                </h3>
+
+                <p className="text-gray-600 leading-relaxed">
+                  {step.description}
+                </p>
               </div>
-
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                {step.title}
-              </h3>
-
-              <p className="text-gray-600 leading-relaxed">
-                {step.description}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
+          
+          {/* Connecting Lines */}
+          <div className="hidden md:block absolute top-12 left-1/2 transform -translate-x-1/2 w-2/3 h-0.5">
+            <div className="w-full h-full bg-gradient-to-r from-[#FCC01C] via-[#FCC01C] to-[#FCC01C] opacity-30"></div>
+          </div>
         </div>
       </div>
     </section>

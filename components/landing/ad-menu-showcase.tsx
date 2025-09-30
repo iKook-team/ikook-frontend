@@ -7,22 +7,22 @@ export const AdMenuShowcase: React.FC = () => {
 
   const menuItems = [
     {
-      image: "/api/placeholder/400/300",
+      image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       title: "Grilled Salmon with Herbs",
       description: "Fresh Atlantic salmon with garden herbs and lemon butter",
     },
     {
-      image: "/api/placeholder/400/300",
+      image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       title: "Jollof Rice Perfection",
       description: "Authentic Nigerian jollof rice with premium spices",
     },
     {
-      image: "/api/placeholder/400/300",
+      image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       title: "Beef Wellington",
       description: "Classic British dish with tender beef and flaky pastry",
     },
     {
-      image: "/api/placeholder/400/300",
+      image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       title: "Chocolate Lava Cake",
       description: "Decadent dessert with molten chocolate center",
     },
@@ -46,7 +46,7 @@ export const AdMenuShowcase: React.FC = () => {
           </h2>
         </div>
 
-        <div className="relative">
+        <div className="relative px-16">
           <div className="overflow-hidden rounded-lg">
             <div
               className="flex transition-transform duration-500 ease-in-out"
@@ -77,7 +77,7 @@ export const AdMenuShowcase: React.FC = () => {
           {/* Navigation */}
           <button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#FCC01C] p-2 rounded-full hover:bg-[#E6AC19] transition-colors"
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-[#FCC01C] p-3 rounded-full hover:bg-[#E6AC19] transition-colors shadow-lg z-10"
           >
             <svg
               className="w-6 h-6"
@@ -95,7 +95,7 @@ export const AdMenuShowcase: React.FC = () => {
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#FCC01C] p-2 rounded-full hover:bg-[#E6AC19] transition-colors"
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-[#FCC01C] p-3 rounded-full hover:bg-[#E6AC19] transition-colors shadow-lg z-10"
           >
             <svg
               className="w-6 h-6"
@@ -113,7 +113,20 @@ export const AdMenuShowcase: React.FC = () => {
           </button>
         </div>
 
-        <div className="text-center mt-12">
+        {/* Slide Indicators */}
+        <div className="flex justify-center mt-8 space-x-2">
+          {menuItems.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`w-3 h-3 rounded-full transition-colors ${
+                index === currentSlide ? 'bg-[#FCC01C]' : 'bg-gray-600'
+              }`}
+            />
+          ))}
+        </div>
+
+        <div className="text-center mt-8">
           <button className="px-8 py-4 bg-transparent border-2 border-[#FCC01C] text-[#FCC01C] font-semibold rounded-lg hover:bg-[#FCC01C] hover:text-white transition-colors">
             See Menu Sample
           </button>

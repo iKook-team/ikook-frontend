@@ -6,22 +6,22 @@ export const AdMeetChefs: React.FC = () => {
   const chefs = [
     {
       name: "Chef Tunde",
-      image: "/api/placeholder/300/300",
+      image: "https://images.unsplash.com/photo-1583394293214-28ded15ee548?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
       specialty: "Nigerian Cuisine",
     },
     {
       name: "Chef Amara",
-      image: "/api/placeholder/300/300",
+      image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
       specialty: "Continental",
     },
     {
       name: "Chef Kemi",
-      image: "/api/placeholder/300/300",
+      image: "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
       specialty: "Pastry & Desserts",
     },
     {
       name: "Chef David",
-      image: "/api/placeholder/300/300",
+      image: "https://images.unsplash.com/photo-1607631568010-a87245c0daf8?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
       specialty: "Grills & BBQ",
     },
   ];

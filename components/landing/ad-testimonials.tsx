@@ -7,22 +7,22 @@ export const AdTestimonials: React.FC = () => {
     {
       name: "Aisha",
       text: "I didn't even know you could book a chef this easy. Chef Tunde came through, cooked, served, even cleaned. All we did was gist and eat. 10/10 experience.",
-      avatar: "/api/placeholder/80/80",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&q=80",
     },
     {
       name: "Kunle",
       text: "That food was too good abeg. The grilled fish finished us, and the jollof? Mad. Everything was smooth from start to finish, zero stress, just vibes. I'm booking again soon.",
-      avatar: "/api/placeholder/80/80",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&q=80",
     },
     {
       name: "Ifeoma",
       text: "Omo, the experience was amazing! The chef was calm, polite, and 100% on point. Thank you iKooK for making my baby so happy. I love love!",
-      avatar: "/api/placeholder/80/80",
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&q=80",
     },
     {
       name: "Chidera",
       text: "Our private chef showed up early, explained every dish, and the food was restaurant standard. After the party, he left the kitchen spotless. Honestly, worth every naira.",
-      avatar: "/api/placeholder/80/80",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&q=80",
     },
   ];
 
