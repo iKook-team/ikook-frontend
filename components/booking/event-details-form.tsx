@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { ProgressIndicator } from "./progress-indicator";
@@ -30,6 +30,16 @@ const EventDetailsForm: React.FC<EventDetailsFormProps> = ({
   isCustomBooking = false,
 }) => {
   const minGuests = menu?.num_of_guests || 1;
+
+  // Local input state to allow clearing/editing without immediate coercion
+  const [guestsInput, setGuestsInput] = useState<string>(
+    String(formData.guests ?? minGuests),
+  );
+
+  // Keep local input in sync if parent value changes externally
+  useEffect(() => {
+    setGuestsInput(String(formData.guests ?? ""));
+  }, [formData.guests]);
 
   const progressSteps = [
     { label: "Event Details", completed: true, inProgress: true },
@@ -160,19 +170,29 @@ const EventDetailsForm: React.FC<EventDetailsFormProps> = ({
                 name="guests"
                 min={minGuests}
                 step="1"
-                value={formData.guests}
-                onChange={(e) =>
-                  handleInputChange(
-                    "guests",
-                    parseInt(e.target.value, 10) || minGuests,
-                  )
-                }
+                value={guestsInput}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setGuestsInput(val);
+                  const parsed = parseInt(val, 10);
+                  if (!isNaN(parsed)) {
+                    // Update parent state only when numeric; do not clamp to min here
+                    handleInputChange("guests", parsed);
+                  }
+                }}
+                onBlur={() => {
+                  // Do not auto-correct to min on blur. Leave value as typed.
+                  // Parent state has already been updated when numeric during typing.
+                }}
                 className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-amber-500 focus:border-amber-500"
                 required
               />
             </div>
 
-            {formData.guests < minGuests && (
+            {(() => {
+              const parsed = parseInt(guestsInput, 10);
+              return !isNaN(parsed) && parsed < minGuests;
+            })() && (
               <div className="flex w-full text-xs text-[#3F3E3D] font-normal leading-5 bg-[#FFFCF5] p-4 rounded-lg">
                 <div className="flex items-center gap-3">
                   <Image
@@ -197,7 +217,8 @@ const EventDetailsForm: React.FC<EventDetailsFormProps> = ({
                   (formData.location || "").trim().length > 0;
                 const isDateValid =
                   (formData.eventDate || "").trim().length > 0;
-                const isGuestsValid = formData.guests >= minGuests;
+                const parsedGuests = parseInt(guestsInput, 10);
+                const isGuestsValid = !isNaN(parsedGuests) && parsedGuests >= minGuests;
                 const isFormValid =
                   isLocationValid && isDateValid && isGuestsValid;
 
