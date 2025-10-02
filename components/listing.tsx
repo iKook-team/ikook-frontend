@@ -159,9 +159,13 @@ const ListingSkeleton = ({
 
 interface ListingProps {
   selectedService?: string;
+  orderBy?: string;
 }
 
-export const Listing = ({ selectedService = "chef-at-home" }: ListingProps) => {
+export const Listing = ({
+  selectedService = "chef-at-home",
+  orderBy,
+}: ListingProps) => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const pageSize = 12; // Show 12 items per page
   const {
@@ -176,12 +180,13 @@ export const Listing = ({ selectedService = "chef-at-home" }: ListingProps) => {
   } = useListings({
     selectedService,
     pageSize,
+    orderBy,
   });
 
-  // Reset page when selectedService changes
+  // Reset page when selectedService or orderBy changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedService]);
+  }, [selectedService, orderBy]);
 
   // Debug log the listings data
   useEffect(() => {

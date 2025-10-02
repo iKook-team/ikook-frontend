@@ -2,10 +2,11 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { Button, Select, SelectItem } from "@heroui/react";
+import { Button } from "@heroui/react";
 
 import { ServiceButton } from "./ServiceButton";
 import { FilterButton } from "./FilterButton";
+import { Select } from "@/components/ui/select";
 
 interface Service {
   id: string;
@@ -29,9 +30,16 @@ const services: Service[] = [
 interface ServicesProps {
   selectedService: string;
   onServiceChange: (serviceId: string) => void;
+  orderBy?: string;
+  onOrderByChange?: (value: string) => void;
 }
 
-export function Services({ selectedService, onServiceChange }: ServicesProps) {
+export function Services({
+  selectedService,
+  onServiceChange,
+  orderBy = "Most Popular",
+  onOrderByChange,
+}: ServicesProps) {
   const router = useRouter();
   const [isFilterOpen, setIsFilterOpen] = React.useState<boolean>(false);
 
@@ -48,9 +56,13 @@ export function Services({ selectedService, onServiceChange }: ServicesProps) {
   };
 
   const sortOptions = [
-    { key: "popular", label: "Most Popular" },
-    { key: "latest", label: "Latest" },
+    { key: "Most Popular", label: "Most Popular" },
+    { key: "Recently Added", label: "Latest" },
   ];
+
+  const handleSortChange = (value: string) => {
+    onOrderByChange?.(value);
+  };
 
   return (
     <>
@@ -110,14 +122,12 @@ export function Services({ selectedService, onServiceChange }: ServicesProps) {
 
           <div className="flex w-full md:w-1/4 mt-2 md:mt-0 justify-end">
             <Select
-              radius="full"
-              className="w-full max-w-full md:max-w-40 border-1 rounded-full"
-              defaultSelectedKeys={["popular"]}
-            >
-              {sortOptions.map((option) => (
-                <SelectItem key={option.key}>{option.label}</SelectItem>
-              ))}
-            </Select>
+              options={sortOptions}
+              value={orderBy}
+              onChange={handleSortChange}
+              placeholder="Sort by"
+              className="w-full max-w-full md:max-w-40"
+            />
           </div>
         </div>
       </div>

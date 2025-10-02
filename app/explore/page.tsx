@@ -9,9 +9,14 @@ import { Services } from "@/components/filter/Services";
 
 export default function Home() {
   const [selectedService, setSelectedService] = useState("chef-at-home");
+  const [orderBy, setOrderBy] = useState<string>("Most Popular");
 
   const handleServiceChange = (serviceId: string) => {
     setSelectedService(serviceId);
+  };
+
+  const handleOrderByChange = (value: string) => {
+    setOrderBy(value);
   };
 
   return (
@@ -20,8 +25,10 @@ export default function Home() {
       <Services
         onServiceChange={handleServiceChange}
         selectedService={selectedService}
+        onOrderByChange={handleOrderByChange}
+        orderBy={orderBy}
       />
-      <Listing selectedService={selectedService} />
+      <Listing selectedService={selectedService} orderBy={orderBy} />
       <Footer />
     </>
   );

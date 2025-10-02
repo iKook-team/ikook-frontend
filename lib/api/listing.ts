@@ -100,6 +100,7 @@ interface BaseListingParams {
   search?: string;
   market?: string;
   city?: string;
+  order_by?: string;
   // Add other common filters as needed
 }
 

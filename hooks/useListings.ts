@@ -31,6 +31,7 @@ interface UseListingsProps {
   searchQuery?: string;
   page?: number;
   pageSize?: number;
+  orderBy?: string;
 }
 
 const useListings = ({
@@ -38,6 +39,7 @@ const useListings = ({
   searchQuery = "",
   page = 1,
   pageSize = 12,
+  orderBy,
 }: UseListingsProps) => {
   const [listings, setListings] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -95,6 +97,7 @@ const useListings = ({
           search: searchQuery,
           city,
           market,
+          order_by: orderBy,
         });
       } else if (selectedService in serviceIdToTag) {
         setListingType("service");
@@ -115,11 +118,14 @@ const useListings = ({
           chef_service: serviceTag,
           city,
           market,
+          order_by: orderBy,
         });
         console.log("Services API response:", response);
       } else if (selectedService in menuIdToTag) {
         setListingType("menu");
-        response = await listingService.getMenus({
+        // For menus, only send order_by if it's "Recently Added"
+        // "Most Popular" is not supported by the menu endpoint
+        const menuParams: any = {
           page: pageToFetch,
           page_size: pageSize,
           search: searchQuery,
@@ -127,7 +133,13 @@ const useListings = ({
           status: "Active",
           city,
           market,
-        });
+        };
+        
+        if (orderBy === "Recently Added") {
+          menuParams.order_by = orderBy;
+        }
+        
+        response = await listingService.getMenus(menuParams);
       } else {
         // Default to empty results if service type is not recognized
         setListings([]);
@@ -169,7 +181,7 @@ const useListings = ({
     } else {
       fetchListings(1, false);
     }
-  }, [selectedService, searchQuery]);
+  }, [selectedService, searchQuery, orderBy]);
 
   // Load more when page changes
   useEffect(() => {
