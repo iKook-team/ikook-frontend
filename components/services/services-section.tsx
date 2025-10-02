@@ -34,10 +34,10 @@ export const ServicesSection: React.FC = () => {
     "Chef at home": null,
     "Fine dining": null,
     "Large event": null,
+    "Corporate dining": null,
     "Meal prep": null,
     "Meal delivery": null,
     "Cooking class": null,
-    "Corporate dining": null,
     "Healthy eating coach": null,
   });
 
@@ -111,11 +111,35 @@ export const ServicesSection: React.FC = () => {
           `${serviceName} ${isActive ? "activated" : "deactivated"} successfully`,
         );
       } else {
-        // For services that don't exist yet, we'll handle creation later
-        // For now, just navigate to the service page
-        router.push(
-          `/services/${serviceName.toLowerCase().replace(/\s+/g, "-")}`,
-        );
+        // Auto-create certain services without opening a form
+        const DISPLAY_TO_BACKEND: Record<string, string> = {
+          "Large event": "Large Event",
+          "Corporate dining": "Corporate Dining",
+          "Meal delivery": "Meal Delivery",
+          "Meal prep": "Meal Prep",
+        };
+
+        const backendName = DISPLAY_TO_BACKEND[serviceName];
+
+        if (backendName) {
+          // Create minimal service with availability=true and correct chef_service
+          const created = await servicesService.createService({
+            availability: true,
+            chef_service: backendName,
+          } as any);
+
+          setServices((prev) => ({
+            ...prev,
+            [serviceName]: created,
+          }));
+
+          toast.success(`${serviceName} created and activated.`);
+        } else {
+          // Default behavior (navigate to form) for excluded services
+          router.push(
+            `/services/${serviceName.toLowerCase().replace(/\s+/g, "-")}`,
+          );
+        }
       }
     } catch (err) {
       console.error(`Failed to update ${serviceName}:`, err);
@@ -195,13 +219,7 @@ export const ServicesSection: React.FC = () => {
                 }
                 onClick={
                   !serviceData
-                    ? () => {
-                        const routeName = serviceName
-                          .toLowerCase()
-                          .replace(/\s+/g, "-");
-
-                        router.push(`/services/${routeName}`);
-                      }
+                    ? () => handleServiceToggle(serviceName, true)
                     : undefined
                 }
               />
