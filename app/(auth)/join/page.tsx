@@ -10,7 +10,7 @@ import { JoinForm } from "@/components/auth/join-form";
 
 const Index: React.FC = () => {
   const router = useRouter();
-  const { error, isLoading } = useGeolocation();
+  const { error, isLoading, retry } = useGeolocation();
   const [showError, setShowError] = useState(false);
   const searchParams = useSearchParams();
 
@@ -34,7 +34,7 @@ const Index: React.FC = () => {
 
   const handleRetry = () => {
     setShowError(false);
-    window.location.reload(); // Force a reload to retry geolocation
+    retry(); // Use the retry function from the hook
   };
 
   // If we're still loading, show a loading state
@@ -57,6 +57,11 @@ const Index: React.FC = () => {
 
   // If there was an error getting location
   if (showError) {
+    const errorLower = error?.toLowerCase() || "";
+    const isPermissionDenied = errorLower.includes("permission denied") || 
+                                errorLower.includes("blocked") ||
+                                errorLower.includes("denied");
+    
     return (
       <div className="w-full min-h-screen flex items-center justify-center bg-[#FBFBFB] p-4 px-2 sm:px-4">
         <div className="max-w-md w-full space-y-6">
@@ -88,11 +93,22 @@ const Index: React.FC = () => {
               Back to Home
             </Button>
           </div>
+          
+          {isPermissionDenied && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-gray-700">
+              <p className="font-semibold mb-2">How to enable location:</p>
+              <ol className="list-decimal list-inside space-y-1 text-xs">
+                <li>Click the lock icon (🔒) or info icon (ⓘ) in your browser's address bar</li>
+                <li>Find "Location" permissions and set it to "Allow"</li>
+                <li>Click "Try Again" above</li>
+              </ol>
+            </div>
+          )}
+          
           <div className="text-xs text-gray-400 text-center mt-6">
-            <p>Make sure to allow location access in your browser settings.</p>
+            <p>Make sure location services are enabled on your device.</p>
             <p>
-              If the issue persists, try refreshing the page or using a
-              different browser.
+              If the issue persists, try using a different browser or contact support.
             </p>
           </div>
         </div>

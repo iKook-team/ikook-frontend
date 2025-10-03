@@ -1,19 +1,35 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 interface GeolocationCoordinates {
   latitude: number | null;
   longitude: number | null;
   error: string | null;
   isLoading: boolean;
+  retry: () => void;
 }
 
 export const useGeolocation = (): GeolocationCoordinates => {
-  const [coordinates, setCoordinates] = useState<GeolocationCoordinates>({
+  const [coordinates, setCoordinates] = useState<{
+    latitude: number | null;
+    longitude: number | null;
+    error: string | null;
+    isLoading: boolean;
+  }>({
     latitude: null,
     longitude: null,
     error: null,
     isLoading: true,
   });
+  const [retryTrigger, setRetryTrigger] = useState(0);
+
+  const retry = useCallback(() => {
+    setCoordinates((prev) => ({
+      ...prev,
+      error: null,
+      isLoading: true,
+    }));
+    setRetryTrigger((prev) => prev + 1);
+  }, []);
 
   useEffect(() => {
     const isSecure = typeof window !== "undefined" && window.isSecureContext;
@@ -97,9 +113,13 @@ export const useGeolocation = (): GeolocationCoordinates => {
     };
 
     const run = async () => {
-      // If explicit denied, surface guidance early
+      // Check permission state but don't block on "denied"
+      // We still attempt getCurrentPosition to trigger the browser prompt
       const state = await checkPermission();
-      if (state === "denied") {
+      
+      // Only show guidance if explicitly denied AND we've already tried
+      // This allows first-time users to get the prompt
+      if (state === "denied" && retryTrigger > 0) {
         setCoordinates({
           latitude: null,
           longitude: null,
@@ -124,7 +144,17 @@ export const useGeolocation = (): GeolocationCoordinates => {
 
         return;
       } catch (e: any) {
-        // continue to fallback
+        // If permission denied on first attempt, provide clear guidance
+        if (e.code === e.PERMISSION_DENIED) {
+          setCoordinates({
+            latitude: null,
+            longitude: null,
+            error: mapError(e),
+            isLoading: false,
+          });
+          return;
+        }
+        // continue to fallback for other errors
       }
 
       // 2) Retry: require fresh/high accuracy with longer timeout
@@ -168,7 +198,7 @@ export const useGeolocation = (): GeolocationCoordinates => {
     return () => {
       // no-op
     };
-  }, []);
+  }, [retryTrigger]);
 
-  return coordinates;
+  return { ...coordinates, retry };
 }
