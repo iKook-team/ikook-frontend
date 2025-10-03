@@ -98,9 +98,9 @@ const Index: React.FC = () => {
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-gray-700">
               <p className="font-semibold mb-2">How to enable location:</p>
               <ol className="list-decimal list-inside space-y-1 text-xs">
-                <li>Click the lock icon (🔒) or info icon (ⓘ) in your browser's address bar</li>
-                <li>Find "Location" permissions and set it to "Allow"</li>
-                <li>Click "Try Again" above</li>
+                <li>Click the lock icon (🔒) or info icon (ⓘ) in your browser&apos;s address bar</li>
+                <li>Find &quot;Location&quot; permissions and set it to &quot;Allow&quot;</li>
+                <li>Click &quot;Try Again&quot; above</li>
               </ol>
             </div>
           )}
