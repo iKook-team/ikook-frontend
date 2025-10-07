@@ -4,12 +4,27 @@ import React, { useState } from "react";
 
 import { ChefFinderCard } from "@/components/booking/custom/chef-finder-card";
 import { ServiceSelection } from "@/components/booking/custom/service-selection";
+import { saveBookingDraft, getBookingDraft, clearBookingDraft } from "@/lib/booking-intent";
+import { useSearchParams } from "next/navigation";
 
 type BookingStep = "chef-finder" | "service-selection";
 
 const CustomBookingPage = () => {
+  const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const isResuming = searchParams?.get("resume") === "true";
   const [currentStep, setCurrentStep] = useState<BookingStep>("chef-finder");
   const [bookingData, setBookingData] = useState<Record<string, any>>({});
+
+  React.useEffect(() => {
+    if (isResuming) {
+      const draft = getBookingDraft();
+      if (draft) {
+        setCurrentStep(draft.step as BookingStep);
+        setBookingData(draft.data.bookingData || {});
+        clearBookingDraft();
+      }
+    }
+  }, [isResuming]);
 
   const handleNext = (data?: Record<string, any>) => {
     if (data) {
@@ -17,7 +32,14 @@ const CustomBookingPage = () => {
     }
     const steps: BookingStep[] = ["chef-finder", "service-selection"];
     const currentIndex = steps.indexOf(currentStep);
-
+    const nextStep = currentIndex < steps.length - 1 ? steps[currentIndex + 1] : currentStep;
+    // Save draft with the *next* step
+    saveBookingDraft({
+      step: nextStep,
+      data: {
+        bookingData,
+      },
+    });
     if (currentIndex < steps.length - 1) {
       setCurrentStep(steps[currentIndex + 1]);
     }

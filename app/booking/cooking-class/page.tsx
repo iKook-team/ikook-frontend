@@ -12,6 +12,7 @@ import { PreferencesForm } from "@/components/booking/preferences";
 import CookingClassMessageForm from "@/components/booking/cooking-class-message-form";
 import { StatusCard } from "@/components/booking/status-card";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { saveBookingDraft, getBookingDraft, clearBookingDraft } from "@/lib/booking-intent";
 
 const steps = [
   "class-details",
@@ -35,6 +36,20 @@ const CookingClassBookingPage = () => {
   const [serviceId, setServiceId] = useState<number | null>(null);
   const router = useRouter();
   const { bookingService, setBookingService } = useAuthStore();
+  const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const isResuming = searchParams?.get("resume") === "true";
+  // Restore draft if resuming
+  React.useEffect(() => {
+    if (isResuming) {
+      const draft = getBookingDraft();
+      if (draft) {
+        setCurrentStep(draft.step as Step);
+        setFormData(draft.data.formData || {});
+        setServiceId(draft.data.serviceId || null);
+        clearBookingDraft();
+      }
+    }
+  }, [isResuming]);
 
   // Validate service from store
   useEffect(() => {
@@ -86,7 +101,15 @@ const CookingClassBookingPage = () => {
   const handleNext = (data?: Record<string, any>) => {
     if (data) setFormData((prev) => ({ ...prev, ...data }));
     const idx = steps.indexOf(currentStep);
-
+    const nextStep = idx < steps.length - 1 ? steps[idx + 1] : currentStep;
+    // Save draft with the *next* step
+    saveBookingDraft({
+      step: nextStep,
+      data: {
+        formData,
+        serviceId,
+      },
+    });
     if (idx < steps.length - 1) {
       setCurrentStep(steps[idx + 1]);
       window.scrollTo(0, 0);

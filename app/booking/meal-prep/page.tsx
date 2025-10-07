@@ -14,6 +14,7 @@ import { PreferencesForm } from "@/components/booking/preferences";
 import { MessagesForm } from "@/components/booking/message-form";
 import { Checkout } from "@/components/checkout/checkout";
 import BudgetStep from "@/components/booking/budget-step";
+import { saveBookingDraft, getBookingDraft, clearBookingDraft } from "@/lib/booking-intent";
 
 type BookingStep =
   | "cart"
@@ -31,6 +32,7 @@ const MealPrepBookingPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isCustomBooking = searchParams.get("is_custom") === "true";
+  const isResuming = searchParams.get("resume") === "true";
   const [currentStep, setCurrentStep] = useState<BookingStep>(
     isCustomBooking ? "meal-details" : "cart",
   );
@@ -51,12 +53,26 @@ const MealPrepBookingPage = () => {
   const [bookingId, setBookingId] = useState<number | null>(null);
   const setMenuId = (id: number) => {};
 
+  React.useEffect(() => {
+    if (isResuming) {
+      const draft = getBookingDraft();
+      if (draft) {
+        setCurrentStep(draft.step as BookingStep);
+        setBookingData(draft.data.bookingData || {});
+        setBudgetStep(draft.data.budgetStep || { budget: 0, budgetType: null });
+        setFormData(draft.data.formData || { allergyDetails: "", dietaryRestrictions: [] });
+        setSelectedMenuItems(draft.data.selectedMenuItems || []);
+        setBookingId(draft.data.bookingId || null);
+        clearBookingDraft();
+      }
+    }
+  }, [isResuming]);
+
   const handleNext = (data?: Record<string, any>) => {
     if (data) {
       if (data.bookingId) setBookingId(data.bookingId);
       // Map step-specific keys to the keys expected by MessagesForm payload
       const mapped: Record<string, any> = { ...data };
-
       if ("deliveryAddress" in data) mapped.location = data.deliveryAddress;
       if ("guests" in data) {
         mapped.guests = data.guests;
@@ -66,14 +82,12 @@ const MealPrepBookingPage = () => {
       if ("weeklyVisits" in data) mapped.numOfWeeklyVisits = data.weeklyVisits;
       if ("option" in data) mapped.deliveryOption = data.option;
       if ("days" in data) mapped.deliveryDays = data.days;
-      // Ensure service is set for payload building
       setBookingData((prev) => ({
         service: "Meal Prep",
         ...prev,
         ...mapped,
       }));
     }
-
     const steps: BookingStep[] = isCustomBooking
       ? [
           "meal-details",
@@ -98,9 +112,19 @@ const MealPrepBookingPage = () => {
           "messages",
           "checkout",
         ];
-
     const currentIndex = steps.indexOf(currentStep);
-
+    const nextStep = currentIndex < steps.length - 1 ? steps[currentIndex + 1] : currentStep;
+    // Save draft with the *next* step
+    saveBookingDraft({
+      step: nextStep,
+      data: {
+        bookingData,
+        budgetStep,
+        formData,
+        selectedMenuItems,
+        bookingId,
+      },
+    });
     if (currentIndex < steps.length - 1) {
       setCurrentStep(steps[currentIndex + 1]);
       window.scrollTo(0, 0); // Scroll to top on step change

@@ -71,3 +71,38 @@ export function clearBookingIntent(): void {
 export function hasBookingIntent(): boolean {
   return getBookingIntent() !== null;
 }
+
+const BOOKING_DRAFT_KEY = "ikook_booking_draft";
+
+export interface BookingDraft {
+  step: string;
+  data: Record<string, any>;
+}
+
+export function saveBookingDraft(draft: BookingDraft): void {
+  try {
+    sessionStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(draft));
+  } catch (error) {
+    console.warn("Failed to save booking draft:", error);
+  }
+}
+
+export function getBookingDraft(): BookingDraft | null {
+  try {
+    const stored = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+    if (!stored) return null;
+    return JSON.parse(stored);
+  } catch (error) {
+    console.warn("Failed to retrieve booking draft:", error);
+    clearBookingDraft();
+    return null;
+  }
+}
+
+export function clearBookingDraft(): void {
+  try {
+    sessionStorage.removeItem(BOOKING_DRAFT_KEY);
+  } catch (error) {
+    console.warn("Failed to clear booking draft:", error);
+  }
+}

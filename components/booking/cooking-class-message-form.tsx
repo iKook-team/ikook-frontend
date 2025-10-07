@@ -7,6 +7,7 @@ import { ChefCard } from "@/components/cart/chef-card";
 import { bookingsService } from "@/lib/api/bookings";
 import { showToast } from "@/lib/utils/toast";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { saveBookingDraft, getBookingDraft } from "@/lib/booking-intent";
 
 export interface CookingClassMessageFormProps {
   onNext: (data?: Record<string, any>) => void;
@@ -41,6 +42,14 @@ const CookingClassMessageForm: React.FC<CookingClassMessageFormProps> = ({
     serviceId ||
     (bookingService?.id ? parseInt(bookingService.id, 10) : undefined);
   const serviceToUse = service || bookingService;
+
+  // Restore message from draft if present
+  React.useEffect(() => {
+    const draft = getBookingDraft();
+    if (draft && draft.data && typeof draft.data.message === "string") {
+      setMessage(draft.data.message);
+    }
+  }, []);
 
   const progressSteps = [
     { label: "Event Details", completed: true },
@@ -195,6 +204,19 @@ const CookingClassMessageForm: React.FC<CookingClassMessageFormProps> = ({
     }
   };
 
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setMessage(e.target.value);
+    // Save message to draft
+    const draft = getBookingDraft() || { step: null, data: {} };
+    saveBookingDraft({
+      step: draft.step,
+      data: {
+        ...draft.data,
+        message: e.target.value,
+      },
+    });
+  };
+
   return (
     <main className="w-[655px] h-[852px] absolute left-[393px] top-[177px]">
       <div className="w-[654px] h-[814px] border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] absolute bg-white rounded-[15px] border-solid border-[#E7E7E7] left-px top-[38px]" />
@@ -269,7 +291,7 @@ const CookingClassMessageForm: React.FC<CookingClassMessageFormProps> = ({
             id="message"
             name="message"
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={handleMessageChange}
             className="border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] w-full text-base text-[#101828] font-normal bg-white mb-6 px-3.5 py-2.5 rounded-lg border-solid focus:outline-none focus:ring-1 focus:ring-amber-500 min-h-[120px]"
             placeholder="Any special instructions or requests for the chef..."
           />

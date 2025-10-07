@@ -15,6 +15,7 @@ import { PreferencesForm } from "@/components/booking/preferences";
 import { MessagesForm } from "@/components/booking/message-form";
 import { Checkout } from "@/components/checkout/checkout";
 import BudgetStep from "@/components/booking/budget-step";
+import { saveBookingDraft, getBookingDraft, clearBookingDraft } from "@/lib/booking-intent";
 
 type BookingStep =
   | "cart"
@@ -29,6 +30,7 @@ type BookingStep =
 const MealDeliveryBookingPage = () => {
   const searchParams = useSearchParams();
   const isCustomBooking = searchParams.get("is_custom") === "true";
+  const isResuming = searchParams.get("resume") === "true";
   const bookingMenu = useAuthStore((s) => s.bookingMenu);
   const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
   const bookingMenuSelection = useAuthStore((s) => s.bookingMenuSelection);
@@ -70,6 +72,24 @@ const MealDeliveryBookingPage = () => {
     : null;
   const [bookingId, setBookingId] = useState<number | null>(null);
 
+  React.useEffect(() => {
+    if (isResuming) {
+      const draft = getBookingDraft();
+      if (draft) {
+        setCurrentStep(draft.step as BookingStep);
+        setBookingData(draft.data.bookingData || {});
+        setSelectedMenuItems(draft.data.selectedMenuItems || []);
+        setEventDetailsForm(draft.data.eventDetailsForm || { location: "", eventDate: "", guests: menu?.num_of_guests || 1 });
+        setEventDetailsForm2(draft.data.eventDetailsForm2 || { eventType: "", preferredCuisines: [] });
+        setEventDetailsForm3(draft.data.eventDetailsForm3 || { eventTime: "", venue: "" });
+        setBudgetStep(draft.data.budgetStep || { budget: 0, budgetType: null });
+        setPreferencesForm(draft.data.preferencesForm || { allergyDetails: "", dietaryRestrictions: [] });
+        setBookingId(draft.data.bookingId || null);
+        clearBookingDraft();
+      }
+    }
+  }, [isResuming]);
+
   const handleNext = (data?: Record<string, any>) => {
     if (data) {
       if (data.selectedMenuItems) setSelectedMenuItems(data.selectedMenuItems);
@@ -79,11 +99,9 @@ const MealDeliveryBookingPage = () => {
       if (data.bookingId) {
         setCurrentStep("checkout");
         window.scrollTo(0, 0);
-
         return;
       }
     }
-
     const steps: BookingStep[] = isCustomBooking
       ? [
           "event-details",
@@ -104,9 +122,22 @@ const MealDeliveryBookingPage = () => {
           "messages",
           "checkout",
         ];
-
     const currentIndex = steps.indexOf(currentStep);
-
+    const nextStep = currentIndex < steps.length - 1 ? steps[currentIndex + 1] : currentStep;
+    // Save draft with the *next* step
+    saveBookingDraft({
+      step: nextStep,
+      data: {
+        bookingData,
+        selectedMenuItems,
+        eventDetailsForm,
+        eventDetailsForm2,
+        eventDetailsForm3,
+        budgetStep,
+        preferencesForm,
+        bookingId,
+      },
+    });
     if (currentIndex < steps.length - 1) {
       setCurrentStep(steps[currentIndex + 1]);
       window.scrollTo(0, 0);

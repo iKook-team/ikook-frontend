@@ -10,6 +10,7 @@ import { EventDetailsForm3 } from "@/components/booking/event-details-form3";
 import { PreferencesForm } from "@/components/booking/preferences";
 import { MessagesForm } from "@/components/booking/message-form";
 import { Checkout } from "@/components/checkout/checkout";
+import { saveBookingDraft, getBookingDraft, clearBookingDraft } from "@/lib/booking-intent";
 
 type BookingStep =
   | "cart"
@@ -22,6 +23,7 @@ type BookingStep =
 const FineDiningBookingPage = () => {
   const searchParams = useSearchParams();
   const isCustomBooking = searchParams.get("is_custom") === "true";
+  const isResuming = searchParams.get("resume") === "true";
   const bookingMenu = useAuthStore((s) => s.bookingMenu);
   const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
   const bookingMenuSelection = useAuthStore((s) => s.bookingMenuSelection);
@@ -55,15 +57,29 @@ const FineDiningBookingPage = () => {
     : null;
   const [bookingId, setBookingId] = useState<number | null>(null);
 
+  React.useEffect(() => {
+    if (isResuming) {
+      const draft = getBookingDraft();
+      if (draft) {
+        setCurrentStep(draft.step as BookingStep);
+        setBookingData(draft.data.bookingData || {});
+        setSelectedMenuItems(draft.data.selectedMenuItems || []);
+        setEventDetailsForm(draft.data.eventDetailsForm || { location: "", eventDate: "", guests: menu?.num_of_guests || 1 });
+        setEventDetailsForm3(draft.data.eventDetailsForm3 || { eventTime: "", venue: "" });
+        setPreferencesForm(draft.data.preferencesForm || { allergyDetails: "", dietaryRestrictions: [] });
+        setBookingId(draft.data.bookingId || null);
+        clearBookingDraft();
+      }
+    }
+  }, [isResuming]);
+
   const handleNext = (data?: Record<string, any>) => {
     if (data) {
-      // If data contains selectedMenuItems or menuId, update them
       if (data.selectedMenuItems) setSelectedMenuItems(data.selectedMenuItems);
-      if (data.menuId) setBookingMenu(data.menuId); // Assuming menuId is set via setBookingMenu
+      if (data.menuId) setBookingMenu(data.menuId);
       if (data.bookingId) setBookingId(data.bookingId);
       setBookingData((prev) => ({ ...prev, ...data }));
     }
-
     const steps: BookingStep[] = isCustomBooking
       ? [
           "event-details",
@@ -80,9 +96,20 @@ const FineDiningBookingPage = () => {
           "messages",
           "checkout",
         ];
-
     const currentIndex = steps.indexOf(currentStep);
-
+    const nextStep = currentIndex < steps.length - 1 ? steps[currentIndex + 1] : currentStep;
+    // Save draft with the *next* step
+    saveBookingDraft({
+      step: nextStep,
+      data: {
+        bookingData,
+        selectedMenuItems,
+        eventDetailsForm,
+        eventDetailsForm3,
+        preferencesForm,
+        bookingId,
+      },
+    });
     if (currentIndex < steps.length - 1) {
       setCurrentStep(steps[currentIndex + 1]);
       window.scrollTo(0, 0); // Scroll to top on step change

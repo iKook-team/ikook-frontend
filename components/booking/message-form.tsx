@@ -15,6 +15,7 @@ import {
   LargeEventPayload,
   MealPrepPayload,
 } from "@/types/booking";
+import { saveBookingDraft, getBookingDraft } from "@/lib/booking-intent";
 
 export interface MessagesFormProps {
   onNext: (data?: Record<string, any>) => void;
@@ -49,6 +50,14 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [showStatusCard, setShowStatusCard] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
+
+  // Restore message from draft if present
+  React.useEffect(() => {
+    const draft = getBookingDraft();
+    if (draft && draft.data && typeof draft.data.message === "string") {
+      setMessage(draft.data.message);
+    }
+  }, []);
 
   const progressSteps = [
     { label: "Event Details", completed: true },
@@ -313,6 +322,19 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
     );
   };
 
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setMessage(e.target.value);
+    // Save message to draft
+    const draft = getBookingDraft() || { step: null, data: {} };
+    saveBookingDraft({
+      step: draft.step,
+      data: {
+        ...draft.data,
+        message: e.target.value,
+      },
+    });
+  };
+
   // If this is a custom booking and we should show the status card
   if (isCustomBooking && showStatusCard && bookingId) {
     return <StatusCard bookingId={bookingId} />;
@@ -396,7 +418,7 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
                 required
                 rows={8}
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={handleMessageChange}
               />
             </div>
 

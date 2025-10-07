@@ -7,6 +7,7 @@ import { ChefCard } from "@/components/cart/chef-card";
 import { bookingsService } from "@/lib/api/bookings";
 import { showToast } from "@/lib/utils/toast";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { saveBookingDraft, getBookingDraft } from "@/lib/booking-intent";
 
 export interface EatingCoachMessageFormProps {
   onNext: (data?: Record<string, any>) => void;
@@ -28,6 +29,14 @@ const EatingCoachMessageForm: React.FC<EatingCoachMessageFormProps> = ({
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { bookingService, setBooking } = useAuthStore();
+
+  // Restore message from draft if present
+  React.useEffect(() => {
+    const draft = getBookingDraft();
+    if (draft && draft.data && typeof draft.data.message === "string") {
+      setMessage(draft.data.message);
+    }
+  }, []);
 
   // Get service ID from auth store if not provided as prop
   const serviceIdToUse =
@@ -123,6 +132,19 @@ const EatingCoachMessageForm: React.FC<EatingCoachMessageFormProps> = ({
     }
   };
 
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setMessage(e.target.value);
+    // Save message to draft
+    const draft = getBookingDraft() || { step: null, data: {} };
+    saveBookingDraft({
+      step: draft.step,
+      data: {
+        ...draft.data,
+        message: e.target.value,
+      },
+    });
+  };
+
   return (
     <main className="w-[655px] h-[852px] absolute left-[393px] top-[177px]">
       <div className="w-[654px] h-[814px] border shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] absolute bg-white rounded-[15px] border-solid border-[#E7E7E7] left-px top-[38px]" />
@@ -186,7 +208,7 @@ const EatingCoachMessageForm: React.FC<EatingCoachMessageFormProps> = ({
             className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
             placeholder="Type your message here..."
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={handleMessageChange}
           />
         </div>
       </div>
