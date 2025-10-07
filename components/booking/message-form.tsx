@@ -325,9 +325,9 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
     // Save message to draft
-    const draft = getBookingDraft() || { step: null, data: {} };
+    const draft = getBookingDraft() || { step: "", data: {} };
     saveBookingDraft({
-      step: draft.step,
+      step: draft.step || "",
       data: {
         ...draft.data,
         message: e.target.value,
