@@ -191,88 +191,49 @@ export const ChefCard: React.FC<ChefCardProps> = ({
   const [favouriteId, setFavouriteId] = React.useState<number | null>(null);
 
   return (
-    <Link
-      href={`/chefs/${id}`}
-      className="w-full h-80 block shadow-[0px_4.942px_4.942px_0px_rgba(0,0,0,0.04)] relative bg-white rounded-[15px] border border-[#E7E7E7] overflow-hidden cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FCC01C]"
-    >
-      {/* Background image */}
-      <div
-        className="absolute top-0 left-0 right-0 h-[220px] bg-cover bg-center bg-no-repeat rounded-t-[15px]"
-        style={{ backgroundImage: "url(/menus/menu6.png)" }}
-      />
-      {/* Like (heart) icon */}
-      <button
-        type="button"
-        aria-label={liked ? "Unlike" : "Like"}
-        aria-pressed={liked}
-        disabled={liked}
-        onClick={async (e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          if (liked) {
-            // Unliking is disabled for now
-            return;
-          }
-          // Perform like once
-          setLiked(true);
-          console.debug("[ChefCard] like -> addFavourite", { chefId: id });
-          try {
-            const newId = await favouritesService.addFavourite({
-              chefId: id as unknown as number,
-            });
-
-            setFavouriteId(newId ?? null);
-          } catch (err) {
-            console.debug("[ChefCard] addFavourite failed", err);
-            setLiked(false);
-          }
-        }}
-        className="absolute top-2 right-2 z-20 inline-flex items-center justify-center"
-      >
-        {liked ? (
-          <FaHeart className="text-red-500 text-xl drop-shadow" />
-        ) : (
-          <FaRegHeart className="text-white text-xl drop-shadow" />
-        )}
-      </button>
-
-      <div className="absolute left-0 top-[225px] w-full px-4 pt-2 z-20">
-        <div className="flex items-start justify-between">
-          <div>
-            <h2 className="text-[#323335] text-base font-bold leading-6">
-              {name}
-            </h2>
-          </div>
-          <div className="relative -mt-8 -mr-1">
-            <VerificationBadge
-              isVerified={isVerified}
-              profileImageUrl={profileImageUrl}
-            />
-          </div>
+    <div className="text-center group">
+      <Link href={`/chefs/${id}`} className="block">
+        <div className="relative overflow-hidden rounded-full mx-auto w-48 h-48 mb-4">
+          <img
+            src={profileImageUrl || 'https://images.unsplash.com/photo-1583394293214-28ded15ee548?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'}
+            alt={name}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+          />
+          <button
+            type="button"
+            aria-label={liked ? "Unlike" : "Like"}
+            aria-pressed={liked}
+            onClick={async (e) => {
+              e.preventDefault();
+              if (liked) return;
+              
+              setLiked(true);
+              try {
+                const newId = await favouritesService.addFavourite({
+                  chefId: id as unknown as number,
+                });
+                setFavouriteId(newId ?? null);
+              } catch (err) {
+                console.debug("[ChefCard] addFavourite failed", err);
+                setLiked(false);
+              }
+            }}
+            className="absolute top-2 right-2 p-2 rounded-full bg-white/80 hover:bg-white transition-colors"
+          >
+            {liked ? (
+              <FaHeart className="text-red-500" />
+            ) : (
+              <FaRegHeart className="text-gray-700" />
+            )}
+          </button>
         </div>
-      </div>
-
-      <div className="z-20 relative">
-        <LocationBadge location={location} />
-      </div>
-
-      <section className="inline-flex flex-col items-start gap-3 absolute w-[287px] h-14 left-[11px] top-[258px] max-md:w-[260px] max-md:left-2.5 max-md:top-[235px] max-sm:w-[235px] max-sm:left-2 max-sm:top-[215px]">
-        <p className="w-[287px] text-[#6F6E6D] text-[10px] font-normal relative line-clamp-3">
-          {description}
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+          {name}
+        </h3>
+        <p className="text-[#FCC01C] font-medium">
+          {services[0] || 'Professional Chef'}
         </p>
-
-        <div
-          aria-label="Chef services"
-          className="flex items-center gap-[9px] relative max-sm:flex-wrap max-sm:gap-1.5"
-          role="list"
-        >
-          {services.map((service, index) => (
-            <div key={index} role="listitem">
-              <ServiceBadge serviceName={service} />
-            </div>
-          ))}
-        </div>
-      </section>
-    </Link>
+      </Link>
+    </div>
   );
 };
