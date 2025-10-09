@@ -14,7 +14,7 @@ export const EventDetailsCard: React.FC<EventDetailsCardProps> = ({
   const chefName = booking?.chef_name || "Chef";
   const chefAvatar =
     booking?.chef_avatar ||
-    "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/231d86006c0dab5ed39c08a8a310d23841a29a6f?placeholderIfAbsent=true";
+    "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
   const chefLocation = booking?.city || "Unknown";
   const chefRating = booking?.chef_rating || "-";
   const chefNumReviews = booking?.chef_num_reviews

@@ -17,7 +17,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
   const chefName = booking?.chef_name || "Chef";
   const chefAvatar =
     booking?.chef_avatar ||
-    "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/b8c11ad88b00cdfbfd0dac9c16bd04c1ac816df3?placeholderIfAbsent=true";
+    "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
   const chefLocation = booking?.city || "Unknown";
   const guests = booking?.num_of_guests || 1;
   const pricePerPerson = booking?.menu_price_per_person

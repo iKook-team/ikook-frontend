@@ -21,6 +21,7 @@ type ChefProfile = {
   is_verified: boolean;
   average_rating: number | null;
   num_reviews: number;
+  num_bookings?: number | null;
   cuisines: string[] | null;
   created_at: string;
   updated_at: string;
@@ -122,6 +123,7 @@ export const ChefProfilePageClient: React.FC<{ id: string }> = ({ id }) => {
               avatar={chef.avatar}
               averageRating={chef.average_rating}
               numReviews={chef.num_reviews}
+              numBookings={chef.num_bookings}
               chefUserId={chef.id}
             />
           </div>

@@ -13,6 +13,7 @@ type ChefProfileCardProps = {
   avatar?: string | null;
   averageRating?: number | null;
   numReviews?: number | null;
+  numBookings?: number | null;
   chefUserId: number;
 };
 
@@ -22,6 +23,7 @@ export const ChefProfileCard: React.FC<ChefProfileCardProps> = ({
   avatar,
   averageRating,
   numReviews,
+  numBookings,
   chefUserId,
 }) => {
   const router = useRouter();
@@ -81,7 +83,7 @@ export const ChefProfileCard: React.FC<ChefProfileCardProps> = ({
           <img
             src={
               avatar ||
-              "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/b8c11ad88b00cdfbfd0dac9c16bd04c1ac816df3?placeholderIfAbsent=true"
+              "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
             }
             className="aspect-[1] object-contain w-20 self-stretch shrink-0 my-auto rounded-lg"
             alt={name}
@@ -126,7 +128,9 @@ export const ChefProfileCard: React.FC<ChefProfileCardProps> = ({
                   alt="Bookings"
                 />
                 <span className="text-[#3F3E3D] self-stretch my-auto">
-                  105 iKooK bookings
+                  {typeof numBookings === "number"
+                    ? `${numBookings} iKooK bookings`
+                    : "0 iKooK bookings"}
                 </span>
               </div>
             </div>
@@ -161,7 +165,7 @@ export const ChefProfileCard: React.FC<ChefProfileCardProps> = ({
           <section className="w-full text-sm text-[#3F3E3D] font-normal mt-6">
             <div className="flex w-full flex-col bg-[#FFFCF5] px-[27px] py-[19px] rounded-[8.483px] max-md:px-5">
               <h3 className="text-black text-base font-medium self-stretch max-md:mr-[5px]">
-                Titilayo&apos;s confirmed information
+                {name}&apos;s confirmed information
               </h3>
               <div className="flex items-center gap-[13px] whitespace-nowrap leading-none mt-[18px]">
                 <img

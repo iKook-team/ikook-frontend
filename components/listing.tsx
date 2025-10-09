@@ -67,7 +67,7 @@ const mapChefToItem = (chef: any) => ({
     "https://images.unsplash.com/photo-1504674900247-0877039348bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
   profileImageUrl:
     toAbsoluteUrl(chef.avatar) ||
-    "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop",
+    "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
   // Consider other verification flags if present
   isVerified:
     chef.is_verified ??
@@ -112,7 +112,7 @@ const mapServiceToItem = (service: any) => {
     profileImageUrl:
       toAbsoluteUrl(service.chef_details?.avatar) ||
       toAbsoluteUrl(service.chef?.avatar) ||
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+      "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
     isVerified: service.chef_details?.is_verified || service.chef?.is_verified,
     chefName: derivedName,
   };

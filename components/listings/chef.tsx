@@ -195,7 +195,7 @@ export const ChefCard: React.FC<ChefCardProps> = ({
       <Link href={`/chefs/${id}`} className="block">
         <div className="relative overflow-hidden rounded-full mx-auto w-48 h-48 mb-4">
           <img
-            src={profileImageUrl || 'https://images.unsplash.com/photo-1583394293214-28ded15ee548?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'}
+            src={profileImageUrl || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'}
             alt={name}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
           />

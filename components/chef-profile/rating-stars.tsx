@@ -16,15 +16,18 @@ export const RatingStars: React.FC<RatingStarsProps> = ({
     lg: "w-[25px] h-[25px]",
   };
 
+  const filledStar = "★";
+  const emptyStar = "☆";
+
   return (
     <div className="flex gap-1">
       {[1, 2, 3, 4, 5].map((star) => (
-        <img
+        <span
           key={star}
-          src="https://api.builder.io/api/v1/image/assets/TEMP/9ca0f57ef67405f61c15ce034bb448d3352cb1cf?placeholderIfAbsent=true"
-          className={`aspect-[1] object-contain ${sizeClasses[size]} fill-[#FFA200] shrink-0`}
-          alt={`${star} star`}
-        />
+          className={`${sizeClasses[size]} ${star <= rating ? 'text-yellow-400' : 'text-gray-300'}`}
+        >
+          {star <= rating ? filledStar : emptyStar}
+        </span>
       ))}
     </div>
   );
