@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
+import { Analytics } from '@vercel/analytics/next';
 import clsx from "clsx";
 
 import { Providers } from "./providers";
@@ -63,7 +64,10 @@ export default function RootLayout({
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div>
-            <main>{children}</main>
+            <main>
+              {children}
+              <Analytics />
+            </main>
           </div>
         </Providers>
       </body>
