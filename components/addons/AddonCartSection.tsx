@@ -5,6 +5,8 @@ import { FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { Button } from "@heroui/react";
 import { Addon } from "@/lib/api/addons";
+import { useMarket } from "@/lib/market-context";
+import { getMarketConfig } from "@/lib/market-config";
 
 interface AddonCartItemProps {
   addon: Addon;
@@ -15,6 +17,9 @@ export const AddonCartItem: React.FC<AddonCartItemProps> = ({
   addon,
   onRemove,
 }) => {
+  const { market } = useMarket();
+  const currencySymbol = getMarketConfig(market).currencySymbol;
+
   return (
     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
       <div className="flex items-center space-x-4">
@@ -31,20 +36,15 @@ export const AddonCartItem: React.FC<AddonCartItemProps> = ({
             {addon.name}
           </h3>
           <p className="text-sm text-gray-600">
-            by {addon.client.business_name}
+            by {addon.client_name}
           </p>
-          <div className="flex items-center mt-1">
-            <span className="text-sm text-gray-500">
-              Category: {addon.category}
-            </span>
-          </div>
         </div>
       </div>
 
       <div className="flex items-center space-x-4">
         <div className="text-right">
           <p className="text-lg font-semibold text-[#FCC01C]">
-            ${addon.price}
+            {currencySymbol}{parseFloat(addon.price || '0').toLocaleString()}
           </p>
           <p className="text-sm text-gray-500">
             per service
@@ -74,11 +74,17 @@ export const AddonCartSection: React.FC<AddonCartSectionProps> = ({
   selectedAddons,
   onRemoveAddon,
 }) => {
+  const { market } = useMarket();
+  const currencySymbol = getMarketConfig(market).currencySymbol;
+
   if (selectedAddons.length === 0) {
     return null;
   }
 
-  const totalAddonCost = selectedAddons.reduce((total, addon) => total + addon.price, 0);
+  const totalAddonCost = selectedAddons.reduce((total, addon) => {
+    const price = parseFloat(addon.price) || 0;
+    return total + price;
+  }, 0);
 
   return (
     <div className="space-y-4">
@@ -107,7 +113,7 @@ export const AddonCartSection: React.FC<AddonCartSectionProps> = ({
             Addons Subtotal:
           </span>
           <span className="text-lg font-bold text-yellow-700">
-            ${totalAddonCost}
+            {currencySymbol}{totalAddonCost.toLocaleString()}
           </span>
         </div>
         <p className="text-sm text-yellow-600 mt-1">

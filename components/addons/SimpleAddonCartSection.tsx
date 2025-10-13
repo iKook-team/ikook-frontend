@@ -70,7 +70,10 @@ export const SimpleAddonCartSection: React.FC<SimpleAddonCartSectionProps> = ({
     return null;
   }
 
-  const totalAddonCost = selectedAddons.reduce((total, addon) => total + addon.price, 0);
+  const totalAddonCost = selectedAddons.reduce((total, addon) => {
+    const price = parseFloat(addon.price) || 0;
+    return total + price;
+  }, 0);
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 mb-6">
