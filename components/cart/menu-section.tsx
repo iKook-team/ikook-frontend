@@ -44,7 +44,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
 
   return (
     <section className="w-full">
-      <div className="mt-7">
+      <div>
         <h2 className="text-[#030302] text-xl sm:text-2xl font-semibold leading-none">
           Your menu pick
         </h2>

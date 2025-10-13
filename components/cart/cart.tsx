@@ -1,12 +1,12 @@
 "use client";
 
-import React from "react";
-
 import { CartHeader } from "./cart-header";
 import { ChefCard } from "./chef-card";
 import { MenuSection } from "./menu-section";
 import { IncludedServices } from "./included-services";
 import { ContinueButton } from "./continue-button";
+import { SimpleAddonCartSection } from "@/components/addons/SimpleAddonCartSection";
+import { DUMMY_ADDONS } from "@/lib/dummy-addons";
 
 interface CartProps {
   onNext: (data?: Record<string, any>) => void;
@@ -16,6 +16,8 @@ interface CartProps {
   selectedMenuItems: string[];
   setSelectedMenuItems: (items: string[]) => void;
   setMenuId: (id: number) => void;
+  selectedAddons?: number[];
+  onAddonToggle?: (addonId: number) => void;
 }
 
 export const Cart: React.FC<CartProps> = ({
@@ -26,6 +28,8 @@ export const Cart: React.FC<CartProps> = ({
   selectedMenuItems,
   setSelectedMenuItems,
   setMenuId,
+  selectedAddons,
+  onAddonToggle,
 }) => {
   // Transform menu data to courses format expected by MenuSection
   const courses = (menu?.courses || []).map((course: any) => ({
@@ -60,12 +64,19 @@ export const Cart: React.FC<CartProps> = ({
     onNext();
   };
 
+  // Debug: Log selected addons and filtered results
+  const safeSelectedAddons = selectedAddons || [];
+  const filteredAddons = DUMMY_ADDONS.filter(addon => safeSelectedAddons.includes(addon.id));
+
+  // If no addons selected, show demo addons for UI testing
+  const displayAddons = filteredAddons.length > 0 ? filteredAddons : DUMMY_ADDONS.slice(0, 2);
+
   return (
     <main className="flex w-full max-w-4xl mx-auto flex-col items-stretch px-2 sm:px-4">
       <CartHeader title="Cart" />
 
       <div className="border border-gray-200 shadow-sm flex w-full flex-col items-stretch bg-white mt-2 py-6 sm:py-8 rounded-2xl border-solid">
-        <div className="flex w-full flex-col items-stretch px-4 sm:px-6 lg:px-8">
+        <div className="flex w-full flex-col items-stretch px-4 sm:px-6 lg:px-8 space-y-8">
           <ChefCard
             chefName={
               menu?.chef?.first_name && menu?.chef?.last_name
@@ -104,6 +115,16 @@ export const Cart: React.FC<CartProps> = ({
                 ? `${menu.chef.first_name} ${menu.chef.last_name}`
                 : "Chef"
             }
+          />
+
+          {/* Addon Services Section */}
+          <SimpleAddonCartSection
+            selectedAddons={displayAddons}
+            onRemoveAddon={(addonId) => {
+              if (onAddonToggle) {
+                onAddonToggle(addonId);
+              }
+            }}
           />
 
           <IncludedServices services={includedServices} />

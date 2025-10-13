@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { useAuthStore } from "@/lib/store/auth-store";
+import { useMenu } from "@/hooks/useMenu";
 import { HeroSection } from "@/components/booking/hero-section";
 import { ImageGallery } from "@/components/booking/image-gallery";
 import { ChefMenuSection } from "@/components/booking/chef-menu-section";
 import { PricingSidebar } from "@/components/booking/pricing-sidebar";
+import { AddonCarousel } from "@/components/addons";
+import { DUMMY_ADDONS } from "@/lib/dummy-addons";
 import { ChefProfile } from "@/components/booking/menu-chef-profile";
-import { useMenu } from "@/hooks/useMenu";
 
 export default function MenuDetailsPage() {
   const { id } = useParams();
@@ -24,6 +26,10 @@ export default function MenuDetailsPage() {
     string,
     Set<number>
   > | null>(null);
+
+  // Addon state management
+  const [selectedAddons, setSelectedAddons] = useState<number[]>([]);
+  const [addonCategoryFilter, setAddonCategoryFilter] = useState<string>("All");
 
   // Redirect chefs away from booking pages
   React.useEffect(() => {
@@ -79,8 +85,32 @@ export default function MenuDetailsPage() {
               selectedItems={selectedItems}
               setSelectedItems={setSelectedItems}
             />
-            <PricingSidebar menu={menu} selectedItems={selectedItems} />
+            <PricingSidebar
+              menu={menu}
+              selectedItems={selectedItems}
+              selectedAddons={selectedAddons}
+              onRemoveAddon={(addonId) => {
+                setSelectedAddons(prev => prev.filter(id => id !== addonId));
+              }}
+            />
           </div>
+        </div>
+
+        {/* Addon Services Section */}
+        <div className="w-full max-w-[1115px] mt-[60px] max-md:max-w-full max-md:mt-10">
+          <AddonCarousel
+            addons={DUMMY_ADDONS}
+            selectedAddons={selectedAddons}
+            onAddonToggle={(addonId) => {
+              setSelectedAddons(prev =>
+                prev.includes(addonId)
+                  ? prev.filter(id => id !== addonId)
+                  : [...prev, addonId]
+              );
+            }}
+            categoryFilter={addonCategoryFilter}
+            onCategoryFilter={setAddonCategoryFilter}
+          />
         </div>
 
         <ChefProfile chef={menu.chef} />

@@ -4,32 +4,22 @@ import React from "react";
 import { useRouter } from "next/navigation";
 
 import { useAuthStore } from "@/lib/store/auth-store";
+import { useMarket } from "@/lib/market-context";
+import { getMarketConfig } from "@/lib/market-config";
+import { DUMMY_ADDONS } from "@/lib/dummy-addons";
 
 interface PricingSidebarProps {
   menu: any;
-  selectedItems: Record<string, Set<number>>;
-}
-
-function getCurrencySymbol(menu: any): string {
-  if (menu?.chef?.currency) {
-    if (menu.chef.currency === "NGN") return "₦";
-    if (menu.chef.currency === "ZAR") return "R";
-    if (menu.chef.currency === "GBP") return "£";
-  }
-  if (menu?.chef?.country) {
-    const country = menu.chef.country;
-
-    if (country === "Nigeria") return "₦";
-    if (country === "South Africa") return "R";
-    if (country === "United Kingdom") return "£";
-  }
-
-  return "₦";
+  selectedItems: Record<string, Set<number>> | null;
+  selectedAddons?: number[];
+  onRemoveAddon: (addonId: number) => void;
 }
 
 export const PricingSidebar: React.FC<PricingSidebarProps> = ({
   menu,
   selectedItems,
+  selectedAddons,
+  onRemoveAddon,
 }) => {
   console.log("PricingSidebar component loaded - DEBUG");
   const router = useRouter();
@@ -38,7 +28,12 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
     (s) => s.setBookingMenuSelection,
   );
 
-  const currency = getCurrencySymbol(menu);
+  const { market } = useMarket();
+  const currencySymbol = getMarketConfig(market).currencySymbol;
+
+  // Calculate addon total
+  const selectedAddonObjects = DUMMY_ADDONS.filter(addon => (selectedAddons || []).includes(addon.id));
+  const addonTotal = selectedAddonObjects.reduce((total, addon) => total + addon.price, 0);
 
   // Calculate total selected items
   const totalSelected = selectedItems
@@ -99,7 +94,7 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
     <aside className="w-[35%] ml-5 max-md:w-full max-md:ml-0">
       <div className="border border-[color:var(--Black-100,#E7E7E7)] shadow-[0px_4px_70px_0px_rgba(0,0,0,0.07)] flex w-full flex-col items-stretch bg-white mx-auto px-[19px] py-[26px] rounded-[15px] border-solid max-md:mt-10">
         <div className="text-[#FCC01C] text-4xl font-semibold leading-none tracking-[-0.72px]">
-          {currency}
+          {currencySymbol}
           {menu?.price_per_person || 100}pp
         </div>
 
@@ -145,6 +140,40 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
             Proceed to Cart ({totalSelected})
           </div>
         </button>
+
+        {/* Selected Addons Section */}
+        {selectedAddonObjects.length > 0 && (
+          <div className="flex w-full flex-col mt-7 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+            <div className="text-black text-sm font-medium mb-3">
+              🎉 Selected Addons ({selectedAddonObjects.length})
+            </div>
+            <div className="space-y-2">
+              {selectedAddonObjects.map((addon) => (
+                <div key={addon.id} className="flex items-center justify-between text-sm">
+                  <div className="flex-1">
+                    <span className="text-gray-900">{addon.name}</span>
+                    <span className="text-gray-600 ml-2">by {addon.client.business_name}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-[#FCC01C] font-semibold">{currencySymbol}{addon.price}</span>
+                    <button
+                      onClick={() => onRemoveAddon(addon.id)}
+                      className="text-red-500 hover:text-red-700 text-xs"
+                    >
+                      ×
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="border-t border-yellow-300 mt-3 pt-2">
+              <div className="flex items-center justify-between text-sm font-semibold">
+                <span>Addons Total:</span>
+                <span className="text-[#FCC01C]">{currencySymbol}{addonTotal}</span>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="flex w-full flex-col text-sm text-[#3F3E3D] font-normal bg-[#FFFCF5] mt-7 px-[25px] py-[18px] rounded-lg max-md:px-5">
           <div className="text-black text-base font-medium">
