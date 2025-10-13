@@ -6,12 +6,13 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
-import { DUMMY_ADDONS } from "@/lib/dummy-addons";
+import { Addon } from "@/lib/api/addons";
 
 interface PricingSidebarProps {
   menu: any;
   selectedItems: Record<string, Set<number>> | null;
   selectedAddons?: number[];
+  addons?: Addon[]; // ✅ NEW: Accept addon data as prop
   onRemoveAddon: (addonId: number) => void;
 }
 
@@ -19,6 +20,7 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
   menu,
   selectedItems,
   selectedAddons,
+  addons = [], // ✅ NEW: Default to empty array
   onRemoveAddon,
 }) => {
   console.log("PricingSidebar component loaded - DEBUG");
@@ -32,8 +34,11 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
   const currencySymbol = getMarketConfig(market).currencySymbol;
 
   // Calculate addon total
-  const selectedAddonObjects = DUMMY_ADDONS.filter(addon => (selectedAddons || []).includes(addon.id));
-  const addonTotal = selectedAddonObjects.reduce((total, addon) => total + addon.price, 0);
+  const selectedAddonObjects = (addons || []).filter(addon => (selectedAddons || []).includes(addon.id));
+  const addonTotal = selectedAddonObjects.reduce((total, addon) => {
+    const price = parseFloat(addon.price) || 0;
+    return total + price;
+  }, 0);
 
   // Calculate total selected items
   const totalSelected = selectedItems
@@ -152,7 +157,7 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
                 <div key={addon.id} className="flex items-center justify-between text-sm">
                   <div className="flex-1">
                     <span className="text-gray-900">{addon.name}</span>
-                    <span className="text-gray-600 ml-2">by {addon.client.business_name}</span>
+                    <span className="text-gray-600 ml-2">by {addon.client}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-[#FCC01C] font-semibold">{currencySymbol}{addon.price}</span>

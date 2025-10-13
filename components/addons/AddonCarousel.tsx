@@ -1,23 +1,64 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Button } from "@heroui/react";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
-import { AddonCarouselProps } from "@/lib/dummy-addons";
+import { AddonCarouselProps, Addon } from "@/lib/api/addons";
+import { addonService } from "@/lib/api/addons";
 import { AddonCard } from "./AddonCard";
 
 export const AddonCarousel: React.FC<AddonCarouselProps> = ({
-  addons,
   selectedAddons,
   onAddonToggle,
-  categoryFilter,
-  onCategoryFilter,
 }) => {
-  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  console.log('🎪 AddonCarousel component rendering...');
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { market } = useMarket();
   const currencySymbol = getMarketConfig(market).currencySymbol;
+
+  // State for addons data
+  const [addons, setAddons] = useState<Addon[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch addons on component mount
+  useEffect(() => {
+    console.log('🚀 AddonCarousel mounted, fetching addons...');
+
+    const fetchAddons = async () => {
+      try {
+        console.log('📡 Making API call to fetch addons...');
+        setLoading(true);
+        setError(null);
+
+        const response = await addonService.getAddons();
+        console.log('✅ Addons fetched successfully:', response);
+
+        // Handle the correct API response structure: { status, message, data: [...] }
+        const addonResults = response?.data || [];
+        console.log('📦 Addon results:', addonResults);
+
+        setAddons(Array.isArray(addonResults) ? addonResults : []);
+      } catch (err: any) {
+        console.error('❌ Failed to fetch addons:', err);
+        console.error('❌ Error details:', {
+          message: err.message,
+          status: err.response?.status,
+          data: err.response?.data
+        });
+        setError(`Failed to load addons: ${err.message}`);
+        setAddons([]); // Ensure addons is always an array
+      } finally {
+        setLoading(false);
+        console.log('🏁 Addon loading complete');
+      }
+    };
+
+    fetchAddons();
+  }, []);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
@@ -35,9 +76,45 @@ export const AddonCarousel: React.FC<AddonCarouselProps> = ({
     }
   };
 
-  const filteredAddons = categoryFilter === "All"
-    ? addons
-    : addons.filter(addon => addon.category === categoryFilter);
+  if (loading) {
+    return (
+      <div className="w-full">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              🎉 Add Extra Services
+            </h2>
+            <p className="text-sm text-gray-600 mt-1">
+              Enhance your event with professional services
+            </p>
+          </div>
+        </div>
+        <div className="w-full text-center py-8 text-gray-500">
+          Loading addons...
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              🎉 Add Extra Services
+            </h2>
+            <p className="text-sm text-gray-600 mt-1">
+              Enhance your event with professional services
+            </p>
+          </div>
+        </div>
+        <div className="w-full text-center py-8 text-red-500">
+          {error}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
@@ -50,25 +127,6 @@ export const AddonCarousel: React.FC<AddonCarouselProps> = ({
           <p className="text-sm text-gray-600 mt-1">
             Enhance your event with professional services
           </p>
-        </div>
-
-        {/* Category Filter Pills */}
-        <div className="flex items-center space-x-2">
-          {["All", "Beverage", "Photography", "Decorations", "Entertainment"].map((category) => (
-            <Button
-              key={category}
-              className={`px-3 py-1 text-sm rounded-full transition-colors ${
-                categoryFilter === category
-                  ? "bg-[#FCC01C] text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-              size="sm"
-              variant="flat"
-              onPress={() => onCategoryFilter(category)}
-            >
-              {category}
-            </Button>
-          ))}
         </div>
       </div>
 
@@ -91,8 +149,8 @@ export const AddonCarousel: React.FC<AddonCarouselProps> = ({
           className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {filteredAddons.length > 0 ? (
-            filteredAddons.map((addon) => (
+          {(addons || []).length > 0 ? (
+            addons.map((addon) => (
               <div key={addon.id} className="flex-shrink-0 w-80">
                 <AddonCard
                   addon={addon}
@@ -103,7 +161,7 @@ export const AddonCarousel: React.FC<AddonCarouselProps> = ({
             ))
           ) : (
             <div className="w-full text-center py-8 text-gray-500">
-              No addons found for category: {categoryFilter}
+              No addons available
             </div>
           )}
         </div>
@@ -128,9 +186,10 @@ export const AddonCarousel: React.FC<AddonCarouselProps> = ({
               {selectedAddons.length} addon{selectedAddons.length > 1 ? "s" : ""} selected
             </span>
             <span className="text-sm font-semibold text-yellow-700">
-              Total: {currencySymbol}{selectedAddons.reduce((total, addonId) => {
-                const addon = addons.find(a => a.id === addonId);
-                return total + (addon ? addon.price : 0);
+              Total: {currencySymbol}{(addons || []).reduce((total, addon) => {
+                const addonId = selectedAddons.find(id => id === addon.id);
+                const price = parseFloat(addon.price) || 0;
+                return total + (addonId ? price : 0);
               }, 0)}
             </span>
           </div>

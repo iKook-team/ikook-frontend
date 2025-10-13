@@ -1,7 +1,9 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 
 import { Cart } from "@/components/cart/cart";
-import { DUMMY_ADDONS } from "@/lib/dummy-addons";
+import { addonService } from "@/lib/api/addons";
 
 const Index = () => {
   const [menu, setMenu] = useState<any>(null);
@@ -9,7 +11,23 @@ const Index = () => {
   const [menuError, setMenuError] = useState<string | null>(null);
   const [selectedMenuItems, setSelectedMenuItems] = useState<string[]>([]);
   const [selectedAddons, setSelectedAddons] = useState<number[]>([1, 3]); // Start with 2 addons selected for demo
+  const [availableAddons, setAvailableAddons] = useState<any[]>([]); // Start empty, will be populated by API
   const setMenuId = (id: number) => {};
+
+  // Fetch addons from API
+  useEffect(() => {
+    const fetchAddons = async () => {
+      try {
+        const response = await addonService.getAddons();
+        setAvailableAddons(response.data);
+      } catch (error) {
+        console.error('Failed to fetch addons:', error);
+        // Keep fallback to dummy data
+      }
+    };
+
+    fetchAddons();
+  }, []);
 
   // Debug: Track state changes
   useEffect(() => {
@@ -43,6 +61,7 @@ const Index = () => {
           setSelectedMenuItems={setSelectedMenuItems}
           setMenuId={setMenuId}
           selectedAddons={selectedAddons}
+          availableAddons={availableAddons}
           onAddonToggle={(addonId) => {
             setSelectedAddons(prev =>
               prev.includes(addonId)

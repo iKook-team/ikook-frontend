@@ -4,7 +4,9 @@ import React from "react";
 import { FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { Button } from "@heroui/react";
-import { Addon } from "@/lib/dummy-addons";
+import { Addon } from "@/lib/api/addons";
+import { useMarket } from "@/lib/market-context";
+import { getMarketConfig } from "@/lib/market-config";
 
 interface AddonSidebarSectionProps {
   selectedAddons: Addon[];
@@ -15,11 +17,17 @@ export const AddonSidebarSection: React.FC<AddonSidebarSectionProps> = ({
   selectedAddons,
   onRemoveAddon,
 }) => {
+  const { market } = useMarket();
+  const currencySymbol = getMarketConfig(market).currencySymbol;
+
   if (selectedAddons.length === 0) {
     return null;
   }
 
-  const totalAddonCost = selectedAddons.reduce((total, addon) => total + addon.price, 0);
+  const totalAddonCost = selectedAddons.reduce((total, addon) => {
+    const price = parseFloat(addon.price) || 0;
+    return total + price;
+  }, 0);
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4">
@@ -37,19 +45,17 @@ export const AddonSidebarSection: React.FC<AddonSidebarSectionProps> = ({
               src={addon.image}
               width={48}
             />
-
             <div className="flex-1 min-w-0">
               <h4 className="text-sm font-medium text-gray-900 truncate">
                 {addon.name}
               </h4>
-              <p className="text-xs text-gray-600 truncate">
-                by {addon.client.business_name}
+              <p className="text-xs text-gray-600">
+                by {addon.client_name}
               </p>
               <p className="text-sm font-semibold text-green-600 mt-1">
-                ${addon.price}
+                {currencySymbol}{parseFloat(addon.price || '0').toLocaleString()}
               </p>
             </div>
-
             <Button
               className="flex-shrink-0 p-1 h-auto bg-transparent hover:bg-red-50"
               isIconOnly
@@ -69,7 +75,7 @@ export const AddonSidebarSection: React.FC<AddonSidebarSectionProps> = ({
             Addons Total:
           </span>
           <span className="text-sm font-semibold text-[#FCC01C]">
-            ${totalAddonCost}
+            {currencySymbol}{totalAddonCost.toLocaleString()}
           </span>
         </div>
       </div>

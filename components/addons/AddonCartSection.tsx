@@ -4,7 +4,7 @@ import React from "react";
 import { FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { Button } from "@heroui/react";
-import { Addon } from "@/lib/dummy-addons";
+import { Addon } from "@/lib/api/addons";
 
 interface AddonCartItemProps {
   addon: Addon;

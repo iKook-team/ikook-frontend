@@ -5,7 +5,7 @@ import { FaTimes } from "react-icons/fa";
 import { Button } from "@heroui/react";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
-import { Addon } from "@/lib/dummy-addons";
+import { Addon } from "@/lib/api/addons";
 
 interface SimpleAddonCartItemProps {
   addon: Addon;
@@ -25,13 +25,13 @@ export const SimpleAddonCartItem: React.FC<SimpleAddonCartItemProps> = ({
           {addon.name}
         </h4>
         <p className="text-xs text-gray-600">
-          by {addon.client.business_name}
+          by {addon.client_name}
         </p>
       </div>
 
       <div className="flex items-center space-x-3">
         <span className="text-sm font-semibold text-[#FCC01C]">
-          {currencySymbol}{addon.price}
+          {currencySymbol}{parseFloat(addon.price || '0').toLocaleString()}
         </span>
         <Button
           className="p-1 bg-red-50 hover:bg-red-100 border border-red-200"

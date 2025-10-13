@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { useAuthStore } from "@/lib/store/auth-store";
@@ -10,7 +10,7 @@ import { ImageGallery } from "@/components/booking/image-gallery";
 import { ChefMenuSection } from "@/components/booking/chef-menu-section";
 import { PricingSidebar } from "@/components/booking/pricing-sidebar";
 import { AddonCarousel } from "@/components/addons";
-import { DUMMY_ADDONS } from "@/lib/dummy-addons";
+import { addonService } from "@/lib/api/addons";
 import { ChefProfile } from "@/components/booking/menu-chef-profile";
 
 const Index: React.FC = () => {
@@ -24,7 +24,26 @@ const Index: React.FC = () => {
     Set<number>
   > | null>(null);
   const [selectedAddons, setSelectedAddons] = useState<number[]>([]);
-  const [addonCategoryFilter, setAddonCategoryFilter] = useState<string>("All");
+  const [addons, setAddons] = useState<any[]>([]);
+  const [addonsLoading, setAddonsLoading] = useState(true);
+
+  // Fetch addons on component mount
+  useEffect(() => {
+    const fetchAddons = async () => {
+      try {
+        setAddonsLoading(true);
+        const response = await addonService.getAddons();
+        setAddons(response.data);
+      } catch (error) {
+        console.error('Failed to fetch addons:', error);
+        setAddons([]);
+      } finally {
+        setAddonsLoading(false);
+      }
+    };
+
+    fetchAddons();
+  }, []);
 
   // Redirect chefs away from booking pages
   React.useEffect(() => {
@@ -85,6 +104,7 @@ const Index: React.FC = () => {
               menu={menu}
               selectedItems={selectedItems}
               selectedAddons={selectedAddons}
+              addons={addons}
               onRemoveAddon={(addonId) => {
                 setSelectedAddons(prev => prev.filter(id => id !== addonId));
               }}
@@ -94,7 +114,6 @@ const Index: React.FC = () => {
         {/* Addon Services Section */}
         <div className="w-full max-w-[1115px] mt-[60px] max-md:max-w-full max-md:mt-10">
           <AddonCarousel
-            addons={DUMMY_ADDONS}
             selectedAddons={selectedAddons}
             onAddonToggle={(addonId) => {
               setSelectedAddons(prev =>
@@ -103,8 +122,6 @@ const Index: React.FC = () => {
                   : [...prev, addonId]
               );
             }}
-            categoryFilter={addonCategoryFilter}
-            onCategoryFilter={setAddonCategoryFilter}
           />
         </div>
         <ChefProfile chef={menu.chef} />
