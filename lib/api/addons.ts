@@ -24,6 +24,12 @@ export interface AddonCarouselProps {
   onAddonToggle: (addonId: number) => void;
 }
 
+export interface AddonCardProps {
+  addon: Addon;
+  isSelected: boolean;
+  onToggle: (addonId: number) => void;
+}
+
 export const addonService = {
   async getAddons(): Promise<AddonListResponse> {
     console.log('Making public API call to /addons/');
