@@ -29,6 +29,7 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
   const setBookingMenuSelection = useAuthStore(
     (s) => s.setBookingMenuSelection,
   );
+  const setBookingSelectedAddons = useAuthStore((s) => s.setBookingSelectedAddons);
 
   const { market } = useMarket();
   const currencySymbol = getMarketConfig(market).currencySymbol;
@@ -84,14 +85,20 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
       path = "/booking/chef-at-home";
     }
     console.log("Proceeding to:", path, "for menu_type:", menu.menu_type, menu);
-    // Save menu and selection to zustand store
-    setBookingMenu(menu);
     // Flatten selectedItems (Record<string, Set<number>>) to array of IDs
     const selectedIds = selectedItems
       ? Object.values(selectedItems).flatMap((set) => Array.from(set))
       : [];
 
+    console.log("Saving to store:", {
+      selectedAddons: selectedAddons,
+      selectedAddonsLength: selectedAddons?.length || 0,
+      selectedItemsCount: selectedIds.length
+    });
+    // Save menu and selection to zustand store
+    setBookingMenu(menu);
     setBookingMenuSelection(selectedIds);
+    setBookingSelectedAddons(selectedAddons || []);
     router.push(path);
   };
 
@@ -157,10 +164,10 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
                 <div key={addon.id} className="flex items-center justify-between text-sm">
                   <div className="flex-1">
                     <span className="text-gray-900">{addon.name}</span>
-                    <span className="text-gray-600 ml-2">by {addon.client}</span>
+                    <span className="text-gray-600 ml-2">by {addon.client_name}</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className="text-[#FCC01C] font-semibold">{currencySymbol}{addon.price}</span>
+                    <span className="text-[#FCC01C] font-semibold">{currencySymbol}{parseFloat(addon.price || '0').toLocaleString()}</span>
                     <button
                       onClick={() => onRemoveAddon(addon.id)}
                       className="text-red-500 hover:text-red-700 text-xs"
@@ -174,7 +181,7 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
             <div className="border-t border-yellow-300 mt-3 pt-2">
               <div className="flex items-center justify-between text-sm font-semibold">
                 <span>Addons Total:</span>
-                <span className="text-[#FCC01C]">{currencySymbol}{addonTotal}</span>
+                <span className="text-[#FCC01C]">{currencySymbol}{addonTotal.toLocaleString()}</span>
               </div>
             </div>
           </div>

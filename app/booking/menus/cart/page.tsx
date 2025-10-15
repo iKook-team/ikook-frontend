@@ -1,73 +1,82 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Cart } from "@/components/cart/cart";
 import { addonService } from "@/lib/api/addons";
+import { useAuthStore } from "@/lib/store/auth-store";
+
+const bookingMenu = useAuthStore((s) => s.bookingMenu);
+const bookingMenuSelection = useAuthStore((s) => s.bookingMenuSelection);
+const bookingSelectedAddons = useAuthStore((s) => s.bookingSelectedAddons);
+const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
+const setBookingMenuSelection = useAuthStore((s) => s.setBookingMenuSelection);
+const setBookingSelectedAddons = useAuthStore((s) => s.setBookingSelectedAddons);
 
 const Index = () => {
-  const [menu, setMenu] = useState<any>(null);
-  const [menuLoading, setMenuLoading] = useState(false);
-  const [menuError, setMenuError] = useState<string | null>(null);
-  const [selectedMenuItems, setSelectedMenuItems] = useState<string[]>([]);
-  const [selectedAddons, setSelectedAddons] = useState<number[]>([1, 3]); // Start with 2 addons selected for demo
-  const [availableAddons, setAvailableAddons] = useState<any[]>([]); // Start empty, will be populated by API
-  const setMenuId = (id: number) => {};
+  const [availableAddons, setAvailableAddons] = useState<any[]>([]);
+  const [ready, setReady] = useState(false);
 
-  // Fetch addons from API
+  useEffect(() => {
+    // Only run on client and only if not already hydrated
+    if (typeof window !== "undefined") {
+      try {
+        const storedMenu = localStorage.getItem("ikook_booking_menu");
+        if (!bookingMenu && storedMenu) setBookingMenu(JSON.parse(storedMenu));
+        const storedMenuSel = localStorage.getItem("ikook_booking_menu_selection");
+        if ((!bookingMenuSelection || bookingMenuSelection.length === 0) && storedMenuSel) setBookingMenuSelection(JSON.parse(storedMenuSel));
+        const storedAddons = localStorage.getItem("ikook_booking_selected_addons");
+        if ((!bookingSelectedAddons || bookingSelectedAddons.length === 0) && storedAddons) setBookingSelectedAddons(JSON.parse(storedAddons));
+        setReady(true);
+      } catch {
+        setReady(true); // fail open
+      }
+    } else {
+      setReady(true); // server never renders UI anyway
+    }
+  }, []);
+
   useEffect(() => {
     const fetchAddons = async () => {
       try {
         const response = await addonService.getAddons();
         setAvailableAddons(response.data);
-      } catch (error) {
-        console.error('Failed to fetch addons:', error);
-        // Keep fallback to dummy data
-      }
+      } catch {}
     };
-
     fetchAddons();
   }, []);
 
-  // Debug: Track state changes
-  useEffect(() => {
-    console.log("🔄 Cart Page State Updated:", {
-      selectedAddons,
-      selectedAddonsType: typeof selectedAddons,
-      selectedAddonsLength: selectedAddons.length,
-      timestamp: new Date().toISOString()
-    });
-  }, [selectedAddons]);
+  if (!ready) return <div className="min-h-screen flex items-center justify-center text-xl">Loading...</div>;
 
-  console.log("🚀 Cart Page Component Rendering!");
+  console.log("[Cart PAGE] hydrated values:", { bookingMenu, bookingMenuSelection, bookingSelectedAddons });
+
+  if (!bookingMenu) {
+    return (
+      <div className="min-h-screen w-full bg-gray-50 py-10 px-4 flex justify-center items-center">
+        <div className="text-center">
+          <div className="text-gray-500 text-lg">Loading cart...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full bg-gray-50 py-10 px-4 flex justify-center">
       <div className="w-full max-w-[655px]">
-        {(() => {
-          console.log("Cart Page Debug:", {
-            selectedAddons,
-            selectedAddonsType: typeof selectedAddons,
-            selectedAddonsLength: selectedAddons.length
-          });
-          return null;
-        })()}
         <Cart
           onNext={() => {}}
-          menu={menu}
-          menuLoading={menuLoading}
-          menuError={menuError}
-          selectedMenuItems={selectedMenuItems}
-          setSelectedMenuItems={setSelectedMenuItems}
-          setMenuId={setMenuId}
-          selectedAddons={selectedAddons}
+          menu={bookingMenu}
+          menuLoading={false}
+          menuError={null}
+          selectedMenuItems={bookingMenuSelection ?? []}
+          setSelectedMenuItems={setBookingMenuSelection}
+          selectedAddons={bookingSelectedAddons ?? []}
           availableAddons={availableAddons}
           onAddonToggle={(addonId) => {
-            setSelectedAddons(prev =>
-              prev.includes(addonId)
-                ? prev.filter(id => id !== addonId)
-                : [...prev, addonId]
-            );
+            const newSelectedAddons = (bookingSelectedAddons ?? []).includes(addonId)
+              ? (bookingSelectedAddons ?? []).filter(id => id !== addonId)
+              : [...(bookingSelectedAddons ?? []), addonId];
+            setBookingSelectedAddons(newSelectedAddons);
           }}
         />
       </div>

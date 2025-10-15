@@ -16,13 +16,13 @@ import { ChefProfile } from "@/components/booking/menu-chef-profile";
 const Index: React.FC = () => {
   const { id } = useParams();
   const router = useRouter();
-  const userType = useAuthStore((s) => s.userType);
   const menuId = Array.isArray(id) ? id[0] : id;
   const { menu, loading, error } = useMenu(menuId);
-  const [selectedItems, setSelectedItems] = useState<Record<
-    string,
-    Set<number>
-  > | null>(null);
+  const userType = useAuthStore((s) => s.userType);
+  const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
+  const setBookingMenuSelection = useAuthStore((s) => s.setBookingMenuSelection);
+  const setBookingSelectedAddons = useAuthStore((s) => s.setBookingSelectedAddons);
+  const [selectedItems, setSelectedItems] = useState<Record<string, Set<number>>>({});
   const [selectedAddons, setSelectedAddons] = useState<number[]>([]);
   const [addons, setAddons] = useState<any[]>([]);
   const [addonsLoading, setAddonsLoading] = useState(true);
@@ -52,16 +52,26 @@ const Index: React.FC = () => {
     }
   }, [userType, router]);
 
-  React.useEffect(() => {
-    if (menu && !selectedItems) {
-      const initial: Record<string, Set<number>> = {};
-
-      (menu.courses || []).forEach((course: string) => {
-        initial[course] = new Set();
-      });
-      setSelectedItems(initial);
+  // Save menu to store when it loads
+  useEffect(() => {
+    if (menu) {
+      setBookingMenu(menu);
+      console.log("💾 Menu saved to store:", menu.id);
     }
-  }, [menu, selectedItems]);
+  }, [menu, setBookingMenu]);
+
+  // Save selected items and addons to store when they change
+  useEffect(() => {
+    // Flatten selectedItems (Record<string, Set<number>>) to array of IDs
+    const selectedIds = Object.values(selectedItems).flatMap((set) => Array.from(set));
+    setBookingMenuSelection(selectedIds);
+  }, [selectedItems, setBookingMenuSelection]);
+
+  useEffect(() => {
+    setBookingSelectedAddons(selectedAddons);
+    console.log("💾 Selected addons saved to store:", selectedAddons);
+    console.log("💾 Selected addons types:", selectedAddons.map(id => ({ id, type: typeof id })));
+  }, [selectedAddons, setBookingSelectedAddons]);
 
   if (userType === "chef") {
     return null; // Avoid flicker during redirect
@@ -75,7 +85,7 @@ const Index: React.FC = () => {
     );
   }
 
-  if (error || !menu || !selectedItems) {
+  if (error || !menu) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <span className="text-red-500 text-lg">
@@ -116,6 +126,7 @@ const Index: React.FC = () => {
           <AddonCarousel
             selectedAddons={selectedAddons}
             onAddonToggle={(addonId) => {
+              console.log("🎯 Addon toggled:", addonId, "Current selected:", selectedAddons);
               setSelectedAddons(prev =>
                 prev.includes(addonId)
                   ? prev.filter(id => id !== addonId)

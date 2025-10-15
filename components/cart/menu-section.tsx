@@ -54,7 +54,12 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
       </div>
       <hr className="w-full border-t border-gray-200 mt-3.5" />
       <div className="mt-[22px]">
-        {courses.map((course, courseIndex) => (
+        {courses.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            No menu items selected
+          </div>
+        ) : (
+          courses.map((course, courseIndex) => (
           <div
             key={courseIndex}
             className={`flex w-full flex-col items-stretch ${courseIndex > 0 ? "mt-6" : ""}`}
@@ -96,7 +101,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
               ))}
             </div>
           </div>
-        ))}
+        )))}
       </div>
     </section>
   );

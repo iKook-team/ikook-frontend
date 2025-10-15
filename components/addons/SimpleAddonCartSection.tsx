@@ -67,7 +67,21 @@ export const SimpleAddonCartSection: React.FC<SimpleAddonCartSectionProps> = ({
   });
 
   if (selectedAddons.length === 0) {
-    return null;
+    return (
+      <div className="bg-white rounded-lg border border-gray-200 mb-6">
+        <div className="px-4 py-3 border-b border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-900">
+            🎉 Addon Services
+          </h3>
+          <p className="text-sm text-gray-600">
+            Additional services for your event
+          </p>
+        </div>
+        <div className="px-4 py-8 text-center text-gray-500">
+          No addon services selected
+        </div>
+      </div>
+    );
   }
 
   const totalAddonCost = selectedAddons.reduce((total, addon) => {

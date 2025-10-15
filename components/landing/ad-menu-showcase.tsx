@@ -36,6 +36,11 @@ export const AdMenuShowcase: React.FC = () => {
     setCurrentSlide((prev) => (prev - 1 + menuItems.length) % menuItems.length);
   };
 
+  const scrollToBooking = () => {
+    const bookingSection = document.getElementById("booking-form");
+    bookingSection?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <section className="py-20 bg-gray-900 text-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -127,8 +132,11 @@ export const AdMenuShowcase: React.FC = () => {
         </div>
 
         <div className="text-center mt-8">
-          <button className="px-8 py-4 bg-transparent border-2 border-[#FCC01C] text-[#FCC01C] font-semibold rounded-lg hover:bg-[#FCC01C] hover:text-white transition-colors">
-            See Menu Sample
+          <button
+            onClick={scrollToBooking}
+            className="px-8 py-4 bg-transparent border-2 border-[#FCC01C] text-[#FCC01C] font-semibold rounded-lg hover:bg-[#FCC01C] hover:text-white transition-colors"
+          >
+            Request Menu Sample
           </button>
         </div>
       </div>

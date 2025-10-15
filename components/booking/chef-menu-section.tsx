@@ -44,9 +44,8 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({
 
   const handleItemToggle = (course: string, id: number) => {
     setSelectedItems((prev) => {
-      if (!prev) return prev;
       const limit = menu.courses_selection_limit?.[course] || 1;
-      const newSet = new Set(prev[course]);
+      const newSet = new Set(prev[course] || []);
 
       if (newSet.has(id)) {
         newSet.delete(id);

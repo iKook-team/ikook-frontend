@@ -1,8 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export const AdBookingForm: React.FC = () => {
+  const router = useRouter();
+  const [showThankYou, setShowThankYou] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,10 +22,72 @@ export const AdBookingForm: React.FC = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/users/contact/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          location: formData.location,
+          event_type: formData.eventType,
+          event_date: formData.date,
+        }),
+      });
+
+      if (response.ok) {
+        setShowThankYou(true);
+      } else {
+        console.error('Form submission failed');
+        // You could show an error message here
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      // You could show an error message here
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  const handleExploreChefs = () => {
+    router.push("/explore");
+  };
+
+  if (showThankYou) {
+    return (
+      <section className="py-20 bg-gradient-to-br from-[#FCC01C]/10 to-orange-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
+            <div className="mb-8">
+              <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
+                Your Chef Match is in Progress!
+              </h3>
+              <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+                Thanks for filling out the form, we've got your details, and our chefs are ready to make your dining experience unforgettable.
+              </p>
+              <p className="text-lg text-gray-600 mb-8">
+                While we process your request, why wait? Explore our pool of talented chefs right now and find the one that feels just right for your occasion.
+              </p>
+            </div>
+
+            <button
+              onClick={handleExploreChefs}
+              className="px-8 py-4 bg-[#FCC01C] text-white font-bold rounded-lg hover:bg-[#E6AC19] transition-colors"
+            >
+              Explore Chefs Now
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -42,6 +108,8 @@ export const AdBookingForm: React.FC = () => {
                 type="text"
                 name="name"
                 placeholder="Full Name"
+                value={formData.name}
+                onChange={handleInputChange}
                 required
                 className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
               />
@@ -49,6 +117,8 @@ export const AdBookingForm: React.FC = () => {
                 type="email"
                 name="email"
                 placeholder="Email"
+                value={formData.email}
+                onChange={handleInputChange}
                 required
                 className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
               />
@@ -56,6 +126,8 @@ export const AdBookingForm: React.FC = () => {
                 type="tel"
                 name="phone"
                 placeholder="Phone"
+                value={formData.phone}
+                onChange={handleInputChange}
                 required
                 className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
               />
@@ -63,30 +135,48 @@ export const AdBookingForm: React.FC = () => {
                 type="text"
                 name="location"
                 placeholder="Location"
+                value={formData.location}
+                onChange={handleInputChange}
                 required
                 className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
               />
               <select
                 name="eventType"
+                value={formData.eventType}
+                onChange={handleInputChange}
                 required
                 className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
               >
                 <option value="">Event Type</option>
                 <option value="birthday">Birthday</option>
-                <option value="dinner">Dinner</option>
+                <option value="weddings">Weddings</option>
+                <option value="corporate-dinner">Corporate dinner</option>
+                <option value="meal-prep">Meal Prep</option>
+                <option value="anniversary">Anniversary</option>
+                <option value="christmas-dinner">Christmas dinner</option>
+                <option value="family-event">Family event</option>
+                <option value="full-time-chef">Full time chef</option>
+                <option value="others">Others</option>
               </select>
               <input
                 type="date"
                 name="date"
+                value={formData.date}
+                onChange={handleInputChange}
                 required
                 className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
               />
             </div>
             <button
               type="submit"
-              className="w-full py-4 bg-[#FCC01C] text-white font-bold rounded-lg hover:bg-[#E6AC19] transition-colors"
+              disabled={isSubmitting}
+              className={`w-full py-4 font-bold rounded-lg transition-colors ${
+                isSubmitting
+                  ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                  : 'bg-[#FCC01C] text-white hover:bg-[#E6AC19]'
+              }`}
             >
-              Find My Chef
+              {isSubmitting ? 'Submitting...' : 'Find My Chef'}
             </button>
           </form>
         </div>

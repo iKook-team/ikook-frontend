@@ -5,24 +5,16 @@ import React from "react";
 export const AdTestimonials: React.FC = () => {
   const testimonials = [
     {
-      name: "Aisha",
-      text: "I didn't even know you could book a chef this easy. Chef Tunde came through, cooked, served, even cleaned. All we did was gist and eat. 10/10 experience.",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&q=80",
+      name: "Oluwatosin",
+      text: "Damn such an amazing experience I love love The chef was calm, polite and to crown it all 100 percent at what he does Thank you IKooK for an amazing one Thank you for making my baby happy",
     },
     {
-      name: "Kunle",
-      text: "That food was too good abeg. The grilled fish finished us, and the jollof? Mad. Everything was smooth from start to finish, zero stress, just vibes. I'm booking again soon.",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&q=80",
+      name: "Olamide",
+      text: "The chef truly outdid themselves! The flavours, presentation, and service were top-notch. Highly recommend! I look forward to trying your service again",
     },
     {
-      name: "Ifeoma",
-      text: "Omo, the experience was amazing! The chef was calm, polite, and 100% on point. Thank you iKooK for making my baby so happy. I love love!",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&q=80",
-    },
-    {
-      name: "Chidera",
-      text: "Our private chef showed up early, explained every dish, and the food was restaurant standard. After the party, he left the kitchen spotless. Honestly, worth every naira.",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&q=80",
+      name: "Chef Daniel",
+      text: "I am so happy to know ikook app The experience the customers service and the opportunity they provide for us we the chefs is excellent, I can't wait to be there No 1 chef. Thanks so much for the opportunity I really appreciate trust me I will recommend this to all my chefs across the country to join",
     },
   ];
 
@@ -44,12 +36,7 @@ export const AdTestimonials: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {testimonials.map((testimonial, index) => (
             <div key={index} className="bg-white p-6 rounded-lg shadow-lg">
-              <div className="flex items-center mb-4">
-                <img
-                  src={testimonial.avatar}
-                  alt={testimonial.name}
-                  className="w-12 h-12 rounded-full mr-4"
-                />
+              <div className="mb-4">
                 <h4 className="font-semibold text-gray-900">
                   {testimonial.name}
                 </h4>

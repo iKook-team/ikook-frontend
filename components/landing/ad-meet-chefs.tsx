@@ -1,30 +1,46 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 
 export const AdMeetChefs: React.FC = () => {
+  const router = useRouter();
   const chefs = [
     {
-      name: "Chef Tunde",
-      image: "https://images.unsplash.com/photo-1583394293214-28ded15ee548?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
-      specialty: "Nigerian Cuisine",
+      name: "Chef Bumzy",
+      image: "/landing/chefbumzy.jpg",
+      specialty: "Nigerian and Mediterranean Cuisine ",
     },
     {
-      name: "Chef Amara",
-      image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
-      specialty: "Continental",
+      name: "Chef Neil",
+      image: "/landing/chefneil.jpg",
+      specialty: "Nigerian and Intercontinental Cuisines ",
     },
     {
-      name: "Chef Kemi",
-      image: "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
-      specialty: "Pastry & Desserts",
+      name: "Chef Benita",
+      image: "/landing/chefbenita.jpg",
+      specialty: "African and Intercontinental Cuisines",
     },
     {
-      name: "Chef David",
-      image: "https://images.unsplash.com/photo-1607631568010-a87245c0daf8?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
-      specialty: "Grills & BBQ",
+      name: "Chef Daniel",
+      image: "/landing/chefdaniel.jpg",
+      specialty: "African and Intercontinental Cuisines",
+    },
+    {
+      name: "Chef Jane",
+      image: "/landing/chefjane.jpg",
+      specialty: "African Cuisines",
+    },
+    {
+      name: "Chef Emmanuel",
+      image: "/landing/chefemmanuel.jpg",
+      specialty: "English, Italian, French and Spanish Cuisine",
     },
   ];
+
+  const handleExploreChefs = () => {
+    router.push("/explore?service=chefs");
+  };
 
   return (
     <section className="py-20 bg-white">
@@ -54,7 +70,10 @@ export const AdMeetChefs: React.FC = () => {
         </div>
 
         <div className="text-center mt-12">
-          <button className="px-8 py-4 bg-[#FCC01C] text-white font-semibold rounded-lg hover:bg-[#E6AC19] transition-colors">
+          <button
+            onClick={handleExploreChefs}
+            className="px-8 py-4 bg-[#FCC01C] text-white font-semibold rounded-lg hover:bg-[#E6AC19] transition-colors"
+          >
             Explore Chefs
           </button>
         </div>

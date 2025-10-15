@@ -77,6 +77,7 @@ interface AuthState {
   chefFormData: ChefFormData | null;
   bookingMenu: any | null;
   bookingMenuSelection: any | null;
+  bookingSelectedAddons: number[] | null;
   booking: any | null;
   bookingService: any | null;
   setBooking: (booking: any) => void;
@@ -91,6 +92,7 @@ interface AuthState {
   clearChefFormData: () => void;
   setBookingMenu: (menu: any) => void;
   setBookingMenuSelection: (selection: any) => void;
+  setBookingSelectedAddons: (addons: number[]) => void;
   setBookingService: (service: any) => void;
 }
 
@@ -135,6 +137,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   chefFormData: null,
   bookingMenu: null,
   bookingMenuSelection: null,
+  bookingSelectedAddons: (() => {
+    // Initialize from localStorage
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("ikook_booking_selected_addons");
+        const parsed = saved ? JSON.parse(saved) : null;
+        console.log("🏪 Store initialized bookingSelectedAddons from localStorage:", parsed);
+        return parsed;
+      } catch (error) {
+        console.warn("Failed to load selected addons from localStorage:", error);
+        return null;
+      }
+    }
+    return null;
+  })(),
   booking: null,
   bookingService: null,
   setBooking: (booking) => {
@@ -157,6 +174,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   logout: () => {
     clearToken();
     clearUserFromStorage();
+    // Clear booking data from localStorage
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("ikook_booking_selected_addons");
+    }
     set({ user: null, isAuthenticated: false, userType: null });
   },
   initializeAuth: () => {
@@ -224,6 +245,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
   setBookingMenuSelection: (selection) => {
     set({ bookingMenuSelection: selection });
+  },
+  setBookingSelectedAddons: (addons) => {
+    console.log("🏪 Store setBookingSelectedAddons called with:", addons);
+    console.log("🏪 Store setBookingSelectedAddons types:", addons.map(id => ({ id, type: typeof id })));
+    set({ bookingSelectedAddons: addons });
+    // Persist to localStorage for cross-session persistence
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("ikook_booking_selected_addons", JSON.stringify(addons));
+        console.log("💾 Saved to localStorage:", addons);
+        // Verify what was actually saved
+        const saved = localStorage.getItem("ikook_booking_selected_addons");
+        console.log("💾 Verified localStorage content:", saved);
+      } catch (error) {
+        console.warn("Failed to save selected addons to localStorage:", error);
+      }
+    }
   },
   setBookingService: (service) => {
     set({ bookingService: service });
