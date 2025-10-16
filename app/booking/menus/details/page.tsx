@@ -22,7 +22,7 @@ const Index: React.FC = () => {
   const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
   const setBookingMenuSelection = useAuthStore((s) => s.setBookingMenuSelection);
   const setBookingSelectedAddons = useAuthStore((s) => s.setBookingSelectedAddons);
-  const [selectedItems, setSelectedItems] = useState<Record<string, Set<number>>>({});
+  const [selectedItems, setSelectedItems] = useState<Record<string, Set<number>> | null>({});
   const [selectedAddons, setSelectedAddons] = useState<number[]>([]);
   const [addons, setAddons] = useState<any[]>([]);
   const [addonsLoading, setAddonsLoading] = useState(true);
@@ -62,9 +62,13 @@ const Index: React.FC = () => {
 
   // Save selected items and addons to store when they change
   useEffect(() => {
-    // Flatten selectedItems (Record<string, Set<number>>) to array of IDs
-    const selectedIds = Object.values(selectedItems).flatMap((set) => Array.from(set));
-    setBookingMenuSelection(selectedIds);
+    if (selectedItems) {
+      // Flatten selectedItems (Record<string, Set<number>>) to array of IDs
+      const selectedIds = Object.values(selectedItems).flatMap((set) => Array.from(set));
+      setBookingMenuSelection(selectedIds);
+    } else {
+      setBookingMenuSelection([]);
+    }
   }, [selectedItems, setBookingMenuSelection]);
 
   useEffect(() => {

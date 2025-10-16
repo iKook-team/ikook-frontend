@@ -6,14 +6,13 @@ import { Cart } from "@/components/cart/cart";
 import { addonService } from "@/lib/api/addons";
 import { useAuthStore } from "@/lib/store/auth-store";
 
-const bookingMenu = useAuthStore((s) => s.bookingMenu);
-const bookingMenuSelection = useAuthStore((s) => s.bookingMenuSelection);
-const bookingSelectedAddons = useAuthStore((s) => s.bookingSelectedAddons);
-const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
-const setBookingMenuSelection = useAuthStore((s) => s.setBookingMenuSelection);
-const setBookingSelectedAddons = useAuthStore((s) => s.setBookingSelectedAddons);
-
 const Index = () => {
+  const bookingMenu = useAuthStore((s) => s.bookingMenu);
+  const bookingMenuSelection = useAuthStore((s) => s.bookingMenuSelection);
+  const bookingSelectedAddons = useAuthStore((s) => s.bookingSelectedAddons);
+  const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
+  const setBookingMenuSelection = useAuthStore((s) => s.setBookingMenuSelection);
+  const setBookingSelectedAddons = useAuthStore((s) => s.setBookingSelectedAddons);
   const [availableAddons, setAvailableAddons] = useState<any[]>([]);
   const [ready, setReady] = useState(false);
 

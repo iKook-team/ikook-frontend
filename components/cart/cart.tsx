@@ -85,14 +85,12 @@ export const Cart: React.FC<CartProps> = ({
   // Debug: Log selected addons and filtered results
   const safeSelectedAddons = selectedAddons || [];
 
-  // More robust filtering - handle both string and number IDs
+  // Filter addons by checking if their ID exists in the selectedAddons array
   const filteredAddons = availableAddons.filter((addon) => {
     const addonId = addon.id;
-    const isSelected =
-      safeSelectedAddons.includes(addonId) ||
-      safeSelectedAddons.includes(Number(addonId)) ||
-      safeSelectedAddons.includes(String(addonId));
-    return isSelected;
+    // Convert all IDs to strings for consistent comparison
+    const selectedAddonIds = safeSelectedAddons.map(String);
+    return selectedAddonIds.includes(String(addonId));
   });
 
   // Only show addons that are actually selected (no demo fallback)

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 
 interface ChefMenuSectionProps {
   menu: any;
-  selectedItems: Record<string, Set<number>>;
+  selectedItems: Record<string, Set<number>> | null;
   setSelectedItems: React.Dispatch<
     React.SetStateAction<Record<string, Set<number>> | null>
   >;
@@ -29,7 +29,7 @@ function getCurrencySymbol(menu: any): string {
 
 export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({
   menu,
-  selectedItems,
+  selectedItems = {},
   setSelectedItems,
 }) => {
   const [activeTab, setActiveTab] = useState<"sharing" | "plated">("sharing");
@@ -45,7 +45,8 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({
   const handleItemToggle = (course: string, id: number) => {
     setSelectedItems((prev) => {
       const limit = menu.courses_selection_limit?.[course] || 1;
-      const newSet = new Set(prev[course] || []);
+      const currentItems = prev || {};
+      const newSet = new Set(currentItems[course] || []);
 
       if (newSet.has(id)) {
         newSet.delete(id);
@@ -55,41 +56,46 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({
         }
       }
 
-      return { ...prev, [course]: newSet };
+      return { ...currentItems, [course]: newSet };
     });
   };
 
-  const renderMenuItem = (item: any, course: string) => (
-    <div
-      key={item.id}
-      className="border border-[color:var(--Black-100,#E7E7E7)] flex w-full max-w-[690px] flex-col overflow-hidden items-stretch px-[31px] py-[21px] rounded-lg border-solid max-md:max-w-full max-md:px-5"
-    >
-      <div className="flex items-center gap-[18px]">
-        <div className="self-stretch flex items-center justify-center w-[30px] my-auto">
-          <button
-            onClick={() => handleItemToggle(course, item.id)}
-            className={`border-[color:var(--Gray-300,#D0D5DD)] self-stretch flex min-h-[30px] w-[30px] h-[30px] my-auto rounded-[9px] border-[1.5px] border-solid ${
-              selectedItems[course]?.has(item.id)
-                ? "bg-[#FCC01C] border-[#FCC01C]"
-                : "bg-white"
-            }`}
-          >
-            {selectedItems[course]?.has(item.id) && (
-              <span className="text-white text-lg self-center">✓</span>
-            )}
-          </button>
-        </div>
-        <div className="text-[#344054] text-base font-medium leading-loose self-stretch my-auto">
-          {item.name}
+  const renderMenuItem = (item: any, course: string) => {
+    const isSelected = selectedItems?.[course]?.has(item.id) || false;
+    
+    return (
+      <div key={item.id}>
+        <div
+          className="border border-[color:var(--Black-100,#E7E7E7)] flex w-full max-w-[690px] flex-col overflow-hidden items-stretch px-[31px] py-[21px] rounded-lg border-solid max-md:max-w-full max-md:px-5"
+        >
+          <div className="flex items-center gap-[18px]">
+            <div className="self-stretch flex items-center justify-center w-[30px] my-auto">
+              <button
+                onClick={() => handleItemToggle(course, item.id)}
+                className={`border-[color:var(--Gray-300,#D0D5DD)] self-stretch flex min-h-[30px] w-[30px] h-[30px] my-auto rounded-[9px] border-[1.5px] border-solid ${
+                  isSelected
+                    ? "bg-[#FCC01C] border-[#FCC01C]"
+                    : "bg-white"
+                }`}
+              >
+                {isSelected && (
+                  <span className="text-white text-lg self-center">✓</span>
+                )}
+              </button>
+            </div>
+            <div className="text-[#344054] text-base font-medium leading-loose self-stretch my-auto">
+              {item.name}
+            </div>
+          </div>
+          {item.description && (
+            <div className="text-[#323335] text-sm font-normal ml-12 mt-[9px] max-md:max-w-full">
+              {item.description}
+            </div>
+          )}
         </div>
       </div>
-      {item.description && (
-        <div className="text-[#323335] text-sm font-normal ml-12 mt-[9px] max-md:max-w-full">
-          {item.description}
-        </div>
-      )}
-    </div>
-  );
+    );
+  };
 
   return (
     <section className="w-[65%] max-md:w-full max-md:ml-0">
@@ -211,9 +217,11 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({
               />
             </div>
             <div className="max-w-full w-[690px] mt-6 space-y-3">
-              {(itemsByCourse[course] || []).map((item) =>
-                renderMenuItem(item, course),
-              )}
+              {(itemsByCourse[course] || []).map((item) => (
+                <React.Fragment key={item.id}>
+                  {renderMenuItem(item, course)}
+                </React.Fragment>
+              ))}
             </div>
           </div>
         ))}
