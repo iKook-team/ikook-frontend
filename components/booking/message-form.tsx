@@ -29,6 +29,7 @@ export interface MessagesFormProps {
   budgetType?: "Flexible" | "Fixed" | null;
   preferredCuisines?: string[];
   isCustomBooking?: boolean;
+  selectedAddons?: number[];
 }
 
 const MessagesForm: React.FC<MessagesFormProps> = ({
@@ -43,6 +44,7 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
   budgetType,
   preferredCuisines = [],
   isCustomBooking = false,
+  selectedAddons = [],
 }) => {
   const setBooking = useAuthStore((s) => s.setBooking);
   const [message, setMessage] = useState("");
@@ -161,7 +163,6 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
   };
 
   const buildPayload = (): BookingPayload => {
-    // Determine the service type first (prefer bookingData.service when menu is absent)
     const serviceType =
       (bookingData.service as string) || menu?.menu_type || menu?.type || "";
 
@@ -180,6 +181,7 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
       hob_type: bookingData.hobType || "Induction",
       hob_size: bookingData.hobSize || "2 top",
       has_oven: bookingData.hasOven || false,
+      addons: selectedAddons || [],
     };
 
     // Normalize budget and budget type using props first, then fallback to bookingData

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { useAuthStore } from "@/lib/store/auth-store";
@@ -15,6 +15,7 @@ import { MessagesForm } from "@/components/booking/message-form";
 import { Checkout } from "@/components/checkout/checkout";
 import BudgetStep from "@/components/booking/budget-step";
 import { saveBookingDraft, getBookingDraft, clearBookingDraft } from "@/lib/booking-intent";
+import { addonService } from "@/lib/api/addons";
 
 type BookingStep =
   | "cart"
@@ -46,7 +47,23 @@ const MealPrepBookingPage = () => {
     allergyDetails: "",
     dietaryRestrictions: [],
   });
+
+  // Fetch addons on component mount
+  useEffect(() => {
+    setAddonsLoading(true);
+    addonService.getAddons().then((response) => {
+      setAvailableAddons(response.data || []);
+      setAddonsLoading(false);
+    });
+  }, []);
   const menu = useAuthStore((s) => s.bookingMenu);
+  const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
+  const bookingMenuSelection = useAuthStore((s) => s.bookingMenuSelection);
+  const setBookingMenuSelection = useAuthStore((s) => s.setBookingMenuSelection);
+  const bookingSelectedAddons = useAuthStore((s) => s.bookingSelectedAddons) || [];
+  const setBookingSelectedAddons = useAuthStore((s) => s.setBookingSelectedAddons);
+  const [availableAddons, setAvailableAddons] = React.useState<any[]>([]);
+  const [addonsLoading, setAddonsLoading] = React.useState(true);
   const [menuLoading, setMenuLoading] = useState(false);
   const [menuError, setMenuError] = useState<string | null>(null);
   const [selectedMenuItems, setSelectedMenuItems] = useState<string[]>([]);
@@ -168,29 +185,40 @@ const MealPrepBookingPage = () => {
   const renderStep = () => {
     switch (currentStep) {
       case "cart":
+        if (addonsLoading) return <div className='text-lg text-center py-20'>Loading Addon Services...</div>;
+        
+        // Show loading state if addons haven't been fetched yet
+        if (availableAddons.length === 0 && !menuLoading) {
+          return (
+            <div className="flex justify-center items-center min-h-screen">
+              <div className="text-center">
+                <div className="text-gray-500 text-lg">Loading addons...</div>
+                <div className="text-sm text-gray-400 mt-2">
+                  Selected addons: {bookingSelectedAddons?.length || 0}
+                </div>
+              </div>
+            </div>
+          );
+        }
+        
         return (
           <Cart
             onNext={handleNext}
             menu={menu}
-            menuLoading={menuLoading}
-            menuError={menuError}
+            menuLoading={false}
+            menuError={!menu ? "No menu data found. Please start from the menu detail page." : null}
             selectedMenuItems={selectedMenuItems}
             setSelectedMenuItems={setSelectedMenuItems}
-            setMenuId={setMenuId}
-          />
-        );
-      case "meal-details":
-        return (
-          <MealDetailsForm
-            onBack={handleBack}
-            onNext={handleNext}
-            isCustomBooking={isCustomBooking}
-            menu={menu}
-            initialDeliveryAddress={
-              bookingData.deliveryAddress || bookingData.location || ""
-            }
-            initialGuests={bookingData.guests || bookingData.numOfPersons || 1}
-            initialAppearance={bookingData.appearance || ""}
+            setMenuId={() => {}}
+            selectedAddons={bookingSelectedAddons}
+            availableAddons={availableAddons}
+            onAddonToggle={(addonId: number) => {
+              const exists = bookingSelectedAddons.includes(addonId);
+              const newAddons = exists
+                ? bookingSelectedAddons.filter(a => a !== addonId)
+                : [...bookingSelectedAddons, addonId];
+              setBookingSelectedAddons(newAddons);
+            }}
           />
         );
       case "meal-details2":
@@ -306,6 +334,7 @@ const MealPrepBookingPage = () => {
             }
             isCustomBooking={isCustomBooking}
             menu={menu}
+            selectedAddons={bookingSelectedAddons}
           />
         );
       case "checkout":

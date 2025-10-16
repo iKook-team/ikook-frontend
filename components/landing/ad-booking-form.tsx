@@ -70,7 +70,7 @@ export const AdBookingForm: React.FC = () => {
                 Your Chef Match is in Progress!
               </h3>
               <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-                Thanks for filling out the form, we've got your details, and our chefs are ready to make your dining experience unforgettable.
+                Thanks for filling out the form, we&apos;ve got your details, and our chefs are ready to make your dining experience unforgettable.
               </p>
               <p className="text-lg text-gray-600 mb-8">
                 While we process your request, why wait? Explore our pool of talented chefs right now and find the one that feels just right for your occasion.

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { useAuthStore } from "@/lib/store/auth-store";
@@ -16,6 +16,7 @@ import { MessagesForm } from "@/components/booking/message-form";
 import { Checkout } from "@/components/checkout/checkout";
 import BudgetStep from "@/components/booking/budget-step";
 import { saveBookingDraft, getBookingDraft, clearBookingDraft } from "@/lib/booking-intent";
+import { addonService } from "@/lib/api/addons";
 
 type BookingStep =
   | "cart"
@@ -37,6 +38,10 @@ const MealDeliveryBookingPage = () => {
   const setBookingMenuSelection = useAuthStore(
     (s) => s.setBookingMenuSelection,
   );
+  const bookingSelectedAddons = useAuthStore((s) => s.bookingSelectedAddons) || [];
+  const setBookingSelectedAddons = useAuthStore((s) => s.setBookingSelectedAddons);
+  const [availableAddons, setAvailableAddons] = React.useState<any[]>([]);
+  const [addonsLoading, setAddonsLoading] = React.useState(true);
   const [selectedMenuItems, setSelectedMenuItems] = useState<string[]>(
     (bookingMenuSelection || []).map((id: any) => String(id)),
   );
@@ -71,6 +76,15 @@ const MealDeliveryBookingPage = () => {
     ? "No menu data found. Please start from the menu detail page."
     : null;
   const [bookingId, setBookingId] = useState<number | null>(null);
+
+  // Fetch addons on component mount
+  useEffect(() => {
+    setAddonsLoading(true);
+    addonService.getAddons().then((response) => {
+      setAvailableAddons(response.data || []);
+      setAddonsLoading(false);
+    });
+  }, []);
 
   React.useEffect(() => {
     if (isResuming) {
@@ -177,6 +191,22 @@ const MealDeliveryBookingPage = () => {
   const renderStep = () => {
     switch (currentStep) {
       case "cart":
+        if (addonsLoading) return <div className='text-lg text-center py-20'>Loading Addon Services...</div>;
+        
+        // Show loading state if addons haven't been fetched yet
+        if (availableAddons.length === 0 && !menuLoading) {
+          return (
+            <div className="flex justify-center items-center min-h-screen">
+              <div className="text-center">
+                <div className="text-gray-500 text-lg">Loading addons...</div>
+                <div className="text-sm text-gray-400 mt-2">
+                  Selected addons: {bookingSelectedAddons?.length || 0}
+                </div>
+              </div>
+            </div>
+          );
+        }
+        
         return (
           <Cart
             onNext={handleNext}
@@ -186,6 +216,15 @@ const MealDeliveryBookingPage = () => {
             selectedMenuItems={selectedMenuItems}
             setSelectedMenuItems={setSelectedMenuItems}
             setMenuId={() => {}}
+            selectedAddons={bookingSelectedAddons}
+            availableAddons={availableAddons}
+            onAddonToggle={(addonId: number) => {
+              const exists = bookingSelectedAddons.includes(addonId);
+              const newAddons = exists
+                ? bookingSelectedAddons.filter(a => a !== addonId)
+                : [...bookingSelectedAddons, addonId];
+              setBookingSelectedAddons(newAddons);
+            }}
           />
         );
       case "event-details":
@@ -266,14 +305,15 @@ const MealDeliveryBookingPage = () => {
             onBack={handleBack}
             onNext={handleNext}
             bookingData={{ ...bookingData, service: "Meal Delivery" }}
-            selectedMenuItems={selectedMenuItems}
-            menuId={menu?.id ?? undefined}
-            menu={menu}
+            selectedMenuItems={isCustomBooking ? [] : selectedMenuItems}
+            menuId={isCustomBooking ? undefined : (menu?.id ?? undefined)}
+            menu={isCustomBooking ? undefined : menu}
             dietaryRestrictions={preferencesForm.dietaryRestrictions}
             budget={budgetStep.budget}
             budgetType={budgetStep.budgetType}
             preferredCuisines={eventDetailsForm2.preferredCuisines}
             isCustomBooking={isCustomBooking}
+            selectedAddons={bookingSelectedAddons}
           />
         );
       case "checkout":

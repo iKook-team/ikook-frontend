@@ -273,6 +273,7 @@ const ChefAtHomeBookingPage = () => {
             menu={isCustomBooking ? undefined : menu}
             dietaryRestrictions={preferencesForm.dietaryRestrictions}
             isCustomBooking={isCustomBooking}
+            selectedAddons={bookingSelectedAddons}
           />
         );
       case "checkout":
