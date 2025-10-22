@@ -104,68 +104,88 @@ export const AdBookingForm: React.FC = () => {
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <input
-                type="text"
-                name="name"
-                placeholder="Full Name"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
-              />
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
-              />
-              <input
-                type="tel"
-                name="phone"
-                placeholder="Phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
-              />
-              <input
-                type="text"
-                name="location"
-                placeholder="Location"
-                value={formData.location}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
-              />
-              <select
-                name="eventType"
-                value={formData.eventType}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
-              >
-                <option value="">Event Type</option>
-                <option value="birthday">Birthday</option>
-                <option value="weddings">Weddings</option>
-                <option value="corporate-dinner">Corporate dinner</option>
-                <option value="meal-prep">Meal Prep</option>
-                <option value="anniversary">Anniversary</option>
-                <option value="christmas-dinner">Christmas dinner</option>
-                <option value="family-event">Family event</option>
-                <option value="full-time-chef">Full time chef</option>
-                <option value="others">Others</option>
-              </select>
-              <input
-                type="date"
-                name="date"
-                value={formData.date}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
-              />
+              <div className="form-group">
+                <label htmlFor="name" className="block text-lg font-medium text-gray-700">Full Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="email" className="block text-lg font-medium text-gray-700">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="phone" className="block text-lg font-medium text-gray-700">Phone</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="location" className="block text-lg font-medium text-gray-700">Location</label>
+                <input
+                  type="text"
+                  id="location"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="eventType" className="block text-lg font-medium text-gray-700">Event Type</label>
+                <select
+                  id="eventType"
+                  name="eventType"
+                  value={formData.eventType}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
+                >
+                  <option value="">Select Event Type</option>
+                  <option value="birthday">Birthday</option>
+                  <option value="weddings">Weddings</option>
+                  <option value="corporate-dinner">Corporate dinner</option>
+                  <option value="meal-prep">Meal Prep</option>
+                  <option value="anniversary">Anniversary</option>
+                  <option value="christmas-dinner">Christmas dinner</option>
+                  <option value="family-event">Family event</option>
+                  <option value="full-time-chef">Full time chef</option>
+                  <option value="others">Others</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="date" className="block text-lg font-medium text-gray-700">Event Date</label>
+                <input
+                  type="date"
+                  id="date"
+                  name="date"
+                  value={formData.date}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
+                />
+              </div>
             </div>
             <button
               type="submit"

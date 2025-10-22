@@ -18,7 +18,7 @@ export const AdWhyChooseUs: React.FC = () => {
     {
       icon: "💎",
       title: "Affordable luxury",
-      description: "Restaurant-quality dining at home without the premium",
+      description: "Enjoy restaurant quality meals without breaking the bank",
     },
     {
       icon: "📱",

@@ -110,7 +110,7 @@ export const LoginForm: React.FC = () => {
                 userType === "host" ? "text-white" : "text-[#020101]"
               }`}
             >
-              Host
+              Login As Host
             </span>
           </button>
 
@@ -129,7 +129,7 @@ export const LoginForm: React.FC = () => {
                 userType === "chef" ? "text-white" : "text-[#020101]"
               }`}
             >
-              Chef
+              Login As Chef
             </span>
           </button>
         </div>

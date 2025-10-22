@@ -68,15 +68,6 @@ export const AdMeetChefs: React.FC = () => {
             </div>
           ))}
         </div>
-
-        <div className="text-center mt-12">
-          <button
-            onClick={handleExploreChefs}
-            className="px-8 py-4 bg-[#FCC01C] text-white font-semibold rounded-lg hover:bg-[#E6AC19] transition-colors"
-          >
-            Explore Chefs
-          </button>
-        </div>
       </div>
     </section>
   );

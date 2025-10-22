@@ -58,11 +58,11 @@ export default function ServicesSection() {
             </p>
           </div>
 
-          <div className="bg-[#323335] p-12 text-center rounded-lg">
-            <h3 className="text-3xl lg:text-4xl font-bold text-[#FCC01C] mb-4 leading-tight">
+          <div className="bg-[#FCC01C] p-12 text-center rounded-lg">
+            <h3 className="text-3xl lg:text-4xl font-bold text-[#323335] mb-4 leading-tight">
               HEALTHY EATING COACH
             </h3>
-            <p className="text-lg text-[#FCC01C]">
+            <p className="text-lg text-[#323335]">
               Improve your healthy eating with our coach
             </p>
           </div>

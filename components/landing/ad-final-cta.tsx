@@ -10,7 +10,7 @@ export const AdFinalCTA: React.FC = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-r from-gray-900 to-gray-800 text-white relative overflow-hidden">
+    <section className="py-20 bg-gradient-to-r from-[#FCC01C]/10 to-orange-50 text-gray-900 relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-10 left-10 w-32 h-32 bg-[#FCC01C] rounded-full blur-3xl" />
@@ -22,14 +22,14 @@ export const AdFinalCTA: React.FC = () => {
           Ready to eat better at home?
         </h2>
 
-        <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+        <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
           Join thousands of satisfied customers who&apos;ve transformed their dining
           experience with iKooK
         </p>
 
         <button
           onClick={scrollToBooking}
-          className="inline-flex items-center justify-center px-10 py-5 text-xl font-bold text-gray-900 bg-[#FCC01C] rounded-lg hover:bg-[#E6AC19] transition-all duration-300 transform hover:scale-105 shadow-2xl"
+          className="inline-flex items-center justify-center px-10 py-5 text-xl font-bold text-white bg-[#FCC01C] rounded-lg hover:bg-[#E6AC19] transition-all duration-300 transform hover:scale-105 shadow-2xl"
         >
           Book Your Chef Now
           <svg
@@ -47,7 +47,7 @@ export const AdFinalCTA: React.FC = () => {
           </svg>
         </button>
 
-        <div className="mt-8 flex justify-center items-center space-x-8 text-sm text-gray-400">
+        <div className="mt-8 flex justify-center items-center space-x-8 text-sm text-gray-600">
           <div className="flex items-center">
             <svg
               className="w-5 h-5 text-green-400 mr-2"

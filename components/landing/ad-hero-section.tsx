@@ -13,7 +13,7 @@ export const AdHeroSection: React.FC = () => {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/40 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-black/10 z-10" />
         <img
           src="/landing/chefneil.jpg"
           alt="Professional chef preparing gourmet meal"
