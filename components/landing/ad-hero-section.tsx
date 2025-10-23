@@ -15,7 +15,7 @@ export const AdHeroSection: React.FC = () => {
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-black/10 z-10" />
         <img
-          src="/landing/chefneil.jpg"
+          src="/landing/hero.png"
           alt="Professional chef preparing gourmet meal"
           className="w-full h-full object-cover"
         />

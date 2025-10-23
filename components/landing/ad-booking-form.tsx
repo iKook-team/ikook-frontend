@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { newsletterService } from "@/lib/api/newsletter";
 
 export const AdBookingForm: React.FC = () => {
   const router = useRouter();
@@ -27,29 +28,18 @@ export const AdBookingForm: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/users/contact/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          location: formData.location,
-          event_type: formData.eventType,
-          event_date: formData.date,
-        }),
+      await newsletterService.submitAdBooking({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        location: formData.location,
+        event_type: formData.eventType,
+        event_date: formData.date,
       });
 
-      if (response.ok) {
-        setShowThankYou(true);
-      } else {
-        console.error('Form submission failed');
-        // You could show an error message here
-      }
+      setShowThankYou(true);
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Form submission failed:', error);
       // You could show an error message here
     } finally {
       setIsSubmitting(false);
