@@ -7,14 +7,14 @@ export const AdMenuShowcase: React.FC = () => {
 
   const menuItems = [
     {
-      image: "/landing/cardamomcake.png",
-      title: "Cardamom Cake with Vanilla Ice Cream",
-      description: "Spiced cake served with cool vanilla ice cream.",
-    },
-    {
       image: "/landing/chickenkatsu.png",
       title: "Chicken Katsu Curry",
       description: "Crispy chicken with rich curry sauce and rice.",
+    },
+    {
+      image: "/landing/cardamomcake.png",
+      title: "Cardamom Cake with Vanilla Ice Cream",
+      description: "Spiced cake served with cool vanilla ice cream.",
     },
     {
       image: "/landing/roastbeef.png",
