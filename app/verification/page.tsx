@@ -247,8 +247,11 @@ const IdentityVerificationModal = ({
       { value: "SAID", label: "SAID" },
       { value: "PASSPORT", label: "PASSPORT" },
     ];
+  } else if (market === "GB") {
+    // UK users use Didit session-based verification
+    typeOptions = [{ value: "OTHER", label: "Other" }];
   } else {
-    // GB and default
+    // Default for other markets
     typeOptions = [{ value: "PASSPORT", label: "PASSPORT" }];
   }
 
@@ -274,7 +277,15 @@ const IdentityVerificationModal = ({
         identity_number: idNumber,
       });
 
-      // Optionally update user.identity_verified if backend returns it
+      // Check if this is a session-based verification (for UK users)
+      if (data?.data?.session_data && data?.data?.verification_url) {
+        // UK users: redirect to Didit verification session
+        showToast.success("Redirecting to verification session...");
+        window.location.href = data.data.verification_url;
+        return;
+      }
+
+      // Handle normal verification response (for non-UK users)
       const verified =
         data && data.data && typeof data.data.identity_verified === "boolean"
           ? Boolean(data.data.identity_verified)
@@ -372,6 +383,7 @@ const IdentityVerificationModal = ({
 const VerificationPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [showIdentityModal, setShowIdentityModal] = useState(false);
+  const { market } = useMarket(); // "NG" | "ZA" | "GB"
   const user = useAuthStore((state) => state.user);
   const updateTriggerRef = useRef(0);
   const [selectedOption, setSelectedOption] = useState<
@@ -418,11 +430,40 @@ const VerificationPage = () => {
     }
   }, [chefDocument, identityVerified, hasCertificate]);
 
-  const handleContinue = () => {
-    if (selectedOption === "identity") {
-      setShowIdentityModal(true);
+  const handleContinue = async () => {
+    // For UK users who need identity verification, directly start Didit session
+    if (market === "GB" && !identityVerified) {
+      if (!user?.email) {
+        showToast.error("Missing user email. Please sign in again.");
+        return;
+      }
 
-      return;
+      try {
+        const data = await authService.verifyIdentity({
+          email: user.email,
+          identity_type: "OTHER",
+          identity_number: "dummy", // Not used for UK session-based verification
+        });
+
+        // Check if this is a session-based verification (for UK users)
+        if (data?.data?.session_data && data?.data?.verification_url) {
+          // UK users: redirect to Didit verification session
+          showToast.success("Redirecting to verification session...");
+          window.location.href = data.data.verification_url;
+          return;
+        }
+      } catch (err) {
+        showToast.error("Failed to start verification. Please try again.");
+        return;
+      }
+    }
+
+    if (selectedOption === "identity") {
+      // Non-UK users: show the modal
+      if (market !== "GB") {
+        setShowIdentityModal(true);
+        return;
+      }
     }
     if (selectedOption === "document" && chefDocument) {
       setShowModal(true);
@@ -451,7 +492,9 @@ const VerificationPage = () => {
               Verify your identity
             </h3>
             <p className="text-[rgba(50,51,53,0.5)] text-xs font-normal">
-              Provide an official ID to verify your identity
+              {market === "GB"
+                ? "Complete identity verification through our partner"
+                : "Provide an official ID to verify your identity"}
             </p>
           </div>
           {identityVerified ? (
@@ -480,7 +523,7 @@ const VerificationPage = () => {
               value="identity"
               checked={selectedOption === "identity"}
               onChange={() => setSelectedOption("identity")}
-              disabled={identityVerified}
+              disabled={identityVerified || market === "GB"} // Disable for UK users
               className="mt-1 w-4 h-4 accent-amber-400"
               aria-label="Select identity verification"
             />
@@ -556,23 +599,29 @@ const VerificationPage = () => {
 
         {!(
           (hostLike && identityVerified) ||
-          (chefDocument && hasCertificate)
+          (chefDocument && hasCertificate) ||
+          (market === "GB" && identityVerified) // Hide button for verified UK users
         ) && (
           <button
             type="button"
             onClick={handleContinue}
             disabled={
-              !selectedOption ||
-              (selectedOption === "document" && !chefDocument)
+              (!selectedOption && market !== "GB") || // For non-UK users, require selection
+              (selectedOption === "document" && !chefDocument) ||
+              (market === "GB" && identityVerified) // Disable UK users who are already verified
             }
-            className={`flex w-[275px] justify-center items-center gap-2 border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] h-12 px-7 py-3 rounded-lg self-start max-sm:w-[90%] border-solid ${!selectedOption || (selectedOption === "document" && !chefDocument) ? "bg-gray-300 border-gray-300 cursor-not-allowed" : "bg-[#FCC01C] border-[#FCC01C] cursor-pointer"}`}
+            className={`flex w-[275px] justify-center items-center gap-2 border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] h-12 px-7 py-3 rounded-lg self-start max-sm:w-[90%] border-solid ${(!selectedOption && market !== "GB") || (selectedOption === "document" && !chefDocument) || (market === "GB" && identityVerified) ? "bg-gray-300 border-gray-300 cursor-not-allowed" : "bg-[#FCC01C] border-[#FCC01C] cursor-pointer"}`}
           >
             <span className="text-white text-base font-bold leading-6">
               {selectedOption === "identity"
-                ? "Verify"
+                ? market === "GB"
+                  ? "Start Verification"
+                  : "Verify"
                 : selectedOption === "document"
                   ? "Upload"
-                  : "Continue"}
+                  : market === "GB" && !identityVerified
+                    ? "Start Verification"
+                    : "Continue"}
             </span>
           </button>
         )}

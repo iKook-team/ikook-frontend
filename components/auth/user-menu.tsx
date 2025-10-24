@@ -124,12 +124,6 @@ export const UserMenu: React.FC = () => {
             >
               Support
             </button>
-            <button
-              className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-              onClick={() => router.push("/didit-verification")}
-            >
-              Didit Verification Test
-            </button>
 
             {/* Chef-specific items */}
             {isChef && (
