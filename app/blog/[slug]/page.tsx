@@ -11,12 +11,23 @@ const getPostBySlug = (slug: string) => {
   return blogPosts.find((post) => post.slug === slug);
 };
 
-export default function BlogDetailPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const post = getPostBySlug(params.slug);
+// Define the page props type for Next.js 13+
+type PageProps = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+// Export as a default async function with proper typing
+export default async function Page({ params, searchParams }: PageProps) {
+  // Await both params and searchParams promises
+  const [{ slug }, search] = await Promise.all([
+    params,
+    searchParams
+  ]);
+  
+  // Use the search params if needed
+  console.log('Search params:', search);
+  const post = getPostBySlug(slug);
 
   if (!post) {
     return (
@@ -96,11 +107,12 @@ export default function BlogDetailPage({
                   className="block"
                 >
                   <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full">
-                    <div className="aspect-video overflow-hidden">
-                      <img
+                    <div className="aspect-video relative w-full">
+                      <Image
                         src={relatedPost.image}
                         alt={relatedPost.title}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                     </div>
                     <div className="p-6">
