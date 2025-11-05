@@ -22,7 +22,7 @@ const services: Service[] = [
   { id: "fine-dining", name: "Fine Dining", category: "menu" },
   { id: "corporate-dining", name: "Corporate Dining", category: "menu" },
   { id: "cooking-class", name: "Cooking Class", category: "service" },
-  { id: "eating-coach", name: "Eating Coach", category: "service" },
+  { id: "eating-coach", name: "Diet & Nutrition", category: "service" },
   { id: "box-groceries", name: "Box Groceries", category: "service" },
   { id: "chefs", name: "CHEFS", category: "profile" },
 ];

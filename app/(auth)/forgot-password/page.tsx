@@ -69,14 +69,14 @@ const ForgotPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen relative bg-[#FBFBFB]">
-      <main className="relative flex items-center justify-center py-10">
+    <div className="w-full min-h-screen relative bg-[#FBFBFB] px-2 sm:px-4 lg:px-8">
+      <main className="relative flex items-center justify-center py-6 sm:py-10">
         {step === 1 && (
-          <section className="w-[603px] max-w-full">
+          <section className="w-[603px] max-w-full px-4 sm:px-0">
             <header className="mb-2 text-black text-xl font-medium leading-[30px]">
               Forgot Password
             </header>
-            <div className="w-full border rounded-[15px] border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] p-8">
+            <div className="w-full border rounded-[15px] border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] p-6 md:p-8">
               <p className="text-sm text-gray-600 mb-6">
                 Enter your email to receive a verification code to reset your
                 password.
@@ -103,7 +103,7 @@ const ForgotPasswordPage: React.FC = () => {
                 </div>
                 <button
                   type="submit"
-                  className="w-full text-white text-base font-bold leading-6 gap-2 border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-[#FCC01C] px-[113px] py-3 rounded-lg border-solid border-[#FCC01C] hover:bg-[#e6ac19] transition-colors"
+                  className="w-full text-white text-base font-bold leading-6 border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-[#FCC01C] py-3 rounded-lg border-solid border-[#FCC01C] hover:bg-[#e6ac19] transition-colors flex items-center justify-center"
                 >
                   Continue
                 </button>
@@ -131,11 +131,11 @@ const ForgotPasswordPage: React.FC = () => {
         )}
 
         {step === 3 && (
-          <section className="w-[603px] max-w-full">
-            <header className="mb-2 text-black text-xl font-medium leading-[30px]">
+          <section className="w-[603px] max-w-full px-4 sm:px-0">
+            <header className="mb-4 text-black text-xl font-medium leading-[30px]">
               Set a new password
             </header>
-            <div className="w-full border rounded-[15px] border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] p-8">
+            <div className="w-full border rounded-[15px] border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] p-6 md:p-8">
               <form onSubmit={handlePasswordSubmit} className="space-y-4">
                 <div>
                   <label
@@ -196,7 +196,7 @@ const ForgotPasswordPage: React.FC = () => {
                     !newPassword ||
                     newPassword !== confirmPassword
                   }
-                  className="w-full text-white text-base font-bold leading-6 gap-2 border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-[#FCC01C] px-[113px] py-3 rounded-lg border-solid border-[#FCC01C] hover:bg-[#e6ac19] transition-colors disabled:opacity-50"
+                  className="w-full text-white text-base font-bold leading-6 border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-[#FCC01C] py-3 rounded-lg border-solid border-[#FCC01C] hover:bg-[#e6ac19] transition-colors disabled:opacity-50 flex items-center justify-center whitespace-nowrap"
                 >
                   {isSubmitting ? "Saving..." : "Save new password"}
                 </button>
