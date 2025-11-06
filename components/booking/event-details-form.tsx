@@ -3,6 +3,7 @@ import Image from "next/image";
 
 import { ProgressIndicator } from "./progress-indicator";
 import { ActionButtons } from "./action-buttons";
+import { GooglePlacesAutocomplete } from "@/components/ui/google-places-autocomplete";
 
 import { ChefCard } from "@/components/cart/chef-card";
 
@@ -120,21 +121,13 @@ const EventDetailsForm: React.FC<EventDetailsFormProps> = ({
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label
-                htmlFor="location"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Location
-              </label>
-              <input
-                type="text"
-                id="location"
-                name="location"
+              <GooglePlacesAutocomplete
                 value={formData.location}
-                onChange={(e) => handleInputChange("location", e.target.value)}
-                className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-amber-500 focus:border-amber-500"
-                placeholder="Enter location"
+                onChange={(city) => handleInputChange("location", city)}
+                placeholder="Enter city"
+                label="Location"
                 required
+                className="w-full"
               />
             </div>
 

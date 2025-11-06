@@ -1,17 +1,16 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { FormField } from "@/components/ui/form-field";
 import { PhoneInput } from "@/components/ui/phone-input";
+import { GooglePlacesAutocomplete } from "@/components/ui/google-places-autocomplete";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { authService } from "@/lib/api/auth";
 import { showToast, handleApiError } from "@/lib/utils/toast";
-import { useMarket } from "@/lib/market-context";
-import { getLocationsForMarket } from "@/lib/locations";
 
 interface FormData {
   firstName: string;
@@ -34,13 +33,6 @@ export const HostRegistrationForm: React.FC<HostRegistrationFormProps> = ({
   const { setUserType, setHostFormData } = useAuthStore();
   // Track selected country code for phone input
   const [countryCode, setCountryCode] = useState("NG");
-  const { market } = useMarket();
-  // Market-based city options (shared with hero section)
-  const allLocations = useMemo(() => getLocationsForMarket(market), [market]);
-  const cityOptions = useMemo(
-    () => allLocations.map((v) => ({ value: v, label: v })),
-    [allLocations],
-  );
 
   const {
     register,
@@ -163,19 +155,17 @@ export const HostRegistrationForm: React.FC<HostRegistrationFormProps> = ({
                 className="w-full"
               />
 
-              {/* City selector (market-based) using standard FormField UI */}
-              <FormField
-                label="City/State"
-                required
-                type="select"
-                options={[{ value: "", label: "Select city" }, ...cityOptions]}
+              {/* City selector using Google Places Autocomplete */}
+              <GooglePlacesAutocomplete
                 value={formValues.city || ""}
-                placeholder="Select city"
-                onChange={(e) => {
-                  setValue("city", e.target.value, { shouldValidate: true });
+                onChange={(city) => {
+                  setValue("city", city, { shouldValidate: true });
                   clearErrors("city");
                 }}
+                placeholder="Enter city"
+                label="City/State"
                 error={errors.city?.message}
+                required
                 className="w-full"
               />
 

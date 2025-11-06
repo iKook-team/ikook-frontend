@@ -1,71 +1,21 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 
 import { useMarket } from "@/lib/market-context";
-import { getLocationsForMarket } from "@/lib/locations";
+import { GooglePlacesAutocomplete } from "@/components/ui/google-places-autocomplete";
 import TextWithHighlight from "@/components/common/TextWithHighlight";
 
 export default function HeroSection() {
   const router = useRouter();
   const { market } = useMarket(); // 'NG' | 'ZA' | 'GB'
 
-  // Valid locations per market (mirror of backend City TextChoices)
-  const allLocations = useMemo(() => getLocationsForMarket(market), [market]);
-
   const [location, setLocation] = useState("");
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [filtered, setFiltered] = useState<string[]>(allLocations);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
   const dateRef = useRef<HTMLInputElement | null>(null);
   const [eventDate, setEventDate] = useState<string>("");
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (!dropdownRef.current) return;
-      if (!dropdownRef.current.contains(e.target as Node)) {
-        setShowDropdown(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handler);
-
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
-  // Update list when market changes, and clear invalid selection
-  useEffect(() => {
-    setFiltered(allLocations);
-    if (location && !allLocations.includes(location)) {
-      setLocation("");
-    }
-  }, [allLocations]);
-
-  const onFocusLocation = () => {
-    setFiltered(allLocations);
-    setShowDropdown(true);
-  };
-
-  const onChangeLocation = (val: string) => {
-    setLocation(val);
-    const v = val.trim().toLowerCase();
-
-    if (!v) {
-      setFiltered(allLocations);
-    } else {
-      setFiltered(allLocations.filter((c) => c.toLowerCase().includes(v)));
-    }
-    setShowDropdown(true);
-  };
-
-  const selectLocation = (val: string) => {
-    setLocation(val);
-    setShowDropdown(false);
-  };
 
   const onSearch = () => {
     const city = location.trim();
@@ -110,40 +60,15 @@ export default function HeroSection() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             {/* Location Input */}
-            <div className="relative" ref={dropdownRef}>
-              <div className="border border-gray-200 rounded-lg p-4 focus-within:outline-none focus-within:ring-0">
-                <label className="block text-sm font-semibold text-[#323335] opacity-70 mb-1">
-                  Location
-                </label>
-                <Input
-                  type="text"
-                  placeholder="City"
-                  value={location}
-                  onFocus={onFocusLocation}
-                  onChange={(e) => onChangeLocation(e.target.value)}
-                  className="border-none p-0 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none focus:outline-none"
-                />
-              </div>
-
-              {showDropdown && (
-                <div className="absolute z-20 mt-2 w-full max-h-64 overflow-auto bg-white border border-gray-200 rounded-md shadow-lg">
-                  {filtered.length === 0 && (
-                    <div className="px-3 py-2 text-sm text-neutral-500">
-                      No matches
-                    </div>
-                  )}
-                  {filtered.map((item) => (
-                    <button
-                      key={item}
-                      type="button"
-                      onClick={() => selectLocation(item)}
-                      className="w-full text-left px-3 py-2 text-sm hover:bg-amber-50 focus:bg-amber-50"
-                    >
-                      {item}
-                    </button>
-                  ))}
-                </div>
-              )}
+            <div className="border border-gray-200 rounded-lg p-4 focus-within:outline-none focus-within:ring-0">
+              <GooglePlacesAutocomplete
+                value={location}
+                onChange={(city) => setLocation(city)}
+                placeholder="City"
+                label="Location"
+                className="w-full"
+                inputClassName="border-none p-0 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none focus:outline-none"
+              />
             </div>
 
             {/* Event Date Input */}

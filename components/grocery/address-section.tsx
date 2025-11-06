@@ -1,12 +1,10 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React from "react";
 
 import { InputField } from "./input-field";
 
-import { FormField } from "@/components/ui/form-field";
-import { useMarket } from "@/lib/market-context";
-import { getLocationsForMarket } from "@/lib/locations";
+import { GooglePlacesAutocomplete } from "@/components/ui/google-places-autocomplete";
 
 interface AddressSectionProps {
   address: string;
@@ -25,17 +23,6 @@ export const AddressSection: React.FC<AddressSectionProps> = ({
   city,
   onCityChange,
 }) => {
-  // Use market-based city/state options (same as signup flow)
-  const { market } = useMarket();
-  const allLocations = useMemo(() => getLocationsForMarket(market), [market]);
-  const cityOptions = useMemo(
-    () => [
-      { value: "", label: "Select city" },
-      ...allLocations.map((v) => ({ value: v, label: v })),
-    ],
-    [allLocations],
-  );
-
   return (
     <section className="w-full flex flex-col gap-4">
       <InputField
@@ -54,13 +41,11 @@ export const AddressSection: React.FC<AddressSectionProps> = ({
         className="w-full"
       />
 
-      <FormField
-        label="City/State"
-        type="select"
-        options={cityOptions}
-        placeholder="Select city"
+      <GooglePlacesAutocomplete
         value={city}
-        onChange={(e) => onCityChange((e.target as HTMLSelectElement).value)}
+        onChange={onCityChange}
+        placeholder="Enter city"
+        label="City/State"
         className="w-full"
       />
     </section>

@@ -4,10 +4,10 @@ import React, { useEffect, useState } from "react";
 
 import { useAuthStore } from "@/lib/store/auth-store";
 import { TagSelector } from "@/components/ui/tag-selector";
+import { GooglePlacesAutocomplete } from "@/components/ui/google-places-autocomplete";
 import { authService } from "@/lib/api/auth";
 import { handleApiError } from "@/lib/utils/toast";
 import { showToast } from "@/lib/utils/toast";
-import { getLocationsForCountry } from "@/lib/locations";
 
 type UserType = "chef" | "host";
 
@@ -214,17 +214,6 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
   ]);
   const [events, setEvents] = useState(["Naming", "Wedding", "Gathering"]);
 
-  const [cities, setCities] = useState<string[]>([]);
-  const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
-
-  // Update cities when user's country changes
-  useEffect(() => {
-    if (user?.country) {
-      const countryCities = getLocationsForCountry(user.country);
-
-      setCities(countryCities);
-    }
-  }, [user?.country]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -516,97 +505,14 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
 
                   {userType === "chef" && (
                     <>
-                      <div className="w-full whitespace-nowrap mt-4 max-md:max-w-full">
-                        <div className="w-full max-md:max-w-full">
-                          <div className="w-full max-md:max-w-full">
-                            <label
-                              id="city-label"
-                              className="text-[#3F3E3D] text-sm font-medium leading-none"
-                            >
-                              City/State
-                            </label>
-                            <div className="relative w-full">
-                              <button
-                                type="button"
-                                aria-haspopup="listbox"
-                                aria-expanded={isCityDropdownOpen}
-                                aria-labelledby="city-label"
-                                className="items-center border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] flex w-full gap-2 overflow-hidden text-base text-[#0F0E0C] font-normal bg-white mt-1.5 px-3.5 py-2.5 rounded-lg border-solid border-[#CFCFCE] cursor-pointer text-left"
-                                onClick={() =>
-                                  setIsCityDropdownOpen(!isCityDropdownOpen)
-                                }
-                                onKeyDown={(e) => {
-                                  if (e.key === "Enter" || e.key === " ") {
-                                    e.preventDefault();
-                                    setIsCityDropdownOpen(!isCityDropdownOpen);
-                                  } else if (
-                                    e.key === "Escape" &&
-                                    isCityDropdownOpen
-                                  ) {
-                                    e.preventDefault();
-                                    setIsCityDropdownOpen(false);
-                                  }
-                                }}
-                              >
-                                <input
-                                  type="text"
-                                  value={formData.city}
-                                  readOnly
-                                  className="self-stretch flex min-w-60 items-center gap-2 flex-1 shrink basis-[0%] my-auto bg-transparent border-none outline-none text-[#0F0E0C] cursor-pointer"
-                                  placeholder="Select city/state"
-                                />
-                                <img
-                                  src="https://api.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/6fbc6bc48ccc3247e1e891a2d67fecfd2cde1c7c?placeholderIfAbsent=true"
-                                  alt="Dropdown arrow"
-                                  className={`aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto transition-transform ${isCityDropdownOpen ? "rotate-180" : ""}`}
-                                />
-                              </button>
-                              {isCityDropdownOpen && (
-                                <div
-                                  role="listbox"
-                                  aria-labelledby="city-label"
-                                  className="absolute z-10 w-full mt-1 bg-white border border-solid border-[#CFCFCE] rounded-lg shadow-lg max-h-60 overflow-y-auto"
-                                >
-                                  {cities.length > 0 ? (
-                                    cities.map((city, index) => (
-                                      <div
-                                        key={city}
-                                        role="option"
-                                        aria-selected={formData.city === city}
-                                        tabIndex={0}
-                                        className={`px-4 py-2 hover:bg-gray-100 cursor-pointer ${formData.city === city ? "bg-amber-100" : ""}`}
-                                        onClick={() => {
-                                          handleInputChange("city", city);
-                                          setIsCityDropdownOpen(false);
-                                        }}
-                                        onKeyDown={(e) => {
-                                          if (
-                                            e.key === "Enter" ||
-                                            e.key === " "
-                                          ) {
-                                            e.preventDefault();
-                                            handleInputChange("city", city);
-                                            setIsCityDropdownOpen(false);
-                                          } else if (e.key === "Escape") {
-                                            e.preventDefault();
-                                            setIsCityDropdownOpen(false);
-                                          }
-                                        }}
-                                      >
-                                        {city}
-                                      </div>
-                                    ))
-                                  ) : (
-                                    <div className="px-4 py-2 text-gray-500">
-                                      No cities available for{" "}
-                                      {user?.country || "selected country"}
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
+                      <div className="w-full mt-4 max-md:max-w-full">
+                        <GooglePlacesAutocomplete
+                          value={formData.city}
+                          onChange={(city) => handleInputChange("city", city)}
+                          placeholder="Enter city"
+                          label="City/State"
+                          className="w-full"
+                        />
                       </div>
 
                       <div className="w-full mt-4 max-md:max-w-full">

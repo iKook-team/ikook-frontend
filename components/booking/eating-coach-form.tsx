@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { ProgressIndicator } from "./progress-indicator";
 import { ActionButtons } from "./action-buttons";
+import { GooglePlacesAutocomplete } from "@/components/ui/google-places-autocomplete";
 
 import { ChefCard } from "@/components/cart/chef-card";
 
@@ -101,22 +102,16 @@ const EatingCoachForm: React.FC<EatingCoachFormProps> = ({
           }}
         >
           {/* Location Field */}
-          <label
-            htmlFor="location"
-            className="text-[#344054] text-sm font-medium leading-none mb-2"
-          >
-            Location *
-          </label>
-          <input
-            type="text"
-            id="location"
-            name="location"
-            value={formData.location}
-            onChange={(e) => handleInputChange("location", e.target.value)}
-            className="border border-[color:var(--Gray-300,#D0D5DD)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] w-full text-base text-[#101828] font-normal bg-white mb-6 px-3.5 py-2.5 rounded-lg border-solid focus:outline-none focus:ring-1 focus:ring-amber-500"
-            placeholder="Enter your location (e.g., 123 Main St, City)"
-            required
-          />
+          <div className="mb-6">
+            <GooglePlacesAutocomplete
+              value={formData.location}
+              onChange={(city) => handleInputChange("location", city)}
+              placeholder="Enter city"
+              label="Location"
+              required
+              className="w-full"
+            />
+          </div>
 
           {/* Service Selection */}
           <label

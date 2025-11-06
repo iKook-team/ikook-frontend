@@ -4,9 +4,8 @@ import React, { useState } from "react";
 
 import { FormField } from "@/components/ui/form-field";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { GooglePlacesAutocomplete } from "@/components/ui/google-places-autocomplete";
 import { useAuthStore } from "@/lib/store/auth-store";
-import { getLocationsForMarket } from "@/lib/locations";
-import { useMarket } from "@/lib/market-context";
 
 interface ChefRegistrationForm3Props {
   formData: {
@@ -18,9 +17,6 @@ interface ChefRegistrationForm3Props {
   isSubmitting: boolean;
   onSubmit: (data: any) => void;
 }
-
-// City options based on current market
-type CityOption = { value: string; label: string };
 
 const workAuthOptions = [
   { value: "yes", label: "Yes, I have the right to work" },
@@ -34,10 +30,6 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
   onSubmit,
 }) => {
   const { setChefFormData, chefFormData } = useAuthStore();
-  const { market } = useMarket();
-  const marketCityOptions: CityOption[] = getLocationsForMarket(market).map(
-    (c) => ({ value: c, label: c }),
-  );
   const [formData, setFormData] = useState(() => ({
     city: initialFormData.city || "",
     postalCode: initialFormData.postalCode || "",
@@ -119,19 +111,14 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
           <form onSubmit={handleSubmit}>
             <fieldset className="flex w-full flex-col items-start gap-6">
               <legend className="sr-only">Location Information</legend>
-              <FormField
+              <GooglePlacesAutocomplete
+                value={formData.city}
+                onChange={(city) => handleInputChange("city", city)}
+                placeholder="Enter city"
+                label="City/State"
+                error={errors.city}
                 required
                 className="w-full"
-                error={errors.city}
-                label="City/State"
-                options={[
-                  { value: "", label: "Select city" },
-                  ...marketCityOptions,
-                ]}
-                placeholder="Select city"
-                type="select"
-                value={formData.city}
-                onChange={(e) => handleInputChange("city", e.target.value)}
               />
               <FormField
                 className="w-full"
