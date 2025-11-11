@@ -40,6 +40,9 @@ export const GooglePlacesAutocomplete: React.FC<
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const [inputValue, setInputValue] = useState(value);
+  const [hasValidSelection, setHasValidSelection] = useState(!!value);
 
   // Initialize Google Maps script
   useEffect(() => {
@@ -83,6 +86,10 @@ export const GooglePlacesAutocomplete: React.FC<
       // Note: We don't remove the script to avoid reloading it if other components need it
     };
   }, []);
+
+  const handleBlur = () => {
+    setHasInteracted(true);
+  };
 
   // Initialize autocomplete when script is loaded
   useEffect(() => {
@@ -133,10 +140,29 @@ export const GooglePlacesAutocomplete: React.FC<
         cityName = place.formatted_address || place.name || value;
       }
 
+      setHasValidSelection(true);
+      setHasInteracted(false);
       onChange(cityName, place.place_id);
     });
 
+    // Handle input changes for validation
+    const handleInputChange = (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      setInputValue(target.value);
+      setHasValidSelection(false);
+      setHasInteracted(false);
+    };
+
+    inputRef.current.addEventListener('input', handleInputChange);
+    inputRef.current.addEventListener('blur', handleBlur);
+
     return () => {
+      // Cleanup input event listeners
+      if (inputRef.current) {
+        inputRef.current.removeEventListener('input', handleInputChange);
+        inputRef.current.removeEventListener('blur', handleBlur);
+      }
+      
       // Cleanup autocomplete listener
       if (autocompleteRef.current) {
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
@@ -149,9 +175,13 @@ export const GooglePlacesAutocomplete: React.FC<
   useEffect(() => {
     if (inputRef.current && inputRef.current.value !== value) {
       inputRef.current.value = value;
+      setInputValue(value);
+      setHasValidSelection(!!value);
     }
   }, [value]);
 
+  const showError = error || (hasInteracted && required && !hasValidSelection && inputValue);
+  
   return (
     <div className={className}>
       {label && (
@@ -164,20 +194,28 @@ export const GooglePlacesAutocomplete: React.FC<
         ref={inputRef}
         type="text"
         defaultValue={value}
-        placeholder={placeholder}
+        placeholder={placeholder || "Type and select your city from the dropdown"}
         disabled={disabled || !isLoaded}
         className={`w-full px-3.5 py-2.5 rounded-lg border ${
-          error
+          showError
             ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+            : hasValidSelection && inputValue
+            ? "border-green-500 focus:border-green-500 focus:ring-green-500"
             : "border-[#CFCFCE] focus:border-[#FCC01C] focus:ring-[#FCC01C]"
         } focus:outline-none focus:ring-2 focus:ring-offset-0 text-base text-[#0F0E0C] bg-white disabled:bg-gray-100 disabled:cursor-not-allowed ${inputClassName}`}
         onChange={(e) => {
           // Allow manual typing, but don't call onChange until place is selected
           // The autocomplete listener will handle onChange when a place is selected
         }}
+        onBlur={() => setHasInteracted(true)}
       />
-      {error && (
-        <p className="mt-1 text-sm text-red-500">{error}</p>
+      {showError && (
+        <p className="mt-1 text-sm text-red-500">
+          {error || "Please select a valid city from the dropdown"}
+        </p>
+      )}
+      {hasValidSelection && inputValue && !showError && (
+        <p className="mt-1 text-sm text-green-600">✓ Valid city selected</p>
       )}
     </div>
   );
