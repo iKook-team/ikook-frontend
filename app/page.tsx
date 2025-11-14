@@ -7,6 +7,7 @@ import HeroSection from "@/components/landing/hero-section";
 import BlogSection from "@/components/landing/blog-section";
 import TopMenuSection from "@/components/landing/top-menu-section";
 import { TrustedOrganizationsSection } from "@/components/landing/trusted-organizations-section";
+import ClientReviews from "@/components/landing/client-reviews";
 import { Footer } from "@/components/footer/footer";
 import { useAuthStore } from "@/lib/store/auth-store";
 
@@ -38,7 +39,7 @@ const Index = () => {
 
       {/* <WhyIkookSection /> */}
 
-      {/* <TestimonialsSection /> */}
+      <ClientReviews />
 
       <BlogSection />
 
