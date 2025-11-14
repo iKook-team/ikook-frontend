@@ -57,7 +57,7 @@ export default function ClientReviews() {
           {/* Review Content */}
           <div className="text-center">
             <blockquote className="text-lg md:text-xl text-gray-700 italic mb-6">
-              "{currentReview.review}"
+              &ldquo;{currentReview.review}&rdquo;
             </blockquote>
             <p className="text-lg font-medium text-gray-900">
               {currentReview.name}
