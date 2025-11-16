@@ -6,6 +6,7 @@ import { Button } from "@heroui/react";
 
 import { ServiceButton } from "./ServiceButton";
 import { FilterButton } from "./FilterButton";
+import { FilterPanel, type FilterPanelFilters } from "./FilterPanel";
 import { Select } from "@/components/ui/select";
 
 interface Service {
@@ -32,6 +33,8 @@ interface ServicesProps {
   onServiceChange: (serviceId: string) => void;
   orderBy?: string;
   onOrderByChange?: (value: string) => void;
+  filters?: FilterPanelFilters;
+  onFiltersChange?: (filters: FilterPanelFilters) => void;
 }
 
 export function Services({
@@ -39,9 +42,17 @@ export function Services({
   onServiceChange,
   orderBy = "Most Popular",
   onOrderByChange,
+  filters = {},
+  onFiltersChange,
 }: ServicesProps) {
   const router = useRouter();
   const [isFilterOpen, setIsFilterOpen] = React.useState<boolean>(false);
+  const [localFilters, setLocalFilters] = React.useState<FilterPanelFilters>(filters || {});
+
+  // Sync localFilters with parent filters when they change
+  React.useEffect(() => {
+    setLocalFilters(filters);
+  }, [filters]);
 
   const handleCustomBookingClick = () => {
     router.push("/booking/custom");
@@ -53,6 +64,17 @@ export function Services({
 
   const handleFilterClick = () => {
     setIsFilterOpen(!isFilterOpen);
+  };
+
+  const handleFiltersChange = (newFilters: FilterPanelFilters) => {
+    setLocalFilters(newFilters);
+    onFiltersChange?.(newFilters);
+  };
+
+  const handleApplyFilters = (newFilters: FilterPanelFilters) => {
+    setLocalFilters(newFilters);
+    onFiltersChange?.(newFilters);
+    setIsFilterOpen(false);
   };
 
   const sortOptions = [
@@ -98,6 +120,15 @@ export function Services({
           </FilterButton>
         </div>
       </nav>
+
+      {/* Filter Panel */}
+      <FilterPanel
+        isOpen={isFilterOpen}
+        filters={localFilters}
+        onFiltersChange={handleFiltersChange}
+        onApply={handleApplyFilters}
+        onClose={() => setIsFilterOpen(false)}
+      />
 
       {/* Title, custom booking, and sort select row */}
       <div className="px-12 max-md:px-6 max-sm:px-4 w-full">

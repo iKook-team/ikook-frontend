@@ -101,6 +101,10 @@ interface BaseListingParams {
   market?: string;
   city?: string;
   order_by?: string;
+  menu_name?: string;
+  chef_name?: string;
+  price_min?: number;
+  price_max?: number;
   // Add other common filters as needed
 }
 
@@ -112,6 +116,7 @@ interface MenuListingParams extends BaseListingParams {
 
 interface ServiceListingParams extends BaseListingParams {
   chef_service?: ServiceTag;
+  service_name?: string;
   // Add service-specific filters
 }
 

@@ -32,6 +32,13 @@ interface UseListingsProps {
   page?: number;
   pageSize?: number;
   orderBy?: string;
+  filters?: {
+    menu_name?: string;
+    chef_name?: string;
+    price_min?: number | string;
+    price_max?: number | string;
+    city?: string;
+  };
 }
 
 const useListings = ({
@@ -40,6 +47,7 @@ const useListings = ({
   page = 1,
   pageSize = 12,
   orderBy,
+  filters = {},
 }: UseListingsProps) => {
   const [listings, setListings] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -95,31 +103,38 @@ const useListings = ({
           page: pageToFetch,
           page_size: pageSize,
           search: searchQuery,
-          city,
+          city: filters.city || city,
           market,
           order_by: orderBy,
+          chef_name: filters.chef_name,
         });
       } else if (selectedService in serviceIdToTag) {
         setListingType("service");
         const serviceTag = serviceIdToTag[selectedService];
 
-        console.log("Fetching services with params:", {
+        const serviceParams = {
           page: pageToFetch,
           page_size: pageSize,
           search: searchQuery,
           chef_service: serviceTag,
-          city,
-          market,
-        });
-        response = await listingService.getServices({
-          page: pageToFetch,
-          page_size: pageSize,
-          search: searchQuery,
-          chef_service: serviceTag,
-          city,
+          city: filters.city || city,
           market,
           order_by: orderBy,
-        });
+          service_name: filters.menu_name || undefined,
+          chef_name: filters.chef_name || undefined,
+          price_min: filters.price_min ? Number(filters.price_min) : undefined,
+          price_max: filters.price_max ? Number(filters.price_max) : undefined,
+        };
+
+        // Remove undefined values
+        Object.keys(serviceParams).forEach(
+          (key) =>
+            serviceParams[key as keyof typeof serviceParams] === undefined &&
+            delete serviceParams[key as keyof typeof serviceParams]
+        );
+
+        console.log("Fetching services with cleaned params:", serviceParams);
+        response = await listingService.getServices(serviceParams);
         console.log("Services API response:", response);
       } else if (selectedService in menuIdToTag) {
         setListingType("menu");
@@ -131,14 +146,26 @@ const useListings = ({
           search: searchQuery,
           menu_type: menuIdToTag[selectedService as keyof typeof menuIdToTag],
           status: "Active",
-          city,
+          city: filters.city || city,
           market,
+          menu_name: filters.menu_name || undefined,
+          chef_name: filters.chef_name || undefined,
+          price_min: filters.price_min ? Number(filters.price_min) : undefined,
+          price_max: filters.price_max ? Number(filters.price_max) : undefined,
         };
         
         if (orderBy === "Recently Added") {
           menuParams.order_by = orderBy;
         }
-        
+
+        // Remove undefined values
+        Object.keys(menuParams).forEach(
+          (key) =>
+            menuParams[key] === undefined &&
+            delete menuParams[key]
+        );
+
+        console.log("Fetching menus with cleaned params:", menuParams);
         response = await listingService.getMenus(menuParams);
       } else {
         // Default to empty results if service type is not recognized
@@ -181,7 +208,7 @@ const useListings = ({
     } else {
       fetchListings(1, false);
     }
-  }, [selectedService, searchQuery, orderBy]);
+  }, [selectedService, searchQuery, orderBy, filters]);
 
   // Load more when page changes
   useEffect(() => {

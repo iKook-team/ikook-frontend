@@ -160,11 +160,18 @@ const ListingSkeleton = ({
 interface ListingProps {
   selectedService?: string;
   orderBy?: string;
+  filters?: {
+    menu_name?: string;
+    chef_name?: string;
+    price_min?: number | string;
+    price_max?: number | string;
+  };
 }
 
 export const Listing = ({
   selectedService = "chef-at-home",
   orderBy,
+  filters,
 }: ListingProps) => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const pageSize = 12; // Show 12 items per page
@@ -181,6 +188,7 @@ export const Listing = ({
     selectedService,
     pageSize,
     orderBy,
+    filters,
   });
 
   // Reset page when selectedService or orderBy changes
