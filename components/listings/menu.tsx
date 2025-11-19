@@ -118,7 +118,7 @@ export const MenuListing: React.FC<MenuListingProps> = ({
 
   return (
     <div
-      className="relative w-full max-w-lg h-80"
+      className="relative w-full max-w-lg"
       onClick={handleCardClick}
       onKeyDown={(e: React.KeyboardEvent) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -130,16 +130,17 @@ export const MenuListing: React.FC<MenuListingProps> = ({
       tabIndex={0}
     >
       <Card
-        className="w-full h-full hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+        className="w-full h-full hover:shadow-lg transition-shadow duration-200 cursor-pointer rounded-lg overflow-hidden shadow-sm"
         shadow="sm"
       >
-        <CardBody className="overflow-visible p-0 relative h-48 bg-gray-100">
+        <CardBody className="overflow-hidden p-0 relative aspect-[4/3] bg-gray-100">
           <img
             src={img || "/menus/menu1.png"}
             alt={title}
-            className="w-full h-full object-cover absolute inset-0 z-0"
+            className="w-full h-full object-cover object-center absolute inset-0 z-0"
             loading="lazy"
           />
+          <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/20 via-transparent to-transparent" />
           <button
             type="button"
             aria-label={liked ? "Unlike" : "Like"}
