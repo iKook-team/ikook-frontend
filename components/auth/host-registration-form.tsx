@@ -79,6 +79,7 @@ export const HostRegistrationForm: React.FC<HostRegistrationFormProps> = ({
 
   // Check if form is valid by checking if all required fields are filled
   const formValues = watch();
+
   const isFormValid =
     formValues.firstName?.trim() &&
     formValues.lastName?.trim() &&
@@ -175,8 +176,16 @@ export const HostRegistrationForm: React.FC<HostRegistrationFormProps> = ({
                 required
                 value={formValues.phoneNumber}
                 onChange={(e) => {
-                  setValue("phoneNumber", e.target.value);
-                  clearErrors("phoneNumber");
+                  const value = e.target.value;
+                  // Validate phone number
+                  if (!value || value.trim() === "") {
+                    setValue("phoneNumber", value, { shouldValidate: true });
+                  } else if (value.trim().length < 7) {
+                    setValue("phoneNumber", value, { shouldValidate: true });
+                  } else {
+                    setValue("phoneNumber", value, { shouldValidate: true });
+                    clearErrors("phoneNumber");
+                  }
                 }}
                 onCountryChange={(code) => setCountryCode(code)}
                 error={errors.phoneNumber?.message}

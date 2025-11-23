@@ -118,6 +118,11 @@ const HostSignupPage: React.FC = () => {
         // Set country from market selection
         const country = getCountryFromMarket(market);
 
+        // DEBUG: Log the hostFormData to check phone number
+        console.log("=== HOST SIGNUP - STEP 3 ===");
+        console.log("hostFormData:", hostFormData);
+        console.log("hostFormData.phoneNumber:", hostFormData.phoneNumber);
+
         // Combine data from all forms
         const signupData: any = {
           user_type: "Host",
@@ -131,6 +136,9 @@ const HostSignupPage: React.FC = () => {
           country: country,
           city: hostFormData.city,
         };
+
+        console.log("Signup payload being sent:", signupData);
+        console.log("phone_number in payload:", signupData.phone_number);
 
         if (hostFormData.referralCode) {
           signupData.referral_code = hostFormData.referralCode;
