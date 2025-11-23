@@ -1,53 +1,45 @@
-"use client";
-import React, { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
-import { Navigation } from "@/components/auth/Navigation";
-import HeroSection from "@/components/landing/hero-section";
-import BlogSection from "@/components/landing/blog-section";
-import TopMenuSection from "@/components/landing/top-menu-section";
-import { TrustedOrganizationsSection } from "@/components/landing/trusted-organizations-section";
-import ClientReviews from "@/components/landing/client-reviews";
-import { Footer } from "@/components/footer/footer";
-import { useAuthStore } from "@/lib/store/auth-store";
-
-const Index = () => {
-  const router = useRouter();
-  const { isAuthenticated, user } = useAuthStore();
-
-  useEffect(() => {
-    if (isAuthenticated && user?.user_type === "Chef") {
-      router.replace("/dashboard/chef");
-    }
-  }, [isAuthenticated, user, router]);
-
-  if (isAuthenticated && user?.user_type === "Chef") {
-    return null;
-  }
-
-  return (
-    <div className="min-h-screen bg-white">
-      <Navigation />
-
-      <HeroSection />
-
-      {/* <ExperienceSection /> */}
-
-      {/* <ServicesSection /> */}
-
-      <TopMenuSection />
-
-      {/* <WhyIkookSection /> */}
-
-      <ClientReviews />
-
-      <BlogSection />
-
-      <TrustedOrganizationsSection />
-
-      <Footer />
-    </div>
-  );
+import { Metadata } from "next";
+import HomePage from "@/components/pages/home-page"; export const metadata: Metadata = {
+  title: "Hire a Private Chef in Nigeria, UK & South Africa | iKook",
+  description:
+    "Book professional private chefs for home dining, events, meal prep and more. Available in Nigeria, United Kingdom, and South Africa. Get personalized culinary experiences delivered to your home.",
+  keywords: [
+    "private chef Nigeria",
+    "private chef UK",
+    "private chef South Africa",
+    "hire personal chef",
+    "chef at home service",
+    "event catering chef",
+    "meal prep chef near me",
+  ],
+  openGraph: {
+    title: "iKook - Hire a Private Chef for Unforgettable Culinary Experience",
+    description:
+      "Book professional private chefs for home dining, events, meal prep and more. Available in Nigeria, UK & South Africa.",
+    url: "https://ikook.co.uk",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "iKook Private Chef Services",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "iKook - Hire a Private Chef for Unforgettable Culinary Experience",
+    description:
+      "Book professional private chefs for home dining, events, meal prep and more.",
+    images: ["/og-image.png"],
+  },
+  alternates: {
+    canonical: "https://ikook.co.uk",
+  },
 };
 
-export default Index;
+export default function Index() {
+  return <HomePage />;
+}

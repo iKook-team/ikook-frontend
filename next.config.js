@@ -2,17 +2,50 @@
 const nextConfig = {
   images: {
     dangerouslyAllowSVG: true,
-    domains: [
-      "localhost",
-      "townsmeet.s3.amazonaws.com",
-      "api.builder.io",
-      "cdn.builder.io",
-      "images.unsplash.com",
-      "www.svgrepo.com",
-      "randomuser.me",
-      "www.gravatar.com",
-      "gravatar.com",
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "townsmeet.s3.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "api.builder.io",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.builder.io",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.svgrepo.com",
+      },
+      {
+        protocol: "https",
+        hostname: "randomuser.me",
+      },
+      {
+        protocol: "https",
+        hostname: "www.gravatar.com",
+      },
+      {
+        protocol: "https",
+        hostname: "gravatar.com",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "8000",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+      },
     ],
+    formats: ["image/avif", "image/webp"],
   },
 };
 

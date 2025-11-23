@@ -32,7 +32,7 @@ const Index = () => {
                     have the legal capacity to accept these Terms of Use.
                     <br />
                     We are committed to protecting your privacy. Our privacy
-                    policy is available at www.ikook.com. By agreeing to these
+                    policy is available at www.ikook.co.uk. By agreeing to these
                     Terms of Use, you also agree to the terms in our privacy
                     policy.
                     <br />

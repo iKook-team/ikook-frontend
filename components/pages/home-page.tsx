@@ -1,0 +1,58 @@
+"use client";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+import { Navigation } from "@/components/auth/Navigation";
+import HeroSection from "@/components/landing/hero-section";
+import BlogSection from "@/components/landing/blog-section";
+import TopMenuSection from "@/components/landing/top-menu-section";
+import { TrustedOrganizationsSection } from "@/components/landing/trusted-organizations-section";
+import ClientReviews from "@/components/landing/client-reviews";
+import { Footer } from "@/components/footer/footer";
+import { useAuthStore } from "@/lib/store/auth-store";
+import {
+    StructuredData,
+    createOrganizationSchema,
+} from "@/components/seo/structured-data";
+
+export default function HomePage() {
+    const router = useRouter();
+    const { isAuthenticated, user } = useAuthStore();
+
+    useEffect(() => {
+        if (isAuthenticated && user?.user_type === "Chef") {
+            router.replace("/dashboard/chef");
+        }
+    }, [isAuthenticated, user, router]);
+
+    if (isAuthenticated && user?.user_type === "Chef") {
+        return null;
+    }
+
+    return (
+        <>
+            <StructuredData data={createOrganizationSchema()} />
+            <div className="min-h-screen bg-white">
+                <Navigation />
+
+                <HeroSection />
+
+                {/* <ExperienceSection /> */}
+
+                {/* <ServicesSection /> */}
+
+                <TopMenuSection />
+
+                {/* <WhyIkookSection /> */}
+
+                <ClientReviews />
+
+                <BlogSection />
+
+                <TrustedOrganizationsSection />
+
+                <Footer />
+            </div>
+        </>
+    );
+}

@@ -1,0 +1,25 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Disallow authenticated/private pages
+Disallow: /dashboard/
+Disallow: /settings/
+Disallow: /wallet/
+Disallow: /payment-cards/
+Disallow: /addresses/
+Disallow: /calendar/
+Disallow: /chat/
+Disallow: /references/
+Disallow: /revenue/
+Disallow: /verification/
+Disallow: /document-verification/
+
+# Disallow auth pages (not useful for SEO)
+Disallow: /login
+Disallow: /join
+Disallow: /forgot-password
+Disallow: /email-verification
+
+# Sitemap location
+Sitemap: https://ikook.co.uk/sitemap.xml
