@@ -87,19 +87,19 @@ export const ServiceSelection: React.FC<ServiceSelectionProps> = ({
   };
 
   return (
-    <section className="w-full max-w-[654px] mx-auto bg-white rounded-2xl border border-solid shadow-lg border-gray-200 p-5 sm:p-12 my-8">
+    <section className="w-full max-w-[654px] mx-auto bg-white rounded-2xl border border-solid shadow-lg border-gray-200 p-4 sm:p-12 my-8">
       <div className="w-full max-w-[394px] mx-auto">
         <h1 className="text-2xl font-bold text-center text-black mb-10">
           What service would you like?
         </h1>
-        <div className="grid grid-cols-2 gap-4 justify-items-center">
+        <div className="grid grid-cols-2 gap-3 sm:gap-6 justify-items-center">
           {services.map((service, index) => (
             <div
               key={index}
               role="button"
               tabIndex={0}
               onClick={() => handleServiceSelect(service.title)}
-              className={`cursor-pointer transition-all duration-200 ${selectedService === service.title ? "ring-2 ring-amber-400 rounded-lg" : ""}`}
+              className={`cursor-pointer transition-all duration-200 w-full ${selectedService === service.title ? "ring-2 ring-amber-400 rounded-lg" : ""}`}
             >
               <ServiceCard
                 imageSrc={service.imageSrc}
@@ -120,11 +120,10 @@ export const ServiceSelection: React.FC<ServiceSelectionProps> = ({
           <button
             onClick={handleContinue}
             disabled={!selectedService}
-            className={`px-5 py-3 text-white rounded-lg border transition-colors w-[150px] ${
-              selectedService
+            className={`px-5 py-3 text-white rounded-lg border transition-colors w-[150px] ${selectedService
                 ? "bg-amber-400 border-amber-400 hover:bg-amber-500"
                 : "bg-gray-300 border-gray-300 cursor-not-allowed"
-            }`}
+              }`}
           >
             Continue
           </button>

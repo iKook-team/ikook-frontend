@@ -117,6 +117,12 @@ export default function RootLayout({
         `,
           }}
         />
+        {/* Trustpilot widget bootstrap */}
+        <script
+          async
+          type="text/javascript"
+          src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js"
+        />
       </head>
       <body
         className={clsx("min-h-screen bg-background font-sans antialiased")}

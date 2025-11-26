@@ -1,6 +1,14 @@
 import React from 'react';
 import SectionHeader from '@/components/common/SectionHeader';
 
+declare global {
+  interface Window {
+    Trustpilot?: {
+      loadFromElement: (element: Element, render?: boolean) => void;
+    };
+  }
+}
+
 const reviews = [
   {
     id: 1,
@@ -28,6 +36,29 @@ const reviews = [
 
 export default function ClientReviews() {
   const [currentReviewIndex, setCurrentReviewIndex] = React.useState(0);
+  const trustBoxRef = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    const target = trustBoxRef.current;
+    if (!target) return;
+
+    const loadTrustBox = () => {
+      if (typeof window !== 'undefined' && window.Trustpilot?.loadFromElement) {
+        window.Trustpilot.loadFromElement(target, true);
+      }
+    };
+
+    loadTrustBox();
+
+    const poll = setInterval(() => {
+      if (window.Trustpilot?.loadFromElement) {
+        loadTrustBox();
+        clearInterval(poll);
+      }
+    }, 500);
+
+    return () => clearInterval(poll);
+  }, []);
 
   const nextReview = () => {
     setCurrentReviewIndex((prevIndex) => 
@@ -52,7 +83,6 @@ export default function ClientReviews() {
         // lineClassName="bg-yellow-500"
         spacingClassName="mb-4"
       />
-
         <div className="relative bg-gray-50 p-8 md:p-12 rounded-lg shadow-lg">
           {/* Review Content */}
           <div className="text-center">
@@ -119,6 +149,27 @@ export default function ClientReviews() {
               />
             </svg>
           </button>
+        </div>
+
+        <div className="mt-8 flex justify-center">
+          <div
+            className="trustpilot-widget w-full"
+            ref={trustBoxRef}
+            data-locale="en-US"
+            data-template-id="56278e9abfbbba0bdcd568bc"
+            data-businessunit-id="60b611b24edff200018023ad"
+            data-style-height="52px"
+            data-style-width="100%"
+            data-token="a24fbfde-b664-44b0-88df-d2e27ef6d853"
+          >
+            <a
+              href="https://www.trustpilot.com/review/ikook.co.uk"
+              target="_blank"
+              rel="noopener"
+            >
+              Trustpilot
+            </a>
+          </div>
         </div>
       </div>
     </section>
