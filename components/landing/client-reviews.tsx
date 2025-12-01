@@ -165,7 +165,7 @@ export default function ClientReviews() {
             <a
               href="https://www.trustpilot.com/review/ikook.co.uk"
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
             >
               Trustpilot
             </a>
