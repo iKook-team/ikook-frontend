@@ -6,7 +6,6 @@ import { newsletterService } from "@/lib/api/newsletter";
 
 export const AdBookingForm: React.FC = () => {
   const router = useRouter();
-  const [showThankYou, setShowThankYou] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -37,7 +36,8 @@ export const AdBookingForm: React.FC = () => {
         event_date: formData.date,
       });
 
-      setShowThankYou(true);
+      // Redirect to success page
+      router.push("/booking-success");
     } catch (error) {
       console.error('Form submission failed:', error);
       // You could show an error message here
@@ -45,39 +45,6 @@ export const AdBookingForm: React.FC = () => {
       setIsSubmitting(false);
     }
   };
-
-  const handleExploreChefs = () => {
-    router.push("/explore");
-  };
-
-  if (showThankYou) {
-    return (
-      <section className="py-20 bg-gradient-to-br from-[#FCC01C]/10 to-orange-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
-            <div className="mb-8">
-              <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
-                Your Chef Match is in Progress!
-              </h3>
-              <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-                Thanks for filling out the form, we&apos;ve got your details, and our chefs are ready to make your dining experience unforgettable.
-              </p>
-              <p className="text-lg text-gray-600 mb-8">
-                While we process your request, why wait? Explore our pool of talented chefs right now and find the one that feels just right for your occasion.
-              </p>
-            </div>
-
-            <button
-              onClick={handleExploreChefs}
-              className="px-8 py-4 bg-[#FCC01C] text-white font-bold rounded-lg hover:bg-[#E6AC19] transition-colors"
-            >
-              Explore Chefs Now
-            </button>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section
