@@ -52,7 +52,7 @@ export default function BookingSuccessPage() {
               </h1>
               
               <p className="text-[#323335] text-xl font-medium mb-8 max-w-3xl mx-auto">
-                Thank you for your booking request! We've received your details and our team is already working to find the perfect chef for your event.
+                Thank you for your booking request! We&apos;ve received your details and our team is already working to find the perfect chef for your event.
               </p>
               
               <p className="text-gray-600 text-lg mb-12 max-w-2xl mx-auto">
@@ -82,7 +82,7 @@ export default function BookingSuccessPage() {
                     <span className="text-blue-600 font-bold">3</span>
                   </div>
                   <h3 className="font-semibold text-[#323335] mb-2">Contact You</h3>
-                  <p className="text-gray-600 text-sm">We'll call or email to confirm details and finalize booking</p>
+                  <p className="text-gray-600 text-sm">We&#39;ll call or email to confirm details and finalize booking</p>
                 </div>
               </div>
             </div>
