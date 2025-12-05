@@ -31,6 +31,7 @@ interface Chef {
   is_verified: boolean;
   average_rating: number | null;
   num_reviews: number;
+  num_bookings: number;
   cuisine_types: string[];
   created_at: string;
   updated_at: string;
