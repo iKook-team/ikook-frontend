@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import Script from "next/script";
 import { Navigation } from "@/components/auth/Navigation";
 import { Footer } from "@/components/footer/footer";
 
@@ -20,6 +21,13 @@ export const metadata: Metadata = {
 export default function BookingSuccessPage() {
   return (
     <div className="min-h-screen bg-white">
+      {/* Google Ads conversion tracking */}
+      <Script id="google-ads-conversion" strategy="afterInteractive">
+        {`
+          gtag('event', 'conversion', {'send_to': 'AW-10834951340/j3s2CObnms8bEKz5wK4o'});
+        `}
+      </Script>
+      
       <Navigation />
 
       <main className="flex w-full flex-col items-stretch mt-[110px] max-md:mt-10">
