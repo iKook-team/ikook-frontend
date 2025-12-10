@@ -93,7 +93,7 @@ export default function RootLayout({
     <html suppressHydrationWarning lang="en">
       <head>
         {/* Google tag (gtag.js) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10834951340" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10834951340"></script>
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -104,7 +104,7 @@ export default function RootLayout({
               gtag('config', 'AW-10834951340');
             `,
           }}
-        />
+        ></script>
         {/* End Google tag */}
         
         {/* Meta Pixel Code */}
