@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { newsletterService } from "@/lib/api/newsletter";
+import { showToast } from "@/lib/utils/toast";
 
 export const AdBookingForm: React.FC = () => {
   const router = useRouter();
@@ -22,6 +23,80 @@ export const AdBookingForm: React.FC = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleFormError = (error: any) => {
+    // Handle Django validation errors format
+    if (error?.response?.data) {
+      const errorData = error.response.data;
+      
+      // Handle case where error message contains Django validation errors as string
+      if (errorData.message && typeof errorData.message === 'string') {
+        const message = errorData.message;
+        
+        // Check if it's a Django validation error string
+        if (message.includes('ErrorDetail') && message.includes('code=')) {
+          try {
+            // Try to parse the string representation of the error dict
+            const errorMatch = message.match(/^\{(.+)\}$/);
+            if (errorMatch) {
+              // Extract the content inside braces
+              const errorContent = errorMatch[1];
+              
+              // Parse field errors
+              const fieldMatch = errorContent.match(/'([^']+)':\s*\[(.+)\]/);
+              if (fieldMatch) {
+                const fieldName = fieldMatch[1];
+                const errorDetails = fieldMatch[2];
+                
+                // Extract the string from ErrorDetail
+                const stringMatch = errorDetails.match(/string='([^']+)'/);
+                if (stringMatch) {
+                  const errorMessage = stringMatch[1];
+                  showToast.error(`${fieldName}: ${errorMessage}`);
+                  return;
+                }
+              }
+            }
+          } catch (parseError) {
+            // If parsing fails, show the original message
+            showToast.error(message);
+            return;
+          }
+        }
+        
+        // Regular message, show as is
+        showToast.error(message);
+        return;
+      }
+      
+      // Handle structured error object (not string)
+      if (typeof errorData === 'object' && !errorData.message) {
+        const errorMessages: string[] = [];
+        
+        // Extract field-specific error messages
+        Object.keys(errorData).forEach(field => {
+          const fieldErrors = errorData[field];
+          if (Array.isArray(fieldErrors)) {
+            fieldErrors.forEach((fieldError: any) => {
+              if (typeof fieldError === 'string') {
+                errorMessages.push(`${field}: ${fieldError}`);
+              } else if (fieldError?.string) {
+                errorMessages.push(`${field}: ${fieldError.string}`);
+              }
+            });
+          }
+        });
+        
+        if (errorMessages.length > 0) {
+          showToast.error(errorMessages.join('. '));
+          return;
+        }
+      }
+    }
+    
+    // Fallback for other error formats
+    showToast.error("Form submission failed. Please try again.");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -39,8 +114,7 @@ export const AdBookingForm: React.FC = () => {
       // Redirect to success page
       router.push("/booking-success");
     } catch (error) {
-      console.error('Form submission failed:', error);
-      // You could show an error message here
+      handleFormError(error);
     } finally {
       setIsSubmitting(false);
     }
@@ -70,6 +144,7 @@ export const AdBookingForm: React.FC = () => {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
+                  autoComplete="new-password"
                   className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
                 />
               </div>
@@ -82,6 +157,7 @@ export const AdBookingForm: React.FC = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
+                  autoComplete="off"
                   className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
                 />
               </div>
@@ -94,6 +170,7 @@ export const AdBookingForm: React.FC = () => {
                   value={formData.phone}
                   onChange={handleInputChange}
                   required
+                  autoComplete="new-password"
                   className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
                 />
               </div>
@@ -106,6 +183,7 @@ export const AdBookingForm: React.FC = () => {
                   value={formData.location}
                   onChange={handleInputChange}
                   required
+                  autoComplete="off"
                   className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
                 />
               </div>
@@ -117,6 +195,7 @@ export const AdBookingForm: React.FC = () => {
                   value={formData.eventType}
                   onChange={handleInputChange}
                   required
+                  autoComplete="off"
                   className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
                 >
                   <option value="">Select Event Type</option>
@@ -140,6 +219,8 @@ export const AdBookingForm: React.FC = () => {
                   value={formData.date}
                   onChange={handleInputChange}
                   required
+                  min={new Date().toISOString().split('T')[0]}
+                  autoComplete="off"
                   className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
                 />
               </div>
