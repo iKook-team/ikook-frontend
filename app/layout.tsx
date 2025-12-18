@@ -36,9 +36,9 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
+    icon: "/favicon_io/favicon.ico",
+    shortcut: "/favicon_io/favicon-16x16.png",
+    apple: "/favicon_io/apple-touch-icon.png",
   },
   manifest: "/favicon_io/site.webmanifest",
   openGraph: {
@@ -106,7 +106,7 @@ export default function RootLayout({
           }}
         ></script>
         {/* End Google tag */}
-        
+
         {/* Meta Pixel Code */}
         <script
           dangerouslySetInnerHTML={{
@@ -125,16 +125,16 @@ export default function RootLayout({
           }}
         />
         <noscript>
-          <img 
-            height="1" 
-            width="1" 
+          <img
+            height="1"
+            width="1"
             style={{ display: 'none' }}
             src="https://www.facebook.com/tr?id=2295675630856427&ev=PageView&noscript=1"
             alt=""
           />
         </noscript>
         {/* End Meta Pixel Code */}
-        
+
         {/* Brevo chat widget script */}
         <script
           dangerouslySetInnerHTML={{
