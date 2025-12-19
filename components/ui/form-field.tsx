@@ -100,6 +100,7 @@ export const FormField = forwardRef<
             ref={ref as React.RefObject<HTMLInputElement>}
             {...commonProps}
             name={safeName}
+            min={type === "number" ? "0" : undefined}
           />
         )}
 
