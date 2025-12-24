@@ -13,7 +13,9 @@ export function formatCurrency(
     style: "currency",
     currency: cfg.currency,
     currencyDisplay: "symbol",
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2,
+    useGrouping: true,
     ...options,
   }).format(amount);
 }
@@ -26,7 +28,9 @@ export function formatNumber(
   const cfg = getMarketConfig(market);
 
   return new Intl.NumberFormat(cfg.locale, {
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2,
+    useGrouping: true,
     ...options,
   }).format(value);
 }

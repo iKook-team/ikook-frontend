@@ -7,6 +7,7 @@ import { useAuthStore } from "@/lib/store/auth-store";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
 import { Addon } from "@/lib/api/addons";
+import { formatNumber } from "@/lib/format";
 
 interface PricingSidebarProps {
   menu: any;
@@ -107,7 +108,7 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
       <div className="border border-[color:var(--Black-100,#E7E7E7)] shadow-[0px_4px_70px_0px_rgba(0,0,0,0.07)] flex w-full flex-col items-stretch bg-white mx-auto px-[19px] py-[26px] rounded-[15px] border-solid max-md:mt-10">
         <div className="text-[#FCC01C] text-4xl font-semibold leading-none tracking-[-0.72px]">
           {currencySymbol}
-          {menu?.price_per_person || 100}pp
+          {formatNumber(parseFloat(menu?.price_per_person || "100"), market)}pp
         </div>
 
         <div className="flex flex-col bg-[#E7E7E7] mt-[23px] px-3.5 py-[13px] rounded-lg">
@@ -167,7 +168,7 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
                     <span className="text-gray-600 ml-2">by {addon.client_name}</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className="text-[#FCC01C] font-semibold">{currencySymbol}{parseFloat(addon.price || '0').toLocaleString()}</span>
+                    <span className="text-[#FCC01C] font-semibold">{currencySymbol}{formatNumber(parseFloat(addon.price || '0'), market)}</span>
                     <button
                       onClick={() => onRemoveAddon(addon.id)}
                       className="text-red-500 hover:text-red-700 text-xs"
@@ -181,7 +182,7 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
             <div className="border-t border-yellow-300 mt-3 pt-2">
               <div className="flex items-center justify-between text-sm font-semibold">
                 <span>Addons Total:</span>
-                <span className="text-[#FCC01C]">{currencySymbol}{addonTotal.toLocaleString()}</span>
+                <span className="text-[#FCC01C]">{currencySymbol}{formatNumber(addonTotal, market)}</span>
               </div>
             </div>
           </div>

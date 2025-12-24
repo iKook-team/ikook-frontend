@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { referralsService } from "@/lib/api/referrals";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { getCurrencySymbol } from "@/lib/utils/currency";
+import { useMarket } from "@/lib/market-context";
+import { formatNumber } from "@/lib/format";
 
 const formatDate = (dateString: string) => {
   const options: Intl.DateTimeFormatOptions = {
@@ -22,6 +24,7 @@ const ReferralList = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const user = useAuthStore((s) => s.user);
+  const { market } = useMarket();
   const currencySymbol = getCurrencySymbol(user || undefined);
 
   useEffect(() => {
@@ -105,7 +108,7 @@ const ReferralList = () => {
             </div>
             <div className="text-lg font-normal text-[#323335] ml-4 whitespace-nowrap">
               {currencySymbol}
-              {parseFloat(referral.reward_amount).toFixed(2)}
+              {formatNumber(parseFloat(referral.reward_amount), market)}
             </div>
           </article>
         ))}

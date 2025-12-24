@@ -9,6 +9,7 @@ import SectionHeader from "@/components/common/SectionHeader";
 import { useMenus, type Menu } from "@/hooks/useMenus";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
+import { formatNumber } from "@/lib/format";
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -97,7 +98,7 @@ function MenuCard({ menu }: { menu: Menu }) {
             <StarRating rating={Math.round(rating)} />
             <span className="text-xs text-[#323335]">
               {currencySymbol}
-              {menu.price_per_person}pp
+              {formatNumber(parseFloat(menu.price_per_person), market)}pp
             </span>
           </div>
         </div>

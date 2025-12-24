@@ -8,6 +8,9 @@ import { ChefCard } from "./chef-card";
 
 import favouritesService, { FavouriteType } from "@/lib/api/favourites";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { useMarket } from "@/lib/market-context";
+import { formatNumber } from "@/lib/format";
+import { getMarketConfig } from "@/lib/market-config";
 
 interface MenuData {
   id: number;
@@ -50,6 +53,8 @@ export const FavouritesSection: React.FC = () => {
 
   // Get user's currency and country for price formatting
   const { user } = useAuthStore();
+  const { market } = useMarket();
+  const marketCfg = getMarketConfig(market);
 
   useEffect(() => {
     // Only run on client side after component mounts
@@ -80,7 +85,7 @@ export const FavouritesSection: React.FC = () => {
             return {
               id: menu.id,
               title: menu.name,
-              price: `£${parseFloat(menu.price_per_person).toFixed(2)}pp`,
+              price: `${marketCfg.currencySymbol}${formatNumber(parseFloat(menu.price_per_person), market)}pp`,
               cuisine: menu.cuisine_types?.[0] || "Cuisine",
               chefName: `${chef.first_name} ${chef.last_name}`.trim() || "Chef",
               location: chef.city || "Location",

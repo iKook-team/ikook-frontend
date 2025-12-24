@@ -3,6 +3,7 @@ import * as React from "react";
 
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
+import { formatNumber } from "@/lib/format";
 
 type QuoteSummaryProps = {
   total?: number; // numeric total in base currency
@@ -32,11 +33,8 @@ export const QuoteSummary: React.FC<QuoteSummaryProps> = ({
   const formattedTotal = React.useMemo(() => {
     const t = typeof total === "number" && !Number.isNaN(total) ? total : 0;
 
-    return `${cfg.currencySymbol}${t.toLocaleString(cfg.locale, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
-  }, [cfg, total]);
+    return `${cfg.currencySymbol}${formatNumber(t, market)}`;
+  }, [cfg, total, market]);
 
   return (
     <aside className="px-8 pt-10 pb-20 w-full bg-white rounded-2xl border border-solid shadow-2xl border-neutral-200 max-md:px-5 max-md:mt-7">
@@ -82,10 +80,7 @@ export const QuoteSummary: React.FC<QuoteSummaryProps> = ({
                   <span className="text-zinc-800 w-[209px]">Subtotal</span>
                   <span className="text-right text-zinc-800 w-[80px]">
                     {cfg.currencySymbol}
-                    {Number(breakdownSubtotal).toLocaleString(cfg.locale, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
+                    {formatNumber(Number(breakdownSubtotal), market)}
                   </span>
                 </div>
               )}
@@ -96,10 +91,7 @@ export const QuoteSummary: React.FC<QuoteSummaryProps> = ({
                   </span>
                   <span className="w-[80px] text-right text-zinc-800">
                     {cfg.currencySymbol}
-                    {Number(breakdownPlatformFee).toLocaleString(cfg.locale, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
+                    {formatNumber(Number(breakdownPlatformFee), market)}
                   </span>
                 </div>
               )}

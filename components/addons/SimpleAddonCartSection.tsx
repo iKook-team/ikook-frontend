@@ -6,17 +6,20 @@ import { Button } from "@heroui/react";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
 import { Addon } from "@/lib/api/addons";
+import { formatNumber } from "@/lib/format";
 
 interface SimpleAddonCartItemProps {
   addon: Addon;
   onRemove: (addonId: number) => void;
   currencySymbol: string;
+  market: any;
 }
 
 export const SimpleAddonCartItem: React.FC<SimpleAddonCartItemProps> = ({
   addon,
   onRemove,
   currencySymbol,
+  market,
 }) => {
   return (
     <div className="flex items-center justify-between py-3 px-4 border-b border-gray-200 last:border-b-0">
@@ -31,7 +34,7 @@ export const SimpleAddonCartItem: React.FC<SimpleAddonCartItemProps> = ({
 
       <div className="flex items-center space-x-3">
         <span className="text-sm font-semibold text-[#FCC01C]">
-          {currencySymbol}{parseFloat(addon.price || '0').toLocaleString()}
+          {currencySymbol}{formatNumber(parseFloat(addon.price || '0'), market)}
         </span>
         <Button
           className="p-1 bg-red-50 hover:bg-red-100 border border-red-200"
@@ -107,6 +110,7 @@ export const SimpleAddonCartSection: React.FC<SimpleAddonCartSectionProps> = ({
             addon={addon}
             onRemove={onRemoveAddon}
             currencySymbol={currencySymbol}
+            market={market}
           />
         ))}
       </div>
@@ -117,7 +121,7 @@ export const SimpleAddonCartSection: React.FC<SimpleAddonCartSectionProps> = ({
             Addons Subtotal:
           </span>
           <span className="text-sm font-bold text-yellow-700">
-            {currencySymbol}{totalAddonCost}
+            {currencySymbol}{formatNumber(totalAddonCost, market)}
           </span>
         </div>
       </div>

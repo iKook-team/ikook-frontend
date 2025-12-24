@@ -7,6 +7,7 @@ import { Button } from "@heroui/react";
 import { Addon } from "@/lib/api/addons";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
+import { formatNumber } from "@/lib/format";
 
 interface AddonCartItemProps {
   addon: Addon;
@@ -44,7 +45,7 @@ export const AddonCartItem: React.FC<AddonCartItemProps> = ({
       <div className="flex items-center space-x-4">
         <div className="text-right">
           <p className="text-lg font-semibold text-[#FCC01C]">
-            {currencySymbol}{parseFloat(addon.price || '0').toLocaleString()}
+            {currencySymbol}{formatNumber(parseFloat(addon.price || '0'), market)}
           </p>
           <p className="text-sm text-gray-500">
             per service
@@ -113,7 +114,7 @@ export const AddonCartSection: React.FC<AddonCartSectionProps> = ({
             Addons Subtotal:
           </span>
           <span className="text-lg font-bold text-yellow-700">
-            {currencySymbol}{totalAddonCost.toLocaleString()}
+            {currencySymbol}{formatNumber(totalAddonCost, market)}
           </span>
         </div>
         <p className="text-sm text-yellow-600 mt-1">

@@ -9,10 +9,13 @@ import { ItemsModal } from "@/components/grocery/items-modal";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { groceriesService, type Grocery } from "@/lib/api/groceries";
 import { getCurrencySymbol } from "@/lib/utils/currency";
+import { useMarket } from "@/lib/market-context";
+import { formatNumber } from "@/lib/format";
 
 const ChefGroceriesPage: React.FC = () => {
   const router = useRouter();
   const { isAuthenticated, user } = useAuthStore();
+  const { market } = useMarket();
 
   useEffect(() => {
     // Only allow chefs with Box Groceries service
@@ -195,7 +198,7 @@ const ChefGroceriesPage: React.FC = () => {
                   const description = isMultiple
                     ? `${g.items?.length || 0} items`
                     : `${g.weight_or_quantity ?? ""} ${g.measurement_unit ?? ""}`.trim();
-                  const price = `${currencySymbol}${g.price}`;
+                  const price = `${currencySymbol}${formatNumber(Number(g.price), market)}`;
 
                   const actionButton = isMultiple ? (
                     <button

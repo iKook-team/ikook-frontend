@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
+import { formatNumber } from "@/lib/format";
 import { quotesService } from "@/lib/api/quotes";
 import { bookingsService } from "@/lib/api/bookings";
 import { chatService } from "@/lib/api/chat";
@@ -83,7 +84,7 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
   const isCustom = booking.is_custom;
   const total =
     booking.total_cost !== undefined && booking.total_cost !== null
-      ? `${marketCfg.currencySymbol}${Number(booking.total_cost).toLocaleString(marketCfg.locale)}`
+      ? `${marketCfg.currencySymbol}${formatNumber(Number(booking.total_cost), market)}`
       : "-";
   const guests = booking.num_of_guests || "-";
   const eventDate = booking.event_date || "-";

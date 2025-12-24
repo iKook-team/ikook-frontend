@@ -7,6 +7,7 @@ import { Button } from "@heroui/react";
 import { Addon } from "@/lib/api/addons";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
+import { formatNumber } from "@/lib/format";
 
 interface AddonSidebarSectionProps {
   selectedAddons: Addon[];
@@ -53,7 +54,7 @@ export const AddonSidebarSection: React.FC<AddonSidebarSectionProps> = ({
                 by {addon.client_name}
               </p>
               <p className="text-sm font-semibold text-green-600 mt-1">
-                {currencySymbol}{parseFloat(addon.price || '0').toLocaleString()}
+                {currencySymbol}{formatNumber(parseFloat(addon.price || '0'), market)}
               </p>
             </div>
             <Button
@@ -75,7 +76,7 @@ export const AddonSidebarSection: React.FC<AddonSidebarSectionProps> = ({
             Addons Total:
           </span>
           <span className="text-sm font-semibold text-[#FCC01C]">
-            {currencySymbol}{totalAddonCost.toLocaleString()}
+            {currencySymbol}{formatNumber(totalAddonCost, market)}
           </span>
         </div>
       </div>

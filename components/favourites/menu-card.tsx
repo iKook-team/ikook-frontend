@@ -2,6 +2,7 @@ import React from "react";
 
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
+import { formatNumber } from "@/lib/format";
 
 interface MenuCardProps {
   title: string;
@@ -40,7 +41,7 @@ export const MenuCard: React.FC<MenuCardProps> = ({
     const numericValue = price.replace(/[^0-9.]/g, "").trim();
 
     // Format with 2 decimal places and add currency symbol
-    return `${currencySymbol}${parseFloat(numericValue || "0").toFixed(2)}`;
+    return `${currencySymbol}${formatNumber(parseFloat(numericValue || "0"), market)}`;
   };
 
   return (

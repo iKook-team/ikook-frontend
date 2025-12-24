@@ -8,6 +8,8 @@ import { FaMoneyBillWave } from "react-icons/fa";
 import { chatService } from "@/lib/api/chat";
 import { handleApiError } from "@/lib/utils/toast";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { useMarket } from "@/lib/market-context";
+import { formatNumber } from "@/lib/format";
 
 // Accept either a booking object or the old props for backward compatibility
 export type BookingCardProps =
@@ -27,6 +29,7 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
   const router = useRouter();
   const [isCreatingChat, setIsCreatingChat] = useState(false);
   const { userType, user: authUser } = useAuthStore();
+  const { market } = useMarket();
 
   // If booking prop is present, use new mapping
   if ("booking" in props) {
@@ -35,7 +38,7 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
       ? new Date(booking.created_at).toLocaleDateString()
       : "-";
     const formattedCost = booking.total_cost
-      ? `₦${Number(booking.total_cost).toLocaleString()}`
+      ? `₦${formatNumber(Number(booking.total_cost), market)}`
       : "-";
     const location = booking.city || "-";
     const title = booking.chef_service || "-";

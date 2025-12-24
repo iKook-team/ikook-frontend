@@ -3,6 +3,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { quotesService } from "@/lib/api/quotes";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { getCurrencySymbol } from "@/lib/utils/currency";
+import { useMarket } from "@/lib/market-context";
+import { formatNumber } from "@/lib/format";
 
 const DEFAULT_CURRENCY = "GBP"; // Default currency if not specified
 
@@ -82,6 +84,7 @@ export const QuotePreview: React.FC<QuotePreviewProps> = ({
 }) => {
   const [quote, setQuote] = useState<QuoteDetails | null>(null);
   const { user } = useAuthStore();
+  const { market } = useMarket();
   const [isLoading, setIsLoading] = useState(false);
   const currency = { currency: "GBP" }; // Default currency
   const [error, setError] = useState<string | null>(null);
@@ -322,7 +325,7 @@ export const QuotePreview: React.FC<QuotePreviewProps> = ({
           <span className="text-lg font-medium">Total</span>
           <span className="text-xl font-bold">
             {getCurrencySymbol(currency)}
-            {calculatedTotalCost.toFixed(2)}
+            {formatNumber(calculatedTotalCost, market)}
           </span>
         </div>
       </div>
@@ -349,9 +352,12 @@ export const QuotePreview: React.FC<QuotePreviewProps> = ({
                     {item.price !== undefined && (
                       <span className="text-gray-600 ml-2 whitespace-nowrap">
                         {getCurrencySymbol(currency)}
-                        {typeof item.price === "number"
-                          ? item.price.toFixed(2)
-                          : (parseFloat(item.price as string) || 0).toFixed(2)}
+                        {formatNumber(
+                          typeof item.price === "number"
+                            ? item.price
+                            : parseFloat(item.price as string) || 0,
+                          market,
+                        )}
                       </span>
                     )}
                   </li>
@@ -384,7 +390,7 @@ export const QuotePreview: React.FC<QuotePreviewProps> = ({
               <div className="text-[#323335] w-[209px]">TOTAL</div>
               <div className="text-[#323335] text-right">
                 {getCurrencySymbol(currency)}
-                {calculatedTotalCost.toFixed(2)}
+                {formatNumber(calculatedTotalCost, market)}
               </div>
             </div>
           </div>

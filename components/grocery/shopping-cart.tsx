@@ -5,6 +5,7 @@ import { CartItem } from "./cart-item";
 
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
+import { formatNumber } from "@/lib/format";
 
 interface CartItemData {
   id: string;
@@ -50,11 +51,7 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
   const platformFee = subtotal * 0.025;
   const total = subtotal + platformFee;
 
-  const fmt = (n: number) =>
-    n.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
+  const fmt = (n: number) => formatNumber(n, market);
 
   return (
     <aside className="w-[36%] ml-5 max-md:w-full max-md:ml-0">

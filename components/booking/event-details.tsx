@@ -6,6 +6,8 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
 import { useAuthStore } from "@/lib/store/auth-store";
+import { useMarket } from "@/lib/market-context";
+import { formatNumber } from "@/lib/format";
 
 interface ChefType {
   id: number;
@@ -51,6 +53,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
   const eventTypes = ["Wedding", "Birthday", "Bachelor's Party", "Night Party"];
 
   const pathname = usePathname();
+  const { market } = useMarket();
   const setBookingService = useAuthStore((state) => state.setBookingService);
   const bookingService = useAuthStore((state) => state.bookingService);
 
@@ -191,7 +194,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
               </div>
               <div className="text-[#030302] text-right text-base font-medium">
                 {serviceData?.starting_price_per_person
-                  ? `From ₦${parseFloat(serviceData.starting_price_per_person).toLocaleString()}pp`
+                  ? `From ₦${formatNumber(parseFloat(serviceData.starting_price_per_person), market)}pp`
                   : "Price on request"}
               </div>
             </div>

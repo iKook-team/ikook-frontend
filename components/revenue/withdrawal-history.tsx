@@ -2,6 +2,8 @@ import React from "react";
 
 import { useAuthStore } from "@/lib/store/auth-store";
 import { getCurrencySymbol } from "@/lib/utils/currency";
+import { useMarket } from "@/lib/market-context";
+import { formatNumber } from "@/lib/format";
 
 interface TransactionItemProps {
   title: string;
@@ -57,6 +59,7 @@ export const WithdrawHistory: React.FC<WithdrawHistoryProps> = ({
   withdrawals = [],
   onWithdraw,
 }) => {
+  const { market } = useMarket();
   const user = useAuthStore((s) => s.user);
   const currency = getCurrencySymbol({
     currency: (user as any)?.currency,
@@ -64,12 +67,12 @@ export const WithdrawHistory: React.FC<WithdrawHistoryProps> = ({
   });
   // Helper to format amount with thousand separators
   const formatAmount = (amount?: string) => {
-    if (!amount) return `${currency}0`;
+    if (!amount) return `${currency}${formatNumber(0, market)}`;
     const num = Number(amount);
 
-    if (isNaN(num)) return `${currency}0`;
+    if (isNaN(num)) return `${currency}${formatNumber(0, market)}`;
 
-    return `${currency}${num.toLocaleString()}`;
+    return `${currency}${formatNumber(num, market)}`;
   };
 
   return (

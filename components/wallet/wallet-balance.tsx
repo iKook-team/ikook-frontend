@@ -2,6 +2,8 @@ import React from "react";
 
 import { useAuthStore } from "@/lib/store/auth-store";
 import { getCurrencySymbol } from "@/lib/utils/currency";
+import { useMarket } from "@/lib/market-context";
+import { formatNumber } from "@/lib/format";
 
 interface WalletBalanceProps {
   balance?: string | number;
@@ -15,6 +17,7 @@ export const WalletBalance: React.FC<WalletBalanceProps> = ({
   onAddMoneyClick,
 }) => {
   const { user } = useAuthStore();
+  const { market } = useMarket();
   const currencySymbol = getCurrencySymbol({
     currency: user?.currency,
     country: user?.country,
@@ -38,7 +41,7 @@ export const WalletBalance: React.FC<WalletBalanceProps> = ({
           </div>
           <div className="text-[#323335] text-2xl font-semibold leading-none mt-1">
             {currencySymbol}
-            {balance ?? "0"}
+            {formatNumber(Number(balance ?? 0), market)}
           </div>
         </div>
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">

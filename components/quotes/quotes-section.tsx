@@ -8,6 +8,7 @@ import { quotesService, Quote as ApiQuote } from "@/lib/api/quotes";
 import Skeleton from "@/components/ui/skeleton";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
+import { formatNumber } from "@/lib/format";
 
 type CardQuote = {
   id: string;
@@ -66,10 +67,7 @@ export const QuotesSection: React.FC<{ bookingId?: string | number }> = ({
               ? firstImage
               : `${apiBase}${firstImage}`
             : null;
-          const formattedTotal = total.toLocaleString(marketCfg.locale, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          });
+          const formattedTotal = formatNumber(total, market);
 
           return {
             id: String(q.id),

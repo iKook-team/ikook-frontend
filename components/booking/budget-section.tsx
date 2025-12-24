@@ -2,6 +2,8 @@ import React from "react";
 
 import { getCurrencySymbol } from "@/lib/utils/currency";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { useMarket } from "@/lib/market-context";
+import { formatNumber } from "@/lib/format";
 
 interface BudgetSectionProps {
   chefName: string;
@@ -19,6 +21,7 @@ export const BudgetSection: React.FC<BudgetSectionProps> = ({
   menu,
 }) => {
   console.log("Menu data in BudgetSection:", menu?.chef);
+  const { market } = useMarket();
   const user = useAuthStore((s) => s.user);
   const currencySymbol = getCurrencySymbol({
     currency:
@@ -63,11 +66,12 @@ export const BudgetSection: React.FC<BudgetSectionProps> = ({
         <div className="w-[540px] text-[#3F3E3D] text-sm font-semibold leading-5">
           {chefName} minimum budget per person for this event is{" "}
           {currencySymbol}
-          {minBudgetPerPerson}. Based on your number of guests ({guestCount}),
+          {formatNumber(minBudgetPerPerson, market)}. Based on your number of
+          guests ({guestCount}),
           the price for this event is about{" "}
           <span className="font-bold">
             {currencySymbol}
-            {totalPrice.toLocaleString()}
+            {formatNumber(totalPrice, market)}
           </span>
           .<br />
           You can always negotiate the price with the chef.

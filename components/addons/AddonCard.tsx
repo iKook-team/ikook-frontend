@@ -7,6 +7,7 @@ import { Card, CardBody } from "@heroui/react";
 import { AddonCardProps } from "@/lib/api/addons";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
+import { formatNumber } from "@/lib/format";
 
 export const AddonCard: React.FC<AddonCardProps> = ({
   addon,
@@ -49,7 +50,7 @@ export const AddonCard: React.FC<AddonCardProps> = ({
               {addon.name}
             </h3>
             <span className="text-lg font-bold text-[#FCC01C] ml-2">
-              {currencySymbol}{parseFloat(addon.price || '0').toLocaleString()}
+              {currencySymbol}{formatNumber(parseFloat(addon.price || '0'), market)}
             </span>
           </div>
 

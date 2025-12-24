@@ -2,6 +2,8 @@ import React from "react";
 
 import { useAuthStore } from "@/lib/store/auth-store";
 import { getCurrencySymbol } from "@/lib/utils/currency";
+import { useMarket } from "@/lib/market-context";
+import { formatNumber } from "@/lib/format";
 
 interface Transaction {
   id: string | number;
@@ -29,6 +31,7 @@ export const TransactionList: React.FC<TransactionListProps> = ({
   transactions,
 }) => {
   const { user } = useAuthStore();
+  const { market } = useMarket();
   const currencySymbol = getCurrencySymbol({
     currency: user?.currency,
     country: user?.country,
@@ -59,7 +62,7 @@ export const TransactionList: React.FC<TransactionListProps> = ({
             </div>
             <div className="text-[#323335] text-[19px] font-medium self-stretch my-auto">
               {currencySymbol}
-              {transaction.amount}
+              {formatNumber(Number(transaction.amount), market)}
             </div>
           </div>
         </article>

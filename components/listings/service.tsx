@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
+import { formatNumber } from "@/lib/format";
 
 // Sub-components
 const StarRating = ({
@@ -226,7 +227,7 @@ export const ServiceListing: React.FC<
         <div className="absolute left-[9px] top-[190px] right-4">
           <div className="text-white font-semibold leading-6">
             From {currencySymbol}
-            {price}
+            {formatNumber(parseFloat(price), market)}
           </div>
         </div>
       )}

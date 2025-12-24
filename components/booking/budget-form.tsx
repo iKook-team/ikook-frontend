@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useMarket } from "@/lib/market-context";
+import { formatNumber } from "@/lib/format";
 
 interface BudgetFormProps {
   defaultBudget?: number;
@@ -17,6 +19,7 @@ export const BudgetForm: React.FC<BudgetFormProps> = ({
   currencySymbol = "£",
   defaultBudgetType = null,
 }) => {
+  const { market } = useMarket();
   const [budget, setBudget] = useState(defaultBudget);
   const [budgetType, setBudgetType] = useState<"flexible" | "fixed" | null>(
     defaultBudgetType
@@ -38,7 +41,7 @@ export const BudgetForm: React.FC<BudgetFormProps> = ({
   };
 
   const formatBudget = (value: number) => {
-    return value ? value.toLocaleString() : "";
+    return value ? formatNumber(value, market) : "";
   };
 
   // Keep local state in sync if parent updates defaultBudget

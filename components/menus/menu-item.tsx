@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
+import { formatNumber } from "@/lib/format";
 
 interface MenuItemProps {
   id: number;
@@ -65,7 +66,8 @@ export const MenuItem = ({
             </span>
             <span className="bg-black/70 text-white rounded-full px-3 py-1 text-sm font-bold">
               {currencySymbol}
-              {price} <span className="text-xs font-normal">pp</span>
+              {formatNumber(parseFloat(price), market)}{" "}
+              <span className="text-xs font-normal">pp</span>
             </span>
           </div>
           <h3 className="text-white text-lg font-semibold line-clamp-2">

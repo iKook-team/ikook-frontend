@@ -8,6 +8,7 @@ import Image from "next/image";
 
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
+import { formatNumber } from "@/lib/format";
 import favouritesService from "@/lib/api/favourites";
 
 interface BadgeData {
@@ -185,7 +186,7 @@ export const MenuListing: React.FC<MenuListingProps> = ({
             </h3>
             <span className="text-base font-semibold text-gray-900">
               {currencySymbol}
-              {price}
+              {formatNumber(Number(price), market)}
             </span>
           </div>
           <div className="flex items-center gap-1">

@@ -2,6 +2,7 @@ import React from "react";
 
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
+import { formatNumber } from "@/lib/format";
 
 interface BudgetCardProps {
   amount: string;
@@ -20,7 +21,7 @@ export const BudgetCard: React.FC<BudgetCardProps> = ({
   const formattedAmount = (() => {
     const n = Number(amount);
 
-    if (Number.isFinite(n)) return n.toLocaleString(marketCfg.locale);
+    if (Number.isFinite(n)) return formatNumber(n, market);
 
     return amount;
   })();

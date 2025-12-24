@@ -3,6 +3,8 @@ import React from "react";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { getCurrencySymbol } from "@/lib/utils/currency";
 import { paymentsService } from "@/lib/api/payments";
+import { useMarket } from "@/lib/market-context";
+import { formatNumber } from "@/lib/format";
 
 interface OrderSummaryProps {
   quote?: any;
@@ -27,11 +29,8 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
   // Backend total already includes the 2.5% fee; extract fee portion:
   const platformFee = total * (0.025 / 1.025);
   const subtotal = total - platformFee;
-  const fmt = (n: number) =>
-    n.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
+  const { market } = useMarket();
+  const fmt = (n: number) => formatNumber(n, market);
   const currency = getCurrencySymbol({ country: booking?.country });
 
   const handlePayment = async () => {

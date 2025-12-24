@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { useMarket } from "@/lib/market-context";
+import { formatNumber } from "@/lib/format";
 
 interface ChefMenuSectionProps {
   menu: any;
@@ -32,6 +34,7 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({
   selectedItems = {},
   setSelectedItems,
 }) => {
+  const { market } = useMarket();
   const [activeTab, setActiveTab] = useState<"sharing" | "plated">("sharing");
 
   // Group items by course
@@ -206,7 +209,7 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({
                     style={{ fontWeight: 500, color: "rgba(252,192,28,1)" }}
                   >
                     {getCurrencySymbol(menu)}
-                    {menu.courses_extra_charge_per_person?.[course] || 0}pp
+                    {formatNumber(menu.courses_extra_charge_per_person?.[course] || 0, market)}pp
                   </span>
                 </p>
               </div>
