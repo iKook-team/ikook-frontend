@@ -2,6 +2,70 @@ import { calculateReadTime } from './calculate-read-time';
 
 export const blogPosts = [
   {
+    id: 5,
+    slug: "its-that-time-of-the-year-again-lets-talk-christmas-food-good-vibes",
+    title: "It’s That Time of the Year Again… Let’s Talk Christmas, Food & Good Vibes",
+    excerpt: "Ah yes, December. That magical time of the year when the group chats are buzzing, calendars are fully booked, and everyone suddenly remembers long-lost cousins.",
+    content: `
+      <p>Ah yes, December.</p>
+      <p>That magical time of the year when the group chats are buzzing, calendars are fully booked, and everyone suddenly remembers long-lost cousins.</p>
+      <p>For some of us, it’s back-to-back parties — Detty December in full swing, soft life activated, stress deactivated (or at least postponed).</p>
+      <p>For others, it’s family time — travelling from different parts of the world to sit around one table, eat good food, gist endlessly, and create memories that last longer than the leftovers.</p>
+      <p>And for some, it’s a quieter season — reflecting on the year, setting intentions, and asking the big questions like “What are we doing differently next year?”</p>
+      <p>Different vibes, same energy. The spirit of Christmas.</p>
+      
+      <p><strong>A Quick Thank You From Us at iKooK</strong></p>
+      <p>This year, iKooK has had the honour of being part of your moments — from intimate dinners and celebrations to special gatherings that mattered. And honestly?</p>
+      <p>You didn’t just show up for us… you showed off for us.</p>
+      <p>You trusted us with your tables, your guests, your celebrations — and that means everything to us. So consider this our big virtual hug to say:</p>
+      <p>Thank you for being amazing.</p>
+      
+      <p><strong>Looking Ahead (But First, Let’s Enjoy Now)</strong></p>
+      <p>As we soak in the festive cheer, we want to wish you and your loved ones a very Merry Christmas and a prosperous New Year in advance.</p>
+      <p>Come 2026, we’re excited to serve you even better — more experiences, more creativity, more unforgettable moments centred around good food and great company.</p>
+      <p>But for now?</p>
+      <p>Slow down.</p>
+      <p>Relax.</p>
+      <p>Eat well.</p>
+      <p>Laugh louder.</p>
+      <p>And truly soak in the joy of this season.</p>
+      <p>Feliz Navidad</p>
+      <p>—</p>
+      <p>The iKooK Team<br/>Always here to serve you better</p>
+    `,
+    image: "/blog/ikookxmas.png",
+    readTime: calculateReadTime(`
+      <p>Ah yes, December.</p>
+      <p>That magical time of the year when the group chats are buzzing, calendars are fully booked, and everyone suddenly remembers long-lost cousins.</p>
+      <p>For some of us, it’s back-to-back parties — Detty December in full swing, soft life activated, stress deactivated (or at least postponed).</p>
+      <p>For others, it’s family time — travelling from different parts of the world to sit around one table, eat good food, gist endlessly, and create memories that last longer than the leftovers.</p>
+      <p>And for some, it’s a quieter season — reflecting on the year, setting intentions, and asking the big questions like “What are we doing differently next year?”</p>
+      <p>Different vibes, same energy. The spirit of Christmas.</p>
+      
+      <p><strong>A Quick Thank You From Us at iKooK</strong></p>
+      <p>This year, iKooK has had the honour of being part of your moments — from intimate dinners and celebrations to special gatherings that mattered. And honestly?</p>
+      <p>You didn’t just show up for us… you showed off for us.</p>
+      <p>You trusted us with your tables, your guests, your celebrations — and that means everything to us. So consider this our big virtual hug to say:</p>
+      <p>Thank you for being amazing.</p>
+      
+      <p><strong>Looking Ahead (But First, Let’s Enjoy Now)</strong></p>
+      <p>As we soak in the festive cheer, we want to wish you and your loved ones a very Merry Christmas and a prosperous New Year in advance.</p>
+      <p>Come 2026, we’re excited to serve you even better — more experiences, more creativity, more unforgettable moments centred around good food and great company.</p>
+      <p>But for now?</p>
+      <p>Slow down.</p>
+      <p>Relax.</p>
+      <p>Eat well.</p>
+      <p>Laugh louder.</p>
+      <p>And truly soak in the joy of this season.</p>
+      <p>Feliz Navidad</p>
+      <p>—</p>
+      <p>The iKooK Team<br/>Always here to serve you better</p>
+    `),
+    date: "December 24, 2025",
+    author: "iKooK Team",
+    authorAvatar: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
+  },
+  {
     id: 1,
     slug: "should-wives-still-be-slaving-in-kitchen-during-festive-periods",
     title: "In 2025, Should Wives Still Be Slaving in the Kitchen During Festive Periods?",
