@@ -209,7 +209,7 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({
                     style={{ fontWeight: 500, color: "rgba(252,192,28,1)" }}
                   >
                     {getCurrencySymbol(menu)}
-                    {formatNumber(menu.courses_extra_charge_per_person?.[course] || 0, market)}pp
+                    {formatNumber(menu.courses_extra_charge_per_person?.[course] || 0, market)}/person
                   </span>
                 </p>
               </div>

@@ -194,7 +194,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
               </div>
               <div className="text-[#030302] text-right text-base font-medium">
                 {serviceData?.starting_price_per_person
-                  ? `From ₦${formatNumber(parseFloat(serviceData.starting_price_per_person), market)}pp`
+                  ? `From ₦${formatNumber(parseFloat(serviceData.starting_price_per_person), market)}/person`
                   : "Price on request"}
               </div>
             </div>

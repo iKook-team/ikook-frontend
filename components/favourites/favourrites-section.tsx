@@ -85,7 +85,7 @@ export const FavouritesSection: React.FC = () => {
             return {
               id: menu.id,
               title: menu.name,
-              price: `${marketCfg.currencySymbol}${formatNumber(parseFloat(menu.price_per_person), market)}pp`,
+              price: `${marketCfg.currencySymbol}${formatNumber(parseFloat(menu.price_per_person), market)}/person`,
               cuisine: menu.cuisine_types?.[0] || "Cuisine",
               chefName: `${chef.first_name} ${chef.last_name}`.trim() || "Chef",
               location: chef.city || "Location",

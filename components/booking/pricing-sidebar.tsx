@@ -108,7 +108,7 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
       <div className="border border-[color:var(--Black-100,#E7E7E7)] shadow-[0px_4px_70px_0px_rgba(0,0,0,0.07)] flex w-full flex-col items-stretch bg-white mx-auto px-[19px] py-[26px] rounded-[15px] border-solid max-md:mt-10">
         <div className="text-[#FCC01C] text-4xl font-semibold leading-none tracking-[-0.72px]">
           {currencySymbol}
-          {formatNumber(parseFloat(menu?.price_per_person || "100"), market)}pp
+          {formatNumber(parseFloat(menu?.price_per_person || "100"), market)}/person
         </div>
 
         <div className="flex flex-col bg-[#E7E7E7] mt-[23px] px-3.5 py-[13px] rounded-lg">

@@ -98,7 +98,7 @@ function MenuCard({ menu }: { menu: Menu }) {
             <StarRating rating={Math.round(rating)} />
             <span className="text-xs text-[#323335]">
               {currencySymbol}
-              {formatNumber(parseFloat(menu.price_per_person), market)}pp
+              {formatNumber(menu.price_per_person, market)}/person
             </span>
           </div>
         </div>

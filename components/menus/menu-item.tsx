@@ -67,7 +67,7 @@ export const MenuItem = ({
             <span className="bg-black/70 text-white rounded-full px-3 py-1 text-sm font-bold">
               {currencySymbol}
               {formatNumber(parseFloat(price), market)}{" "}
-              <span className="text-xs font-normal">pp</span>
+              <span className="text-xs font-normal">/person</span>
             </span>
           </div>
           <h3 className="text-white text-lg font-semibold line-clamp-2">
