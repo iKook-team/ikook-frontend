@@ -65,7 +65,7 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({
 
   const renderMenuItem = (item: any, course: string) => {
     const isSelected = selectedItems?.[course]?.has(item.id) || false;
-    
+
     return (
       <div key={item.id}>
         <div
@@ -75,11 +75,10 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({
             <div className="self-stretch flex items-center justify-center w-[30px] my-auto">
               <button
                 onClick={() => handleItemToggle(course, item.id)}
-                className={`border-[color:var(--Gray-300,#D0D5DD)] self-stretch flex min-h-[30px] w-[30px] h-[30px] my-auto rounded-[9px] border-[1.5px] border-solid ${
-                  isSelected
+                className={`border-[color:var(--Gray-300,#D0D5DD)] self-stretch flex min-h-[30px] w-[30px] h-[30px] my-auto rounded-[9px] border-[1.5px] border-solid ${isSelected
                     ? "bg-[#FCC01C] border-[#FCC01C]"
                     : "bg-white"
-                }`}
+                  }`}
               >
                 {isSelected && (
                   <span className="text-white text-lg self-center">✓</span>
@@ -158,10 +157,9 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({
             type="button"
             onClick={() => setActiveTab("sharing")}
             className={`w-1/2 h-[30px] absolute left-[5px] top-1 rounded-sm transition-all z-10
-              ${
-                activeTab === "sharing"
-                  ? "bg-[#FCC01C] text-white shadow-[0.568px_0px_5.683px_0px_rgba(0,0,0,0.10)]"
-                  : "bg-transparent text-[#020101]"
+              ${activeTab === "sharing"
+                ? "bg-[#FCC01C] text-white shadow-[0.568px_0px_5.683px_0px_rgba(0,0,0,0.10)]"
+                : "bg-transparent text-[#020101]"
               }
             `}
             aria-pressed={activeTab === "sharing"}
@@ -174,10 +172,9 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({
             type="button"
             onClick={() => setActiveTab("plated")}
             className={`w-1/2 h-[30px] absolute right-[5px] top-1 rounded-sm transition-all z-10
-              ${
-                activeTab === "plated"
-                  ? "bg-[#FCC01C] text-white shadow-[0.568px_0px_5.683px_0px_rgba(0,0,0,0.10)]"
-                  : "bg-transparent text-[#020101]"
+              ${activeTab === "plated"
+                ? "bg-[#FCC01C] text-white shadow-[0.568px_0px_5.683px_0px_rgba(0,0,0,0.10)]"
+                : "bg-transparent text-[#020101]"
               }
             `}
             aria-pressed={activeTab === "plated"}
@@ -209,7 +206,8 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({
                     style={{ fontWeight: 500, color: "rgba(252,192,28,1)" }}
                   >
                     {getCurrencySymbol(menu)}
-                    {formatNumber(menu.courses_extra_charge_per_person?.[course] || 0, market)}/person
+                    {formatNumber(menu.courses_extra_charge_per_person?.[course] || 0, market)}
+                    <span className="text-[10px]"> / person</span>
                   </span>
                 </p>
               </div>

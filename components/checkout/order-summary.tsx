@@ -30,7 +30,11 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
   const platformFee = total * (0.025 / 1.025);
   const subtotal = total - platformFee;
   const { market } = useMarket();
-  const fmt = (n: number) => formatNumber(n, market);
+  const fmt = (n: number) =>
+    formatNumber(n, market, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   const currency = getCurrencySymbol({ country: booking?.country });
 
   const handlePayment = async () => {
