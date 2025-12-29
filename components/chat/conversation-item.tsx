@@ -1,4 +1,5 @@
 import * as React from "react";
+import { maskContactInfo } from "@/lib/utils/chat-filter";
 
 interface ConversationItemProps {
   name: string;
@@ -34,7 +35,7 @@ export function ConversationItem({
           </time>
         </div>
         <div className="mt-1">
-          <p className="text-sm text-stone-950 truncate">{lastMessage}</p>
+          <p className="text-sm text-stone-950 truncate">{maskContactInfo(lastMessage)}</p>
           <p className="text-xs text-neutral-400 mt-0.5">{eventInfo}</p>
         </div>
       </div>

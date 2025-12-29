@@ -1,4 +1,5 @@
 import * as React from "react";
+import { maskContactInfo } from "@/lib/utils/chat-filter";
 
 interface MessageBubbleProps {
   content: string;
@@ -17,6 +18,8 @@ export function MessageBubble({
   image,
   isRead = true,
 }: MessageBubbleProps) {
+  const maskedContent = maskContactInfo(content);
+
   if (isOwn) {
     return (
       <div className="flex flex-col items-end self-end py-2.5 px-4 mt-6 bg-amber-100 rounded-md max-w-[80%] w-auto">
@@ -29,9 +32,9 @@ export function MessageBubble({
             />
           </div>
         )}
-        {content && (
+        {maskedContent && (
           <div className="text-sm leading-5 text-right text-stone-950 break-words">
-            {content}
+            {maskedContent}
           </div>
         )}
         <div className="flex items-center gap-1.5 mt-1">
@@ -62,8 +65,8 @@ export function MessageBubble({
               />
             </div>
           )}
-          {content && (
-            <div className="text-sm leading-5 text-stone-950">{content}</div>
+          {maskedContent && (
+            <div className="text-sm leading-5 text-stone-950">{maskedContent}</div>
           )}
           <time className="mt-1 block text-xs text-neutral-500">
             {timestamp}

@@ -10,6 +10,7 @@ import { type Message, type ApiResponse } from "@/lib/api/chat";
 import apiClient from "@/src/lib/axios";
 import { useChatWebSocket } from "@/hooks/useChatWebSocket";
 import { getToken } from "@/src/lib/auth";
+import { maskContactInfo } from "@/lib/utils/chat-filter";
 
 interface ChatAreaProps {
   activeChatId: number | null;
@@ -117,12 +118,13 @@ export function ChatArea({
     if ((!newMessage.trim() && !selectedImage) || !activeChatId || isSending)
       return;
 
+    const maskedMessage = maskContactInfo(newMessage.trim());
     const formData = new FormData();
 
     formData.append("chat", activeChatId.toString());
 
-    if (newMessage.trim()) {
-      formData.append("message", newMessage.trim());
+    if (maskedMessage) {
+      formData.append("message", maskedMessage);
     }
 
     if (selectedImage) {
@@ -133,7 +135,7 @@ export function ChatArea({
     const tempId = Date.now().toString();
     const optimisticMessage: Message = {
       id: parseInt(tempId),
-      message: newMessage.trim(),
+      message: maskedMessage,
       image: imagePreview,
       is_read: true,
       created_at: new Date().toISOString(),
@@ -374,11 +376,10 @@ export function ChatArea({
             <button
               type="submit"
               disabled={!newMessage.trim() || !isConnected || isSending}
-              className={`px-4 py-2 text-sm font-medium text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
-                !newMessage.trim() || !isConnected || isSending
-                  ? "bg-amber-300 cursor-not-allowed"
-                  : "bg-amber-400 hover:bg-amber-500 focus:ring-amber-400"
-              }`}
+              className={`px-4 py-2 text-sm font-medium text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${!newMessage.trim() || !isConnected || isSending
+                ? "bg-amber-300 cursor-not-allowed"
+                : "bg-amber-400 hover:bg-amber-500 focus:ring-amber-400"
+                }`}
             >
               {isSending ? "Sending..." : "Send"}
             </button>
