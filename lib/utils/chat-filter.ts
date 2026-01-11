@@ -25,6 +25,11 @@ const PHONE_REGEX = /(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4,}/
  */
 const SOCIAL_REGEX = /(?:@\w+|IG:\s*\w+|FB:\s*\w+|WhatsApp:\s*\+?\d+|Instagram:\s*\w+|Facebook:\s*\w+)/gi;
 
+/**
+ * Keywords that should be masked to prevent sharing contact info.
+ */
+const KEYWORDS_REGEX = /\b(phone|address|account)\b/gi;
+
 const MASK_TEXT = "[Contact Info Masked]";
 
 export function maskContactInfo(text: string): string {
@@ -54,6 +59,9 @@ export function maskContactInfo(text: string): string {
 
     // Mask Social Handles
     maskedText = maskedText.replace(SOCIAL_REGEX, MASK_TEXT);
+
+    // Mask Keywords
+    maskedText = maskedText.replace(KEYWORDS_REGEX, MASK_TEXT);
 
     return maskedText;
 }
