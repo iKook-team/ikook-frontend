@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import { MenuListing } from "./listings/menu";
 import { ChefCard } from "./listings/chef";
@@ -173,6 +174,10 @@ export const Listing = ({
   orderBy,
   filters,
 }: ListingProps) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const pageSize = 12; // Show 12 items per page
   const {
@@ -194,7 +199,24 @@ export const Listing = ({
   // Reset page when selectedService or orderBy changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedService, orderBy]);
+
+    // Clear page param from URL when filters change
+    const params = new URLSearchParams(searchParams.toString());
+    if (params.has("page")) {
+      params.delete("page");
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    }
+  }, [selectedService, orderBy, filters]);
+
+  // Sync state with URL for back/forward navigation
+  useEffect(() => {
+    const pageParam = searchParams.get("page");
+    const pageNum = pageParam ? parseInt(pageParam, 10) : 1;
+
+    if (pageNum !== currentPage) {
+      setCurrentPage(pageNum);
+    }
+  }, [searchParams]);
 
   // Debug log the listings data
   useEffect(() => {
@@ -224,8 +246,16 @@ export const Listing = ({
   // Handle loading more items
   const handleLoadMore = () => {
     if (loading || isLoadingMore) return;
+
+    const nextPage = currentPage + 1;
+
+    // Update URL to add to history
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", nextPage.toString());
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+
     setIsLoadingMore(true);
-    setCurrentPage((prev) => prev + 1);
+    setCurrentPage(nextPage);
   };
 
   // Check if there are more items to load

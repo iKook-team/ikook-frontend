@@ -153,7 +153,7 @@ const useListings = ({
           price_min: filters.price_min ? Number(filters.price_min) : undefined,
           price_max: filters.price_max ? Number(filters.price_max) : undefined,
         };
-        
+
         if (orderBy === "Recently Added") {
           menuParams.order_by = orderBy;
         }
@@ -211,11 +211,19 @@ const useListings = ({
   }, [selectedService, searchQuery, orderBy, filters]);
 
   // Load more when page changes
+  const prevPageRef = useRef<number>(currentPage);
+
   useEffect(() => {
-    if (currentPage > 1) {
+    if (currentPage > prevPageRef.current) {
+      // Forward navigation (Load More)
       fetchListings(currentPage, true);
+    } else if (currentPage < prevPageRef.current) {
+      // Back navigation
+      // Truncate listings to the current page's size
+      setListings((prev) => prev.slice(0, currentPage * pageSize));
     }
-  }, [currentPage]);
+    prevPageRef.current = currentPage;
+  }, [currentPage, pageSize]);
 
   const refetch = () => fetchListings(1, false);
 
