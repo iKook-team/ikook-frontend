@@ -23,8 +23,8 @@ export const AdFinalCTA: React.FC = () => {
         </h2>
 
         <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
-          Join thousands of satisfied customers who&apos;ve transformed their dining
-          experience with iKooK
+          Join thousands of satisfied customers who&apos;ve transformed their
+          dining experience with iKooK
         </p>
 
         <button

@@ -136,7 +136,11 @@ export const FooterLinks: React.FC<FooterLinksProps> = ({ className = "" }) => {
                           link.trim().toLowerCase().replace(/\s+/g, "-"),
                         );
 
-                        return isCountry ? `/locations/${slug}` : link === "Terms & Condition" ? "/legal/sla" : `/${slug}`;
+                        return isCountry
+                          ? `/locations/${slug}`
+                          : link === "Terms & Condition"
+                            ? "/legal/sla"
+                            : `/${slug}`;
                       })()}
                       className="hover:text-black transition-colors"
                     >

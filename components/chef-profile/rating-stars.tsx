@@ -24,7 +24,7 @@ export const RatingStars: React.FC<RatingStarsProps> = ({
       {[1, 2, 3, 4, 5].map((star) => (
         <span
           key={star}
-          className={`${sizeClasses[size]} ${star <= rating ? 'text-yellow-400' : 'text-gray-300'}`}
+          className={`${sizeClasses[size]} ${star <= rating ? "text-yellow-400" : "text-gray-300"}`}
         >
           {star <= rating ? filledStar : emptyStar}
         </span>

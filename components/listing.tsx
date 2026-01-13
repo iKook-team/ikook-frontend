@@ -202,6 +202,7 @@ export const Listing = ({
 
     // Clear page param from URL when filters change
     const params = new URLSearchParams(searchParams.toString());
+
     if (params.has("page")) {
       params.delete("page");
       router.replace(`${pathname}?${params.toString()}`, { scroll: false });
@@ -251,6 +252,7 @@ export const Listing = ({
 
     // Update URL to add to history
     const params = new URLSearchParams(searchParams.toString());
+
     params.set("page", nextPage.toString());
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
 

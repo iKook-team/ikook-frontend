@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import { useMarket } from "@/lib/market-context";
 import { formatNumber } from "@/lib/format";
 

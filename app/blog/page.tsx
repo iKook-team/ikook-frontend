@@ -1,9 +1,10 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { Navigation } from "@/components/auth/Navigation";
 import { Footer } from "@/components/footer/footer";
-import Link from 'next/link';
 import { blogPosts } from "@/lib/data/blog-posts";
 
 function BlogCard({ post }: { post: (typeof blogPosts)[0] }) {
@@ -58,7 +59,8 @@ export default function BlogListPage() {
             Our Blog
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Discover delicious recipes, cooking tips, and culinary inspiration from our expert chefs.
+            Discover delicious recipes, cooking tips, and culinary inspiration
+            from our expert chefs.
           </p>
         </div>
 
@@ -74,19 +76,21 @@ export default function BlogListPage() {
         {/* Pagination */}
         {totalPages > 1 && (
           <div className="flex justify-center gap-2 mt-12">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
-              <Button
-                key={number}
-                onClick={() => paginate(number)}
-                className={`w-10 h-10 p-0 rounded-full ${
-                  currentPage === number
-                    ? 'bg-[#FCC01C] text-[#323335] hover:bg-[#FCC01C]/90'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {number}
-              </Button>
-            ))}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+              (number) => (
+                <Button
+                  key={number}
+                  onClick={() => paginate(number)}
+                  className={`w-10 h-10 p-0 rounded-full ${
+                    currentPage === number
+                      ? "bg-[#FCC01C] text-[#323335] hover:bg-[#FCC01C]/90"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                >
+                  {number}
+                </Button>
+              ),
+            )}
           </div>
         )}
       </main>

@@ -1,6 +1,7 @@
-
 import { Metadata } from "next";
-import HomePage from "@/components/pages/home-page"; export const metadata: Metadata = {
+
+import HomePage from "@/components/pages/home-page";
+export const metadata: Metadata = {
   title: "Hire a Private Chef in Nigeria, UK & South Africa | iKook",
   description:
     "Book professional private chefs for home dining, events, meal prep and more. Available in Nigeria, United Kingdom, and South Africa. Get personalized culinary experiences delivered to your home.",

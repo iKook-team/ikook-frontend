@@ -3,8 +3,8 @@ import Image from "next/image";
 
 import { ProgressIndicator } from "./progress-indicator";
 import { ActionButtons } from "./action-buttons";
-import { GooglePlacesAutocomplete } from "@/components/ui/google-places-autocomplete";
 
+import { GooglePlacesAutocomplete } from "@/components/ui/google-places-autocomplete";
 import { ChefCard } from "@/components/cart/chef-card";
 
 interface EventDetailsFormProps {
@@ -166,8 +166,10 @@ const EventDetailsForm: React.FC<EventDetailsFormProps> = ({
                 value={guestsInput}
                 onChange={(e) => {
                   const val = e.target.value;
+
                   setGuestsInput(val);
                   const parsed = parseInt(val, 10);
+
                   if (!isNaN(parsed)) {
                     // Update parent state only when numeric; do not clamp to min here
                     handleInputChange("guests", parsed);
@@ -184,6 +186,7 @@ const EventDetailsForm: React.FC<EventDetailsFormProps> = ({
 
             {(() => {
               const parsed = parseInt(guestsInput, 10);
+
               return !isNaN(parsed) && parsed < minGuests;
             })() && (
               <div className="flex w-full text-xs text-[#3F3E3D] font-normal leading-5 bg-[#FFFCF5] p-4 rounded-lg">
@@ -211,7 +214,8 @@ const EventDetailsForm: React.FC<EventDetailsFormProps> = ({
                 const isDateValid =
                   (formData.eventDate || "").trim().length > 0;
                 const parsedGuests = parseInt(guestsInput, 10);
-                const isGuestsValid = !isNaN(parsedGuests) && parsedGuests >= minGuests;
+                const isGuestsValid =
+                  !isNaN(parsedGuests) && parsedGuests >= minGuests;
                 const isFormValid =
                   isLocationValid && isDateValid && isGuestsValid;
 

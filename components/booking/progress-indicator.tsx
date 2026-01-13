@@ -16,10 +16,7 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
   return (
     <div className="flex w-full items-start gap-2 min-h-[29px]">
       {steps.map((step, index) => (
-        <div
-          key={index}
-          className="flex flex-1 flex-col items-start gap-1"
-        >
+        <div key={index} className="flex flex-1 flex-col items-start gap-1">
           <div className="w-full h-2 relative">
             <div className="w-full h-2 absolute bg-[#E7E7E7] rounded-[10px] left-0 top-0" />
             {step.completed && (

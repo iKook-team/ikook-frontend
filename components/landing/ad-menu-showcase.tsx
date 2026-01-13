@@ -38,6 +38,7 @@ export const AdMenuShowcase: React.FC = () => {
 
   const scrollToBooking = () => {
     const bookingSection = document.getElementById("booking-form");
+
     bookingSection?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -61,7 +62,9 @@ export const AdMenuShowcase: React.FC = () => {
                 <div key={index} className="w-full flex-shrink-0">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                     <div className="order-2 lg:order-1">
-                      <h3 className="text-2xl font-bold mb-4 text-gray-900">{item.title}</h3>
+                      <h3 className="text-2xl font-bold mb-4 text-gray-900">
+                        {item.title}
+                      </h3>
                       <p className="text-gray-700 text-lg mb-6">
                         {item.description}
                       </p>
@@ -125,7 +128,7 @@ export const AdMenuShowcase: React.FC = () => {
               key={index}
               onClick={() => setCurrentSlide(index)}
               className={`w-3 h-3 rounded-full transition-colors ${
-                index === currentSlide ? 'bg-[#FCC01C]' : 'bg-gray-400'
+                index === currentSlide ? "bg-[#FCC01C]" : "bg-gray-400"
               }`}
             />
           ))}

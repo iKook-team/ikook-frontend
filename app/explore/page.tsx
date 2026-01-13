@@ -24,7 +24,7 @@ export default function Home() {
     "cooking-class",
     "eating-coach",
     "box-groceries",
-    "chefs"
+    "chefs",
   ];
 
   // Set initial selectedService based on query parameter or default
@@ -32,6 +32,7 @@ export default function Home() {
     if (serviceParam && availableServices.includes(serviceParam)) {
       return serviceParam;
     }
+
     return "chef-at-home";
   };
 
@@ -64,8 +65,8 @@ export default function Home() {
         filters={filters}
         onFiltersChange={handleFiltersChange}
       />
-      <Listing 
-        selectedService={selectedService} 
+      <Listing
+        selectedService={selectedService}
         orderBy={orderBy}
         filters={filters}
       />

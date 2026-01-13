@@ -3,17 +3,19 @@
 import React, { useRef, useState, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Button } from "@heroui/react";
+
+import { AddonCard } from "./AddonCard";
+
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
 import { AddonCarouselProps, Addon } from "@/lib/api/addons";
 import { addonService } from "@/lib/api/addons";
-import { AddonCard } from "./AddonCard";
 
 export const AddonCarousel: React.FC<AddonCarouselProps> = ({
   selectedAddons,
   onAddonToggle,
 }) => {
-  console.log('🎪 AddonCarousel component rendering...');
+  console.log("🎪 AddonCarousel component rendering...");
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { market } = useMarket();
@@ -26,34 +28,36 @@ export const AddonCarousel: React.FC<AddonCarouselProps> = ({
 
   // Fetch addons on component mount
   useEffect(() => {
-    console.log('🚀 AddonCarousel mounted, fetching addons...');
+    console.log("🚀 AddonCarousel mounted, fetching addons...");
 
     const fetchAddons = async () => {
       try {
-        console.log('📡 Making API call to fetch addons...');
+        console.log("📡 Making API call to fetch addons...");
         setLoading(true);
         setError(null);
 
         const response = await addonService.getAddons();
-        console.log('✅ Addons fetched successfully:', response);
+
+        console.log("✅ Addons fetched successfully:", response);
 
         // Handle the correct API response structure: { status, message, data: [...] }
         const addonResults = response?.data || [];
-        console.log('📦 Addon results:', addonResults);
+
+        console.log("📦 Addon results:", addonResults);
 
         setAddons(Array.isArray(addonResults) ? addonResults : []);
       } catch (err: any) {
-        console.error('❌ Failed to fetch addons:', err);
-        console.error('❌ Error details:', {
+        console.error("❌ Failed to fetch addons:", err);
+        console.error("❌ Error details:", {
           message: err.message,
           status: err.response?.status,
-          data: err.response?.data
+          data: err.response?.data,
         });
         setError(`Failed to load addons: ${err.message}`);
         setAddons([]); // Ensure addons is always an array
       } finally {
         setLoading(false);
-        console.log('🏁 Addon loading complete');
+        console.log("🏁 Addon loading complete");
       }
     };
 
@@ -109,9 +113,7 @@ export const AddonCarousel: React.FC<AddonCarouselProps> = ({
             </p>
           </div>
         </div>
-        <div className="w-full text-center py-8 text-red-500">
-          {error}
-        </div>
+        <div className="w-full text-center py-8 text-red-500">{error}</div>
       </div>
     );
   }
@@ -183,12 +185,15 @@ export const AddonCarousel: React.FC<AddonCarouselProps> = ({
         <div className="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
           <div className="flex items-center justify-between">
             <span className="text-sm text-yellow-700">
-              {selectedAddons.length} addon{selectedAddons.length > 1 ? "s" : ""} selected
+              {selectedAddons.length} addon
+              {selectedAddons.length > 1 ? "s" : ""} selected
             </span>
             <span className="text-sm font-semibold text-yellow-700">
-              Total: {currencySymbol}{(addons || []).reduce((total, addon) => {
-                const addonId = selectedAddons.find(id => id === addon.id);
+              Total: {currencySymbol}
+              {(addons || []).reduce((total, addon) => {
+                const addonId = selectedAddons.find((id) => id === addon.id);
                 const price = parseFloat(addon.price) || 0;
+
                 return total + (addonId ? price : 0);
               }, 0)}
             </span>
@@ -196,8 +201,9 @@ export const AddonCarousel: React.FC<AddonCarouselProps> = ({
         </div>
       )}
 
-      <style dangerouslySetInnerHTML={{
-        __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
           .scrollbar-hide {
             -ms-overflow-style: none;
             scrollbar-width: none;
@@ -205,8 +211,9 @@ export const AddonCarousel: React.FC<AddonCarouselProps> = ({
           .scrollbar-hide::-webkit-scrollbar {
             display: none;
           }
-        `
-      }} />
+        `,
+        }}
+      />
     </div>
   );
 };

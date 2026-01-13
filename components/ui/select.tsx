@@ -47,6 +47,7 @@ export const Select = ({
     };
 
     document.addEventListener("mousedown", handleClickOutside);
+
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
@@ -72,7 +73,7 @@ export const Select = ({
           "focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400",
           !disabled && "hover:border-gray-400",
           disabled && "opacity-50 cursor-not-allowed",
-          isOpen && "border-yellow-400 ring-2 ring-yellow-400"
+          isOpen && "border-yellow-400 ring-2 ring-yellow-400",
         )}
       >
         <span className={clsx(!selectedOption && "text-gray-500")}>
@@ -81,7 +82,7 @@ export const Select = ({
         <ChevronDown
           className={clsx(
             "w-4 h-4 transition-transform duration-200",
-            isOpen && "rotate-180"
+            isOpen && "rotate-180",
           )}
         />
       </button>
@@ -100,7 +101,7 @@ export const Select = ({
                   "hover:bg-gray-100",
                   option.key === value
                     ? "bg-yellow-50 text-yellow-900 font-medium"
-                    : "text-gray-900"
+                    : "text-gray-900",
                 )}
               >
                 {option.label}

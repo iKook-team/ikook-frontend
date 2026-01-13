@@ -75,14 +75,16 @@ const CreateMenuStep1: React.FC<CreateMenuStep1Props> = ({
       >,
     ) => {
       let value = event.target.value;
-      
+
       // Prevent negative numbers for numeric fields
-      if ((field === 'minimumGuests' || field === 'maxMenuSelection') && 
-          event.target.type === 'number' && 
-          value.startsWith('-')) {
-        value = value.replace('-', '');
+      if (
+        (field === "minimumGuests" || field === "maxMenuSelection") &&
+        event.target.type === "number" &&
+        value.startsWith("-")
+      ) {
+        value = value.replace("-", "");
       }
-      
+
       const newData = { ...localFormData, [field]: value };
 
       setLocalFormData(newData);

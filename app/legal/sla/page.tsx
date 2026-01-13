@@ -22,25 +22,55 @@ const Index = () => {
                       <span className="relative z-[3]">Service</span>
                     </span>
                   </h1>
-                  <div className="text-[#323335] text-base font-medium mt-4">Last updated July 5th, 2024</div>
+                  <div className="text-[#323335] text-base font-medium mt-4">
+                    Last updated July 5th, 2024
+                  </div>
                   <div className="text-[#323335] text-xl font-medium mt-[40px] max-md:max-w-full max-md:mt-6 space-y-6">
                     <p>AGREEMENT TO OUR LEGAL TERMS</p>
                     <p>
-                      We are iKooK ("we", "us", or "our"), a company registered in the United Kingdom at 27 Old Gloucester St, London WC1N 3AX. We operate the website https://ikook.co.uk (the "Site"), the mobile application iKooK (the "App"), as well as any other related products and services that refer or link to these legal terms (the "Legal Terms") (collectively, the "Services").
+                      We are iKooK (&quot;we&quot;, &quot;us&quot;, or
+                      &quot;our&quot;), a company registered in the United
+                      Kingdom at 27 Old Gloucester St, London WC1N 3AX. We
+                      operate the website https://ikook.co.uk (the
+                      &quot;Site&quot;), the mobile application iKooK (the
+                      &quot;App&quot;), as well as any other related products
+                      and services that refer or link to these legal terms (the
+                      &quot;Legal Terms&quot;) (collectively, the
+                      &quot;Services&quot;).
                     </p>
                     <p>
-                      You can contact us by phone at 02045207041, email at info@ikook.co.uk, or by mail to 27 Old Gloucester St, London WC1N 3AX, United Kingdom.
+                      You can contact us by phone at 02045207041, email at
+                      info@ikook.co.uk, or by mail to 27 Old Gloucester St,
+                      London WC1N 3AX, United Kingdom.
                     </p>
                     <p>
-                      These Legal Terms constitute a legally binding agreement made between you, whether personally or on behalf of an entity ("you"), and iKooK, concerning your access to and use of the Services. You agree that by accessing the Services, you have read, understood, and agreed to be bound by all of these Legal Terms. IF YOU DO NOT AGREE WITH ALL OF THESE LEGAL TERMS, THEN YOU ARE EXPRESSLY PROHIBITED FROM USING THE SERVICES AND YOU MUST DISCONTINUE USE IMMEDIATELY.
+                      These Legal Terms constitute a legally binding agreement
+                      made between you, whether personally or on behalf of an
+                      entity (&quot;you&quot;), and iKooK, concerning your
+                      access to and use of the Services. You agree that by
+                      accessing the Services, you have read, understood, and
+                      agreed to be bound by all of these Legal Terms. IF YOU DO
+                      NOT AGREE WITH ALL OF THESE LEGAL TERMS, THEN YOU ARE
+                      EXPRESSLY PROHIBITED FROM USING THE SERVICES AND YOU MUST
+                      DISCONTINUE USE IMMEDIATELY.
                     </p>
                     <p>
-                      We will provide you with prior notice of any scheduled changes to the Services you are using. The modified Legal Terms will become effective upon posting or notifying you by support@ikook.co.uk, as stated in the email message. By continuing to use the Services after the effective date of any changes, you agree to be bound by the modified terms.
+                      We will provide you with prior notice of any scheduled
+                      changes to the Services you are using. The modified Legal
+                      Terms will become effective upon posting or notifying you
+                      by support@ikook.co.uk, as stated in the email message. By
+                      continuing to use the Services after the effective date of
+                      any changes, you agree to be bound by the modified terms.
                     </p>
                     <p>
-                      The Services are intended for users who are at least 18 years old. Persons under the age of 18 are not permitted to use or register for the Services.
+                      The Services are intended for users who are at least 18
+                      years old. Persons under the age of 18 are not permitted
+                      to use or register for the Services.
                     </p>
-                    <p>We recommend that you print a copy of these Legal Terms for your records.</p>
+                    <p>
+                      We recommend that you print a copy of these Legal Terms
+                      for your records.
+                    </p>
                   </div>
                 </div>
               </div>

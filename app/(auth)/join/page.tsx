@@ -58,10 +58,11 @@ const Index: React.FC = () => {
   // If there was an error getting location
   if (showError) {
     const errorLower = error?.toLowerCase() || "";
-    const isPermissionDenied = errorLower.includes("permission denied") || 
-                                errorLower.includes("blocked") ||
-                                errorLower.includes("denied");
-    
+    const isPermissionDenied =
+      errorLower.includes("permission denied") ||
+      errorLower.includes("blocked") ||
+      errorLower.includes("denied");
+
     return (
       <div className="w-full min-h-screen flex items-center justify-center bg-[#FBFBFB] p-4 px-2 sm:px-4">
         <div className="max-w-md w-full space-y-6">
@@ -93,22 +94,29 @@ const Index: React.FC = () => {
               Back to Home
             </Button>
           </div>
-          
+
           {isPermissionDenied && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-gray-700">
               <p className="font-semibold mb-2">How to enable location:</p>
               <ol className="list-decimal list-inside space-y-1 text-xs">
-                <li>Click the lock icon (🔒) or info icon (ⓘ) in your browser&apos;s address bar</li>
-                <li>Find &quot;Location&quot; permissions and set it to &quot;Allow&quot;</li>
+                <li>
+                  Click the lock icon (🔒) or info icon (ⓘ) in your
+                  browser&apos;s address bar
+                </li>
+                <li>
+                  Find &quot;Location&quot; permissions and set it to
+                  &quot;Allow&quot;
+                </li>
                 <li>Click &quot;Try Again&quot; above</li>
               </ol>
             </div>
           )}
-          
+
           <div className="text-xs text-gray-400 text-center mt-6">
             <p>Make sure location services are enabled on your device.</p>
             <p>
-              If the issue persists, try using a different browser or contact support.
+              If the issue persists, try using a different browser or contact
+              support.
             </p>
           </div>
         </div>

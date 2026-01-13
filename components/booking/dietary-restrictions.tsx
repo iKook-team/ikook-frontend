@@ -25,15 +25,15 @@ export const DietaryRestrictions: React.FC<DietaryRestrictionsProps> = ({
   onChange,
 }) => {
   const toggleAllergy = (allergy: string) => {
-    if (allergy === 'None') {
-      if (selectedAllergies.includes('None')) {
+    if (allergy === "None") {
+      if (selectedAllergies.includes("None")) {
         // If 'None' is already selected, deselect it
         onChange([]);
       } else {
         // If 'None' is not selected, select only 'None' and clear others
-        onChange(['None']);
+        onChange(["None"]);
       }
-    } else if (selectedAllergies.includes('None')) {
+    } else if (selectedAllergies.includes("None")) {
       // If 'None' is already selected and user selects something else, remove 'None' and add the new selection
       onChange([allergy]);
     } else if (selectedAllergies.includes(allergy)) {
@@ -46,7 +46,7 @@ export const DietaryRestrictions: React.FC<DietaryRestrictionsProps> = ({
   };
 
   // Check if 'None' is selected
-  const isNoneSelected = selectedAllergies.includes('None');
+  const isNoneSelected = selectedAllergies.includes("None");
 
   return (
     <section className="flex flex-col mt-14 w-full max-md:mt-10 max-md:max-w-full">
@@ -62,8 +62,8 @@ export const DietaryRestrictions: React.FC<DietaryRestrictionsProps> = ({
       <div className="flex flex-wrap gap-2 items-start mt-6 w-full text-sm leading-none max-w-[573px] text-neutral-400 max-md:max-w-full">
         {allergyOptions.map((allergy) => {
           const isSelected = selectedAllergies.includes(allergy);
-          const isDisabled = isNoneSelected && allergy !== 'None';
-          
+          const isDisabled = isNoneSelected && allergy !== "None";
+
           return (
             <AllergyTag
               key={allergy}

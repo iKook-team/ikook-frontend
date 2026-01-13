@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+
 import { newsletterService } from "@/lib/api/newsletter";
 import { showToast } from "@/lib/utils/toast";
 
@@ -27,31 +28,36 @@ export const AdBookingForm: React.FC = () => {
     // Handle Django validation errors format
     if (error?.response?.data) {
       const errorData = error.response.data;
-      
+
       // Handle case where error message contains Django validation errors as string
-      if (errorData.message && typeof errorData.message === 'string') {
+      if (errorData.message && typeof errorData.message === "string") {
         const message = errorData.message;
-        
+
         // Check if it's a Django validation error string
-        if (message.includes('ErrorDetail') && message.includes('code=')) {
+        if (message.includes("ErrorDetail") && message.includes("code=")) {
           try {
             // Try to parse the string representation of the error dict
             const errorMatch = message.match(/^\{(.+)\}$/);
+
             if (errorMatch) {
               // Extract the content inside braces
               const errorContent = errorMatch[1];
-              
+
               // Parse field errors
               const fieldMatch = errorContent.match(/'([^']+)':\s*\[(.+)\]/);
+
               if (fieldMatch) {
                 const fieldName = fieldMatch[1];
                 const errorDetails = fieldMatch[2];
-                
+
                 // Extract the string from ErrorDetail
                 const stringMatch = errorDetails.match(/string='([^']+)'/);
+
                 if (stringMatch) {
                   const errorMessage = stringMatch[1];
+
                   showToast.error(`${fieldName}: ${errorMessage}`);
+
                   return;
                 }
               }
@@ -59,25 +65,28 @@ export const AdBookingForm: React.FC = () => {
           } catch (parseError) {
             // If parsing fails, show the original message
             showToast.error(message);
+
             return;
           }
         }
-        
+
         // Regular message, show as is
         showToast.error(message);
+
         return;
       }
-      
+
       // Handle structured error object (not string)
-      if (typeof errorData === 'object' && !errorData.message) {
+      if (typeof errorData === "object" && !errorData.message) {
         const errorMessages: string[] = [];
-        
+
         // Extract field-specific error messages
-        Object.keys(errorData).forEach(field => {
+        Object.keys(errorData).forEach((field) => {
           const fieldErrors = errorData[field];
+
           if (Array.isArray(fieldErrors)) {
             fieldErrors.forEach((fieldError: any) => {
-              if (typeof fieldError === 'string') {
+              if (typeof fieldError === "string") {
                 errorMessages.push(`${field}: ${fieldError}`);
               } else if (fieldError?.string) {
                 errorMessages.push(`${field}: ${fieldError.string}`);
@@ -85,14 +94,15 @@ export const AdBookingForm: React.FC = () => {
             });
           }
         });
-        
+
         if (errorMessages.length > 0) {
-          showToast.error(errorMessages.join('. '));
+          showToast.error(errorMessages.join(". "));
+
           return;
         }
       }
     }
-    
+
     // Fallback for other error formats
     showToast.error("Form submission failed. Please try again.");
   };
@@ -136,7 +146,12 @@ export const AdBookingForm: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="form-group">
-                <label htmlFor="name" className="block text-lg font-medium text-gray-700">Full Name</label>
+                <label
+                  htmlFor="name"
+                  className="block text-lg font-medium text-gray-700"
+                >
+                  Full Name
+                </label>
                 <input
                   type="text"
                   id="name"
@@ -149,7 +164,12 @@ export const AdBookingForm: React.FC = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="email" className="block text-lg font-medium text-gray-700">Email</label>
+                <label
+                  htmlFor="email"
+                  className="block text-lg font-medium text-gray-700"
+                >
+                  Email
+                </label>
                 <input
                   type="email"
                   id="email"
@@ -162,7 +182,12 @@ export const AdBookingForm: React.FC = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="phone" className="block text-lg font-medium text-gray-700">Phone</label>
+                <label
+                  htmlFor="phone"
+                  className="block text-lg font-medium text-gray-700"
+                >
+                  Phone
+                </label>
                 <input
                   type="tel"
                   id="phone"
@@ -175,7 +200,12 @@ export const AdBookingForm: React.FC = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="location" className="block text-lg font-medium text-gray-700">Location</label>
+                <label
+                  htmlFor="location"
+                  className="block text-lg font-medium text-gray-700"
+                >
+                  Location
+                </label>
                 <input
                   type="text"
                   id="location"
@@ -188,7 +218,12 @@ export const AdBookingForm: React.FC = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="eventType" className="block text-lg font-medium text-gray-700">Event Type</label>
+                <label
+                  htmlFor="eventType"
+                  className="block text-lg font-medium text-gray-700"
+                >
+                  Event Type
+                </label>
                 <select
                   id="eventType"
                   name="eventType"
@@ -211,7 +246,12 @@ export const AdBookingForm: React.FC = () => {
                 </select>
               </div>
               <div className="form-group">
-                <label htmlFor="date" className="block text-lg font-medium text-gray-700">Event Date</label>
+                <label
+                  htmlFor="date"
+                  className="block text-lg font-medium text-gray-700"
+                >
+                  Event Date
+                </label>
                 <input
                   type="date"
                   id="date"
@@ -219,7 +259,7 @@ export const AdBookingForm: React.FC = () => {
                   value={formData.date}
                   onChange={handleInputChange}
                   required
-                  min={new Date().toISOString().split('T')[0]}
+                  min={new Date().toISOString().split("T")[0]}
                   autoComplete="off"
                   className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#FCC01C]"
                 />
@@ -230,11 +270,11 @@ export const AdBookingForm: React.FC = () => {
               disabled={isSubmitting}
               className={`w-full py-4 font-bold rounded-lg transition-colors ${
                 isSubmitting
-                  ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                  : 'bg-[#FCC01C] text-white hover:bg-[#E6AC19]'
+                  ? "bg-gray-400 text-gray-600 cursor-not-allowed"
+                  : "bg-[#FCC01C] text-white hover:bg-[#E6AC19]"
               }`}
             >
-              {isSubmitting ? 'Submitting...' : 'Find My Chef'}
+              {isSubmitting ? "Submitting..." : "Find My Chef"}
             </button>
           </form>
         </div>

@@ -67,8 +67,7 @@ export const BudgetSection: React.FC<BudgetSectionProps> = ({
           {chefName} minimum budget per person for this event is{" "}
           {currencySymbol}
           {formatNumber(minBudgetPerPerson, market)}. Based on your number of
-          guests ({guestCount}),
-          the price for this event is about{" "}
+          guests ({guestCount}), the price for this event is about{" "}
           <span className="font-bold">
             {currencySymbol}
             {formatNumber(totalPrice, market)}

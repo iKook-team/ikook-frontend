@@ -90,11 +90,14 @@ export function saveBookingDraft(draft: BookingDraft): void {
 export function getBookingDraft(): BookingDraft | null {
   try {
     const stored = sessionStorage.getItem(BOOKING_DRAFT_KEY);
+
     if (!stored) return null;
+
     return JSON.parse(stored);
   } catch (error) {
     console.warn("Failed to retrieve booking draft:", error);
     clearBookingDraft();
+
     return null;
   }
 }

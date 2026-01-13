@@ -5,11 +5,9 @@ import { ChefCard } from "./chef-card";
 import { MenuSection } from "./menu-section";
 import { IncludedServices } from "./included-services";
 import { ContinueButton } from "./continue-button";
+
 import { SimpleAddonCartSection } from "@/components/addons/SimpleAddonCartSection";
 import { Addon } from "@/lib/api/addons";
-import { useAuthStore } from "@/lib/store/auth-store";
-import { addonService } from "@/lib/api/addons";
-import { useState, useEffect } from "react";
 
 interface CartProps {
   onNext: (data?: Record<string, any>) => void;
@@ -45,7 +43,7 @@ export const Cart: React.FC<CartProps> = ({
         .filter(
           (item: any) =>
             item.course === courseName &&
-            selectedMenuItems.includes(String(item.id))
+            selectedMenuItems.includes(String(item.id)),
         )
         .map((item: any) => ({ id: String(item.id), name: item.name }));
 
@@ -90,6 +88,7 @@ export const Cart: React.FC<CartProps> = ({
     const addonId = addon.id;
     // Convert all IDs to strings for consistent comparison
     const selectedAddonIds = safeSelectedAddons.map(String);
+
     return selectedAddonIds.includes(String(addonId));
   });
 

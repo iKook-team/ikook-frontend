@@ -99,10 +99,10 @@ export const AdHowItWorks: React.FC = () => {
               </div>
             ))}
           </div>
-          
+
           {/* Connecting Lines */}
           <div className="hidden md:block absolute top-12 left-1/2 transform -translate-x-1/2 w-2/3 h-0.5">
-            <div className="w-full h-full bg-gradient-to-r from-[#FCC01C] via-[#FCC01C] to-[#FCC01C] opacity-30"></div>
+            <div className="w-full h-full bg-gradient-to-r from-[#FCC01C] via-[#FCC01C] to-[#FCC01C] opacity-30" />
           </div>
         </div>
       </div>

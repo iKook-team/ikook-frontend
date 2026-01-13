@@ -48,9 +48,11 @@ export const OTPInput = forwardRef<HTMLInputElement, OTPInputProps>(
       // If multiple characters arrive (e.g., OTP autofill), delegate upstream
       if (newValue.length > 1) {
         const digits = newValue.replace(/\D/g, "");
+
         if (digits && onBulkChange) {
           onBulkChange(digits);
         }
+
         return;
       }
 

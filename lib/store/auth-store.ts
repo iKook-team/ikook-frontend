@@ -143,13 +143,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       try {
         const saved = localStorage.getItem("ikook_booking_selected_addons");
         const parsed = saved ? JSON.parse(saved) : null;
-        console.log("🏪 Store initialized bookingSelectedAddons from localStorage:", parsed);
+
+        console.log(
+          "🏪 Store initialized bookingSelectedAddons from localStorage:",
+          parsed,
+        );
+
         return parsed;
       } catch (error) {
-        console.warn("Failed to load selected addons from localStorage:", error);
+        console.warn(
+          "Failed to load selected addons from localStorage:",
+          error,
+        );
+
         return null;
       }
     }
+
     return null;
   })(),
   booking: null,
@@ -248,15 +258,22 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
   setBookingSelectedAddons: (addons) => {
     console.log("🏪 Store setBookingSelectedAddons called with:", addons);
-    console.log("🏪 Store setBookingSelectedAddons types:", addons.map(id => ({ id, type: typeof id })));
+    console.log(
+      "🏪 Store setBookingSelectedAddons types:",
+      addons.map((id) => ({ id, type: typeof id })),
+    );
     set({ bookingSelectedAddons: addons });
     // Persist to localStorage for cross-session persistence
     if (typeof window !== "undefined") {
       try {
-        localStorage.setItem("ikook_booking_selected_addons", JSON.stringify(addons));
+        localStorage.setItem(
+          "ikook_booking_selected_addons",
+          JSON.stringify(addons),
+        );
         console.log("💾 Saved to localStorage:", addons);
         // Verify what was actually saved
         const saved = localStorage.getItem("ikook_booking_selected_addons");
+
         console.log("💾 Verified localStorage content:", saved);
       } catch (error) {
         console.warn("Failed to save selected addons to localStorage:", error);

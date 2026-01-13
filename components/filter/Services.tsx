@@ -7,6 +7,7 @@ import { Button } from "@heroui/react";
 import { ServiceButton } from "./ServiceButton";
 import { FilterButton } from "./FilterButton";
 import { FilterPanel, type FilterPanelFilters } from "./FilterPanel";
+
 import { Select } from "@/components/ui/select";
 
 interface Service {
@@ -47,7 +48,9 @@ export function Services({
 }: ServicesProps) {
   const router = useRouter();
   const [isFilterOpen, setIsFilterOpen] = React.useState<boolean>(false);
-  const [localFilters, setLocalFilters] = React.useState<FilterPanelFilters>(filters || {});
+  const [localFilters, setLocalFilters] = React.useState<FilterPanelFilters>(
+    filters || {},
+  );
 
   // Sync localFilters with parent filters when they change
   React.useEffect(() => {

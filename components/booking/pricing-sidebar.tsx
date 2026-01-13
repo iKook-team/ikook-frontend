@@ -30,15 +30,20 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
   const setBookingMenuSelection = useAuthStore(
     (s) => s.setBookingMenuSelection,
   );
-  const setBookingSelectedAddons = useAuthStore((s) => s.setBookingSelectedAddons);
+  const setBookingSelectedAddons = useAuthStore(
+    (s) => s.setBookingSelectedAddons,
+  );
 
   const { market } = useMarket();
   const currencySymbol = getMarketConfig(market).currencySymbol;
 
   // Calculate addon total
-  const selectedAddonObjects = (addons || []).filter(addon => (selectedAddons || []).includes(addon.id));
+  const selectedAddonObjects = (addons || []).filter((addon) =>
+    (selectedAddons || []).includes(addon.id),
+  );
   const addonTotal = selectedAddonObjects.reduce((total, addon) => {
     const price = parseFloat(addon.price) || 0;
+
     return total + price;
   }, 0);
 
@@ -50,10 +55,10 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
   const totalPossible =
     menu?.courses && menu?.courses_selection_limit
       ? menu.courses.reduce(
-        (sum: number, course: string) =>
-          sum + (menu.courses_selection_limit[course] || 1),
-        0,
-      )
+          (sum: number, course: string) =>
+            sum + (menu.courses_selection_limit[course] || 1),
+          0,
+        )
       : 0;
   const progressPercent =
     totalPossible > 0
@@ -94,7 +99,7 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
     console.log("Saving to store:", {
       selectedAddons: selectedAddons,
       selectedAddonsLength: selectedAddons?.length || 0,
-      selectedItemsCount: selectedIds.length
+      selectedItemsCount: selectedIds.length,
     });
     // Save menu and selection to zustand store
     setBookingMenu(menu);
@@ -163,13 +168,21 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
             </div>
             <div className="space-y-2">
               {selectedAddonObjects.map((addon) => (
-                <div key={addon.id} className="flex items-center justify-between text-sm">
+                <div
+                  key={addon.id}
+                  className="flex items-center justify-between text-sm"
+                >
                   <div className="flex-1">
                     <span className="text-gray-900">{addon.name}</span>
-                    <span className="text-gray-600 ml-2">by {addon.client_name}</span>
+                    <span className="text-gray-600 ml-2">
+                      by {addon.client_name}
+                    </span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className="text-[#FCC01C] font-semibold">{currencySymbol}{formatNumber(parseFloat(addon.price || '0'), market)}</span>
+                    <span className="text-[#FCC01C] font-semibold">
+                      {currencySymbol}
+                      {formatNumber(parseFloat(addon.price || "0"), market)}
+                    </span>
                     <button
                       onClick={() => onRemoveAddon(addon.id)}
                       className="text-red-500 hover:text-red-700 text-xs"
@@ -183,7 +196,10 @@ export const PricingSidebar: React.FC<PricingSidebarProps> = ({
             <div className="border-t border-yellow-300 mt-3 pt-2">
               <div className="flex items-center justify-between text-sm font-semibold">
                 <span>Addons Total:</span>
-                <span className="text-[#FCC01C]">{currencySymbol}{formatNumber(addonTotal, market)}</span>
+                <span className="text-[#FCC01C]">
+                  {currencySymbol}
+                  {formatNumber(addonTotal, market)}
+                </span>
               </div>
             </div>
           </div>

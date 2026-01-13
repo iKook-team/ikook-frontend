@@ -11,8 +11,12 @@ const Index = () => {
   const bookingMenuSelection = useAuthStore((s) => s.bookingMenuSelection);
   const bookingSelectedAddons = useAuthStore((s) => s.bookingSelectedAddons);
   const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
-  const setBookingMenuSelection = useAuthStore((s) => s.setBookingMenuSelection);
-  const setBookingSelectedAddons = useAuthStore((s) => s.setBookingSelectedAddons);
+  const setBookingMenuSelection = useAuthStore(
+    (s) => s.setBookingMenuSelection,
+  );
+  const setBookingSelectedAddons = useAuthStore(
+    (s) => s.setBookingSelectedAddons,
+  );
   const [availableAddons, setAvailableAddons] = useState<any[]>([]);
   const [ready, setReady] = useState(false);
 
@@ -21,11 +25,26 @@ const Index = () => {
     if (typeof window !== "undefined") {
       try {
         const storedMenu = localStorage.getItem("ikook_booking_menu");
+
         if (!bookingMenu && storedMenu) setBookingMenu(JSON.parse(storedMenu));
-        const storedMenuSel = localStorage.getItem("ikook_booking_menu_selection");
-        if ((!bookingMenuSelection || bookingMenuSelection.length === 0) && storedMenuSel) setBookingMenuSelection(JSON.parse(storedMenuSel));
-        const storedAddons = localStorage.getItem("ikook_booking_selected_addons");
-        if ((!bookingSelectedAddons || bookingSelectedAddons.length === 0) && storedAddons) setBookingSelectedAddons(JSON.parse(storedAddons));
+        const storedMenuSel = localStorage.getItem(
+          "ikook_booking_menu_selection",
+        );
+
+        if (
+          (!bookingMenuSelection || bookingMenuSelection.length === 0) &&
+          storedMenuSel
+        )
+          setBookingMenuSelection(JSON.parse(storedMenuSel));
+        const storedAddons = localStorage.getItem(
+          "ikook_booking_selected_addons",
+        );
+
+        if (
+          (!bookingSelectedAddons || bookingSelectedAddons.length === 0) &&
+          storedAddons
+        )
+          setBookingSelectedAddons(JSON.parse(storedAddons));
         setReady(true);
       } catch {
         setReady(true); // fail open
@@ -39,15 +58,26 @@ const Index = () => {
     const fetchAddons = async () => {
       try {
         const response = await addonService.getAddons();
+
         setAvailableAddons(response.data);
       } catch {}
     };
+
     fetchAddons();
   }, []);
 
-  if (!ready) return <div className="min-h-screen flex items-center justify-center text-xl">Loading...</div>;
+  if (!ready)
+    return (
+      <div className="min-h-screen flex items-center justify-center text-xl">
+        Loading...
+      </div>
+    );
 
-  console.log("[Cart PAGE] hydrated values:", { bookingMenu, bookingMenuSelection, bookingSelectedAddons });
+  console.log("[Cart PAGE] hydrated values:", {
+    bookingMenu,
+    bookingMenuSelection,
+    bookingSelectedAddons,
+  });
 
   if (!bookingMenu) {
     return (
@@ -72,9 +102,12 @@ const Index = () => {
           selectedAddons={bookingSelectedAddons ?? []}
           availableAddons={availableAddons}
           onAddonToggle={(addonId) => {
-            const newSelectedAddons = (bookingSelectedAddons ?? []).includes(addonId)
-              ? (bookingSelectedAddons ?? []).filter(id => id !== addonId)
+            const newSelectedAddons = (bookingSelectedAddons ?? []).includes(
+              addonId,
+            )
+              ? (bookingSelectedAddons ?? []).filter((id) => id !== addonId)
               : [...(bookingSelectedAddons ?? []), addonId];
+
             setBookingSelectedAddons(newSelectedAddons);
           }}
         />

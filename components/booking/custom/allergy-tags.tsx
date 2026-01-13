@@ -23,7 +23,7 @@ export const AllergyTag = ({
     <button
       className={`${baseClasses} ${
         isSelected ? selectedClasses : unselectedClasses
-      } ${disabled ? disabledClasses : 'cursor-pointer'}`}
+      } ${disabled ? disabledClasses : "cursor-pointer"}`}
       onClick={!disabled ? onClick : undefined}
       type="button"
       disabled={disabled}

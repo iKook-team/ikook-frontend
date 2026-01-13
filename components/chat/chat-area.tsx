@@ -376,10 +376,11 @@ export function ChatArea({
             <button
               type="submit"
               disabled={!newMessage.trim() || !isConnected || isSending}
-              className={`px-4 py-2 text-sm font-medium text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${!newMessage.trim() || !isConnected || isSending
-                ? "bg-amber-300 cursor-not-allowed"
-                : "bg-amber-400 hover:bg-amber-500 focus:ring-amber-400"
-                }`}
+              className={`px-4 py-2 text-sm font-medium text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
+                !newMessage.trim() || !isConnected || isSending
+                  ? "bg-amber-300 cursor-not-allowed"
+                  : "bg-amber-400 hover:bg-amber-500 focus:ring-amber-400"
+              }`}
             >
               {isSending ? "Sending..." : "Send"}
             </button>

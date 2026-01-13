@@ -130,7 +130,7 @@ const useListings = ({
         Object.keys(serviceParams).forEach(
           (key) =>
             serviceParams[key as keyof typeof serviceParams] === undefined &&
-            delete serviceParams[key as keyof typeof serviceParams]
+            delete serviceParams[key as keyof typeof serviceParams],
         );
 
         console.log("Fetching services with cleaned params:", serviceParams);
@@ -160,9 +160,7 @@ const useListings = ({
 
         // Remove undefined values
         Object.keys(menuParams).forEach(
-          (key) =>
-            menuParams[key] === undefined &&
-            delete menuParams[key]
+          (key) => menuParams[key] === undefined && delete menuParams[key],
         );
 
         console.log("Fetching menus with cleaned params:", menuParams);

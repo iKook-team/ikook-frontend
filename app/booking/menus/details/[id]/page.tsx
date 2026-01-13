@@ -17,8 +17,9 @@ export default function MenuDetailsPage() {
   const { id } = useParams();
   const router = useRouter();
   const userType = useAuthStore((s) => s.userType);
-  console.log('👤 User type:', userType);
-  console.log('🔐 Auth store state:', useAuthStore.getState());
+
+  console.log("👤 User type:", userType);
+  console.log("🔐 Auth store state:", useAuthStore.getState());
   // Ensure id is string or number
   const menuId = Array.isArray(id) ? id[0] : id;
   const { menu, loading, error } = useMenu(menuId);
@@ -40,9 +41,10 @@ export default function MenuDetailsPage() {
       try {
         setAddonsLoading(true);
         const response = await addonService.getAddons();
+
         setAddons(response.data);
       } catch (error) {
-        console.error('Failed to fetch addons:', error);
+        console.error("Failed to fetch addons:", error);
         setAddons([]);
       } finally {
         setAddonsLoading(false);
@@ -112,7 +114,9 @@ export default function MenuDetailsPage() {
               selectedAddons={selectedAddons}
               addons={addons}
               onRemoveAddon={(addonId) => {
-                setSelectedAddons(prev => prev.filter(id => id !== addonId));
+                setSelectedAddons((prev) =>
+                  prev.filter((id) => id !== addonId),
+                );
               }}
             />
           </div>
@@ -123,10 +127,10 @@ export default function MenuDetailsPage() {
           <AddonCarousel
             selectedAddons={selectedAddons}
             onAddonToggle={(addonId) => {
-              setSelectedAddons(prev =>
+              setSelectedAddons((prev) =>
                 prev.includes(addonId)
-                  ? prev.filter(id => id !== addonId)
-                  : [...prev, addonId]
+                  ? prev.filter((id) => id !== addonId)
+                  : [...prev, addonId],
               );
             }}
           />

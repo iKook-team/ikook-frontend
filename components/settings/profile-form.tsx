@@ -214,7 +214,6 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ userType = "chef" }) => {
   ]);
   const [events, setEvents] = useState(["Naming", "Wedding", "Gathering"]);
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 

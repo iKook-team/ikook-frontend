@@ -7,11 +7,17 @@ import PreferencesForm from "@/components/booking/preferences";
 import EatingCoachMessageForm from "@/components/booking/eating-coach-message-form";
 import { StatusCard } from "@/components/booking/status-card";
 import { useAuthStore } from "@/lib/store/auth-store";
-import { saveBookingDraft, getBookingDraft, clearBookingDraft } from "@/lib/booking-intent";
-import { useSearchParams } from "next/navigation";
+import {
+  saveBookingDraft,
+  getBookingDraft,
+  clearBookingDraft,
+} from "@/lib/booking-intent";
 
 export default function EatingCoachBookingPage() {
-  const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const searchParams =
+    typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search)
+      : null;
   const isResuming = searchParams?.get("resume") === "true";
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({});
@@ -20,6 +26,7 @@ export default function EatingCoachBookingPage() {
   React.useEffect(() => {
     if (isResuming) {
       const draft = getBookingDraft();
+
       if (draft) {
         setStep(Number(draft.step) || 0);
         setFormData(draft.data.formData || {});

@@ -41,7 +41,9 @@ export const AdTestimonials: React.FC = () => {
                   {testimonial.name}
                 </h4>
               </div>
-              <p className="text-gray-600 italic">&ldquo;{testimonial.text}&rdquo;</p>
+              <p className="text-gray-600 italic">
+                &ldquo;{testimonial.text}&rdquo;
+              </p>
               <div className="flex text-[#FCC01C] mt-4">{"★".repeat(5)}</div>
             </div>
           ))}

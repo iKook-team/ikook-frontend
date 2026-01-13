@@ -113,18 +113,24 @@ const PreferencesForm: React.FC<PreferencesFormProps> = ({
               </label>
               <textarea
                 className={`w-full overflow-hidden px-3.5 py-2.5 text-base rounded-lg border shadow-sm text-neutral-700 min-h-[120px] resize-y ${
-                dietaryRestrictions.includes('None')
-                  ? 'bg-gray-100 border-gray-200 cursor-not-allowed text-gray-400'
-                  : 'bg-white border-gray-300'
-              }`}
+                  dietaryRestrictions.includes("None")
+                    ? "bg-gray-100 border-gray-200 cursor-not-allowed text-gray-400"
+                    : "bg-white border-gray-300"
+                }`}
                 id="allergy-details"
-                placeholder={dietaryRestrictions.includes('None') ? 'No allergies to report' : 'Enter a description...'}
-                value={dietaryRestrictions.includes('None') ? '' : allergyDetails}
+                placeholder={
+                  dietaryRestrictions.includes("None")
+                    ? "No allergies to report"
+                    : "Enter a description..."
+                }
+                value={
+                  dietaryRestrictions.includes("None") ? "" : allergyDetails
+                }
                 onChange={(e) =>
-                  !dietaryRestrictions.includes('None') &&
+                  !dietaryRestrictions.includes("None") &&
                   onChange({ ...formData, allergyDetails: e.target.value })
                 }
-                disabled={dietaryRestrictions.includes('None')}
+                disabled={dietaryRestrictions.includes("None")}
               />
             </div>
 

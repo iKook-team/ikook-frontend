@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Button } from "@heroui/react";
 import { X } from "lucide-react";
+
 import { GooglePlacesAutocomplete } from "@/components/ui/google-places-autocomplete";
 
 export interface FilterPanelFilters {
@@ -36,8 +37,12 @@ export function FilterPanel({
     setLocalFilters(filters || {});
   }, [filters]);
 
-  const handleInputChange = (key: keyof FilterPanelFilters, value: string | number) => {
+  const handleInputChange = (
+    key: keyof FilterPanelFilters,
+    value: string | number,
+  ) => {
     const updated = { ...localFilters, [key]: value };
+
     setLocalFilters(updated);
     // Debounce text inputs for real-time filtering
     if (key === "menu_name" || key === "chef_name") {
@@ -47,17 +52,27 @@ export function FilterPanel({
 
   const handleCityChange = (city: string, _placeId?: string) => {
     const updated = { ...localFilters, city };
+
     setLocalFilters(updated);
     onFiltersChange(updated);
   };
 
   const handleApply = () => {
     // Validate price range and clean up empty values
-    const minPrice = localFilters.price_min ? Number(localFilters.price_min) : undefined;
-    const maxPrice = localFilters.price_max ? Number(localFilters.price_max) : undefined;
+    const minPrice = localFilters.price_min
+      ? Number(localFilters.price_min)
+      : undefined;
+    const maxPrice = localFilters.price_max
+      ? Number(localFilters.price_max)
+      : undefined;
 
-    if (minPrice !== undefined && maxPrice !== undefined && minPrice > maxPrice) {
+    if (
+      minPrice !== undefined &&
+      maxPrice !== undefined &&
+      minPrice > maxPrice
+    ) {
       alert("Minimum price cannot be greater than maximum price");
+
       return;
     }
 
@@ -74,7 +89,7 @@ export function FilterPanel({
     Object.keys(cleanedFilters).forEach(
       (key) =>
         cleanedFilters[key as keyof FilterPanelFilters] === undefined &&
-        delete cleanedFilters[key as keyof FilterPanelFilters]
+        delete cleanedFilters[key as keyof FilterPanelFilters],
     );
 
     onApply(cleanedFilters);
@@ -85,6 +100,7 @@ export function FilterPanel({
 
   const handleReset = () => {
     const emptyFilters: FilterPanelFilters = {};
+
     setLocalFilters(emptyFilters);
     onApply(emptyFilters);
     if (onClose) {
@@ -179,7 +195,10 @@ export function FilterPanel({
                 placeholder="Min price"
                 value={localFilters.price_min || ""}
                 onChange={(e) =>
-                  handleInputChange("price_min", e.target.value ? Number(e.target.value) : "")
+                  handleInputChange(
+                    "price_min",
+                    e.target.value ? Number(e.target.value) : "",
+                  )
                 }
                 className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm"
                 aria-label="Filter by minimum price"
@@ -201,7 +220,10 @@ export function FilterPanel({
                 placeholder="Max price"
                 value={localFilters.price_max || ""}
                 onChange={(e) =>
-                  handleInputChange("price_max", e.target.value ? Number(e.target.value) : "")
+                  handleInputChange(
+                    "price_max",
+                    e.target.value ? Number(e.target.value) : "",
+                  )
                 }
                 className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm"
                 aria-label="Filter by maximum price"

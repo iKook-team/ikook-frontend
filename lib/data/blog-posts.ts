@@ -1,11 +1,13 @@
-import { calculateReadTime } from './calculate-read-time';
+import { calculateReadTime } from "./calculate-read-time";
 
 export const blogPosts = [
   {
     id: 5,
     slug: "its-that-time-of-the-year-again-lets-talk-christmas-food-good-vibes",
-    title: "It’s That Time of the Year Again… Let’s Talk Christmas, Food & Good Vibes",
-    excerpt: "Ah yes, December. That magical time of the year when the group chats are buzzing, calendars are fully booked, and everyone suddenly remembers long-lost cousins.",
+    title:
+      "It’s That Time of the Year Again… Let’s Talk Christmas, Food & Good Vibes",
+    excerpt:
+      "Ah yes, December. That magical time of the year when the group chats are buzzing, calendars are fully booked, and everyone suddenly remembers long-lost cousins.",
     content: `
       <p>Ah yes, December.</p>
       <p>That magical time of the year when the group chats are buzzing, calendars are fully booked, and everyone suddenly remembers long-lost cousins.</p>
@@ -63,13 +65,16 @@ export const blogPosts = [
     `),
     date: "December 24, 2025",
     author: "iKooK Team",
-    authorAvatar: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
+    authorAvatar:
+      "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
   },
   {
     id: 1,
     slug: "should-wives-still-be-slaving-in-kitchen-during-festive-periods",
-    title: "In 2025, Should Wives Still Be Slaving in the Kitchen During Festive Periods?",
-    excerpt: "Breaking the cycle of women's unpaid labor during holidays with iKooK's professional chef services.",
+    title:
+      "In 2025, Should Wives Still Be Slaving in the Kitchen During Festive Periods?",
+    excerpt:
+      "Breaking the cycle of women's unpaid labor during holidays with iKooK's professional chef services.",
     content: `
       <p>In 2025, are we really still asking if wives should rest and be fully involved in bonding with the family during festive periods?</p>
       
@@ -93,7 +98,8 @@ export const blogPosts = [
       
       <p>Book an iKooK chef and give the women in your life the gift of a stress-free festive season.</p>
     `,
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/f4b8b58012c47362abf1359d23385b5fb6cff17f?width=1216",
+    image:
+      "https://api.builder.io/api/v1/image/assets/TEMP/f4b8b58012c47362abf1359d23385b5fb6cff17f?width=1216",
     readTime: calculateReadTime(`
       <p>In 2025, are we really still asking if wives should rest and be fully involved in bonding with the family during festive periods?</p>
       
@@ -119,13 +125,15 @@ export const blogPosts = [
     `),
     date: "November 1, 2025",
     author: "iKooK Team",
-    authorAvatar: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
+    authorAvatar:
+      "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
   },
   {
     id: 2,
     slug: "why-corporate-parties-better-with-chef-than-caterer",
     title: "Why Corporate Parties Are Better With a Chef Than a Caterer",
-    excerpt: "Transform your corporate events from predictable to unforgettable with a private chef experience.",
+    excerpt:
+      "Transform your corporate events from predictable to unforgettable with a private chef experience.",
     content: `
       <p>It's the season of jingle bells; the time when companies close their books, teams breathe out, and we all gather to toast the good, the bad, and even the ugly days of the year gone by. End-of-year parties are more than just events; they are a chance to feel comfortable, grateful, and most importantly, special.</p>
       
@@ -143,7 +151,8 @@ export const blogPosts = [
       
       <p>Book iKooK for your end-of-year hangout, and let a private chef show your team what celebration really tastes like.</p>
     `,
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/962d61e257213dccf160da83706d978aa1ecce27?width=600",
+    image:
+      "https://api.builder.io/api/v1/image/assets/TEMP/962d61e257213dccf160da83706d978aa1ecce27?width=600",
     readTime: calculateReadTime(`
       <p>It's the season of jingle bells; the time when companies close their books, teams breathe out, and we all gather to toast the good, the bad, and even the ugly days of the year gone by. End-of-year parties are more than just events; they are a chance to feel comfortable, grateful, and most importantly, special.</p>
       
@@ -163,13 +172,15 @@ export const blogPosts = [
     `),
     date: "November 2, 2025",
     author: "iKooK Team",
-    authorAvatar: "https://www.gravatar.com/avatar/11111111111111111111111111111111?d=mp&f=y",
+    authorAvatar:
+      "https://www.gravatar.com/avatar/11111111111111111111111111111111?d=mp&f=y",
   },
   {
     id: 3,
     slug: "why-go-out-to-eat-when-future-of-dining-is-coming-home",
     title: "Why Go Out to Eat When the Future of Dining is Coming Home?",
-    excerpt: "Discover how on-demand private chefs are transforming Nigeria's dining landscape, bringing restaurant-quality experiences to your doorstep.",
+    excerpt:
+      "Discover how on-demand private chefs are transforming Nigeria's dining landscape, bringing restaurant-quality experiences to your doorstep.",
     content: `
       <p>Over the last decade, Nigeria has witnessed a remarkable shift in how we live and consume services. The rise of the gig economy has redefined convenience, from how we move around our cities to how we access everyday essentials. The common thread across all these changes is simple: Nigerians want services that are flexible, on-demand, and tailored to their lifestyles.</p>
       
@@ -191,7 +202,8 @@ export const blogPosts = [
       
       <p>In a country where food is more than nourishment; it is culture, identity, and celebration, this shift could become one of the most exciting lifestyle transformations of the decade.</p>
     `,
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/23e30eef5ba97cbeff584bbc1dfd327820e663fb?width=600",
+    image:
+      "https://api.builder.io/api/v1/image/assets/TEMP/23e30eef5ba97cbeff584bbc1dfd327820e663fb?width=600",
     readTime: calculateReadTime(`
       <p>Over the last decade, Nigeria has witnessed a remarkable shift in how we live and consume services. The rise of the gig economy has redefined convenience, from how we move around our cities to how we access everyday essentials. The common thread across all these changes is simple: Nigerians want services that are flexible, on-demand, and tailored to their lifestyles.</p>
       
@@ -215,13 +227,16 @@ export const blogPosts = [
     `),
     date: "October 30, 2025",
     author: "iKooK Team",
-    authorAvatar: "https://www.gravatar.com/avatar/22222222222222222222222222222222?d=mp&f=y",
+    authorAvatar:
+      "https://www.gravatar.com/avatar/22222222222222222222222222222222?d=mp&f=y",
   },
   {
     id: 4,
     slug: "ikook-expands-into-short-term-rental-market-with-myabode-partnership",
-    title: "Private Chef Service iKooK Expands into Short-Term Rental Market with Myabode Partnership",
-    excerpt: "iKooK partners with Myabode Apartments to bring private chef services to short-term rental guests in Lagos.",
+    title:
+      "Private Chef Service iKooK Expands into Short-Term Rental Market with Myabode Partnership",
+    excerpt:
+      "iKooK partners with Myabode Apartments to bring private chef services to short-term rental guests in Lagos.",
     content: `
       <p>Lagos, Nigeria — iKooK, a private chef booking platform, has partnered with Myabode Apartments to offer its services across the short-term rental provider's Lagos properties. The collaboration marks a shift in how travelers can access personalized dining experiences during their stays, bringing the convenience of private chef services into the apartment rental space.</p>
       
@@ -263,6 +278,7 @@ export const blogPosts = [
     `),
     date: "October 25, 2025",
     author: "iKooK Team",
-    authorAvatar: "https://www.gravatar.com/avatar/22222222222222222222222222222222?d=mp&f=y",
+    authorAvatar:
+      "https://www.gravatar.com/avatar/22222222222222222222222222222222?d=mp&f=y",
   },
 ];

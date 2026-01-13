@@ -4,6 +4,7 @@ import React from "react";
 import { FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { Button } from "@heroui/react";
+
 import { Addon } from "@/lib/api/addons";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
@@ -33,23 +34,18 @@ export const AddonCartItem: React.FC<AddonCartItemProps> = ({
         />
 
         <div className="flex-1">
-          <h3 className="text-lg font-medium text-gray-900">
-            {addon.name}
-          </h3>
-          <p className="text-sm text-gray-600">
-            by {addon.client_name}
-          </p>
+          <h3 className="text-lg font-medium text-gray-900">{addon.name}</h3>
+          <p className="text-sm text-gray-600">by {addon.client_name}</p>
         </div>
       </div>
 
       <div className="flex items-center space-x-4">
         <div className="text-right">
           <p className="text-lg font-semibold text-[#FCC01C]">
-            {currencySymbol}{formatNumber(parseFloat(addon.price || '0'), market)}
+            {currencySymbol}
+            {formatNumber(parseFloat(addon.price || "0"), market)}
           </p>
-          <p className="text-sm text-gray-500">
-            per service
-          </p>
+          <p className="text-sm text-gray-500">per service</p>
         </div>
 
         <Button
@@ -84,6 +80,7 @@ export const AddonCartSection: React.FC<AddonCartSectionProps> = ({
 
   const totalAddonCost = selectedAddons.reduce((total, addon) => {
     const price = parseFloat(addon.price) || 0;
+
     return total + price;
   }, 0);
 
@@ -94,7 +91,8 @@ export const AddonCartSection: React.FC<AddonCartSectionProps> = ({
           Addon Services
         </h2>
         <p className="text-sm text-yellow-600 mt-1">
-          {selectedAddons.length} service{selectedAddons.length > 1 ? "s" : ""} selected
+          {selectedAddons.length} service{selectedAddons.length > 1 ? "s" : ""}{" "}
+          selected
         </p>
       </div>
 
@@ -114,11 +112,13 @@ export const AddonCartSection: React.FC<AddonCartSectionProps> = ({
             Addons Subtotal:
           </span>
           <span className="text-lg font-bold text-yellow-700">
-            {currencySymbol}{formatNumber(totalAddonCost, market)}
+            {currencySymbol}
+            {formatNumber(totalAddonCost, market)}
           </span>
         </div>
         <p className="text-sm text-yellow-600 mt-1">
-          {selectedAddons.length} service{selectedAddons.length > 1 ? "s" : ""} selected
+          {selectedAddons.length} service{selectedAddons.length > 1 ? "s" : ""}{" "}
+          selected
         </p>
       </div>
     </div>

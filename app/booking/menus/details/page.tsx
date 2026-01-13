@@ -20,9 +20,16 @@ const Index: React.FC = () => {
   const { menu, loading, error } = useMenu(menuId);
   const userType = useAuthStore((s) => s.userType);
   const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
-  const setBookingMenuSelection = useAuthStore((s) => s.setBookingMenuSelection);
-  const setBookingSelectedAddons = useAuthStore((s) => s.setBookingSelectedAddons);
-  const [selectedItems, setSelectedItems] = useState<Record<string, Set<number>> | null>({});
+  const setBookingMenuSelection = useAuthStore(
+    (s) => s.setBookingMenuSelection,
+  );
+  const setBookingSelectedAddons = useAuthStore(
+    (s) => s.setBookingSelectedAddons,
+  );
+  const [selectedItems, setSelectedItems] = useState<Record<
+    string,
+    Set<number>
+  > | null>({});
   const [selectedAddons, setSelectedAddons] = useState<number[]>([]);
   const [addons, setAddons] = useState<any[]>([]);
   const [addonsLoading, setAddonsLoading] = useState(true);
@@ -33,9 +40,10 @@ const Index: React.FC = () => {
       try {
         setAddonsLoading(true);
         const response = await addonService.getAddons();
+
         setAddons(response.data);
       } catch (error) {
-        console.error('Failed to fetch addons:', error);
+        console.error("Failed to fetch addons:", error);
         setAddons([]);
       } finally {
         setAddonsLoading(false);
@@ -64,7 +72,10 @@ const Index: React.FC = () => {
   useEffect(() => {
     if (selectedItems) {
       // Flatten selectedItems (Record<string, Set<number>>) to array of IDs
-      const selectedIds = Object.values(selectedItems).flatMap((set) => Array.from(set));
+      const selectedIds = Object.values(selectedItems).flatMap((set) =>
+        Array.from(set),
+      );
+
       setBookingMenuSelection(selectedIds);
     } else {
       setBookingMenuSelection([]);
@@ -74,7 +85,10 @@ const Index: React.FC = () => {
   useEffect(() => {
     setBookingSelectedAddons(selectedAddons);
     console.log("💾 Selected addons saved to store:", selectedAddons);
-    console.log("💾 Selected addons types:", selectedAddons.map(id => ({ id, type: typeof id })));
+    console.log(
+      "💾 Selected addons types:",
+      selectedAddons.map((id) => ({ id, type: typeof id })),
+    );
   }, [selectedAddons, setBookingSelectedAddons]);
 
   if (userType === "chef") {
@@ -105,8 +119,6 @@ const Index: React.FC = () => {
         <HeroSection menu={menu} />
         <ImageGallery images={menu.images} />
 
-        
-
         <div className="w-full max-w-[1115px] mt-[60px] max-md:max-w-full max-md:mt-10">
           <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
             <ChefMenuSection
@@ -120,7 +132,9 @@ const Index: React.FC = () => {
               selectedAddons={selectedAddons}
               addons={addons}
               onRemoveAddon={(addonId) => {
-                setSelectedAddons(prev => prev.filter(id => id !== addonId));
+                setSelectedAddons((prev) =>
+                  prev.filter((id) => id !== addonId),
+                );
               }}
             />
           </div>
@@ -130,11 +144,16 @@ const Index: React.FC = () => {
           <AddonCarousel
             selectedAddons={selectedAddons}
             onAddonToggle={(addonId) => {
-              console.log("🎯 Addon toggled:", addonId, "Current selected:", selectedAddons);
-              setSelectedAddons(prev =>
+              console.log(
+                "🎯 Addon toggled:",
+                addonId,
+                "Current selected:",
+                selectedAddons,
+              );
+              setSelectedAddons((prev) =>
                 prev.includes(addonId)
-                  ? prev.filter(id => id !== addonId)
-                  : [...prev, addonId]
+                  ? prev.filter((id) => id !== addonId)
+                  : [...prev, addonId],
               );
             }}
           />

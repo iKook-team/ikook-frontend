@@ -12,7 +12,11 @@ import { PreferencesForm } from "@/components/booking/preferences";
 import { MessagesForm } from "@/components/booking/message-form";
 import { Checkout } from "@/components/checkout/checkout";
 import BudgetStep from "@/components/booking/budget-step";
-import { saveBookingDraft, getBookingDraft, clearBookingDraft } from "@/lib/booking-intent";
+import {
+  saveBookingDraft,
+  getBookingDraft,
+  clearBookingDraft,
+} from "@/lib/booking-intent";
 import { addonService } from "@/lib/api/addons";
 
 type BookingStep =
@@ -35,8 +39,11 @@ const LargeEventBookingPage = () => {
   const setBookingMenuSelection = useAuthStore(
     (s) => s.setBookingMenuSelection,
   );
-  const bookingSelectedAddons = useAuthStore((s) => s.bookingSelectedAddons) || [];
-  const setBookingSelectedAddons = useAuthStore((s) => s.setBookingSelectedAddons);
+  const bookingSelectedAddons =
+    useAuthStore((s) => s.bookingSelectedAddons) || [];
+  const setBookingSelectedAddons = useAuthStore(
+    (s) => s.setBookingSelectedAddons,
+  );
   const [availableAddons, setAvailableAddons] = React.useState<any[]>([]);
   const [addonsLoading, setAddonsLoading] = React.useState(true);
   const [selectedMenuItems, setSelectedMenuItems] = useState<string[]>(
@@ -95,15 +102,34 @@ const LargeEventBookingPage = () => {
   React.useEffect(() => {
     if (isResuming) {
       const draft = getBookingDraft();
+
       if (draft) {
         setCurrentStep(draft.step as BookingStep);
         setBookingData(draft.data.bookingData || {});
         setSelectedMenuItems(draft.data.selectedMenuItems || []);
-        setEventDetailsForm(draft.data.eventDetailsForm || { location: "", eventDate: "", guests: menu?.num_of_guests || 1 });
-        setEventDetailsForm2(draft.data.eventDetailsForm2 || { eventType: "", preferredCuisines: [] });
-        setEventDetailsForm3(draft.data.eventDetailsForm3 || { eventTime: "", venue: "" });
+        setEventDetailsForm(
+          draft.data.eventDetailsForm || {
+            location: "",
+            eventDate: "",
+            guests: menu?.num_of_guests || 1,
+          },
+        );
+        setEventDetailsForm2(
+          draft.data.eventDetailsForm2 || {
+            eventType: "",
+            preferredCuisines: [],
+          },
+        );
+        setEventDetailsForm3(
+          draft.data.eventDetailsForm3 || { eventTime: "", venue: "" },
+        );
         setBudgetStep(draft.data.budgetStep || { budget: 0, budgetType: null });
-        setPreferencesForm(draft.data.preferencesForm || { allergyDetails: "", dietaryRestrictions: [] });
+        setPreferencesForm(
+          draft.data.preferencesForm || {
+            allergyDetails: "",
+            dietaryRestrictions: [],
+          },
+        );
         setBookingId(draft.data.bookingId || null);
         clearBookingDraft();
       }
@@ -119,6 +145,7 @@ const LargeEventBookingPage = () => {
       if (data.bookingId) {
         setCurrentStep("checkout");
         window.scrollTo(0, 0);
+
         return;
       }
     }
@@ -133,7 +160,9 @@ const LargeEventBookingPage = () => {
       "checkout",
     ];
     const currentIndex = steps.indexOf(currentStep);
-    const nextStep = currentIndex < steps.length - 1 ? steps[currentIndex + 1] : currentStep;
+    const nextStep =
+      currentIndex < steps.length - 1 ? steps[currentIndex + 1] : currentStep;
+
     // Save draft with the *next* step
     saveBookingDraft({
       step: nextStep,
@@ -177,8 +206,13 @@ const LargeEventBookingPage = () => {
   const renderStep = () => {
     switch (currentStep) {
       case "cart":
-        if (addonsLoading) return <div className='text-lg text-center py-20'>Loading Addon Services...</div>;
-        
+        if (addonsLoading)
+          return (
+            <div className="text-lg text-center py-20">
+              Loading Addon Services...
+            </div>
+          );
+
         // Show loading state if addons haven't been fetched yet
         if (availableAddons.length === 0 && !menuLoading) {
           return (
@@ -192,7 +226,7 @@ const LargeEventBookingPage = () => {
             </div>
           );
         }
-        
+
         return (
           <Cart
             onNext={handleNext}
@@ -207,8 +241,9 @@ const LargeEventBookingPage = () => {
             onAddonToggle={(addonId: number) => {
               const exists = bookingSelectedAddons.includes(addonId);
               const newAddons = exists
-                ? bookingSelectedAddons.filter(a => a !== addonId)
+                ? bookingSelectedAddons.filter((a) => a !== addonId)
                 : [...bookingSelectedAddons, addonId];
+
               setBookingSelectedAddons(newAddons);
             }}
           />

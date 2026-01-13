@@ -90,15 +90,15 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
       id: serviceId,
       chef: serviceData?.chef
         ? {
-          id: serviceData.chef.id,
-          first_name: serviceData.chef.first_name,
-          last_name: serviceData.chef.last_name,
-          avatar: serviceData.chef.avatar,
-          city: serviceData.chef.city,
-          bio: serviceData.chef.bio,
-          num_reviews: serviceData.chef.num_reviews,
-          average_rating: serviceData.chef.average_rating,
-        }
+            id: serviceData.chef.id,
+            first_name: serviceData.chef.first_name,
+            last_name: serviceData.chef.last_name,
+            avatar: serviceData.chef.avatar,
+            city: serviceData.chef.city,
+            bio: serviceData.chef.bio,
+            num_reviews: serviceData.chef.num_reviews,
+            average_rating: serviceData.chef.average_rating,
+          }
         : undefined,
     };
 
@@ -195,7 +195,11 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
               <div className="text-[#030302] text-right text-base font-medium">
                 {serviceData?.starting_price_per_person ? (
                   <>
-                    From ₦{formatNumber(parseFloat(serviceData.starting_price_per_person), market)}
+                    From ₦
+                    {formatNumber(
+                      parseFloat(serviceData.starting_price_per_person),
+                      market,
+                    )}
                     <span className="text-xs"> / person</span>
                   </>
                 ) : (

@@ -177,6 +177,7 @@ export const HostRegistrationForm: React.FC<HostRegistrationFormProps> = ({
                 value={formValues.phoneNumber}
                 onChange={(e) => {
                   const value = e.target.value;
+
                   // Validate phone number
                   if (!value || value.trim() === "") {
                     setValue("phoneNumber", value, { shouldValidate: true });

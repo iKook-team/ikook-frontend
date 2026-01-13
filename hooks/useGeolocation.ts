@@ -33,6 +33,7 @@ export const useGeolocation = (): GeolocationCoordinates => {
 
   useEffect(() => {
     const isSecure = typeof window !== "undefined" && window.isSecureContext;
+
     if (!isSecure) {
       setCoordinates({
         latitude: null,
@@ -59,8 +60,10 @@ export const useGeolocation = (): GeolocationCoordinates => {
     const readCached = () => {
       try {
         const raw = localStorage.getItem("userLocation");
+
         if (!raw) return null;
         const parsed = JSON.parse(raw);
+
         if (
           parsed &&
           typeof parsed.latitude === "number" &&
@@ -69,6 +72,7 @@ export const useGeolocation = (): GeolocationCoordinates => {
           return parsed as { latitude: number; longitude: number };
         }
       } catch {}
+
       return null;
     };
 
@@ -106,6 +110,7 @@ export const useGeolocation = (): GeolocationCoordinates => {
         const perm: any = await (navigator as any).permissions?.query({
           name: "geolocation",
         });
+
         return perm?.state ?? null;
       } catch {
         return null;
@@ -116,7 +121,7 @@ export const useGeolocation = (): GeolocationCoordinates => {
       // Check permission state but don't block on "denied"
       // We still attempt getCurrentPosition to trigger the browser prompt
       const state = await checkPermission();
-      
+
       // Only show guidance if explicitly denied AND we've already tried
       // This allows first-time users to get the prompt
       if (state === "denied" && retryTrigger > 0) {
@@ -139,6 +144,7 @@ export const useGeolocation = (): GeolocationCoordinates => {
           maximumAge: 300000, // up to 5 minutes old
         });
         const { latitude, longitude } = pos.coords;
+
         persist(latitude, longitude);
         setCoordinates({ latitude, longitude, error: null, isLoading: false });
 
@@ -152,6 +158,7 @@ export const useGeolocation = (): GeolocationCoordinates => {
             error: mapError(e),
             isLoading: false,
           });
+
           return;
         }
         // continue to fallback for other errors
@@ -165,6 +172,7 @@ export const useGeolocation = (): GeolocationCoordinates => {
           maximumAge: 0,
         });
         const { latitude, longitude } = pos.coords;
+
         persist(latitude, longitude);
         setCoordinates({ latitude, longitude, error: null, isLoading: false });
 
@@ -172,6 +180,7 @@ export const useGeolocation = (): GeolocationCoordinates => {
       } catch (err: any) {
         // 3) Fallback to cached location if available
         const cached = readCached();
+
         if (cached) {
           setCoordinates({
             latitude: cached.latitude,
@@ -194,6 +203,7 @@ export const useGeolocation = (): GeolocationCoordinates => {
     };
 
     run();
+
     // Cleanup function
     return () => {
       // no-op
@@ -201,4 +211,4 @@ export const useGeolocation = (): GeolocationCoordinates => {
   }, [retryTrigger]);
 
   return { ...coordinates, retry };
-}
+};

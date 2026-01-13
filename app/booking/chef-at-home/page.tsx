@@ -12,7 +12,11 @@ import { EventDetailsForm3 } from "@/components/booking/event-details-form3";
 import { PreferencesForm } from "@/components/booking/preferences";
 import { MessagesForm } from "@/components/booking/message-form";
 import { Checkout } from "@/components/checkout/checkout";
-import { saveBookingDraft, getBookingDraft, clearBookingDraft } from "@/lib/booking-intent";
+import {
+  saveBookingDraft,
+  getBookingDraft,
+  clearBookingDraft,
+} from "@/lib/booking-intent";
 import { addonService } from "@/lib/api/addons";
 
 type BookingStep =
@@ -28,6 +32,7 @@ const ChefAtHomeBookingPage = () => {
   const searchParams = useSearchParams();
   const isCustomBooking = searchParams.get("is_custom") === "true";
   const isResuming = searchParams.get("resume") === "true";
+
   console.log("🏠 Chef-at-home page params:", { isCustomBooking, isResuming });
   const bookingMenu = useAuthStore((s) => s.bookingMenu);
   const setBookingMenu = useAuthStore((s) => s.setBookingMenu);
@@ -35,21 +40,28 @@ const ChefAtHomeBookingPage = () => {
   const setBookingMenuSelection = useAuthStore(
     (s) => s.setBookingMenuSelection,
   );
-  const bookingSelectedAddons = useAuthStore((s) => s.bookingSelectedAddons) ?? [];
-  const setBookingSelectedAddons = useAuthStore((s) => s.setBookingSelectedAddons);
+  const bookingSelectedAddons =
+    useAuthStore((s) => s.bookingSelectedAddons) ?? [];
+  const setBookingSelectedAddons = useAuthStore(
+    (s) => s.setBookingSelectedAddons,
+  );
   const [availableAddons, setAvailableAddons] = React.useState<any[]>([]);
   const [addonsLoading, setAddonsLoading] = React.useState(true);
-  
-  console.log("🏠 Chef-at-home store subscription - bookingSelectedAddons:", bookingSelectedAddons);
-  
+
+  console.log(
+    "🏠 Chef-at-home store subscription - bookingSelectedAddons:",
+    bookingSelectedAddons,
+  );
+
   // Direct store check
   const directStoreCheck = useAuthStore.getState();
+
   console.log("🏠 Chef-at-home direct store check:", {
     bookingSelectedAddons: directStoreCheck.bookingSelectedAddons,
     bookingMenu: !!directStoreCheck.bookingMenu,
-    bookingMenuSelection: directStoreCheck.bookingMenuSelection
+    bookingMenuSelection: directStoreCheck.bookingMenuSelection,
   });
-  
+
   const [selectedMenuItems, setSelectedMenuItems] = useState<string[]>(
     (bookingMenuSelection || []).map((id: any) => String(id)),
   );
@@ -57,6 +69,7 @@ const ChefAtHomeBookingPage = () => {
   const [currentStep, setCurrentStep] = useState<BookingStep>(
     isCustomBooking ? "event-details" : "cart",
   );
+
   console.log("🏠 Chef-at-home currentStep:", currentStep);
   const [bookingData, setBookingData] = useState<Record<string, any>>({});
 
@@ -94,13 +107,27 @@ const ChefAtHomeBookingPage = () => {
   React.useEffect(() => {
     if (isResuming) {
       const draft = getBookingDraft();
+
       if (draft) {
         setCurrentStep(draft.step as BookingStep);
         setBookingData(draft.data.bookingData || {});
         setSelectedMenuItems(draft.data.selectedMenuItems || []);
-        setEventDetailsForm(draft.data.eventDetailsForm || { location: "", eventDate: "", guests: menu?.num_of_guests || 1 });
-        setEventDetailsForm3(draft.data.eventDetailsForm3 || { eventTime: "", venue: "" });
-        setPreferencesForm(draft.data.preferencesForm || { allergyDetails: "", dietaryRestrictions: [] });
+        setEventDetailsForm(
+          draft.data.eventDetailsForm || {
+            location: "",
+            eventDate: "",
+            guests: menu?.num_of_guests || 1,
+          },
+        );
+        setEventDetailsForm3(
+          draft.data.eventDetailsForm3 || { eventTime: "", venue: "" },
+        );
+        setPreferencesForm(
+          draft.data.preferencesForm || {
+            allergyDetails: "",
+            dietaryRestrictions: [],
+          },
+        );
         setBookingId(draft.data.bookingId || null);
         clearBookingDraft();
       }
@@ -124,7 +151,9 @@ const ChefAtHomeBookingPage = () => {
       "checkout",
     ];
     const currentIndex = steps.indexOf(currentStep);
-    const nextStep = currentIndex < steps.length - 1 ? steps[currentIndex + 1] : currentStep;
+    const nextStep =
+      currentIndex < steps.length - 1 ? steps[currentIndex + 1] : currentStep;
+
     // Save draft with the *next* step
     saveBookingDraft({
       step: nextStep,
@@ -162,7 +191,10 @@ const ChefAtHomeBookingPage = () => {
   };
 
   const renderStep = () => {
-    console.log("🏠 Chef-at-home renderStep called with currentStep:", currentStep);
+    console.log(
+      "🏠 Chef-at-home renderStep called with currentStep:",
+      currentStep,
+    );
     // Skip cart step for custom booking
     if (isCustomBooking && currentStep === "cart") {
       console.log("🏠 Chef-at-home: Skipping cart step for custom booking");
@@ -173,16 +205,24 @@ const ChefAtHomeBookingPage = () => {
 
     switch (currentStep) {
       case "cart":
-        if (addonsLoading) return <div className='text-lg text-center py-20'>Loading Addon Services...</div>;
-        console.log("[ChefAtHome] Cart step: bookingSelectedAddons =", bookingSelectedAddons);
+        if (addonsLoading)
+          return (
+            <div className="text-lg text-center py-20">
+              Loading Addon Services...
+            </div>
+          );
+        console.log(
+          "[ChefAtHome] Cart step: bookingSelectedAddons =",
+          bookingSelectedAddons,
+        );
         console.log("🏠 Chef-at-home rendering cart step with:", {
           bookingSelectedAddons,
           localSelectedAddons: bookingSelectedAddons,
           availableAddonsCount: availableAddons.length,
           selectedMenuItemsCount: selectedMenuItems.length,
-          menu: !!menu
+          menu: !!menu,
         });
-        
+
         // Show loading state if addons haven't been fetched yet
         if (availableAddons.length === 0 && !menuLoading) {
           return (
@@ -196,7 +236,7 @@ const ChefAtHomeBookingPage = () => {
             </div>
           );
         }
-        
+
         const cartProps = {
           onNext: handleNext,
           menu: menu,
@@ -211,18 +251,19 @@ const ChefAtHomeBookingPage = () => {
             // This toggles - don't mutate in place
             const exists = bookingSelectedAddons.includes(addonId);
             const newAddons = exists
-              ? bookingSelectedAddons.filter(a => a !== addonId)
+              ? bookingSelectedAddons.filter((a) => a !== addonId)
               : [...bookingSelectedAddons, addonId];
+
             setBookingSelectedAddons(newAddons);
-          }
+          },
         };
-        
+
         console.log("🏠 Chef-at-home Cart props:", {
           selectedAddons: cartProps.selectedAddons,
           availableAddonsCount: cartProps.availableAddons.length,
-          menu: !!cartProps.menu
+          menu: !!cartProps.menu,
         });
-        
+
         return <Cart {...cartProps} />;
       case "event-details":
         return (
@@ -295,7 +336,11 @@ const ChefAtHomeBookingPage = () => {
     }
   };
 
-  console.log("🏠 Chef-at-home page about to render, currentStep:", currentStep);
+  console.log(
+    "🏠 Chef-at-home page about to render, currentStep:",
+    currentStep,
+  );
+
   return (
     <div className="min-h-screen w-full bg-gray-50 flex items-center justify-center px-2 py-4 sm:px-4 lg:px-6">
       <div className="w-full max-w-4xl">{renderStep()}</div>

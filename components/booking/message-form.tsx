@@ -56,6 +56,7 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
   // Restore message from draft if present
   React.useEffect(() => {
     const draft = getBookingDraft();
+
     if (draft && draft.data && typeof draft.data.message === "string") {
       setMessage(draft.data.message);
     }
@@ -328,6 +329,7 @@ const MessagesForm: React.FC<MessagesFormProps> = ({
     setMessage(e.target.value);
     // Save message to draft
     const draft = getBookingDraft() || { step: "", data: {} };
+
     saveBookingDraft({
       step: draft.step || "",
       data: {

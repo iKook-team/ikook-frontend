@@ -1,15 +1,18 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
+
 import { Navigation } from "@/components/auth/Navigation";
 import { Footer } from "@/components/footer/footer";
 
 export const metadata: Metadata = {
   title: "Booking Success | iKook",
-  description: "Your private chef booking request has been submitted successfully. Our team will contact you soon.",
+  description:
+    "Your private chef booking request has been submitted successfully. Our team will contact you soon.",
   openGraph: {
     title: "Booking Success | iKook",
-    description: "Your private chef booking request has been submitted successfully.",
+    description:
+      "Your private chef booking request has been submitted successfully.",
     url: "https://ikook.co.uk/booking-success",
     type: "website",
   },
@@ -27,7 +30,7 @@ export default function BookingSuccessPage() {
           gtag('event', 'conversion', {'send_to': 'AW-10834951340/j3s2CObnms8bEKz5wK4o'});
         `}
       </Script>
-      
+
       <Navigation />
 
       <main className="flex w-full flex-col items-stretch mt-[110px] max-md:mt-10">
@@ -50,7 +53,7 @@ export default function BookingSuccessPage() {
                   />
                 </svg>
               </div>
-              
+
               <h1 className="text-[#323335] text-[50px] font-bold leading-none mb-6 max-md:text-[40px]">
                 Booking
                 <span className="ml-3 relative inline-block">
@@ -58,39 +61,57 @@ export default function BookingSuccessPage() {
                   <span className="relative z-[3]">Successful!</span>
                 </span>
               </h1>
-              
+
               <p className="text-[#323335] text-xl font-medium mb-8 max-w-3xl mx-auto">
-                Thank you for your booking request! We&apos;ve received your details and our team is already working to find the perfect chef for your event.
+                Thank you for your booking request! We&apos;ve received your
+                details and our team is already working to find the perfect chef
+                for your event.
               </p>
-              
+
               <p className="text-gray-600 text-lg mb-12 max-w-2xl mx-auto">
-                One of our representatives will contact you shortly to discuss your requirements and match you with the ideal private chef.
+                One of our representatives will contact you shortly to discuss
+                your requirements and match you with the ideal private chef.
               </p>
             </div>
 
             <div className="bg-gray-50 rounded-2xl p-8 mb-12">
-              <h2 className="text-2xl font-semibold text-[#323335] mb-6">What happens next?</h2>
+              <h2 className="text-2xl font-semibold text-[#323335] mb-6">
+                What happens next?
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-blue-600 font-bold">1</span>
                   </div>
-                  <h3 className="font-semibold text-[#323335] mb-2">Review Your Request</h3>
-                  <p className="text-gray-600 text-sm">Our team reviews your event details and requirements</p>
+                  <h3 className="font-semibold text-[#323335] mb-2">
+                    Review Your Request
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    Our team reviews your event details and requirements
+                  </p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-blue-600 font-bold">2</span>
                   </div>
-                  <h3 className="font-semibold text-[#323335] mb-2">Chef Matching</h3>
-                  <p className="text-gray-600 text-sm">We match you with the perfect chef based on your needs</p>
+                  <h3 className="font-semibold text-[#323335] mb-2">
+                    Chef Matching
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    We match you with the perfect chef based on your needs
+                  </p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-blue-600 font-bold">3</span>
                   </div>
-                  <h3 className="font-semibold text-[#323335] mb-2">Contact You</h3>
-                  <p className="text-gray-600 text-sm">We&#39;ll call or email to confirm details and finalize booking</p>
+                  <h3 className="font-semibold text-[#323335] mb-2">
+                    Contact You
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    We&#39;ll call or email to confirm details and finalize
+                    booking
+                  </p>
                 </div>
               </div>
             </div>

@@ -120,10 +120,11 @@ export const ServiceSelection: React.FC<ServiceSelectionProps> = ({
           <button
             onClick={handleContinue}
             disabled={!selectedService}
-            className={`px-5 py-3 text-white rounded-lg border transition-colors w-[150px] ${selectedService
+            className={`px-5 py-3 text-white rounded-lg border transition-colors w-[150px] ${
+              selectedService
                 ? "bg-amber-400 border-amber-400 hover:bg-amber-500"
                 : "bg-gray-300 border-gray-300 cursor-not-allowed"
-              }`}
+            }`}
           >
             Continue
           </button>

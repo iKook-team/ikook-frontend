@@ -50,12 +50,14 @@ export const GooglePlacesAutocomplete: React.FC<
 
     if (!apiKey) {
       console.error("Google Maps API key is not configured");
+
       return;
     }
 
     // Check if script is already loaded
     if (window.google && window.google.maps && window.google.maps.places) {
       setIsLoaded(true);
+
       return;
     }
 
@@ -63,16 +65,19 @@ export const GooglePlacesAutocomplete: React.FC<
     const existingScript = document.querySelector(
       'script[src*="maps.googleapis.com"]',
     );
+
     if (existingScript) {
       // Wait for script to load
       existingScript.addEventListener("load", () => {
         setIsLoaded(true);
       });
+
       return;
     }
 
     // Load Google Maps script
     const script = document.createElement("script");
+
     script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&language=en`;
     script.async = true;
     script.defer = true;
@@ -148,21 +153,22 @@ export const GooglePlacesAutocomplete: React.FC<
     // Handle input changes for validation
     const handleInputChange = (e: Event) => {
       const target = e.target as HTMLInputElement;
+
       setInputValue(target.value);
       setHasValidSelection(false);
       setHasInteracted(false);
     };
 
-    inputRef.current.addEventListener('input', handleInputChange);
-    inputRef.current.addEventListener('blur', handleBlur);
+    inputRef.current.addEventListener("input", handleInputChange);
+    inputRef.current.addEventListener("blur", handleBlur);
 
     return () => {
       // Cleanup input event listeners
       if (inputRef.current) {
-        inputRef.current.removeEventListener('input', handleInputChange);
-        inputRef.current.removeEventListener('blur', handleBlur);
+        inputRef.current.removeEventListener("input", handleInputChange);
+        inputRef.current.removeEventListener("blur", handleBlur);
       }
-      
+
       // Cleanup autocomplete listener
       if (autocompleteRef.current) {
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
@@ -180,8 +186,9 @@ export const GooglePlacesAutocomplete: React.FC<
     }
   }, [value]);
 
-  const showError = error || (hasInteracted && required && !hasValidSelection && inputValue);
-  
+  const showError =
+    error || (hasInteracted && required && !hasValidSelection && inputValue);
+
   return (
     <div className={className}>
       {label && (
@@ -194,14 +201,16 @@ export const GooglePlacesAutocomplete: React.FC<
         ref={inputRef}
         type="text"
         defaultValue={value}
-        placeholder={placeholder || "Type and select your city from the dropdown"}
+        placeholder={
+          placeholder || "Type and select your city from the dropdown"
+        }
         disabled={disabled || !isLoaded}
         className={`w-full px-3.5 py-2.5 rounded-lg border ${
           showError
             ? "border-red-500 focus:border-red-500 focus:ring-red-500"
             : hasValidSelection && inputValue
-            ? "border-green-500 focus:border-green-500 focus:ring-green-500"
-            : "border-[#CFCFCE] focus:border-[#FCC01C] focus:ring-[#FCC01C]"
+              ? "border-green-500 focus:border-green-500 focus:ring-green-500"
+              : "border-[#CFCFCE] focus:border-[#FCC01C] focus:ring-[#FCC01C]"
         } focus:outline-none focus:ring-2 focus:ring-offset-0 text-base text-[#0F0E0C] bg-white disabled:bg-gray-100 disabled:cursor-not-allowed ${inputClassName}`}
         onChange={(e) => {
           // Allow manual typing, but don't call onChange until place is selected
@@ -220,4 +229,3 @@ export const GooglePlacesAutocomplete: React.FC<
     </div>
   );
 };
-

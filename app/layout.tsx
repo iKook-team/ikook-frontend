@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
-import { Analytics } from '@vercel/analytics/next';
+import { Analytics } from "@vercel/analytics/next";
 import clsx from "clsx";
 
 import { Providers } from "./providers";
@@ -93,7 +93,10 @@ export default function RootLayout({
     <html suppressHydrationWarning lang="en">
       <head>
         {/* Google tag (gtag.js) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10834951340"></script>
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=AW-10834951340"
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -104,7 +107,7 @@ export default function RootLayout({
               gtag('config', 'AW-10834951340');
             `,
           }}
-        ></script>
+        />
         {/* End Google tag */}
 
         {/* Meta Pixel Code */}
@@ -128,7 +131,7 @@ export default function RootLayout({
           <img
             height="1"
             width="1"
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
             src="https://www.facebook.com/tr?id=2295675630856427&ev=PageView&noscript=1"
             alt=""
           />

@@ -53,6 +53,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
     const onDocPaste = (e: ClipboardEvent) => {
       if (!e.clipboardData) return;
       const pasted = e.clipboardData.getData("text").replace(/\D/g, "");
+
       if (!pasted) return;
 
       // Determine start index based on focused element
@@ -63,6 +64,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
       const chars = pasted.slice(0, 6).split("");
       const newValues = [...otpValues];
       let i = startIndex;
+
       for (const ch of chars) {
         if (i > 5) break;
         newValues[i] = ch;
@@ -71,8 +73,10 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
       setOtpValues(newValues);
 
       const nextEmpty = newValues.findIndex((v) => v === "");
+
       if (nextEmpty === -1) {
         const code = newValues.join("");
+
         if (code.length === 6) onSubmit({ otp: code });
       } else {
         inputRefs.current[nextEmpty]?.focus();
@@ -84,6 +88,7 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
     };
 
     document.addEventListener("paste", onDocPaste as any, true);
+
     return () => document.removeEventListener("paste", onDocPaste as any, true);
   }, [otpValues, onSubmit]);
 
@@ -99,33 +104,38 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
     }
   };
 
-  const handlePaste = (startIndex: number) => (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const pasted = e.clipboardData.getData("text").replace(/\D/g, "");
-    if (!pasted) return;
+  const handlePaste =
+    (startIndex: number) => (e: React.ClipboardEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      const pasted = e.clipboardData.getData("text").replace(/\D/g, "");
 
-    const chars = pasted.slice(0, 6).split("");
-    const newValues = [...otpValues];
-    let i = startIndex;
-    for (const ch of chars) {
-      if (i > 5) break;
-      newValues[i] = ch;
-      i += 1;
-    }
-    setOtpValues(newValues);
+      if (!pasted) return;
 
-    // Focus next empty field or submit if complete
-    const nextEmpty = newValues.findIndex((v) => v === "");
-    if (nextEmpty === -1) {
-      // All filled, attempt submit
-      const code = newValues.join("");
-      if (code.length === 6) {
-        onSubmit({ otp: code });
+      const chars = pasted.slice(0, 6).split("");
+      const newValues = [...otpValues];
+      let i = startIndex;
+
+      for (const ch of chars) {
+        if (i > 5) break;
+        newValues[i] = ch;
+        i += 1;
       }
-    } else {
-      inputRefs.current[nextEmpty]?.focus();
-    }
-  };
+      setOtpValues(newValues);
+
+      // Focus next empty field or submit if complete
+      const nextEmpty = newValues.findIndex((v) => v === "");
+
+      if (nextEmpty === -1) {
+        // All filled, attempt submit
+        const code = newValues.join("");
+
+        if (code.length === 6) {
+          onSubmit({ otp: code });
+        }
+      } else {
+        inputRefs.current[nextEmpty]?.focus();
+      }
+    };
 
   const handleResendCode = async () => {
     setIsResending(true);
@@ -205,10 +215,14 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
               className="mb-6 flex justify-center gap-2"
               onPaste={(e) => {
                 // Delegate container-level paste to the currently focused input index
-                const active = document.activeElement as HTMLInputElement | null;
+                const active =
+                  document.activeElement as HTMLInputElement | null;
                 const idx = inputRefs.current.findIndex((el) => el === active);
                 const startIndex = idx >= 0 ? idx : 0;
-                handlePaste(startIndex)(e as unknown as React.ClipboardEvent<HTMLInputElement>);
+
+                handlePaste(startIndex)(
+                  e as unknown as React.ClipboardEvent<HTMLInputElement>,
+                );
               }}
             >
               {otpValues.map((value, index) => (
@@ -223,9 +237,13 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
                   onPaste={handlePaste(index)}
                   onBulkChange={(digits) => {
                     // Distribute a bulk value (e.g., OS autofill) starting at current index
-                    const chars = digits.replace(/\D/g, "").slice(0, 6).split("");
+                    const chars = digits
+                      .replace(/\D/g, "")
+                      .slice(0, 6)
+                      .split("");
                     const newValues = [...otpValues];
                     let i = index;
+
                     for (const ch of chars) {
                       if (i > 5) break;
                       newValues[i] = ch;
@@ -234,8 +252,10 @@ export const OTPVerification: React.FC<OTPVerificationProps> = ({
                     setOtpValues(newValues);
 
                     const nextEmpty = newValues.findIndex((v) => v === "");
+
                     if (nextEmpty === -1) {
                       const code = newValues.join("");
+
                       if (code.length === 6) onSubmit({ otp: code });
                     } else {
                       inputRefs.current[nextEmpty]?.focus();

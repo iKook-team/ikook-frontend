@@ -4,6 +4,7 @@ import React from "react";
 import { FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { Button } from "@heroui/react";
+
 import { Addon } from "@/lib/api/addons";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
@@ -27,6 +28,7 @@ export const AddonSidebarSection: React.FC<AddonSidebarSectionProps> = ({
 
   const totalAddonCost = selectedAddons.reduce((total, addon) => {
     const price = parseFloat(addon.price) || 0;
+
     return total + price;
   }, 0);
 
@@ -38,7 +40,10 @@ export const AddonSidebarSection: React.FC<AddonSidebarSectionProps> = ({
 
       <div className="space-y-3">
         {selectedAddons.map((addon) => (
-          <div key={addon.id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+          <div
+            key={addon.id}
+            className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg"
+          >
             <Image
               alt={addon.name}
               className="w-12 h-12 object-cover rounded-lg flex-shrink-0"
@@ -50,11 +55,10 @@ export const AddonSidebarSection: React.FC<AddonSidebarSectionProps> = ({
               <h4 className="text-sm font-medium text-gray-900 truncate">
                 {addon.name}
               </h4>
-              <p className="text-xs text-gray-600">
-                by {addon.client_name}
-              </p>
+              <p className="text-xs text-gray-600">by {addon.client_name}</p>
               <p className="text-sm font-semibold text-green-600 mt-1">
-                {currencySymbol}{formatNumber(parseFloat(addon.price || '0'), market)}
+                {currencySymbol}
+                {formatNumber(parseFloat(addon.price || "0"), market)}
               </p>
             </div>
             <Button
@@ -76,7 +80,8 @@ export const AddonSidebarSection: React.FC<AddonSidebarSectionProps> = ({
             Addons Total:
           </span>
           <span className="text-sm font-semibold text-[#FCC01C]">
-            {currencySymbol}{formatNumber(totalAddonCost, market)}
+            {currencySymbol}
+            {formatNumber(totalAddonCost, market)}
           </span>
         </div>
       </div>

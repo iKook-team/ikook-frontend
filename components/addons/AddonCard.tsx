@@ -2,8 +2,9 @@
 
 import React from "react";
 import Image from "next/image";
-import { FaStar, FaCheck } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
 import { Card, CardBody } from "@heroui/react";
+
 import { AddonCardProps } from "@/lib/api/addons";
 import { useMarket } from "@/lib/market-context";
 import { getMarketConfig } from "@/lib/market-config";
@@ -41,7 +42,6 @@ export const AddonCard: React.FC<AddonCardProps> = ({
               <FaCheck className="text-white text-sm" />
             </div>
           )}
-
         </div>
 
         <div className="p-4">
@@ -50,7 +50,8 @@ export const AddonCard: React.FC<AddonCardProps> = ({
               {addon.name}
             </h3>
             <span className="text-lg font-bold text-[#FCC01C] ml-2">
-              {currencySymbol}{formatNumber(parseFloat(addon.price || '0'), market)}
+              {currencySymbol}
+              {formatNumber(parseFloat(addon.price || "0"), market)}
             </span>
           </div>
 

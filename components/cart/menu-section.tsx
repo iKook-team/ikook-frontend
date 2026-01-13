@@ -60,48 +60,49 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
           </div>
         ) : (
           courses.map((course, courseIndex) => (
-          <div
-            key={courseIndex}
-            className={`flex w-full flex-col items-stretch ${courseIndex > 0 ? "mt-6" : ""}`}
-          >
-            <div className="w-full text-lg text-black font-medium leading-loose">
-              <h3>
-                {course.title} x{course.quantity}
-              </h3>
-              <hr className="w-full border-t border-gray-200 mt-1.5" />
-            </div>
-            <div className="flex flex-col items-stretch mt-4">
-              {course.items.map((item, itemIndex) => (
-                <div
-                  key={item.id}
-                  className={`flex items-center gap-3 ${itemIndex > 0 ? "mt-3" : ""}`}
-                >
-                  <button
-                    aria-pressed={selectedMenuItems.includes(item.id)}
-                    className="self-stretch flex items-center justify-center w-5 my-auto"
-                    type="button"
-                    onClick={() => handleItemToggle(item.id)}
+            <div
+              key={courseIndex}
+              className={`flex w-full flex-col items-stretch ${courseIndex > 0 ? "mt-6" : ""}`}
+            >
+              <div className="w-full text-lg text-black font-medium leading-loose">
+                <h3>
+                  {course.title} x{course.quantity}
+                </h3>
+                <hr className="w-full border-t border-gray-200 mt-1.5" />
+              </div>
+              <div className="flex flex-col items-stretch mt-4">
+                {course.items.map((item, itemIndex) => (
+                  <div
+                    key={item.id}
+                    className={`flex items-center gap-3 ${itemIndex > 0 ? "mt-3" : ""}`}
                   >
-                    <Image
-                      alt={
-                        selectedMenuItems.includes(item.id)
-                          ? "Selected"
-                          : "Not selected"
-                      }
-                      className="object-contain self-stretch my-auto"
-                      height={20}
-                      src={checkboxUrl}
-                      width={20}
-                    />
-                  </button>
-                  <label className="text-[#344054] text-base font-medium self-stretch my-auto cursor-pointer">
-                    {item.name}
-                  </label>
-                </div>
-              ))}
+                    <button
+                      aria-pressed={selectedMenuItems.includes(item.id)}
+                      className="self-stretch flex items-center justify-center w-5 my-auto"
+                      type="button"
+                      onClick={() => handleItemToggle(item.id)}
+                    >
+                      <Image
+                        alt={
+                          selectedMenuItems.includes(item.id)
+                            ? "Selected"
+                            : "Not selected"
+                        }
+                        className="object-contain self-stretch my-auto"
+                        height={20}
+                        src={checkboxUrl}
+                        width={20}
+                      />
+                    </button>
+                    <label className="text-[#344054] text-base font-medium self-stretch my-auto cursor-pointer">
+                      {item.name}
+                    </label>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )))}
+          ))
+        )}
       </div>
     </section>
   );

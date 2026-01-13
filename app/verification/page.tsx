@@ -282,6 +282,7 @@ const IdentityVerificationModal = ({
         // UK users: redirect to Didit verification session
         showToast.success("Redirecting to verification session...");
         window.location.href = data.data.verification_url;
+
         return;
       }
 
@@ -435,6 +436,7 @@ const VerificationPage = () => {
     if (market === "GB" && !identityVerified) {
       if (!user?.email) {
         showToast.error("Missing user email. Please sign in again.");
+
         return;
       }
 
@@ -450,10 +452,12 @@ const VerificationPage = () => {
           // UK users: redirect to Didit verification session
           showToast.success("Redirecting to verification session...");
           window.location.href = data.data.verification_url;
+
           return;
         }
       } catch (err) {
         showToast.error("Failed to start verification. Please try again.");
+
         return;
       }
     }
@@ -462,6 +466,7 @@ const VerificationPage = () => {
       // Non-UK users: show the modal
       if (market !== "GB") {
         setShowIdentityModal(true);
+
         return;
       }
     }
@@ -598,9 +603,11 @@ const VerificationPage = () => {
         )}
 
         {!(
-          (hostLike && identityVerified) ||
-          (chefDocument && hasCertificate) ||
-          (market === "GB" && identityVerified) // Hide button for verified UK users
+          (
+            (hostLike && identityVerified) ||
+            (chefDocument && hasCertificate) ||
+            (market === "GB" && identityVerified)
+          ) // Hide button for verified UK users
         ) && (
           <button
             type="button"

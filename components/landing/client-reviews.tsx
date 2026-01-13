@@ -1,5 +1,6 @@
-import React from 'react';
-import SectionHeader from '@/components/common/SectionHeader';
+import React from "react";
+
+import SectionHeader from "@/components/common/SectionHeader";
 
 declare global {
   interface Window {
@@ -12,25 +13,27 @@ declare global {
 const reviews = [
   {
     id: 1,
-    name: 'Ms. Olamide',
-    review: 'The chef truly outdid themselves! The flavours, presentation, and service were \
-    top-notch. Highly recommend! I look forward to trying your service again',
+    name: "Ms. Olamide",
+    review:
+      "The chef truly outdid themselves! The flavours, presentation, and service were \
+    top-notch. Highly recommend! I look forward to trying your service again",
   },
   {
     id: 2,
-    name: 'Ms. Dede',
-    review: 'Thank you sooo much for yesterday We had a great time \
-    And my husband enjoyed every meal',
+    name: "Ms. Dede",
+    review:
+      "Thank you sooo much for yesterday We had a great time \
+    And my husband enjoyed every meal",
   },
   {
     id: 3,
-    name: 'Miss Wunmi',
-    review: 'Hi, I had a good experience with the chef. Thank you so much.',
+    name: "Miss Wunmi",
+    review: "Hi, I had a good experience with the chef. Thank you so much.",
   },
   {
     id: 4,
-    name: 'Ms. Kene',
-    review: 'This is sooo good Thank you sooo much',
+    name: "Ms. Kene",
+    review: "This is sooo good Thank you sooo much",
   },
 ];
 
@@ -40,10 +43,11 @@ export default function ClientReviews() {
 
   React.useEffect(() => {
     const target = trustBoxRef.current;
+
     if (!target) return;
 
     const loadTrustBox = () => {
-      if (typeof window !== 'undefined' && window.Trustpilot?.loadFromElement) {
+      if (typeof window !== "undefined" && window.Trustpilot?.loadFromElement) {
         window.Trustpilot.loadFromElement(target, true);
       }
     };
@@ -61,14 +65,14 @@ export default function ClientReviews() {
   }, []);
 
   const nextReview = () => {
-    setCurrentReviewIndex((prevIndex) => 
-      prevIndex === reviews.length - 1 ? 0 : prevIndex + 1
+    setCurrentReviewIndex((prevIndex) =>
+      prevIndex === reviews.length - 1 ? 0 : prevIndex + 1,
     );
   };
 
   const prevReview = () => {
     setCurrentReviewIndex((prevIndex) =>
-      prevIndex === 0 ? reviews.length - 1 : prevIndex - 1
+      prevIndex === 0 ? reviews.length - 1 : prevIndex - 1,
     );
   };
 
@@ -77,12 +81,12 @@ export default function ClientReviews() {
   return (
     <section className="bg-white py-16 px-4 lg:px-24">
       <div className="max-w-5xl mx-auto">
-        <SectionHeader 
-        title="Our Clients Say"
-        className="text-gray-900 font-bold"
-        // lineClassName="bg-yellow-500"
-        spacingClassName="mb-4"
-      />
+        <SectionHeader
+          title="Our Clients Say"
+          className="text-gray-900 font-bold"
+          // lineClassName="bg-yellow-500"
+          spacingClassName="mb-4"
+        />
         <div className="relative bg-gray-50 p-8 md:p-12 rounded-lg shadow-lg">
           {/* Review Content */}
           <div className="text-center">
@@ -101,7 +105,7 @@ export default function ClientReviews() {
                 key={index}
                 onClick={() => setCurrentReviewIndex(index)}
                 className={`w-3 h-3 rounded-full ${
-                  index === currentReviewIndex ? 'bg-yellow-500' : 'bg-gray-300'
+                  index === currentReviewIndex ? "bg-yellow-500" : "bg-gray-300"
                 }`}
                 aria-label={`View review ${index + 1}`}
               />

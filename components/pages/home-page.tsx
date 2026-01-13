@@ -11,48 +11,48 @@ import ClientReviews from "@/components/landing/client-reviews";
 import { Footer } from "@/components/footer/footer";
 import { useAuthStore } from "@/lib/store/auth-store";
 import {
-    StructuredData,
-    createOrganizationSchema,
+  StructuredData,
+  createOrganizationSchema,
 } from "@/components/seo/structured-data";
 
 export default function HomePage() {
-    const router = useRouter();
-    const { isAuthenticated, user } = useAuthStore();
+  const router = useRouter();
+  const { isAuthenticated, user } = useAuthStore();
 
-    useEffect(() => {
-        if (isAuthenticated && user?.user_type === "Chef") {
-            router.replace("/dashboard/chef");
-        }
-    }, [isAuthenticated, user, router]);
-
+  useEffect(() => {
     if (isAuthenticated && user?.user_type === "Chef") {
-        return null;
+      router.replace("/dashboard/chef");
     }
+  }, [isAuthenticated, user, router]);
 
-    return (
-        <>
-            <StructuredData data={createOrganizationSchema()} />
-            <div className="min-h-screen bg-white">
-                <Navigation />
+  if (isAuthenticated && user?.user_type === "Chef") {
+    return null;
+  }
 
-                <HeroSection />
+  return (
+    <>
+      <StructuredData data={createOrganizationSchema()} />
+      <div className="min-h-screen bg-white">
+        <Navigation />
 
-                {/* <ExperienceSection /> */}
+        <HeroSection />
 
-                {/* <ServicesSection /> */}
+        {/* <ExperienceSection /> */}
 
-                <TopMenuSection />
+        {/* <ServicesSection /> */}
 
-                {/* <WhyIkookSection /> */}
+        <TopMenuSection />
 
-                <ClientReviews />
+        {/* <WhyIkookSection /> */}
 
-                <BlogSection />
+        <ClientReviews />
 
-                <TrustedOrganizationsSection />
+        <BlogSection />
 
-                <Footer />
-            </div>
-        </>
-    );
+        <TrustedOrganizationsSection />
+
+        <Footer />
+      </div>
+    </>
+  );
 }

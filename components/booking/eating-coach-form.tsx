@@ -2,8 +2,8 @@ import React, { useState } from "react";
 
 import { ProgressIndicator } from "./progress-indicator";
 import { ActionButtons } from "./action-buttons";
-import { GooglePlacesAutocomplete } from "@/components/ui/google-places-autocomplete";
 
+import { GooglePlacesAutocomplete } from "@/components/ui/google-places-autocomplete";
 import { ChefCard } from "@/components/cart/chef-card";
 
 interface EatingCoachFormProps {

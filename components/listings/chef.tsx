@@ -195,7 +195,10 @@ export const ChefCard: React.FC<ChefCardProps> = ({
       <Link href={`/chefs/${id}`} className="block">
         <div className="relative overflow-hidden rounded-full mx-auto w-48 h-48 mb-4">
           <img
-            src={profileImageUrl || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'}
+            src={
+              profileImageUrl ||
+              "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+            }
             alt={name}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
           />
@@ -206,12 +209,13 @@ export const ChefCard: React.FC<ChefCardProps> = ({
             onClick={async (e) => {
               e.preventDefault();
               if (liked) return;
-              
+
               setLiked(true);
               try {
                 const newId = await favouritesService.addFavourite({
                   chefId: id as unknown as number,
                 });
+
                 setFavouriteId(newId ?? null);
               } catch (err) {
                 console.debug("[ChefCard] addFavourite failed", err);
@@ -227,11 +231,9 @@ export const ChefCard: React.FC<ChefCardProps> = ({
             )}
           </button>
         </div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">
-          {name}
-        </h3>
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">{name}</h3>
         <p className="text-[#FCC01C] font-medium">
-          {services[0] || 'Professional Chef'}
+          {services[0] || "Professional Chef"}
         </p>
       </Link>
     </div>

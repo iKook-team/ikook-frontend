@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+
 import { FaqSection } from "@/components/faq/faq-section";
 import { Navigation } from "@/components/auth/Navigation";
 import { Footer } from "@/components/footer/footer";
@@ -29,4 +30,3 @@ export default function Faqs() {
     </>
   );
 }
-

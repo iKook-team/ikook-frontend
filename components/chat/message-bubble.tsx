@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { maskContactInfo } from "@/lib/utils/chat-filter";
 
 interface MessageBubbleProps {
@@ -66,7 +67,9 @@ export function MessageBubble({
             </div>
           )}
           {maskedContent && (
-            <div className="text-sm leading-5 text-stone-950">{maskedContent}</div>
+            <div className="text-sm leading-5 text-stone-950">
+              {maskedContent}
+            </div>
           )}
           <time className="mt-1 block text-xs text-neutral-500">
             {timestamp}

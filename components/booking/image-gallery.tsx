@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { LayoutGrid } from "lucide-react";
+
 import { ImageSliderModal } from "./image-slider-modal";
 
 interface ImageGalleryProps {
@@ -81,7 +82,9 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
                 className="absolute right-3 bottom-3 flex items-center gap-1.5 bg-white bg-opacity-90 px-3 py-1.5 rounded-lg hover:bg-opacity-100 transition-all shadow-sm"
               >
                 <LayoutGrid className="w-3.5 h-3.5 text-gray-700" />
-                <span className="text-xs font-semibold text-gray-700">View all</span>
+                <span className="text-xs font-semibold text-gray-700">
+                  View all
+                </span>
               </button>
             </div>
           </div>

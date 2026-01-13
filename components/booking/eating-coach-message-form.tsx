@@ -33,6 +33,7 @@ const EatingCoachMessageForm: React.FC<EatingCoachMessageFormProps> = ({
   // Restore message from draft if present
   React.useEffect(() => {
     const draft = getBookingDraft();
+
     if (draft && draft.data && typeof draft.data.message === "string") {
       setMessage(draft.data.message);
     }
@@ -136,6 +137,7 @@ const EatingCoachMessageForm: React.FC<EatingCoachMessageFormProps> = ({
     setMessage(e.target.value);
     // Save message to draft
     const draft = getBookingDraft() || { step: "", data: {} };
+
     saveBookingDraft({
       step: draft.step || "",
       data: {
