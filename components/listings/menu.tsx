@@ -38,6 +38,7 @@ const Badge: React.FC<BadgeProps> = ({ label, onClick }) => (
 
 interface MenuListingProps {
   id: number;
+  slug?: string;
   title: string;
   price: string;
   img: string;
@@ -58,6 +59,7 @@ interface MenuListingProps {
 export const MenuListing: React.FC<MenuListingProps> = ({
   badges: providedBadges,
   id: _id,
+  slug,
   img,
   location,
   onBadgeClick: _onBadgeClick,
@@ -127,7 +129,7 @@ export const MenuListing: React.FC<MenuListingProps> = ({
   }, [providedBadges, cuisine_types, num_of_guests, courses]);
 
   const handleCardClick = () => {
-    router.push(`/booking/menus/details/${_id}`);
+    router.push(`/booking/menus/details/${slug || _id}`);
   };
 
   const handleBadgeClick = (

@@ -161,6 +161,7 @@ const VerificationBadge = ({
 // Main component interface
 interface ChefCardProps {
   id: number;
+  slug?: string;
   name: string;
   location: string;
   rating: number;
@@ -175,6 +176,7 @@ interface ChefCardProps {
 
 export const ChefCard: React.FC<ChefCardProps> = ({
   id,
+  slug,
   description,
   isVerified = true,
   location,
@@ -192,7 +194,7 @@ export const ChefCard: React.FC<ChefCardProps> = ({
 
   return (
     <div className="text-center group">
-      <Link href={`/chefs/${id}`} className="block">
+      <Link href={`/chefs/${slug || id}`} className="block">
         <div className="relative overflow-hidden rounded-full mx-auto w-48 h-48 mb-4">
           <img
             src={

@@ -27,6 +27,7 @@ const toAbsoluteUrl = (url?: string | null): string => {
 // Map API response to component props
 const mapMenuToItem = (menu: any) => ({
   id: menu.id,
+  slug: menu.slug,
   title: menu.name,
   price: menu.price_per_person,
   img:
@@ -56,6 +57,7 @@ const mapMenuToItem = (menu: any) => ({
 
 const mapChefToItem = (chef: any) => ({
   id: chef.id,
+  slug: chef.slug,
   name: `${chef.first_name} ${chef.last_name}`.trim(),
   location: chef.city || "Unknown location",
   rating: chef.average_rating || 0,

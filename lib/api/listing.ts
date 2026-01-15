@@ -20,6 +20,7 @@ interface ApiResponse<T> {
 
 interface Chef {
   id: number;
+  slug: string;
   first_name: string;
   last_name: string;
   email: string;
@@ -39,6 +40,7 @@ interface Chef {
 
 interface Menu {
   id: number;
+  slug: string;
   name: string;
   description: string;
   price_per_person: string;

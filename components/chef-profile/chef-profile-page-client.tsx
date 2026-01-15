@@ -48,28 +48,30 @@ export const ChefProfilePageClient: React.FC<{ id: string }> = ({ id }) => {
         setError(null);
         const payload = await listingService.getChefById(id);
         const data = (payload as any)?.data ?? payload;
+        const chefProfile = data as ChefProfile;
 
-        if (mounted) setChef(data as ChefProfile);
-        // Fetch reviews for this chef id
+        if (mounted) setChef(chefProfile);
+
+        // Fetch reviews for this chef id (using numeric ID from profile)
         try {
           const resp = await apiClient.get("/reviews/", {
-            params: { chef_id: id },
+            params: { chef_id: chefProfile.id },
           });
           const results = (resp.data?.data?.results ??
             resp.data?.results ??
             []) as any[];
           const mapped = Array.isArray(results)
             ? results.map((r) => ({
-                name:
-                  `${r?.reviewer?.first_name ?? ""} ${r?.reviewer?.last_name ?? ""}`.trim() ||
-                  r?.reviewer?.email ||
-                  "Anonymous",
-                comment: r?.comment ?? "",
-                date: r?.created_at
-                  ? new Date(r.created_at).toLocaleDateString()
-                  : "",
-                avatar: r?.reviewer?.avatar ?? null,
-              }))
+              name:
+                `${r?.reviewer?.first_name ?? ""} ${r?.reviewer?.last_name ?? ""}`.trim() ||
+                r?.reviewer?.email ||
+                "Anonymous",
+              comment: r?.comment ?? "",
+              date: r?.created_at
+                ? new Date(r.created_at).toLocaleDateString()
+                : "",
+              avatar: r?.reviewer?.avatar ?? null,
+            }))
             : [];
 
           if (mounted) setReviews(mapped);

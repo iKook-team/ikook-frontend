@@ -3,7 +3,7 @@ import React from "react";
 import { ChefProfilePageClient } from "@/components/chef-profile/chef-profile-page-client";
 
 interface PageParams {
-  id: string;
+  slug: string;
 }
 
 export default async function Page({
@@ -11,7 +11,7 @@ export default async function Page({
 }: {
   params: Promise<PageParams>;
 }) {
-  const { id } = await params;
+  const { slug } = await params;
 
-  return <ChefProfilePageClient id={id} />;
+  return <ChefProfilePageClient id={slug} />;
 }

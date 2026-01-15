@@ -14,15 +14,15 @@ import { addonService } from "@/lib/api/addons";
 import { ChefProfile } from "@/components/booking/menu-chef-profile";
 
 export default function MenuDetailsPage() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const router = useRouter();
   const userType = useAuthStore((s) => s.userType);
 
   console.log("👤 User type:", userType);
   console.log("🔐 Auth store state:", useAuthStore.getState());
-  // Ensure id is string or number
-  const menuId = Array.isArray(id) ? id[0] : id;
-  const { menu, loading, error } = useMenu(menuId);
+  // Ensure slug is string
+  const menuSlug = Array.isArray(slug) ? slug[0] : slug;
+  const { menu, loading, error } = useMenu(menuSlug);
 
   // LIFTED STATE: selection state per course
   const [selectedItems, setSelectedItems] = useState<Record<
