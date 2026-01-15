@@ -50,6 +50,8 @@ const mapMenuToItem = (menu: any) => ({
   cuisine_types: menu.cuisine_types || [],
   country: menu.chef_details?.country || menu.chef?.country,
   currency: menu.chef_details?.currency || menu.chef?.currency,
+  num_of_guests: menu.num_of_guests,
+  courses: menu.courses || [],
 });
 
 const mapChefToItem = (chef: any) => ({
