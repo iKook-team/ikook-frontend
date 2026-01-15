@@ -5,6 +5,7 @@ import { useMarket } from "@/lib/market-context";
 
 export interface Menu {
   id: number;
+  slug: string;
   name: string;
   description?: string;
   price_per_person: number;

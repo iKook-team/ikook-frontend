@@ -156,7 +156,7 @@ export default function TopMenuSection() {
               className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
             >
               <Link
-                href={`/booking/menus/details/${menu.id}`}
+                href={`/booking/menus/details/${menu.slug}`}
                 className="block"
                 aria-label={`View details for ${menu.name}`}
               >
