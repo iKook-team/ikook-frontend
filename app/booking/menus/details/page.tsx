@@ -139,7 +139,7 @@ const Index: React.FC = () => {
             />
           </div>
         </div>
-        {/* Addon Services Section */}
+        {/* Addon Services Section - HIDDEN FOR NOW
         <div className="w-full max-w-[1115px] mt-[60px] max-md:max-w-full max-md:mt-10">
           <AddonCarousel
             selectedAddons={selectedAddons}
@@ -158,6 +158,7 @@ const Index: React.FC = () => {
             }}
           />
         </div>
+        */}
         <ChefProfile chef={menu.chef} />
         {/* <ReviewsSection />
         <MenusSection /> */}

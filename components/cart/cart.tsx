@@ -50,10 +50,10 @@ export const Cart: React.FC<CartProps> = ({
       // Only include courses that have selected items
       return courseItems.length > 0
         ? {
-            title: courseName,
-            quantity: course.quantity || 1,
-            items: courseItems,
-          }
+          title: courseName,
+          quantity: course.quantity || 1,
+          items: courseItems,
+        }
         : null;
     })
     .filter(Boolean); // Remove null courses
@@ -141,6 +141,7 @@ export const Cart: React.FC<CartProps> = ({
             }
           />
 
+          {/* Addon Services Section - HIDDEN FOR NOW
           <div>
             <SimpleAddonCartSection
               selectedAddons={displayAddons}
@@ -151,6 +152,7 @@ export const Cart: React.FC<CartProps> = ({
               }}
             />
           </div>
+          */}
 
           <IncludedServices services={includedServices} />
 
