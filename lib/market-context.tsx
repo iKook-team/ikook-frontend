@@ -17,7 +17,7 @@ const MarketContext = React.createContext<MarketContextValue | undefined>(
 );
 
 function readMarketFromCookie(): MarketCode {
-  if (typeof document === "undefined") return "GB";
+  if (typeof document === "undefined") return "NG";
   const match = document.cookie
     .split("; ")
     .find((row) => row.startsWith(`${MARKET_COOKIE}=`));
@@ -25,11 +25,11 @@ function readMarketFromCookie(): MarketCode {
 
   if (value === "NG" || value === "GB" || value === "ZA") return value;
 
-  return "GB";
+  return "NG";
 }
 
 export function MarketProvider({ children }: { children: React.ReactNode }) {
-  const [market, setMarket] = React.useState<MarketCode>("GB");
+  const [market, setMarket] = React.useState<MarketCode>("NG");
 
   React.useEffect(() => {
     setMarket(readMarketFromCookie());
@@ -56,7 +56,7 @@ export function MarketProvider({ children }: { children: React.ReactNode }) {
         const next =
           code === "NG" || code === "ZA" || code === "GB"
             ? (code as MarketCode)
-            : "GB";
+            : "NG";
 
         if (!cancelled && next !== market) {
           setMarket(next);
@@ -68,17 +68,17 @@ export function MarketProvider({ children }: { children: React.ReactNode }) {
         // ignore
       }
     }
-    // Only attempt refinement if currently GB (default) AND there isn't a user override cookie
+    // Only attempt refinement if currently NG (default) AND there isn't a user override cookie
     const src =
       typeof document !== "undefined"
         ? document.cookie
-            .split("; ")
-            .find((r) => r.startsWith(`${MARKET_SRC_COOKIE}=`))
-            ?.split("=")[1]
+          .split("; ")
+          .find((r) => r.startsWith(`${MARKET_SRC_COOKIE}=`))
+          ?.split("=")[1]
         : undefined;
     const userOverrode = src === "user";
 
-    if (market === "GB" && !userOverrode) {
+    if (market === "NG" && !userOverrode) {
       refineFromIp();
     }
 

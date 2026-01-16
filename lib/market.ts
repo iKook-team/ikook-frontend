@@ -10,6 +10,6 @@ export function mapCountryCodeToMarket(code?: string): MarketCode {
     case "ZA":
       return "ZA";
     default:
-      return "GB"; // default to UK if outside the three markets
+      return "NG"; // default to NG if outside the three markets
   }
 }

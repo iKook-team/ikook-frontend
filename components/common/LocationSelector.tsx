@@ -16,7 +16,7 @@ type Country = {
 
 const COUNTRIES: Country[] = [
   { code: "NG", name: "Nigeria", flag: "🇳🇬" },
-  { code: "GB", name: "United Kingdom", flag: "🇬🇧" },
+  // { code: "GB", name: "United Kingdom", flag: "🇬🇧" },
   { code: "ZA", name: "South Africa", flag: "🇿🇦" },
 ];
 
@@ -25,7 +25,7 @@ export const LocationSelector: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
   const [selectedCountry, setSelectedCountry] = useState<Country>(
-    () => COUNTRIES.find((c) => c.code === market) || COUNTRIES[1],
+    () => COUNTRIES.find((c) => c.code === market) || COUNTRIES[0],
   );
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -120,9 +120,8 @@ export const LocationSelector: React.FC = () => {
             >
               <button
                 type="button"
-                className={`w-full text-left px-3 py-2 flex items-center gap-2 hover:bg-gray-50 ${
-                  c.code === selectedCountry.code ? "bg-gray-50" : ""
-                }`}
+                className={`w-full text-left px-3 py-2 flex items-center gap-2 hover:bg-gray-50 ${c.code === selectedCountry.code ? "bg-gray-50" : ""
+                  }`}
                 onClick={() => onSelect(c)}
               >
                 <span className="text-lg" aria-hidden>

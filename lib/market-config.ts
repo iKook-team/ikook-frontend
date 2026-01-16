@@ -8,7 +8,7 @@ export type MarketConfig = {
   phoneCountryCode: string; // E.164 prefix
 };
 
-export const MARKET_CONFIG: Record<MarketCode, MarketConfig> = {
+export const MARKET_CONFIG: Record<MarketCode, MarketConfig> | any = {
   NG: {
     code: "NG",
     locale: "en-NG",
@@ -16,13 +16,13 @@ export const MARKET_CONFIG: Record<MarketCode, MarketConfig> = {
     currencySymbol: "₦",
     phoneCountryCode: "+234",
   },
-  GB: {
+  /* GB: {
     code: "GB",
     locale: "en-GB",
     currency: "GBP",
     currencySymbol: "£",
     phoneCountryCode: "+44",
-  },
+  }, */
   ZA: {
     code: "ZA",
     locale: "en-ZA",
@@ -33,5 +33,5 @@ export const MARKET_CONFIG: Record<MarketCode, MarketConfig> = {
 };
 
 export function getMarketConfig(code: MarketCode): MarketConfig {
-  return MARKET_CONFIG[code] ?? MARKET_CONFIG.GB;
+  return MARKET_CONFIG[code] ?? MARKET_CONFIG.NG;
 }
