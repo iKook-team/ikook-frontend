@@ -116,6 +116,7 @@ export const Navigation: React.FC = () => {
               >
                 How it Works
               </Link>
+              {/* Gift Link - HIDDEN FOR NOW
               <div className="flex items-center space-x-1">
                 <Link
                   href="/gifts"
@@ -125,6 +126,7 @@ export const Navigation: React.FC = () => {
                 </Link>
                 <Gift className="w-5 h-5 text-[#FCC01C]" />
               </div>
+              */}
               {showJoinAsChef && (
                 <Link
                   // href="/join?role=chef"
@@ -217,6 +219,7 @@ export const Navigation: React.FC = () => {
               >
                 How it Works
               </Link>
+              {/* Gift Link - HIDDEN FOR NOW
               <Link
                 href="/gifts"
                 className="block rounded-md px-3 py-2 text-ikook-secondary hover:bg-gray-50"
@@ -224,6 +227,7 @@ export const Navigation: React.FC = () => {
               >
                 Gifts
               </Link>
+              */}
               {showJoinAsChef && (
                 <Link
                   // href="/join?role=chef"
