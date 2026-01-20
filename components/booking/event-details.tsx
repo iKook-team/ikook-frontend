@@ -8,6 +8,8 @@ import { Button } from "../ui/button";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { useMarket } from "@/lib/market-context";
 import { formatNumber } from "@/lib/format";
+import { getMarketConfig } from "@/lib/market-config";
+import { getCurrencySymbol } from "@/lib/utils/currency";
 
 interface ChefType {
   id: number;
@@ -195,7 +197,7 @@ export const EventDetails: React.FC<EventDetailsProps> = ({
               <div className="text-[#030302] text-right text-base font-medium">
                 {serviceData?.starting_price_per_person ? (
                   <>
-                    From ₦
+                    From {getCurrencySymbol(serviceData, market)}
                     {formatNumber(
                       parseFloat(serviceData.starting_price_per_person),
                       market,

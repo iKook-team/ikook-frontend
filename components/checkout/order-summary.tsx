@@ -35,7 +35,10 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
-  const currency = getCurrencySymbol({ country: booking?.country });
+  const currency = getCurrencySymbol(
+    { country: booking?.country, currency: booking?.currency },
+    market,
+  );
 
   const handlePayment = async () => {
     if (!quote?.id) {

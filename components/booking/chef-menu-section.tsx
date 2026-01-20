@@ -4,6 +4,7 @@ import React, { useState } from "react";
 
 import { useMarket } from "@/lib/market-context";
 import { formatNumber } from "@/lib/format";
+import { getCurrencySymbol } from "@/lib/utils/currency";
 
 interface ChefMenuSectionProps {
   menu: any;
@@ -11,28 +12,6 @@ interface ChefMenuSectionProps {
   setSelectedItems: React.Dispatch<
     React.SetStateAction<Record<string, Set<number>> | null>
   >;
-}
-
-function getCurrencySymbol(menu: any): string {
-  if (menu?.currency) {
-    if (menu.currency === "NGN") return "₦";
-    if (menu.currency === "ZAR") return "R";
-    if (menu.currency === "GBP") return "£";
-  }
-  if (menu?.chef?.currency) {
-    if (menu.chef.currency === "NGN") return "₦";
-    if (menu.chef.currency === "ZAR") return "R";
-    if (menu.chef.currency === "GBP") return "£";
-  }
-  if (menu?.chef?.country) {
-    const country = menu.chef.country;
-
-    if (country === "Nigeria") return "₦";
-    if (country === "South Africa") return "R";
-    if (country === "United Kingdom") return "£";
-  }
-
-  return "₦";
 }
 
 export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({
@@ -210,7 +189,7 @@ export const ChefMenuSection: React.FC<ChefMenuSectionProps> = ({
                   <span
                     style={{ fontWeight: 500, color: "rgba(252,192,28,1)" }}
                   >
-                    {getCurrencySymbol(menu)}
+                    {getCurrencySymbol(menu, market)}
                     {formatNumber(
                       menu.courses_extra_charge_per_person?.[course] || 0,
                       market,

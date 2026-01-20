@@ -10,6 +10,8 @@ import { handleApiError } from "@/lib/utils/toast";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { useMarket } from "@/lib/market-context";
 import { formatNumber } from "@/lib/format";
+import { getMarketConfig } from "@/lib/market-config";
+import { getCurrencySymbol } from "@/lib/utils/currency";
 
 // Accept either a booking object or the old props for backward compatibility
 export type BookingCardProps =
@@ -38,7 +40,7 @@ export const BookingCard: React.FC<BookingCardProps> = (props) => {
       ? new Date(booking.created_at).toLocaleDateString()
       : "-";
     const formattedCost = booking.total_cost
-      ? `₦${formatNumber(Number(booking.total_cost), market)}`
+      ? `${getCurrencySymbol(booking, market)}${formatNumber(Number(booking.total_cost), market)}`
       : "-";
     const location = booking.city || "-";
     const title = booking.chef_service || "-";
