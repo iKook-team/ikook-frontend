@@ -14,6 +14,11 @@ interface ChefMenuSectionProps {
 }
 
 function getCurrencySymbol(menu: any): string {
+  if (menu?.currency) {
+    if (menu.currency === "NGN") return "₦";
+    if (menu.currency === "ZAR") return "R";
+    if (menu.currency === "GBP") return "£";
+  }
   if (menu?.chef?.currency) {
     if (menu.chef.currency === "NGN") return "₦";
     if (menu.chef.currency === "ZAR") return "R";
