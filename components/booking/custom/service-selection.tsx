@@ -16,47 +16,28 @@ export const ServiceSelection: React.FC<ServiceSelectionProps> = ({
 }) => {
   const services = [
     {
-      imageSrc:
-        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/3401a0546ac1f09aa210faddfa300ccfaac8de9b?placeholderIfAbsent=true",
+      imageSrc: "/chef-at-home.png",
       title: "Chef at Home",
-      description: "Hire the best private chef for your mini event",
-      titleAlignment: "left" as const,
     },
     {
-      imageSrc:
-        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/979638d451296043ed838c953bfad548df06d5b9?placeholderIfAbsent=true",
+      imageSrc: "/large-event.png",
       title: "Large Event",
-      description:
-        "Events with more than 40 people here is the service for you",
-      titleAlignment: "center" as const,
     },
     {
-      imageSrc:
-        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/d814b6ccd4aaae4a49147f3e5d57c1c0f1ec466b?placeholderIfAbsent=true",
+      imageSrc: "/meal-prep.png",
       title: "Meal Prep",
-      description: "Hire a chef to cook for you weekly/monthly at a go",
-      titleAlignment: "left" as const,
     },
     {
-      imageSrc:
-        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/683179e13a90b06aafeaad7fe0487faaefeaaee3?placeholderIfAbsent=true",
+      imageSrc: "/meal-delivery.png",
       title: "Meal Delivery",
-      description: "Won't be home, Our chefs can deliver your meals",
-      titleAlignment: "left" as const,
     },
     {
-      imageSrc:
-        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/8f117432ee94e00d1b1bb09f5f5a358007ae4263?placeholderIfAbsent=true",
+      imageSrc: "/fine-dining.png",
       title: "Fine Dining",
-      description: "Have a taste of the best cuisines",
-      titleAlignment: "center" as const,
     },
     {
-      imageSrc:
-        "https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/f78f0c9ba2bbc2b46e7ac7bb6a4aa25ae0f631a2?placeholderIfAbsent=true",
+      imageSrc: "/corporate-dining.png",
       title: "Corporate Dining",
-      description: "We can serve corporations with the best dining experience",
-      titleAlignment: "left" as const,
     },
   ];
 
@@ -87,12 +68,12 @@ export const ServiceSelection: React.FC<ServiceSelectionProps> = ({
   };
 
   return (
-    <section className="w-full max-w-[654px] mx-auto bg-white rounded-2xl border border-solid shadow-lg border-gray-200 p-4 sm:p-12 my-8">
-      <div className="w-full max-w-[394px] mx-auto">
+    <section className="w-full max-w-[654px] md:max-w-[1000px] mx-auto bg-white rounded-2xl border border-solid shadow-lg border-gray-200 p-4 sm:p-12 my-8">
+      <div className="w-full max-w-[394px] md:max-w-[900px] mx-auto">
         <h1 className="text-2xl font-bold text-center text-black mb-10">
           What service would you like?
         </h1>
-        <div className="grid grid-cols-2 gap-3 sm:gap-6 justify-items-center">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6 justify-items-center">
           {services.map((service, index) => (
             <div
               key={index}
@@ -104,8 +85,6 @@ export const ServiceSelection: React.FC<ServiceSelectionProps> = ({
               <ServiceCard
                 imageSrc={service.imageSrc}
                 title={service.title}
-                description={service.description}
-                titleAlignment={service.titleAlignment}
               />
             </div>
           ))}

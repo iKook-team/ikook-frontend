@@ -32,7 +32,7 @@ export function createOrganizationSchema() {
       "Professional private chef services connecting talented chefs with food enthusiasts across Nigeria, United Kingdom, and South Africa.",
     url: "https://ikook.co.uk",
     logo: "https://ikook.co.uk/footer-logo.png",
-    image: "https://ikook.co.uk/og-image.png",
+    image: "https://ikook.co.uk/og-image.jpg",
     sameAs: [
       // Add your actual social media URLs here
       "https://www.facebook.com/IKOOKAPP",
@@ -182,7 +182,7 @@ export function createBlogPostingSchema(post: {
     headline: post.title,
     description: post.description,
     url: `https://ikook.co.uk/blog/${post.slug}`,
-    image: post.image || "https://ikook.co.uk/og-image.png",
+    image: post.image || "https://ikook.co.uk/og-image.jpg",
     datePublished: post.datePublished,
     dateModified: post.dateModified || post.datePublished,
     author: {
