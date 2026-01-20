@@ -52,14 +52,24 @@ export default function HeroSection() {
           </TextWithHighlight>
         </div>
 
-        {/* Search Card */}
-        <div className="bg-white rounded-lg border border-gray-200 shadow-lg p-8 max-w-4xl mx-auto">
+        {/* Get Started Button */}
+        <div className="flex justify-center mt-12">
+          <Button
+            onClick={() => router.push("/booking/custom")}
+            className="bg-[#323335] hover:bg-[#323335]/90 text-white px-8 py-4 h-auto text-xl font-medium rounded-md flex items-center space-x-3"
+          >
+            <span>Get Started</span>
+          </Button>
+        </div>
+
+        {/* Search Card - Commented out but preserved */}
+        {/*
+        <div className="bg-white rounded-lg border border-gray-200 shadow-lg p-8 max-w-4xl mx-auto mt-12">
           <h2 className="text-xl font-semibold text-[#323335] mb-6">
             Explore Our Best Services
           </h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            {/* Location Input */}
             <div className="border border-gray-200 rounded-lg p-4 focus-within:outline-none focus-within:ring-0">
               <GooglePlacesAutocomplete
                 value={location}
@@ -71,7 +81,6 @@ export default function HeroSection() {
               />
             </div>
 
-            {/* Event Date Input */}
             <div className="border border-gray-200 rounded-lg p-4 focus-within:outline-none focus-within:ring-0 relative">
               <label className="block text-sm font-semibold text-[#323335] opacity-70 mb-1">
                 Event Date
@@ -85,7 +94,6 @@ export default function HeroSection() {
                 onChange={(e) => setEventDate(e.target.value)}
                 className="date-no-native-icon w-full border-none p-0 pr-10 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none focus:outline-none"
               />
-              {/* End icon button */}
               <button
                 type="button"
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-[#323335]"
@@ -94,7 +102,6 @@ export default function HeroSection() {
                   const el = dateRef.current;
 
                   if (!el) return;
-                  // Prefer native showPicker if available
                   if (
                     "showPicker" in el &&
                     typeof (el as any).showPicker === "function"
@@ -124,10 +131,8 @@ export default function HeroSection() {
                 </svg>
               </button>
             </div>
-            {/* Date picker indicator hidden via global CSS in styles/globals.css */}
           </div>
 
-          {/* Search Button */}
           <div className="flex justify-end">
             <Button
               onClick={onSearch}
@@ -151,6 +156,7 @@ export default function HeroSection() {
             </Button>
           </div>
         </div>
+        */}
       </div>
     </section>
   );
