@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "iKook Private Chef Services",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     title: "iKook - Hire a Private Chef for Unforgettable Culinary Experience",
     description:
       "Book professional private chefs for home dining, events, meal prep and more.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.png"],
   },
   alternates: {
     canonical: "https://ikook.co.uk",

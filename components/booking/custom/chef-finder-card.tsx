@@ -14,7 +14,7 @@ export const ChefFinderCard: React.FC<ChefFinderCardProps> = ({ onNext }) => {
       <main className="text-base max-w-[654px] w-full text-zinc-800">
         <article className="flex flex-col items-center px-6 sm:px-20 pt-12 pb-24 bg-white rounded-2xl border border-solid shadow-lg border-[color:var(--Black-100,#E7E7E7)] w-full">
           <img
-            src="https://cdn.builder.io/api/v1/image/assets/ff501a58d59a405f99206348782d743c/7cf1404848cf4970267052f281bd3e8a9ae495ff?placeholderIfAbsent=true"
+            src="/join.png"
             alt="Chef illustration"
             className="object-contain self-center max-w-full aspect-[1.29] w-[266px]"
           />

@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "iKook - Hire a Private Chef for Unforgettable Culinary Experience",
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: ["/og-image.jpg"],
+    images: ["/og-image.png"],
     creator: "@ikook",
   },
   robots: {
