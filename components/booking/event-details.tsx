@@ -20,6 +20,8 @@ interface ChefType {
   bio: string;
   num_reviews: number;
   average_rating: number;
+  currency?: string;
+  country?: string;
 }
 
 interface ServiceData {
@@ -32,6 +34,8 @@ interface ServiceData {
   availability?: boolean;
   cover_image?: string;
   chef?: ChefType;
+  currency?: string;
+  country?: string;
 }
 
 interface EventDetailsProps {
