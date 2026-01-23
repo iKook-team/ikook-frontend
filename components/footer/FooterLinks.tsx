@@ -66,7 +66,11 @@ export const FooterLinks: React.FC<FooterLinksProps> = ({ className = "" }) => {
     },
     {
       title: "iKooK Chef In",
-      links: ["United Kingdom", "Nigeria", "South Africa"],
+      links: [
+        // "United Kingdom",
+        "Nigeria",
+        "South Africa",
+      ],
     },
     {
       isContact: true,

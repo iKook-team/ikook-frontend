@@ -1,129 +1,74 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { Navigation } from "@/components/auth/Navigation";
 import { Footer } from "@/components/footer/footer";
+import apiClient from "@/src/lib/axios";
 
-// Map country slug to display name, market code and cities
+// Map country slug to display name and market code
 const COUNTRY_DATA: Record<
   string,
-  { label: string; market: "GB" | "NG" | "ZA"; cities: string[] }
+  { label: string; market: "GB" | "NG" | "ZA" }
 > = {
   "united-kingdom": {
     label: "United Kingdom",
     market: "GB",
-    cities: [
-      "London",
-      "Manchester",
-      "Birmingham",
-      "Leeds",
-      "Glasgow",
-      "Liverpool",
-      "Bristol",
-      "Sheffield",
-      "Edinburgh",
-      "Leicester",
-      "Coventry",
-      "Bradford",
-      "Cardiff",
-      "Belfast",
-      "Nottingham",
-      "Newcastle upon Tyne",
-      "Southampton",
-      "Portsmouth",
-      "Brighton",
-      "Plymouth",
-      "Derby",
-      "Stoke-on-Trent",
-      "Wolverhampton",
-      "Reading",
-      "Northampton",
-      "Milton Keynes",
-      "Swindon",
-      "Aberdeen",
-      "Dundee",
-      "York",
-      "Cambridge",
-      "Oxford",
-    ],
   },
   nigeria: {
     label: "Nigeria",
     market: "NG",
-    cities: [
-      "Lagos",
-      "Abuja",
-      "Port Harcourt",
-      "Ibadan",
-      "Benin City",
-      "Kano",
-      "Kaduna",
-      "Enugu",
-      "Onitsha",
-      "Jos",
-      "Warri",
-      "Uyo",
-      "Calabar",
-      "Abeokuta",
-      "Ilorin",
-      "Owerri",
-      "Akure",
-      "Asaba",
-      "Makurdi",
-      "Minna",
-      "Bauchi",
-      "Maiduguri",
-      "Sokoto",
-      "Yola",
-      "Zaria",
-      "Osogbo",
-      "Ado-Ekiti",
-      "Awka",
-      "Lafia",
-    ],
   },
   "south-africa": {
     label: "South Africa",
     market: "ZA",
-    cities: [
-      "Johannesburg",
-      "Cape Town",
-      "Durban",
-      "Pretoria",
-      "Gqeberha",
-      "East London",
-      "Bloemfontein",
-      "Polokwane",
-      "Mbombela",
-      "Kimberley",
-      "Pietermaritzburg",
-      "George",
-      "Rustenburg",
-      "Klerksdorp",
-      "Vereeniging",
-      "Benoni",
-      "Springs",
-      "Boksburg",
-      "Randburg",
-      "Sandton",
-      "Soweto",
-      "Centurion",
-      "Midrand",
-      "Stellenbosch",
-      "Paarl",
-      "Somerset West",
-    ],
   },
 };
 
 export default function CountryPage() {
   const { country } = useParams<{ country: string }>();
   const router = useRouter();
+  const [cities, setCities] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const slug = Array.isArray(country) ? country[0] : country;
   const data = COUNTRY_DATA[slug?.toLowerCase() || ""];
+
+  useEffect(() => {
+    if (!data) return;
+
+    const fetchCities = async () => {
+      try {
+        setIsLoading(true);
+        // Fetch cities from the backend
+        const response = await apiClient.get(
+          `/users/profiles/public-chef-cities/?market=${data.market}`,
+        );
+        // The response.data.data contains the list of cities based on SuccessResponse structure
+        // Adjust based on actual API response structure (SuccessResponse usually wraps data in 'data' field)
+        // If api.get returns the parsed JSON, check if it has .data or is the data itself
+        // Assuming api.get returns the response body
+        const cityList = response.data?.data || response.data || [];
+
+        if (Array.isArray(cityList)) {
+          setCities(cityList);
+        } else {
+          console.error("Unexpected response format:", response);
+          setCities([]);
+        }
+
+      } catch (err) {
+        console.error("Failed to fetch cities:", err);
+        setError("Failed to load cities. Please try again later.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCities();
+  }, [data]);
 
   const handleCityClick = (city: string) => {
     if (!data) return;
@@ -166,21 +111,33 @@ export default function CountryPage() {
             Select a city to explore menus and chefs nearby.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
-            {data.cities.map((city) => (
-              <button
-                key={city}
-                type="button"
-                onClick={() => handleCityClick(city)}
-                className="text-left border border-gray-200 rounded-lg px-4 py-3 hover:border-[#FCC01C] hover:shadow-sm transition"
-                aria-label={`Explore in ${city}`}
-              >
-                <span className="text-base text-[#323335] font-medium">
-                  {city}
-                </span>
-              </button>
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#FCC01C]"></div>
+            </div>
+          ) : error ? (
+            <div className="text-center py-10 text-red-500">{error}</div>
+          ) : cities.length === 0 ? (
+            <div className="text-center py-10 text-gray-500">
+              No cities found with active chefs in this region.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
+              {cities.map((city) => (
+                <button
+                  key={city}
+                  type="button"
+                  onClick={() => handleCityClick(city)}
+                  className="text-left border border-gray-200 rounded-lg px-4 py-3 hover:border-[#FCC01C] hover:shadow-sm transition"
+                  aria-label={`Explore in ${city}`}
+                >
+                  <span className="text-base text-[#323335] font-medium">
+                    {city}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </main>
       <Footer />

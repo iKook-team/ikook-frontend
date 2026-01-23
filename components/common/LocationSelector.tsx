@@ -71,9 +71,25 @@ export const LocationSelector: React.FC = () => {
     setMarketCookie(code);
     setOpen(false);
 
+    setMarketCookie(code);
+    setOpen(false);
+
     // If user switched country while on the explore page, navigate back to home
     if (pathname && pathname.startsWith("/explore")) {
       router.push("/");
+    }
+
+    // If user switched country while on a location page, navigate to the new country's location page
+    if (pathname && pathname.startsWith("/locations/")) {
+      const slugMap: Record<MarketCode, string> = {
+        NG: "nigeria",
+        GB: "united-kingdom",
+        ZA: "south-africa",
+      };
+      const newSlug = slugMap[code];
+      if (newSlug) {
+        router.push(`/locations/${newSlug}`);
+      }
     }
   };
 
