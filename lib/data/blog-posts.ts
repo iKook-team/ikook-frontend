@@ -106,6 +106,9 @@ export const blogPosts = [
       <p>iKook is built for you — because your time, comfort, and experience matter most.</p>
     `,
     image: "/blog/how-to-hire.png",
+    date: "January 28, 2026",
+    author: "iKooK Team",
+    authorAvatar: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
     readTime: calculateReadTime(`
       Booking a private chef at home should feel effortless, not overwhelming. Whether you're looking to hire a private chef, explore home chefs, or simply find a chef to cook for you at home across the UK, Nigeria and South Africa, iKook was designed to make the entire process seamless.
       
