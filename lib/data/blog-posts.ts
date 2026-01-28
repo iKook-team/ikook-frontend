@@ -2,6 +2,197 @@ import { calculateReadTime } from "./calculate-read-time";
 
 export const blogPosts = [
   {
+    id: 7,
+    slug: "how-to-book-a-private-chef-on-ikook",
+    title: "How to Book a Private Chef on iKook — And Why iKook Puts You First",
+    excerpt: "Discover how easy it is to book a private chef with iKook across the UK, Nigeria, and South Africa. Enjoy personalized dining experiences tailored to your taste and schedule.",
+    content: `
+      <p>Booking a private chef at home should feel effortless, not overwhelming. Whether you're looking to hire a private chef, explore home chefs, or simply find a chef to cook for you at home across the UK, Nigeria and South Africa, iKook was designed to make the entire process seamless.</p>
+
+      <p>At iKook, we understand the real pain point: people want high-quality meals and five-star experiences without the stress of cooking, planning, or endless searching. That's why our platform connects you with the best private chef options — all in one easy-to-use chef app.</p>
+
+      <h2>Step 1: Create an Account and Find a Chef on iKook</h2>
+
+      <p>Before you can book a private chef online, you'll need to create an account. This step is quick and intuitive because iKook is built with a people-first mindset.</p>
+
+      <p><strong>How to get started:</strong></p>
+      <ul>
+        <li>Visit the iKook website or mobile chef app</li>
+        <li>Click Sign Up</li>
+        <li>Enter your name, email address, and password</li>
+        <li>Verify your email to access our private chef services</li>
+      </ul>
+
+      <p>Once logged in, you can immediately find a chef that fits your needs — whether you're searching for a personal chef, a mobile chef, or a private chef in the UK, Nigeria or South Africa.</p>
+
+      <h2>Step 2: Book a Chef in Your Location That Matches Your Taste</h2>
+
+      <p>Choosing the right chef is about more than food — it's about trust, flexibility, and experience. iKook helps you confidently hire a chef by giving you all the details you need upfront.</p>
+
+      <p><strong>What to consider when hiring a private chef:</strong></p>
+      <ul>
+        <li>Reviews and ratings from real clients</li>
+        <li>Cuisine styles and chef foods offered</li>
+        <li>Availability in your city</li>
+      </ul>
+
+      <h2>Step 3: Customise Your Private Chef Menu at Home</h2>
+
+      <p>One of the biggest reasons people choose iKook is the ability to personalise their experience. From your private chef menu to dietary needs, everything is tailored to you.</p>
+
+      <p><strong>Customisation options include:</strong></p>
+      <ul>
+        <li>Selecting or co-creating a menu with your chef</li>
+        <li>Accommodating allergies, vegan, or lifestyle preferences</li>
+        <li>Requesting special themes or occasions</li>
+      </ul>
+
+      <p>Whether you want a relaxed chef at home experience or a fully curated private dining event, iKook adapts to your lifestyle — not the other way around.</p>
+
+      <h2>Why Choose iKook to Hire a Private Chef?</h2>
+
+      <h3>We Understand the User Experience</h3>
+
+      <p>People searching for "hire the best private chef" or "chef to cook for you at home" aren't just looking for food — they're looking for ease, reliability, and peace of mind.</p>
+
+      <p>That's why iKook was built to:</p>
+      <ul>
+        <li>Reduce decision fatigue</li>
+        <li>Eliminate unnecessary steps</li>
+        <li>Put people first, always</li>
+      </ul>
+
+      <h3>More Than Just a Chef App</h3>
+
+      <p>iKook is not just a chef mobile app — it's a complete solution for:</p>
+      <ul>
+        <li>Private chef at home bookings</li>
+        <li>Hire a caterer for events</li>
+        <li>Book a caterer online when hosting larger gatherings</li>
+      </ul>
+
+      <p>Everything lives in one place, so you don't have to juggle multiple platforms.</p>
+
+      <h3>Quality, Consistency, and Trust</h3>
+
+      <p>Every chef on iKook is vetted to deliver a premium experience. Whether you're booking a personal chef, a mobile chef, or exploring what it's really like to be a private chef, quality is non-negotiable.</p>
+
+      <h2>Private Chef Costs: What You Should Know</h2>
+
+      <p>A common question is: <strong>How much does it cost to hire a private chef?</strong></p>
+
+      <p>The answer varies based on:</p>
+      <ul>
+        <li>Location</li>
+        <li>Menu complexity</li>
+        <li>Duration of service</li>
+        <li>Event size</li>
+      </ul>
+
+      <p>Rather than fixing rigid prices, iKook allows flexibility — ensuring you find value that matches your needs while still receiving a premium experience.</p>
+
+      <h2>Book a Private Chef Online with Confidence</h2>
+
+      <p>From intimate dinners to special occasions, iKook bridges the gap between convenience and luxury. You get access to trusted private chef services while enjoying a smooth, user-friendly booking experience.</p>
+
+      <p>If you're ready to:</p>
+      <ul>
+        <li>Book a private chef</li>
+        <li>Hire a chef at home</li>
+        <li>Explore private chef menus</li>
+        <li>Or find a reliable private chef across the UK, Nigeria and South Africa.</li>
+      </ul>
+
+      <p>iKook is built for you — because your time, comfort, and experience matter most.</p>
+    `,
+    image: "/blog/how-to-hire.png",
+    readTime: calculateReadTime(`
+      Booking a private chef at home should feel effortless, not overwhelming. Whether you're looking to hire a private chef, explore home chefs, or simply find a chef to cook for you at home across the UK, Nigeria and South Africa, iKook was designed to make the entire process seamless.
+      
+      At iKook, we understand the real pain point: people want high-quality meals and five-star experiences without the stress of cooking, planning, or endless searching. That's why our platform connects you with the best private chef options — all in one easy-to-use chef app.
+      
+      Step 1: Create an Account and Find a Chef on iKook
+      
+      Before you can book a private chef online, you'll need to create an account. This step is quick and intuitive because iKook is built with a people-first mindset.
+      
+      How to get started:
+      - Visit the iKook website or mobile chef app
+      - Click Sign Up
+      - Enter your name, email address, and password
+      - Verify your email to access our private chef services
+      
+      Once logged in, you can immediately find a chef that fits your needs — whether you're searching for a personal chef, a mobile chef, or a private chef in the UK, Nigeria or South Africa.
+      
+      Step 2: Book a Chef in Your Location That Matches Your Taste
+      
+      Choosing the right chef is about more than food — it's about trust, flexibility, and experience. iKook helps you confidently hire a chef by giving you all the details you need upfront.
+      
+      What to consider when hiring a private chef:
+      - Reviews and ratings from real clients
+      - Cuisine styles and chef foods offered
+      - Availability in your city
+      
+      Step 3: Customise Your Private Chef Menu at Home
+      
+      One of the biggest reasons people choose iKook is the ability to personalise their experience. From your private chef menu to dietary needs, everything is tailored to you.
+      
+      Customisation options include:
+      - Selecting or co-creating a menu with your chef
+      - Accommodating allergies, vegan, or lifestyle preferences
+      - Requesting special themes or occasions
+      
+      Whether you want a relaxed chef at home experience or a fully curated private dining event, iKook adapts to your lifestyle — not the other way around.
+      
+      Why Choose iKook to Hire a Private Chef?
+      
+      We Understand the User Experience
+      
+      People searching for "hire the best private chef" or "chef to cook for you at home" aren't just looking for food — they're looking for ease, reliability, and peace of mind.
+      
+      That's why iKook was built to:
+      - Reduce decision fatigue
+      - Eliminate unnecessary steps
+      - Put people first, always
+      
+      More Than Just a Chef App
+      
+      iKook is not just a chef mobile app — it's a complete solution for:
+      - Private chef at home bookings
+      - Hire a caterer for events
+      - Book a caterer online when hosting larger gatherings
+      
+      Everything lives in one place, so you don't have to juggle multiple platforms.
+      
+      Quality, Consistency, and Trust
+      
+      Every chef on iKook is vetted to deliver a premium experience. Whether you're booking a personal chef, a mobile chef, or exploring what it's really like to be a private chef, quality is non-negotiable.
+      
+      Private Chef Costs: What You Should Know
+      
+      A common question is: How much does it cost to hire a private chef?
+      
+      The answer varies based on:
+      - Location
+      - Menu complexity
+      - Duration of service
+      - Event size
+      
+      Rather than fixing rigid prices, iKook allows flexibility — ensuring you find value that matches your needs while still receiving a premium experience.
+      
+      Book a Private Chef Online with Confidence
+      
+      From intimate dinners to special occasions, iKook bridges the gap between convenience and luxury. You get access to trusted private chef services while enjoying a smooth, user-friendly booking experience.
+      
+      If you're ready to:
+      - Book a private chef
+      - Hire a chef at home
+      - Explore private chef menus
+      - Or find a reliable private chef across the UK, Nigeria and South Africa.
+      
+      iKook is built for you — because your time, comfort, and experience matter most.
+    `),
+  },
+  {
     id: 6,
     slug: "is-hiring-a-private-chef-worth-it-in-2026-real-benefits-for-your-time-health-and-productivity",
     title:
