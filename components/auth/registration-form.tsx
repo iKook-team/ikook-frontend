@@ -15,6 +15,7 @@ interface RegistrationFormProps {
   isSubmitting: boolean;
   userType?: "chef" | "host";
   onSubmit: (data: any) => void;
+  onBack?: () => void;
 }
 
 export const RegistrationForm: React.FC<RegistrationFormProps> = ({
@@ -22,6 +23,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
   isSubmitting,
   userType = "chef", // Default to 'chef' for backward compatibility
   onSubmit,
+  onBack,
 }) => {
   const [formData, setFormData] = useState({
     username: initialFormData.username || "",
@@ -73,6 +75,28 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
           {`Join iKook as a ${userType === "chef" ? "Chef" : "Host"}`}
         </h1>
       </header>
+
+      {onBack && (
+        <button
+          type="button"
+          onClick={onBack}
+          className="mb-4 flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-black transition-colors"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+          Back
+        </button>
+      )}
 
       <main className="w-[605px] rounded-[15px] border border-solid border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] max-lg:w-full max-lg:max-w-[605px] max-sm:rounded-[10px]">
         <div className="pt-[27px] w-full">

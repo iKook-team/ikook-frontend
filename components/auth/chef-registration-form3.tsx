@@ -16,6 +16,7 @@ interface ChefRegistrationForm3Props {
   };
   isSubmitting: boolean;
   onSubmit: (data: any) => void;
+  onBack?: () => void;
 }
 
 const workAuthOptions = [
@@ -28,6 +29,7 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
   formData: initialFormData,
   isSubmitting,
   onSubmit,
+  onBack,
 }) => {
   const { setChefFormData, chefFormData } = useAuthStore();
   const [formData, setFormData] = useState(() => ({
@@ -97,6 +99,28 @@ export const ChefRegistrationForm3: React.FC<ChefRegistrationForm3Props> = ({
           Join iKook as a Chef
         </h1>
       </header>
+
+      {onBack && (
+        <button
+          type="button"
+          onClick={onBack}
+          className="mb-4 flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-black transition-colors"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+          Back
+        </button>
+      )}
 
       <main className="w-[605px] rounded-[15px] border border-solid border-[#E7E7E7] bg-white shadow-[0px_4px_30px_0px_rgba(0,0,0,0.03)] max-lg:w-full max-lg:max-w-[605px] max-sm:rounded-[10px]">
         <div className="pt-[27px] w-full">

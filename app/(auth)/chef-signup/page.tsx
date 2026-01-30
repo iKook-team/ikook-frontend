@@ -54,6 +54,8 @@ const ChefSignupPage: React.FC = () => {
 
   const nextStep = () => setStep((prev) => prev + 1);
 
+  const prevStep = () => setStep((prev) => Math.max(1, prev - 1));
+
   const handleNext = async (data: any) => {
     const newData =
       typeof data === "object" && data !== null && !Array.isArray(data)
@@ -189,6 +191,7 @@ const ChefSignupPage: React.FC = () => {
             formData={formData}
             isSubmitting={isSubmitting}
             onSubmit={handleNext}
+            onBack={prevStep}
           />
         );
       case 3:
@@ -197,6 +200,7 @@ const ChefSignupPage: React.FC = () => {
             isSubmitting={isSubmitting}
             onSubmit={handleNext}
             email={chefFormData?.email}
+            onBack={prevStep}
           />
         );
       case 4:
@@ -205,6 +209,7 @@ const ChefSignupPage: React.FC = () => {
             formData={formData}
             isSubmitting={isSubmitting}
             onSubmit={handleNext}
+            onBack={prevStep}
           />
         );
       case 5:
@@ -213,6 +218,7 @@ const ChefSignupPage: React.FC = () => {
             formData={formData}
             isSubmitting={isSubmitting}
             onSubmit={handleNext}
+            onBack={prevStep}
           />
         );
       case 6:
@@ -222,6 +228,7 @@ const ChefSignupPage: React.FC = () => {
             isSubmitting={isSubmitting}
             userType="chef"
             onSubmit={handleNext}
+            onBack={prevStep}
           />
         );
       default:

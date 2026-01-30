@@ -57,6 +57,13 @@ const HostSignupPage: React.FC = () => {
     });
   };
 
+  const prevStep = () => {
+    setStep((prev) => {
+      console.log("Returning to step", prev - 1);
+      return Math.max(1, prev - 1);
+    });
+  };
+
   const handleNext = async (data: any) => {
     console.log("handleNext called with data:", data, "current step:", step);
     const newData =
@@ -189,6 +196,7 @@ const HostSignupPage: React.FC = () => {
             isSubmitting={isSubmitting}
             onSubmit={handleNext}
             email={hostFormData?.email}
+            onBack={prevStep}
           />
         );
       case 3:
@@ -198,6 +206,7 @@ const HostSignupPage: React.FC = () => {
             isSubmitting={isSubmitting}
             userType="host"
             onSubmit={handleNext}
+            onBack={prevStep}
           />
         );
       default:
