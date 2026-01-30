@@ -14,6 +14,7 @@ import { showToast, handleApiError } from "@/lib/utils/toast";
 import { bookingsService } from "@/lib/api/bookings";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { Button } from "@/components/ui/button";
+import { ConfirmationModal } from "@/components/ui/confirmation-modal";
 
 const Page: React.FC = () => {
   const params = useParams<{ id: string }>();
@@ -92,10 +93,10 @@ const Page: React.FC = () => {
 
   const items: MenuQuoteItem[] | undefined = Array.isArray(quote?.items)
     ? quote.items.map((it: any) => ({
-        id: it.id,
-        course: it.course,
-        name: it.name,
-      }))
+      id: it.id,
+      course: it.course,
+      name: it.name,
+    }))
     : undefined;
 
   // Parse numeric total
@@ -231,6 +232,23 @@ const Page: React.FC = () => {
     }
   };
 
+  const [deleting, setDeleting] = React.useState(false);
+  const [showDeleteModal, setShowDeleteModal] = React.useState(false);
+
+  const onDeleteQuote = async () => {
+    try {
+      setDeleting(true);
+      await quotesService.deleteQuote(quoteId);
+      showToast.success("Quote deleted successfully");
+      router.push("/quotes");
+    } catch (e: any) {
+      handleApiError(e, "Failed to delete quote");
+    } finally {
+      setDeleting(false);
+      setShowDeleteModal(false);
+    }
+  };
+
   return (
     <div className="w-full min-h-screen relative bg-[#FBFBFB] flex justify-center max-md:w-full max-md:max-w-screen-lg max-md:h-auto max-md:min-h-screen">
       <main className="flex flex-col items-center w-full max-w-[885px] px-4 py-9">
@@ -284,7 +302,36 @@ const Page: React.FC = () => {
                       {accepting ? "Processing..." : "Pay Quote"}
                     </Button>
                   )}
+                  {userType === "chef" && !isPaid && !quote?.is_accepted && (
+                    <div className="flex flex-col gap-3">
+                      <Button
+                        className="w-full bg-[#323335] hover:bg-[#323335]/90 text-white font-semibold"
+                        onClick={() => router.push(`/quotes/${quoteId}/edit`)}
+                      >
+                        Edit Quote
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="w-full border-red-500 text-red-500 hover:bg-red-50 font-semibold"
+                        onClick={() => setShowDeleteModal(true)}
+                        disabled={deleting}
+                      >
+                        {deleting ? "Deleting..." : "Delete Quote"}
+                      </Button>
+                    </div>
+                  )}
                 </QuoteSummary>
+
+                <ConfirmationModal
+                  isOpen={showDeleteModal}
+                  onClose={() => setShowDeleteModal(false)}
+                  onConfirm={onDeleteQuote}
+                  title="Delete Quote"
+                  message="Are you sure you want to delete this quote? This action cannot be undone."
+                  confirmLabel="Delete"
+                  variant="danger"
+                  isLoading={deleting}
+                />
               </div>
             </div>
           )}

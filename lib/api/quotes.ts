@@ -73,4 +73,14 @@ export const quotesService = {
     // Support both wrapped and unwrapped responses
     return response.data?.data || response.data;
   },
+  async updateQuote(id: string | number, data: Partial<CreateQuoteInput>) {
+    const response = await apiClient.patch(`/quotes/${id}/`, data);
+
+    return response.data?.data || response.data;
+  },
+  async deleteQuote(id: string | number) {
+    const response = await apiClient.delete(`/quotes/${id}/`);
+
+    return response.data?.data || response.data;
+  },
 };
